@@ -25,6 +25,7 @@ namespace XAMLiteDemo
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            IsMouseVisible = true;
         }
 
         /// <summary>
@@ -35,11 +36,22 @@ namespace XAMLiteDemo
         /// </summary>
         protected override void Initialize()
         {
+
+            // XAML label reference example.
+            //Label label = new Label();
+            //label.Content = "Hello, world!";
+            //label.Foreground = Brushes.Red;
+            //label.HorizontalAlignment = HorizontalAlignment.Center;
+            //label.VerticalAlignment = VerticalAlignment.Center;
+            //label.Visibility = Visibility.Visible;
+            //ComponentsGrid.Children.Add(label);
+
             // XAMLite label example.
-            XAMLiteLabel _label = new XAMLiteLabel(this, "Hello, world.");
-            _label.HorizontalAlignment = HorizontalAlignment.Center;
-            _label.VerticalAlignment = VerticalAlignment.Center;
-            Components.Add(_label);
+            XAMLiteLabel label = new XAMLiteLabel(this);
+            label.Content = "Hello, world!";
+            label.HorizontalAlignment = HorizontalAlignment.Center;
+            label.VerticalAlignment = VerticalAlignment.Center;
+            Components.Add(label);
 
             // Initialize all game components. (This includes calling Initialize() on all XAMLite controls, 
             // since they are game components).

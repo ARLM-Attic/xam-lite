@@ -44,7 +44,7 @@ namespace WpfReferenceDemo
 
             // Label example.
             Label label = new Label();
-            label.Content = "Hello";
+            label.Content = "Hello, world!";
             label.Foreground = Brushes.Red;
             label.HorizontalAlignment = HorizontalAlignment.Center;
             label.VerticalAlignment = VerticalAlignment.Center;

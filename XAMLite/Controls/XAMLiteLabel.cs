@@ -19,11 +19,6 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        private string initialText;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public override string Text
         {
             get
@@ -32,10 +27,28 @@ namespace XAMLite
             }
             set
             {
-                this.Width = (int)this.spriteFont.MeasureString( value ).X;
-                this.Height = (int)this.spriteFont.MeasureString( value ).Y;
+                if (this.spriteFont != null)
+                {
+                    RecalculateWidthAndHeight(value);
+                }
                 base.Text = value;
 
+            }
+        }
+
+        /// <summary>
+        /// This just duplicates the Text property but is here since XAML developer will expect to be able
+        /// to set the Content property of a label.
+        /// </summary>
+        public string Content {
+            get
+            {
+                return this.Text;
+            }
+
+            set
+            {
+                this.Text = value;
             }
         }
 
@@ -44,17 +57,29 @@ namespace XAMLite
         /// </summary>
         public Color Color { get; set; }
 
+        public XAMLiteLabel(Game game)
+            : base(game)
+        {
+
+            //
+            this.Text = string.Empty;
+
+            //
+            this.Color = Color.White;
+
+        }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="game"></param>
-        public XAMLiteLabel ( Game game, string initialText )
+        public XAMLiteLabel ( Game game, string text )
             : base( game )
         {
             
             //
-            this.initialText = initialText;
-            
+            this.Text = text;
+
             //
             this.Color = Color.White;
 
@@ -69,7 +94,7 @@ namespace XAMLite
         protected override void LoadContent ()
         {
             this.spriteFont = Game.Content.Load<SpriteFont>( "Fonts/Courier10" );
-            this.Text = this.initialText;
+            RecalculateWidthAndHeight( this.Text );
             base.LoadContent();
         }
 
@@ -84,6 +109,15 @@ namespace XAMLite
             spriteBatch.End();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="text"></param>
+        private void RecalculateWidthAndHeight(string text)
+        {
+            this.Width = (int)this.spriteFont.MeasureString(text).X;
+            this.Height = (int)this.spriteFont.MeasureString(text).Y;
+        }
     }
 
 }
