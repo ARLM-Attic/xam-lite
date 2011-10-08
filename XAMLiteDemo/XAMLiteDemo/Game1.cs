@@ -20,11 +20,6 @@ namespace XAMLiteDemo
     {
         GraphicsDeviceManager _graphics;
         SpriteBatch _spriteBatch;
-
-        /// <summary>
-        /// This is to test our label control.
-        /// </summary>
-        XAMLiteLabel _testLabel;
         
         public Game1()
         {
@@ -40,9 +35,16 @@ namespace XAMLiteDemo
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            // XAMLite label example.
+            XAMLiteLabel _label = new XAMLiteLabel(this, "Hello, world.");
+            _label.HorizontalAlignment = HorizontalAlignment.Center;
+            _label.VerticalAlignment = VerticalAlignment.Center;
+            Components.Add(_label);
 
+            // Initialize all game components. (This includes calling Initialize() on all XAMLite controls, 
+            // since they are game components).
             base.Initialize();
+
         }
 
         /// <summary>
@@ -55,10 +57,9 @@ namespace XAMLiteDemo
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            _testLabel = new XAMLiteLabel(this, "Hello, world.");
-            _testLabel.Initialize();
-            _testLabel.HorizontalAlignment = HorizontalAlignment.Center;
-            _testLabel.VerticalAlignment = VerticalAlignment.Center;
+
+            // Call LoadContent() on all game components. (This inludes any XAMLite game components.)
+            base.LoadContent();
 
         }
 
@@ -96,9 +97,10 @@ namespace XAMLiteDemo
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            _testLabel.Draw(gameTime);
 
+            // Draw all game components. (This includes our XAMLite drawable game components).
             base.Draw(gameTime);
+
         }
     }
 }

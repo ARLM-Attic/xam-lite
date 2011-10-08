@@ -29,7 +29,13 @@ namespace WpfReferenceDemo
         }
 
         /// <summary>
-        /// 
+        /// Create some example controls and add them as children to the root XAML grid control.
+        /// Note the WPF and XNA difference:
+        /// WPF:  ComponentsGrid.Children.Add(label)
+        /// XNA:  Components.Add(label)
+        /// In this application, we've named the main grid "ComponentsGrid". The idea is that a grid is the UI
+        /// control container in WPF/XAML, and the Components collection is the container in XNA. That's why 
+        /// we've picked the named "ComponentsGrid" in this WPF reference application.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -43,17 +49,13 @@ namespace WpfReferenceDemo
             label.HorizontalAlignment = HorizontalAlignment.Center;
             label.VerticalAlignment = VerticalAlignment.Center;
             label.Visibility = Visibility.Visible;
-
-            // Add label to window grid.
-            this.grid1.Children.Add(label);
+            ComponentsGrid.Children.Add(label);
 
             // Rectangle example.
             Rectangle rectangle = new Rectangle();
             rectangle.Margin = new Thickness(10, 10, 50, 50);
             rectangle.Stroke = Brushes.Green;
-            
-            // Add rectangle to window grid.
-            this.grid1.Children.Add(rectangle);
+            ComponentsGrid.Children.Add(rectangle);
 
         }
 
