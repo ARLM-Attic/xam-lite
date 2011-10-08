@@ -8,7 +8,7 @@ namespace XAMLite
     /// 
     /// </summary>
     /// <see cref="http://msdn.microsoft.com/en-us/library/ms611056.aspx"/>
-    public class ffxLabel : ffxControl
+    public class XAMLiteLabel : XAMLiteControl
     {
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace XAMLite
         /// 
         /// </summary>
         /// <param name="game"></param>
-        public ffxLabel ( Game game, string initialText )
+        public XAMLiteLabel ( Game game, string initialText )
             : base( game )
         {
             

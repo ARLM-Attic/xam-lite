@@ -101,6 +101,10 @@
     <Content Include="GameThumbnail.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\XAMLite\XAMLite.csproj">
+      <Project>{8295012B-3506-4AD2-91DA-36971718B322}</Project>
+      <Name>XAMLite</Name>
+    </ProjectReference>
     <ProjectReference Include="..\XAMLiteDemoContent\XAMLiteDemoContent.contentproj">
       <Name>XAMLiteDemoContent</Name>
       <XnaReferenceType>Content</XnaReferenceType>

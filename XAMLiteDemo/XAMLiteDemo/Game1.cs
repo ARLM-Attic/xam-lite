@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using XAMLite;
 
 namespace XAMLiteDemo
 {
@@ -16,12 +17,17 @@ namespace XAMLiteDemo
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        GraphicsDeviceManager _graphics;
+        SpriteBatch _spriteBatch;
 
+        /// <summary>
+        /// This is to test our label control.
+        /// </summary>
+        XAMLiteLabel _testLabel;
+        
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
+            _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
 
@@ -45,9 +51,12 @@ namespace XAMLiteDemo
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            _testLabel = new XAMLiteLabel(this, "Hello, world.");
+            _testLabel.Initialize();
+
         }
 
         /// <summary>
@@ -84,6 +93,7 @@ namespace XAMLiteDemo
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            _testLabel.Draw(gameTime);
 
             base.Draw(gameTime);
         }

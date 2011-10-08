@@ -12,7 +12,7 @@ namespace XAMLite
     /// <summary>
     /// 
     /// </summary>
-    public class ffxImage : ffxControl
+    public class XAMLiteImage : XAMLiteControl
     {
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace XAMLite
         /// </summary>
         /// <param name="game"></param>
         /// <param name="assetName"></param>
-        public ffxImage ( Game game, string assetName )
+        public XAMLiteImage ( Game game, string assetName )
             : base( game )
         {
             this.assetName = assetName;

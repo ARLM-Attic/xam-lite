@@ -9,7 +9,7 @@ namespace XAMLite
     /// 
     /// </summary>
     /// <see cref="http://msdn.microsoft.com/en-us/library/system.windows.controls.control.aspx"/>
-    public class ffxControl : DrawableGameComponent
+    public class XAMLiteControl : DrawableGameComponent
     {
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace XAMLite
         /// 
         /// </summary>
         /// <param name="game"></param>
-        public ffxControl ( Game game )
+        public XAMLiteControl ( Game game )
             : base( game )
         {
             this.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;

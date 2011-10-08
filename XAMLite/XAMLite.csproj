@@ -94,11 +94,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
-    <Compile Include="Controls\ffxImage.cs" />
-    <Compile Include="Controls\ffxLabel.cs" />
-    <Compile Include="Controls\ffxLabelWithShadow.cs" />
-    <Compile Include="Controls\Rectangle.cs" />
-    <Compile Include="Control\ffxControl.cs" />
+    <Compile Include="Controls\XAMLiteImage.cs" />
+    <Compile Include="Controls\XAMLiteLabel.cs" />
+    <Compile Include="Controls\XAMLiteLabelWithShadow.cs" />
+    <Compile Include="Controls\XAMLiteRectangle.cs" />
+    <Compile Include="Control\XAMLiteControl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

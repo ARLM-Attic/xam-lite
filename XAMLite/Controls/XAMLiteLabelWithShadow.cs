@@ -10,7 +10,7 @@ namespace XAMLite
     /// <summary>
     /// 
     /// </summary>
-    public class ffxLabelWithShadow : ffxLabel
+    public class XAMLiteLabelWithShadow : XAMLiteLabel
     {
 
         /// <summary>
@@ -18,7 +18,7 @@ namespace XAMLite
         /// </summary>
         /// <param name="game"></param>
         /// <param name="initialText"></param>
-        public ffxLabelWithShadow ( Game game, string initialText )
+        public XAMLiteLabelWithShadow ( Game game, string initialText )
             : base( game, initialText )
         {
         }
