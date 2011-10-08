@@ -73,6 +73,7 @@
     <Reference Include="mscorlib">
       <Private>False</Private>
     </Reference>
+    <Reference Include="PresentationFramework" />
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
@@ -96,6 +97,7 @@
     <Compile Include="Controls\ffxImage.cs" />
     <Compile Include="Controls\ffxLabel.cs" />
     <Compile Include="Controls\ffxLabelWithShadow.cs" />
+    <Compile Include="Controls\Rectangle.cs" />
     <Compile Include="Control\ffxControl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

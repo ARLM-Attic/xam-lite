@@ -1,0 +1,9 @@
+﻿<Window x:Class="WpfReferenceDemo.XamlMarkup"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="XamlMarkup" Height="395" Width="703">
+    <Grid>
+        <Rectangle Height="100" HorizontalAlignment="Left" Margin="132,131,0,0" Name="rectangle1" Stroke="Black" VerticalAlignment="Top" Width="200" />
+        <TextBlock Height="46" HorizontalAlignment="Left" Margin="12,12,0,0" Name="textBlock1" Text="These controls are all laid out with XAML markup, which is what we'll NOT be doing.  Instead our XNA controls will be creating using a code-only approach, but mimicing the code-only API from XAML." VerticalAlignment="Top" TextWrapping="Wrap" Width="657" />
+    </Grid>
+</Window>
