@@ -68,6 +68,13 @@ namespace XAMLiteDemo
             rectangle1.Margin = new Thickness(0, 25, 0, 0);
             Components.Add(rectangle1);
 
+            // Rectangle example #2.
+            XAMLiteRectangle rectangle2 = new XAMLiteRectangle(this);
+            rectangle2.Initialize();
+            rectangle2.Margin = new Thickness(10, 10, 10, 10);
+            rectangle2.Stroke = Color.Pink;
+            Components.Add(rectangle2);
+
             // Initialize all game components. (This includes calling Initialize() on all XAMLite controls, 
             // since they are game components).
             base.Initialize();

@@ -52,13 +52,22 @@ namespace WpfReferenceDemo
             ComponentsGrid.Children.Add(label);
 
             // Rectangle example #1.
-            Rectangle rectangle = new Rectangle();
-            rectangle.Margin = new Thickness(10, 10, 10, 10);
-            rectangle.Stroke = Brushes.Pink;
-            ComponentsGrid.Children.Add(rectangle);
+            Rectangle rectangle1 = new Rectangle();
+            rectangle1.Width = 300;
+            rectangle1.Height = 100;
+            rectangle1.Fill = Brushes.LightGray;
+            rectangle1.Stroke = Brushes.Green;
+            rectangle1.StrokeThickness = 1;
+            rectangle1.HorizontalAlignment = HorizontalAlignment.Center;
+            rectangle1.VerticalAlignment = VerticalAlignment.Top;
+            rectangle1.Margin = new Thickness(0, 25, 0, 0);
+            ComponentsGrid.Children.Add(rectangle1);
 
-            // Rectange example #2
-
+            // Rectangle example #2
+            Rectangle rectangle2 = new Rectangle();
+            rectangle2.Margin = new Thickness(10, 10, 10, 10);
+            rectangle2.Stroke = Brushes.Pink;
+            ComponentsGrid.Children.Add(rectangle2);
 
         }
 
