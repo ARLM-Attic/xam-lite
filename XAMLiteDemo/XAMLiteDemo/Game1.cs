@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -56,6 +57,8 @@ namespace XAMLiteDemo
             // TODO: use this.Content to load your game content here
             _testLabel = new XAMLiteLabel(this, "Hello, world.");
             _testLabel.Initialize();
+            _testLabel.HorizontalAlignment = HorizontalAlignment.Center;
+            _testLabel.VerticalAlignment = VerticalAlignment.Center;
 
         }
 
