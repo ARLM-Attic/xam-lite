@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Windows.Media;
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {
@@ -56,8 +58,23 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        public Color Color { get; set; }
+        protected Color _foregroundColor;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public Brush Foreground
+        {
+            set
+            {
+                var solidBrush = (SolidColorBrush)value;
+                var color = solidBrush.Color;
+                _foregroundColor = new Color(color.R, color.G, color.B, color.A);
+            }
+        }
+
+
+        
         public XAMLiteLabel(Game game)
             : base(game)
         {
@@ -66,7 +83,7 @@ namespace XAMLite
             this.Text = string.Empty;
 
             //
-            this.Color = Color.White;
+            this._foregroundColor = Color.White;
 
         }
 
@@ -82,7 +99,7 @@ namespace XAMLite
             this.Text = text;
 
             //
-            this.Color = Color.White;
+            this._foregroundColor = Color.White;
 
         }
 
@@ -106,7 +123,7 @@ namespace XAMLite
         public override void Draw ( GameTime gameTime )
         {
             spriteBatch.Begin();
-            spriteBatch.DrawString( this.spriteFont, Text, Position, this.Color );
+            spriteBatch.DrawString( this.spriteFont, Text, Position, this._foregroundColor );
             spriteBatch.End();
         }
 

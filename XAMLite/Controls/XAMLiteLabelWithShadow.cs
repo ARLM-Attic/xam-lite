@@ -38,7 +38,7 @@ namespace XAMLite
             this.spriteBatch.DrawString(this.spriteFont, this.Text, shadowPos, Color.Black);
 
             // Draw text.
-            this.spriteBatch.DrawString(this.spriteFont, this.Text, this.Position, this.Color);
+            this.spriteBatch.DrawString(this.spriteFont, this.Text, this.Position, this._foregroundColor);
 
             // End.
             this.spriteBatch.End();
