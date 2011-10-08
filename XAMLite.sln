@@ -1,7 +1,51 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XAMLite", "XAMLite\XAMLite.csproj", "{8295012B-3506-4AD2-91DA-36971718B322}"
+EndProject
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "XAMLiteContent", "XAMLiteContent\XAMLiteContent.contentproj", "{E03B3989-D21C-47D0-994D-6AA69BA533B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XAMLiteDemo", "XAMLiteDemo\XAMLiteDemo\XAMLiteDemo.csproj", "{A837BFE1-AFAB-4C4C-8945-6721D4F0BBE6}"
+EndProject
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "XAMLiteDemoContent", "XAMLiteDemo\XAMLiteDemoContent\XAMLiteDemoContent.contentproj", "{85F37BDE-5A97-448A-ACEB-8F5BD5C01FF8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfReferenceDemo", "WpfReferenceDemo\WpfReferenceDemo.csproj", "{59CED8D0-EEC3-4737-9AD4-929EEFDCF561}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8295012B-3506-4AD2-91DA-36971718B322}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{8295012B-3506-4AD2-91DA-36971718B322}.Debug|x86.ActiveCfg = Debug|x86
+		{8295012B-3506-4AD2-91DA-36971718B322}.Debug|x86.Build.0 = Debug|x86
+		{8295012B-3506-4AD2-91DA-36971718B322}.Release|Any CPU.ActiveCfg = Release|x86
+		{8295012B-3506-4AD2-91DA-36971718B322}.Release|x86.ActiveCfg = Release|x86
+		{8295012B-3506-4AD2-91DA-36971718B322}.Release|x86.Build.0 = Release|x86
+		{E03B3989-D21C-47D0-994D-6AA69BA533B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E03B3989-D21C-47D0-994D-6AA69BA533B2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E03B3989-D21C-47D0-994D-6AA69BA533B2}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{E03B3989-D21C-47D0-994D-6AA69BA533B2}.Release|x86.ActiveCfg = Debug|Any CPU
+		{A837BFE1-AFAB-4C4C-8945-6721D4F0BBE6}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{A837BFE1-AFAB-4C4C-8945-6721D4F0BBE6}.Debug|x86.ActiveCfg = Debug|x86
+		{A837BFE1-AFAB-4C4C-8945-6721D4F0BBE6}.Debug|x86.Build.0 = Debug|x86
+		{A837BFE1-AFAB-4C4C-8945-6721D4F0BBE6}.Release|Any CPU.ActiveCfg = Release|x86
+		{A837BFE1-AFAB-4C4C-8945-6721D4F0BBE6}.Release|x86.ActiveCfg = Release|x86
+		{A837BFE1-AFAB-4C4C-8945-6721D4F0BBE6}.Release|x86.Build.0 = Release|x86
+		{85F37BDE-5A97-448A-ACEB-8F5BD5C01FF8}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{85F37BDE-5A97-448A-ACEB-8F5BD5C01FF8}.Debug|x86.ActiveCfg = Debug|x86
+		{85F37BDE-5A97-448A-ACEB-8F5BD5C01FF8}.Release|Any CPU.ActiveCfg = Release|x86
+		{85F37BDE-5A97-448A-ACEB-8F5BD5C01FF8}.Release|x86.ActiveCfg = Release|x86
+		{59CED8D0-EEC3-4737-9AD4-929EEFDCF561}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{59CED8D0-EEC3-4737-9AD4-929EEFDCF561}.Debug|x86.ActiveCfg = Debug|x86
+		{59CED8D0-EEC3-4737-9AD4-929EEFDCF561}.Debug|x86.Build.0 = Debug|x86
+		{59CED8D0-EEC3-4737-9AD4-929EEFDCF561}.Release|Any CPU.ActiveCfg = Release|x86
+		{59CED8D0-EEC3-4737-9AD4-929EEFDCF561}.Release|x86.ActiveCfg = Release|x86
+		{59CED8D0-EEC3-4737-9AD4-929EEFDCF561}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
