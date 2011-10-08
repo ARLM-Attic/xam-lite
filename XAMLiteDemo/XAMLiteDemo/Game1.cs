@@ -10,6 +10,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using XAMLite;
+using System.Windows.Media;
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLiteDemo
 {
@@ -39,18 +41,10 @@ namespace XAMLiteDemo
         protected override void Initialize()
         {
 
-            // XAML label reference example.
-            //Label label = new Label();
-            //label.Content = "Hello, world!";
-            //label.Foreground = Brushes.Red;
-            //label.HorizontalAlignment = HorizontalAlignment.Center;
-            //label.VerticalAlignment = VerticalAlignment.Center;
-            //label.Visibility = Visibility.Visible;
-            //ComponentsGrid.Children.Add(label);
-
             // XAMLite label example.
             XAMLiteLabel label = new XAMLiteLabel(this);
             label.Content = "Hello, world!";
+            label.Foreground = Brushes.Yellow;
             label.HorizontalAlignment = HorizontalAlignment.Center;
             label.VerticalAlignment = VerticalAlignment.Center;
             Components.Add(label);
