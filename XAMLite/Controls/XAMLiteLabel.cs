@@ -38,7 +38,8 @@ namespace XAMLite
 
         /// <summary>
         /// This just duplicates the Text property but is here since XAML developer will expect to be able
-        /// to set the Content property of a label.
+        /// to set the Content property of a label. Note: This Content property shouldn't be confuse with 
+        /// XNA's concept of Content (i.e. textures and models, etc).
         /// </summary>
         public string Content {
             get
