@@ -51,7 +51,6 @@ namespace XAMLiteDemo
 
             // Rectangle example #1
             XAMLiteRectangle rectangle1 = new XAMLiteRectangle(this);
-            rectangle1.Initialize();
             rectangle1.Width = 300;
             rectangle1.Height = 100;
             rectangle1.Fill = Color.LightGray;
@@ -64,7 +63,6 @@ namespace XAMLiteDemo
 
             // Rectangle example #2.
             XAMLiteRectangle rectangle2 = new XAMLiteRectangle(this);
-            rectangle2.Initialize();
             rectangle2.Margin = new Thickness(10, 10, 10, 10);
             rectangle2.Stroke = Color.Pink;
             Components.Add(rectangle2);
