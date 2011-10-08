@@ -25,12 +25,35 @@ namespace WpfReferenceDemo
         /// </summary>
         public MainWindow()
         {
-
-            //
             InitializeComponent();
+        }
 
-            //
-            //var label = new Label
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+
+            // Label example.
+            Label label = new Label();
+            label.Content = "Hello";
+            label.Foreground = Brushes.Red;
+            label.HorizontalAlignment = HorizontalAlignment.Center;
+            label.VerticalAlignment = VerticalAlignment.Center;
+            label.Visibility = Visibility.Visible;
+
+            // Add label to window grid.
+            this.grid1.Children.Add(label);
+
+            // Rectangle example.
+            Rectangle rectangle = new Rectangle();
+            rectangle.Margin = new Thickness(10, 10, 50, 50);
+            rectangle.Stroke = Brushes.Green;
+            
+            // Add rectangle to window grid.
+            this.grid1.Children.Add(rectangle);
 
         }
 
