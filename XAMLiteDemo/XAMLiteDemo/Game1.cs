@@ -53,6 +53,18 @@ namespace XAMLiteDemo
             label.VerticalAlignment = VerticalAlignment.Center;
             Components.Add(label);
 
+            XAMLiteRectangle rectangle = new XAMLiteRectangle(this);
+            rectangle.Initialize();
+            rectangle.Width = 300;
+            rectangle.Height = 100;
+            rectangle.Fill = Color.LightGray;
+            rectangle.Stroke = Color.Green;
+            rectangle.StrokeThickness = 1;
+            rectangle.HorizontalAlignment = HorizontalAlignment.Center;
+            rectangle.VerticalAlignment = VerticalAlignment.Top;
+            rectangle.Margin = new Thickness(0, 25, 0, 0);
+            Components.Add(rectangle);
+
             // Initialize all game components. (This includes calling Initialize() on all XAMLite controls, 
             // since they are game components).
             base.Initialize();
