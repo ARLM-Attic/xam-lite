@@ -19,9 +19,20 @@ namespace WpfReferenceDemo
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        /// <summary>
+        /// 
+        /// </summary>
         public MainWindow()
         {
+
+            //
             InitializeComponent();
+
+            //
+            //var label = new Label
+
         }
+
     }
 }
