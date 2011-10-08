@@ -26,6 +26,8 @@ namespace XAMLiteDemo
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            _graphics.PreferredBackBufferWidth = 600;
+            _graphics.PreferredBackBufferHeight = 400;
         }
 
         /// <summary>
@@ -53,17 +55,18 @@ namespace XAMLiteDemo
             label.VerticalAlignment = VerticalAlignment.Center;
             Components.Add(label);
 
-            XAMLiteRectangle rectangle = new XAMLiteRectangle(this);
-            rectangle.Initialize();
-            rectangle.Width = 300;
-            rectangle.Height = 100;
-            rectangle.Fill = Color.LightGray;
-            rectangle.Stroke = Color.Green;
-            rectangle.StrokeThickness = 1;
-            rectangle.HorizontalAlignment = HorizontalAlignment.Center;
-            rectangle.VerticalAlignment = VerticalAlignment.Top;
-            rectangle.Margin = new Thickness(0, 25, 0, 0);
-            Components.Add(rectangle);
+            // Rectangle example #1
+            XAMLiteRectangle rectangle1 = new XAMLiteRectangle(this);
+            rectangle1.Initialize();
+            rectangle1.Width = 300;
+            rectangle1.Height = 100;
+            rectangle1.Fill = Color.LightGray;
+            rectangle1.Stroke = Color.Green;
+            rectangle1.StrokeThickness = 1;
+            rectangle1.HorizontalAlignment = HorizontalAlignment.Center;
+            rectangle1.VerticalAlignment = VerticalAlignment.Top;
+            rectangle1.Margin = new Thickness(0, 25, 0, 0);
+            Components.Add(rectangle1);
 
             // Initialize all game components. (This includes calling Initialize() on all XAMLite controls, 
             // since they are game components).

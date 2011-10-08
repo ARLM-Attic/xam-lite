@@ -51,11 +51,14 @@ namespace WpfReferenceDemo
             label.Visibility = Visibility.Visible;
             ComponentsGrid.Children.Add(label);
 
-            // Rectangle example.
+            // Rectangle example #1.
             Rectangle rectangle = new Rectangle();
-            rectangle.Margin = new Thickness(10, 10, 50, 50);
-            rectangle.Stroke = Brushes.Green;
+            rectangle.Margin = new Thickness(10, 10, 10, 10);
+            rectangle.Stroke = Brushes.Pink;
             ComponentsGrid.Children.Add(rectangle);
+
+            // Rectange example #2
+
 
         }
 
