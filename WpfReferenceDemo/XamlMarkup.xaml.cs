@@ -20,12 +20,38 @@ namespace WpfReferenceDemo
     {
 
 
-        public VerticalAlignment VerticalAlignment { get; set; }
 
         public XamlMarkup()
         {
             InitializeComponent();
 
         }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void dogImage_MouseEnter(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void dogImage_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            this.imageLabel.Content = "Image (clicked)";
+        }
+
+        private void dogImage_MouseLeave(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void dogImage_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+
     }
 }

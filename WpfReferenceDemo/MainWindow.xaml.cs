@@ -47,7 +47,7 @@ namespace WpfReferenceDemo
             label.Content = "Hello, world!";
             label.Foreground = Brushes.Yellow;
             label.HorizontalAlignment = HorizontalAlignment.Center;
-            label.VerticalAlignment = VerticalAlignment.Center;
+            label.VerticalAlignment = VerticalAlignment.Bottom;
             label.Visibility = Visibility.Visible;
             ComponentsGrid.Children.Add(label);
 
@@ -69,7 +69,18 @@ namespace WpfReferenceDemo
             rectangle2.Stroke = Brushes.Pink;
             ComponentsGrid.Children.Add(rectangle2);
 
+            // Dog image example.
+            // <Image Height="100" HorizontalAlignment="Left" Margin="197,80,0,0" Name="image1" Stretch="Fill" VerticalAlignment="Top" Width="100" Source="/WpfReferenceDemo;component/Content/Dog.png" />
+            Image dogImage = new Image();
+            dogImage.Width = 100;
+            dogImage.Height = 100;
+            dogImage.Source = new BitmapImage(new Uri(@"Content\Dog.png", UriKind.Relative));
+            dogImage.MouseDown +=new MouseButtonEventHandler(dogImage_MouseDown);
+            ComponentsGrid.Children.Add(dogImage);
+
         }
+
+        public MouseButtonEventHandler dogImage_MouseDown { get; set; }
 
     }
 }
