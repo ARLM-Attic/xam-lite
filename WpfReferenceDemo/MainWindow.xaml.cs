@@ -80,6 +80,8 @@ namespace WpfReferenceDemo
             dogImage.MouseDown +=new MouseButtonEventHandler(dogImage_MouseDown);
             ComponentsGrid.Children.Add(dogImage);
 
+            var foo = new TextBlock();
+            foo.TextWrapping = TextWrapping.Wrap;
         }
 
         /// <summary>
