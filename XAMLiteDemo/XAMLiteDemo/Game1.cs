@@ -27,12 +27,26 @@ namespace XAMLiteDemo
 
         public Game1()
         {
+
+            //
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+
+            // Default screen size.
             _graphics.PreferredBackBufferWidth = 600;
             _graphics.PreferredBackBufferHeight = 400;
 
+            // Enable this for random screen to (to test we're not hard-coding anything
+            // base on screen size). Note: we're not attempting to support real-time
+            // user resizing of the window.
+            bool useRandomWindowSize = false;
+            if (useRandomWindowSize)
+            {
+                var dice = new Random();
+                _graphics.PreferredBackBufferWidth = dice.Next(600, 800);
+                _graphics.PreferredBackBufferHeight = dice.Next(400, 500);
+            }
 
         }
 
