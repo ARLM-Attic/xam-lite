@@ -75,7 +75,7 @@ namespace XAMLiteDemo
             XAMLiteImage dogImage = new XAMLiteImage(this);
             dogImage.Width = 100;
             dogImage.Height = 100;
-            dogImage.SourceName = "Dog";
+            dogImage.SourceName = @"Textures/Dog";
             //dogImage.MouseDown += new MouseButtonEventHandler(dogImage_MouseDown);
             Components.Add(dogImage);
 
@@ -91,7 +91,7 @@ namespace XAMLiteDemo
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void dogImage_MouseDown(object sender, MouseButtonEventArgs e)
-        {s
+        {
             _label.Content = "You clicked the dog!";
         }
 
