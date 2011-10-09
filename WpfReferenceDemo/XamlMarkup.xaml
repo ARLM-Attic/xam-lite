@@ -15,6 +15,6 @@
         <RadioButton Content="RadioButton" Height="16" HorizontalAlignment="Left" Margin="275,303,0,0" Name="radioButton1" VerticalAlignment="Top" />
         <TextBlock Height="61" HorizontalAlignment="Left" Margin="488,169,0,0" Name="textBlock2" Text="TextBlock.  The quick brown fox jumps over the lazy dog." VerticalAlignment="Top" Width="156" TextWrapping="Wrap" Background="#FFFCFAF5" />
         <Label Content="Rectangle" Height="28" HorizontalAlignment="Left" Margin="60,129,0,0" Name="label2" VerticalAlignment="Top" />
-        <Label Content="Image" Height="28" HorizontalAlignment="Left" Margin="197,174,0,0" Name="imageLabel" VerticalAlignment="Top" Width="100" HorizontalContentAlignment="Center" />
+        <Label Content="Image (clickable)" Height="28" HorizontalAlignment="Left" Margin="197,174,0,0" Name="imageLabel" VerticalAlignment="Top" Width="100" HorizontalContentAlignment="Center" />
     </Grid>
 </Window>

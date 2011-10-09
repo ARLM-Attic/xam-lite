@@ -19,6 +19,7 @@ namespace WpfReferenceDemo
     /// </summary>
     public partial class MainWindow : Window
     {
+  
 
         /// <summary>
         /// 
@@ -27,6 +28,8 @@ namespace WpfReferenceDemo
         {
             InitializeComponent();
         }
+
+        Label _label;
 
         /// <summary>
         /// Create some example controls and add them as children to the root XAML grid control.
@@ -43,13 +46,13 @@ namespace WpfReferenceDemo
         {
 
             // Label example.
-            Label label = new Label();
-            label.Content = "Hello, world!";
-            label.Foreground = Brushes.Yellow;
-            label.HorizontalAlignment = HorizontalAlignment.Center;
-            label.VerticalAlignment = VerticalAlignment.Bottom;
-            label.Visibility = Visibility.Visible;
-            ComponentsGrid.Children.Add(label);
+            _label = new Label();
+            _label.Content = "Hello, world!";
+            _label.Foreground = Brushes.Yellow;
+            _label.HorizontalAlignment = HorizontalAlignment.Center;
+            _label.VerticalAlignment = VerticalAlignment.Bottom;
+            _label.Visibility = Visibility.Visible;
+            ComponentsGrid.Children.Add(_label);
 
             // Rectangle example #1.
             Rectangle rectangle1 = new Rectangle();
@@ -65,12 +68,11 @@ namespace WpfReferenceDemo
 
             // Rectangle example #2
             Rectangle rectangle2 = new Rectangle();
-            rectangle2.Margin = new Thickness(10, 10, 10, 10);
+            rectangle2.Margin = new Thickness(30, 30, 30, 30);
             rectangle2.Stroke = Brushes.Pink;
             ComponentsGrid.Children.Add(rectangle2);
 
-            // Dog image example.
-            // <Image Height="100" HorizontalAlignment="Left" Margin="197,80,0,0" Name="image1" Stretch="Fill" VerticalAlignment="Top" Width="100" Source="/WpfReferenceDemo;component/Content/Dog.png" />
+            // Image example.
             Image dogImage = new Image();
             dogImage.Width = 100;
             dogImage.Height = 100;
@@ -80,7 +82,15 @@ namespace WpfReferenceDemo
 
         }
 
-        public MouseButtonEventHandler dogImage_MouseDown { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dogImage_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            _label.Content = "You clicked the dog!";
+        }
 
     }
 }
