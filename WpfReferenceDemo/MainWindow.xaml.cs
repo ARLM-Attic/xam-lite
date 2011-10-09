@@ -72,7 +72,7 @@ namespace WpfReferenceDemo
             rectangle2.Stroke = Brushes.Pink;
             ComponentsGrid.Children.Add(rectangle2);
 
-            // Image example.
+            // Clickable-image example.
             Image dogImage = new Image();
             dogImage.Width = 100;
             dogImage.Height = 100;

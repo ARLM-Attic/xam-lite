@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Media;
 using XAMLite;
 using System.Windows.Media;
 using Color = Microsoft.Xna.Framework.Color;
+using System.Windows.Input;
 
 namespace XAMLiteDemo
 {
@@ -22,7 +23,8 @@ namespace XAMLiteDemo
     {
         GraphicsDeviceManager _graphics;
         SpriteBatch _spriteBatch;
-        
+        XAMLiteLabel _label;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -42,12 +44,12 @@ namespace XAMLiteDemo
         {
 
             // XAMLite label example.
-            XAMLiteLabel label = new XAMLiteLabel(this);
-            label.Content = "Hello, world!";
-            label.Foreground = Brushes.Yellow;
-            label.HorizontalAlignment = HorizontalAlignment.Center;
-            label.VerticalAlignment = VerticalAlignment.Center;
-            Components.Add(label);
+            _label = new XAMLiteLabel(this);
+            _label.Content = "Hello, world!";
+            _label.Foreground = Brushes.Yellow;
+            _label.HorizontalAlignment = HorizontalAlignment.Center;
+            _label.VerticalAlignment = VerticalAlignment.Center;
+            Components.Add(_label);
 
             // Rectangle example #1
             XAMLiteRectangle rectangle1 = new XAMLiteRectangle(this);
@@ -67,10 +69,28 @@ namespace XAMLiteDemo
             rectangle2.Stroke = Color.Pink;
             Components.Add(rectangle2);
 
+            // Clickable-image example.
+            XAMLiteImage dogImage = new XAMLiteImage(this, "Dog");
+            dogImage.Width = 100;
+            dogImage.Height = 100;
+            //dogImage.Source = new BitmapImage(new Uri(@"Content\Dog.png", UriKind.Relative));
+            //dogImage.MouseDown += new MouseButtonEventHandler(dogImage_MouseDown);
+            Components.Add(dogImage);
+
             // Initialize all game components. (This includes calling Initialize() on all XAMLite controls, 
             // since they are game components).
             base.Initialize();
 
+        }
+
+        /// <summary>
+        /// Here's the mouse-down event handler method for clicking on the dog image.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dogImage_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            _label.Content = "You clicked the dog!";
         }
 
         /// <summary>
