@@ -32,6 +32,8 @@ namespace XAMLiteDemo
             IsMouseVisible = true;
             _graphics.PreferredBackBufferWidth = 600;
             _graphics.PreferredBackBufferHeight = 400;
+
+
         }
 
         /// <summary>
@@ -70,10 +72,10 @@ namespace XAMLiteDemo
             Components.Add(rectangle2);
 
             // Clickable-image example.
-            XAMLiteImage dogImage = new XAMLiteImage(this, "Dog");
+            XAMLiteImage dogImage = new XAMLiteImage(this);
             dogImage.Width = 100;
             dogImage.Height = 100;
-            //dogImage.Source = new BitmapImage(new Uri(@"Content\Dog.png", UriKind.Relative));
+            dogImage.SourceName = "Dog";
             //dogImage.MouseDown += new MouseButtonEventHandler(dogImage_MouseDown);
             Components.Add(dogImage);
 
@@ -89,7 +91,7 @@ namespace XAMLiteDemo
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void dogImage_MouseDown(object sender, MouseButtonEventArgs e)
-        {
+        {s
             _label.Content = "You clicked the dog!";
         }
 
