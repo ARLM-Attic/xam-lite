@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Input;
 
 namespace XAMLite
 {
@@ -12,6 +13,7 @@ namespace XAMLite
     /// <see cref="http://msdn.microsoft.com/en-us/library/system.windows.controls.control.aspx"/>
     public class XAMLiteControl : DrawableGameComponent
     {
+        public event MouseButtonEventHandler MouseDown;
 
         /// <summary>
         /// 
