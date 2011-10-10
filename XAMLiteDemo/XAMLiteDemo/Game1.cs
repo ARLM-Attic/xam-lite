@@ -71,8 +71,8 @@ namespace XAMLiteDemo
             XAMLiteRectangle rectangle1 = new XAMLiteRectangle(this);
             rectangle1.Width = 300;
             rectangle1.Height = 100;
-            rectangle1.Fill = Color.LightGray;
-            rectangle1.Stroke = Color.Green;
+            rectangle1.Fill = Brushes.LightGray;
+            rectangle1.Stroke = Brushes.Green;
             rectangle1.StrokeThickness = 1;
             rectangle1.HorizontalAlignment = HorizontalAlignment.Center;
             rectangle1.VerticalAlignment = VerticalAlignment.Top;
@@ -82,7 +82,7 @@ namespace XAMLiteDemo
             // Rectangle example #2.
             XAMLiteRectangle rectangle2 = new XAMLiteRectangle(this);
             rectangle2.Margin = new Thickness(10, 10, 10, 10);
-            rectangle2.Stroke = Color.Pink;
+            rectangle2.Stroke = Brushes.Pink;
             Components.Add(rectangle2);
 
             // Clickable-image example.
