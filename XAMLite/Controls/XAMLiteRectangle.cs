@@ -99,10 +99,10 @@ namespace XAMLite
         private void ConfirmHeightAndWidth()
         {
             if(this.Width == 0)
-                this.Width = Game.GraphicsDevice.Viewport.Width - (int)this.Margin.Left - (int)this.Margin.Right;
+                this.Width = this.viewport.Width - (int)this.Margin.Left - (int)this.Margin.Right;
 
             if(this.Height == 0)
-                this.Height = Game.GraphicsDevice.Viewport.Height - (int)this.Margin.Top - (int)this.Margin.Bottom;
+                this.Height = this.viewport.Height - (int)this.Margin.Top - (int)this.Margin.Bottom;
         }
     }
 }

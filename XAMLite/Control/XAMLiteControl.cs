@@ -135,7 +135,7 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        Viewport viewport;
+        public Viewport viewport;
 
         /// <summary>
         /// 
