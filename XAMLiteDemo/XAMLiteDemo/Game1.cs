@@ -32,6 +32,7 @@ namespace XAMLiteDemo
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            Window.Title = "XAMLite Demo (XNA)";
 
             // Default screen size.
             _graphics.PreferredBackBufferWidth = 600;
@@ -40,7 +41,7 @@ namespace XAMLiteDemo
             // Enable this for random screen to (to test we're not hard-coding anything
             // base on screen size). Note: we're not attempting to support real-time
             // user resizing of the window.
-            bool useRandomWindowSize = false;
+            bool useRandomWindowSize = true;
             if (useRandomWindowSize)
             {
                 var dice = new Random();
@@ -89,9 +90,21 @@ namespace XAMLiteDemo
             XAMLiteImage dogImage = new XAMLiteImage(this);
             dogImage.Width = 100;
             dogImage.Height = 100;
+            dogImage.VerticalAlignment = VerticalAlignment.Bottom;
+            dogImage.HorizontalAlignment = HorizontalAlignment.Left;
             dogImage.SourceName = @"Textures/Dog";
             dogImage.MouseDown += new EventHandler(dogImage_MouseDown);
             Components.Add(dogImage);
+
+            // Clickable-image example.
+            XAMLiteImage catImage = new XAMLiteImage(this);
+            catImage.Width = 100;
+            catImage.Height = 100;
+            catImage.VerticalAlignment = VerticalAlignment.Bottom;
+            catImage.HorizontalAlignment = HorizontalAlignment.Right;
+            catImage.SourceName = @"Textures/Cat";
+            catImage.MouseDown += new EventHandler(catImage_MouseDown);
+            Components.Add(catImage);
 
             // Initialize all game components. (This includes calling Initialize() on all XAMLite controls, 
             // since they are game components).
@@ -106,6 +119,16 @@ namespace XAMLiteDemo
         private void dogImage_MouseDown(object sender, EventArgs e)
         {
             _label.Content = "You clicked the dog!";
+        }
+
+        /// <summary>
+        /// Here's the mouse-down event handler method for clicking on the cat image.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void catImage_MouseDown(object sender, EventArgs e)
+        {
+            _label.Content = "You clicked the cat!";
         }
 
         /// <summary>

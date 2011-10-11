@@ -31,6 +31,8 @@ namespace WpfReferenceDemo
 
         Label _label;
 
+        Image _dogImage;
+
         /// <summary>
         /// Create some example controls and add them as children to the root XAML grid control.
         /// Note the WPF and XNA difference:
@@ -73,16 +75,20 @@ namespace WpfReferenceDemo
             ComponentsGrid.Children.Add(rectangle2);
 
             // Clickable-image example.
-            Image dogImage = new Image();
-            dogImage.Width = 100;
-            dogImage.Height = 100;
-            dogImage.Source = new BitmapImage(new Uri(@"Content\Dog.png", UriKind.Relative));
-            dogImage.MouseDown +=new MouseButtonEventHandler(dogImage_MouseDown);
-            ComponentsGrid.Children.Add(dogImage);
+            _dogImage = new Image();
+            _dogImage.Width = 100;
+            _dogImage.Height = 100;
+            _dogImage.Source = new BitmapImage(new Uri(@"Content\Dog.png", UriKind.Relative));
+            _dogImage.MouseDown +=new MouseButtonEventHandler(dogImage_MouseDown);
+            _dogImage.MouseEnter +=new MouseEventHandler(dogImage_MouseEnter);
+            _dogImage.MouseLeave += new MouseEventHandler(dogImage_MouseLeave);
+            ComponentsGrid.Children.Add(_dogImage);
 
             var foo = new TextBlock();
             foo.TextWrapping = TextWrapping.Wrap;
         }
+
+
 
         /// <summary>
         /// 
@@ -92,6 +98,26 @@ namespace WpfReferenceDemo
         private void dogImage_MouseDown(object sender, MouseButtonEventArgs e)
         {
             _label.Content = "You clicked the dog!";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void dogImage_MouseEnter(object sender, MouseEventArgs e)
+        {
+            _dogImage.Source = new BitmapImage(new Uri(@"Content\Dog-Bright.jpg", UriKind.Relative));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void dogImage_MouseLeave(object sender, MouseEventArgs e)
+        {
+            _dogImage.Source = new BitmapImage(new Uri(@"Content\Dog.png", UriKind.Relative));
         }
 
     }
