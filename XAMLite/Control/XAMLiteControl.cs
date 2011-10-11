@@ -129,7 +129,7 @@ namespace XAMLite
         /// Gets or sets a brush that describes the foreground color. The default 
         /// color is black.
         /// </summary>
-        public Brush Foreground { get; set; }
+        //public Brush Foreground { get; set; }
 
         /// <summary>
         /// 
@@ -157,7 +157,7 @@ namespace XAMLite
             this.VerticalAlignment = System.Windows.VerticalAlignment.Top;
             this.Margin = new Thickness( 0, 0, 0, 0 );
             this.Opacity = 1.0;
-            this.Foreground = Brushes.Black;
+            //this.Foreground = Brushes.Black;
         }
 
         /// <summary>

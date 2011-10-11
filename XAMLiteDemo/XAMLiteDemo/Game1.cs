@@ -1,7 +1,9 @@
 using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -122,6 +124,16 @@ namespace XAMLiteDemo
             dogImage2.MouseEnter += new MouseEventHandler(dogImage2_MouseEnter);
             dogImage2.MouseLeave += new MouseEventHandler(dogImage2_MouseLeave);
             Components.Add(dogImage2);
+
+            XAMLiteTextBlock textBlock = new XAMLiteTextBlock(this);
+            textBlock.Background = Brushes.Bisque;
+            textBlock.Foreground = Brushes.Green;
+            textBlock.TextWrapping = TextWrapping.Wrap;
+            textBlock.TextAlignment = TextAlignment.Center;
+            textBlock.Text = "Something to talk about!!!";
+            textBlock.Width = 100;
+            Components.Add(textBlock);
+
 
             // Initialize all game components. (This includes calling Initialize() on all XAMLite controls, 
             // since they are game components).
