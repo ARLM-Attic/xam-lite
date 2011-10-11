@@ -125,15 +125,33 @@ namespace XAMLiteDemo
             dogImage2.MouseLeave += new MouseEventHandler(dogImage2_MouseLeave);
             Components.Add(dogImage2);
 
-            XAMLiteTextBlock textBlock = new XAMLiteTextBlock(this);
-            textBlock.Background = Brushes.Bisque;
+            /*XAMLiteTextBlock textBlock = new XAMLiteTextBlock(this);
+            textBlock.Background = Brushes.Orange;
             textBlock.Foreground = Brushes.Green;
             textBlock.TextWrapping = TextWrapping.Wrap;
             textBlock.TextAlignment = TextAlignment.Center;
-            textBlock.Text = "Something to talk about!!!";
+            // we may want enum with possible choices??
+            // then: textBlock.FontFamily = FontFamily.Times;
+            textBlock.FontFamily = new FontFamily("Arial");
+            textBlock.Run = "Something to talk about!!!";
             textBlock.Width = 100;
+            textBlock.Height = 300;
             Components.Add(textBlock);
 
+
+            // faking the Run class for WPF programmers
+            XAMLiteTextBlock textBlock2 = new XAMLiteTextBlock(this, new Run("This constructor uses a mock Run class for WPF developers"));
+            textBlock2.Background = Brushes.Bisque;
+            textBlock2.Foreground = Brushes.Red;
+            textBlock2.Padding = new Thickness(0, 25, 0, 0);
+            textBlock2.TextWrapping = TextWrapping.Wrap;
+            textBlock2.TextAlignment = TextAlignment.Center;
+            textBlock2.FontFamily = new FontFamily("Courier10");
+            textBlock2.Width = 150;
+            textBlock2.Height = 300;
+            textBlock2.HorizontalAlignment = HorizontalAlignment.Center;
+            textBlock2.VerticalAlignment = VerticalAlignment.Center;
+            Components.Add(textBlock2);*/
 
             // Initialize all game components. (This includes calling Initialize() on all XAMLite controls, 
             // since they are game components).

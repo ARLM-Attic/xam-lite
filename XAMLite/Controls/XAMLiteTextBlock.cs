@@ -20,7 +20,30 @@ namespace XAMLite
     /// </summary>
     public class XAMLiteTextBlock : XAMLiteControl
     {
-        protected SpriteFont spriteFont;
+        // spritefont is toggled to whichever font the developer chooses
+        protected SpriteFont spriteFont { get; set; }
+
+        // the set of possible fonts that are preloaded in LoadContent()
+        protected SpriteFont arialSpriteFont { get; set; }
+        protected SpriteFont courier10SpriteFont { get; set; }
+
+        private Rectangle textBlockContainer;
+
+        private Texture2D _pixel;
+
+        // for WPF developers, in case they do not load Run in the Constructor.
+        // They could then type: textblock.Run
+        public string Run 
+        { 
+            get { return base.Text; } 
+            set {
+                    if (this.spriteFont != null)
+                    {
+                        RecalculateWidthAndHeight(value);
+                    }
+                    base.Text = value;
+            } 
+        }
 
         /// <summary>
         /// Specifies whether text wraps when it reaches the edge of the containing box.
@@ -29,14 +52,21 @@ namespace XAMLite
 
         public TextAlignment TextAlignment { get; set; }
 
-        public FontFamily FontFamily { get; set; }
+        // public FontStyle FontStyle { get; set; } // possibly more spriteFonts preloaded??
 
-        public FontStyle FontStyle { get; set; }
+        // An idea for establishing a set of possible preloaded SpriteFonts??
+        private FontFamily _fontFamily;
+        private bool fontFamilyChanged; // used in the Update() method
 
-        public FontWeight FontWeight { get; set; }
+        public FontFamily FontFamily 
+        { 
+            get { return _fontFamily; }
+            set { _fontFamily = value; fontFamilyChanged = true; } 
+        }
+
+        // public FontWeight FontWeight { get; set; }
 
         public Thickness Padding { get; set; }
-
 
         /// <summary>
         /// 
@@ -101,21 +131,31 @@ namespace XAMLite
             TextWrapping = TextWrapping.Wrap;
             _foregroundColor = Color.Black;
             _backgroundColor = Color.Transparent;
+            this.spriteFont = courier10SpriteFont;
+            this.Padding = new Thickness(0, 0, 0, 0);
+
+            // for Background Color
+            _pixel = new Texture2D(game.GraphicsDevice, 1, 1);
+            _pixel.SetData<Color>(new Color[] { Color.White });
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="game"></param>
-        public XAMLiteTextBlock ( Game game, string text )
+        public XAMLiteTextBlock ( Game game, Run run )
             : base( game )
         {
+            this.Text = run.textBlock;
             TextAlignment = TextAlignment.Left;
             TextWrapping = TextWrapping.Wrap;
-            this.Text = text;
             this._foregroundColor = Color.Black;
             this._backgroundColor = Color.Transparent;
+            this.Padding = new Thickness(0, 0, 0, 0);
 
+            // for Background Color
+            _pixel = new Texture2D(game.GraphicsDevice, 1, 1);
+            _pixel.SetData<Color>(new Color[] { Color.White });
         }
 
         /// <summary>
@@ -126,9 +166,30 @@ namespace XAMLite
         /// <param name="fontName"></param>
         protected override void LoadContent()
         {
-            this.spriteFont = Game.Content.Load<SpriteFont>("Fonts/Courier10");
-            //RecalculateWidthAndHeight(this.Text);
             base.LoadContent();
+            this.arialSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Arial");
+            this.courier10SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Courier10");
+            this.spriteFont = courier10SpriteFont;
+            
+            //RecalculateWidthAndHeight(this.Text);
+            //AdjustPadding();
+            CreateTextBlockContainer();
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            if (fontFamilyChanged)
+            {
+                fontFamilyChanged = false;
+                if (_fontFamily.ToString() == "Arial")
+                    this.spriteFont = arialSpriteFont;
+                else
+                    this.spriteFont = courier10SpriteFont;
+                //RecalculateWidthAndHeight(this.Text);
+                CreateTextBlockContainer();
+            }
         }
 
         /// <summary>
@@ -137,10 +198,60 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
+            //CreateTextBlockContainer();
             spriteBatch.Begin();
+            if(_backgroundColor != Color.Transparent) 
+                spriteBatch.Draw(_pixel, textBlockContainer, this._backgroundColor);
             spriteBatch.DrawString(this.spriteFont, Text, Position, this._foregroundColor);
             spriteBatch.End();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="text"></param>
+        private void RecalculateWidthAndHeight(string text)
+        {
+            this.Width = (int)this.spriteFont.MeasureString(text).X;
+            this.Height = (int)this.spriteFont.MeasureString(text).Y;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="text"></param>
+        private void AdjustPadding()
+        {
+            if (this.Width == 0)
+                this.Width = this.viewport.Width - (int)this.Padding.Left - (int)this.Margin.Right;
+
+            if (this.Height == 0)
+                this.Height = this.viewport.Height - (int)this.Margin.Top - (int)this.Margin.Bottom;
+        }
+
+        // Determines the size of the textblock based on Width, Height.
+        // Finds the size of the inner rectangle to contain the text based on the padding.
+        private void CreateTextBlockContainer()
+        {
+            double stringWidth = this.spriteFont.MeasureString(this.Text).X;
+            double stringHeight = this.spriteFont.MeasureString(this.Text).Y;
+            
+            if(this.Width != 0  && this.Height != 0)
+                textBlockContainer = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+
+        }
+
+    }
+
+    // for mocking the WPF constructor
+    // this value gets placed into the "string Run" of XAMLiteTextBlock.cs
+    public class Run
+    {
+        public string textBlock { get; set; }
+
+        public Run(string textBlock)
+        {
+            this.textBlock = textBlock;
+        }
     }
 }
