@@ -93,7 +93,7 @@ namespace XAMLiteDemo
             dogImage.VerticalAlignment = VerticalAlignment.Bottom;
             dogImage.HorizontalAlignment = HorizontalAlignment.Left;
             dogImage.SourceName = @"Textures/Dog";
-            dogImage.MouseDown += new EventHandler(dogImage_MouseDown);
+            dogImage.MouseDown += new MouseButtonEventHandler(dogImage_MouseDown);
             Components.Add(dogImage);
 
             // Clickable-image example.
@@ -103,7 +103,7 @@ namespace XAMLiteDemo
             catImage.VerticalAlignment = VerticalAlignment.Bottom;
             catImage.HorizontalAlignment = HorizontalAlignment.Right;
             catImage.SourceName = @"Textures/Cat";
-            catImage.MouseDown += new EventHandler(catImage_MouseDown);
+            catImage.MouseDown += new MouseButtonEventHandler(catImage_MouseDown);
             Components.Add(catImage);
 
             // Initialize all game components. (This includes calling Initialize() on all XAMLite controls, 
@@ -116,7 +116,7 @@ namespace XAMLiteDemo
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void dogImage_MouseDown(object sender, EventArgs e)
+        private void dogImage_MouseDown(object sender, MouseButtonEventArgs e)
         {
             _label.Content = "You clicked the dog!";
         }
@@ -126,7 +126,7 @@ namespace XAMLiteDemo
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void catImage_MouseDown(object sender, EventArgs e)
+        private void catImage_MouseDown(object sender, MouseButtonEventArgs e)
         {
             _label.Content = "You clicked the cat!";
         }

@@ -6,16 +6,16 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework;
 using System.Diagnostics;
+using System.Windows.Input;
 
 namespace XAMLite
 {
-
     /// <summary>
     /// 
     /// </summary>
     public class XAMLiteImage : XAMLiteControl
     {
-        public event EventHandler MouseDown;
+        public event MouseButtonEventHandler MouseDown;
 
         /// <summary>
         /// 
@@ -99,7 +99,11 @@ namespace XAMLite
          public virtual void OnMouseDown()
          {
              if (MouseDown != null)
-                 MouseDown(this, EventArgs.Empty);
+             {
+                 var e = EventArgs.Empty as MouseButtonEventArgs;
+                 MouseDown(this, e);
+             }
+                
          }
 
     }
