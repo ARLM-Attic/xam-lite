@@ -26,6 +26,7 @@ namespace XAMLiteDemo
         XAMLiteLabel _label;
         XAMLiteImage catImage;
         XAMLiteImage dogImage;
+        XAMLiteImageWithRollover dogImage2;
 
         public Game1()
         {
@@ -111,6 +112,14 @@ namespace XAMLiteDemo
             catImage.MouseEnter += new MouseEventHandler(catImage_MouseEnter);
             catImage.MouseLeave += new MouseEventHandler(catImage_MouseLeave);
             Components.Add(catImage);
+
+            // Rollover example
+            dogImage2 = new XAMLiteImageWithRollover(this);
+            dogImage2.SourceName = dogImage.SourceName;
+            dogImage2.RolloverSourceName = @"Textures/Dog-Bright";
+            dogImage2.VerticalAlignment = VerticalAlignment.Top;
+            dogImage2.HorizontalAlignment = HorizontalAlignment.Right;
+            Components.Add(dogImage2);
 
             // Initialize all game components. (This includes calling Initialize() on all XAMLite controls, 
             // since they are game components).

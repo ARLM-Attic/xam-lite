@@ -23,12 +23,12 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        Texture2D texture;
+        protected Texture2D texture;
 
         /// <summary>
         /// For collision detection
         /// </summary>
-        Rectangle _rect;
+        protected Rectangle rect;
 
         /// <summary>
         /// This is the image file path, minus the file extension.
@@ -37,8 +37,6 @@ namespace XAMLite
             get; 
             set; 
         }
-
-        //public BitmapImage Source { get; set; }
 
         /// <summary>
         /// 
@@ -61,7 +59,7 @@ namespace XAMLite
             this.texture = Game.Content.Load<Texture2D>( SourceName );
             this.Width = this.texture.Width;
             this.Height = this.texture.Height;
-            _rect = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+            rect = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
         }
 
         public override void Update(GameTime gameTime)
@@ -69,7 +67,7 @@ namespace XAMLite
             base.Update(gameTime);
 
             Rectangle msRect = new Rectangle(ms.X, ms.Y, 1, 1);
-            if (_rect.Contains(msRect))
+            if (rect.Contains(msRect))
             {
                 if (!_mouseEnter)
                 {
@@ -106,7 +104,6 @@ namespace XAMLite
             float opacity = (float)this.Opacity;
 
             //
-            Rectangle rect = new Rectangle(  (int)this.Position.X, (int)this.Position.Y, this.Width, this.Height );
             this.spriteBatch.Draw(this.texture, rect, (Color.White * opacity));
             
             //
