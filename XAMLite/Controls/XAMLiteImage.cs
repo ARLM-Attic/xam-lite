@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework;
 using System.Diagnostics;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 namespace XAMLite
 {
@@ -16,6 +17,8 @@ namespace XAMLite
     public class XAMLiteImage : XAMLiteControl
     {
         public event MouseButtonEventHandler MouseDown;
+        public event MouseEventHandler MouseEnter;
+        public event MouseEventHandler MouseLeave;
 
         /// <summary>
         /// 
@@ -34,6 +37,8 @@ namespace XAMLite
             get; 
             set; 
         }
+
+        //public BitmapImage Source { get; set; }
 
         /// <summary>
         /// 
@@ -64,10 +69,26 @@ namespace XAMLite
             base.Update(gameTime);
 
             Rectangle msRect = new Rectangle(ms.X, ms.Y, 1, 1);
-            if (_mouseDown && _rect.Contains(msRect))
+            if (_rect.Contains(msRect))
             {
-                _mouseDown = false;
-                OnMouseDown();
+                if (!_mouseEnter)
+                {
+                    _mouseEnter = true;
+                    OnMouseEnter();
+                }
+                if (_mouseDown)
+                {
+                    _mouseDown = false;
+                    OnMouseDown();
+                }
+            }
+            else
+            {
+                if (_mouseEnter)
+                {
+                    _mouseEnter = false;
+                    OnMouseLeave();
+                }
             }
         }
 
@@ -102,8 +123,31 @@ namespace XAMLite
              {
                  var e = EventArgs.Empty as MouseButtonEventArgs;
                  MouseDown(this, e);
+             }        
+         }
+
+         /// <summary>
+         /// 
+         /// </summary>
+         public virtual void OnMouseEnter()
+         {
+             if (MouseEnter != null)
+             {
+                 var e = EventArgs.Empty as MouseEventArgs;
+                 MouseEnter(this, e);
              }
-                
+         }
+
+         /// <summary>
+         /// 
+         /// </summary>
+         public virtual void OnMouseLeave()
+         {
+             if (MouseLeave != null)
+             {
+                 var e = EventArgs.Empty as MouseEventArgs;
+                 MouseLeave(this, e);
+             }
          }
 
     }

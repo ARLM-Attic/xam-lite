@@ -19,6 +19,8 @@ namespace XAMLite
         public Microsoft.Xna.Framework.Point mouseLoc;
 
         public bool _mouseDown;
+        public bool _mouseEnter;
+        public bool _mouseLeave;
 
         /// <summary>
         /// 

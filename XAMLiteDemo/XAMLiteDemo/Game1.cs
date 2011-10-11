@@ -24,6 +24,8 @@ namespace XAMLiteDemo
         GraphicsDeviceManager _graphics;
         SpriteBatch _spriteBatch;
         XAMLiteLabel _label;
+        XAMLiteImage catImage;
+        XAMLiteImage dogImage;
 
         public Game1()
         {
@@ -87,23 +89,27 @@ namespace XAMLiteDemo
             Components.Add(rectangle2);
 
             // Clickable-image example.
-            XAMLiteImage dogImage = new XAMLiteImage(this);
+            dogImage = new XAMLiteImage(this);
             dogImage.Width = 100;
             dogImage.Height = 100;
             dogImage.VerticalAlignment = VerticalAlignment.Bottom;
             dogImage.HorizontalAlignment = HorizontalAlignment.Left;
             dogImage.SourceName = @"Textures/Dog";
             dogImage.MouseDown += new MouseButtonEventHandler(dogImage_MouseDown);
+            dogImage.MouseEnter += new MouseEventHandler(dogImage_MouseEnter);
+            dogImage.MouseLeave += new MouseEventHandler(dogImage_MouseLeave);
             Components.Add(dogImage);
 
             // Clickable-image example.
-            XAMLiteImage catImage = new XAMLiteImage(this);
+            catImage = new XAMLiteImage(this);
             catImage.Width = 100;
             catImage.Height = 100;
             catImage.VerticalAlignment = VerticalAlignment.Bottom;
             catImage.HorizontalAlignment = HorizontalAlignment.Right;
             catImage.SourceName = @"Textures/Cat";
             catImage.MouseDown += new MouseButtonEventHandler(catImage_MouseDown);
+            catImage.MouseEnter += new MouseEventHandler(catImage_MouseEnter);
+            catImage.MouseLeave += new MouseEventHandler(catImage_MouseLeave);
             Components.Add(catImage);
 
             // Initialize all game components. (This includes calling Initialize() on all XAMLite controls, 
@@ -112,13 +118,25 @@ namespace XAMLiteDemo
         }
 
         /// <summary>
-        /// Here's the mouse-down event handler method for clicking on the dog image.
+        /// Here's the mouse-leave event handler method for leaving the dog image.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void dogImage_MouseDown(object sender, MouseButtonEventArgs e)
+        void catImage_MouseLeave(object sender, MouseEventArgs e)
         {
-            _label.Content = "You clicked the dog!";
+            _label.Content = "MouseLeave event was raised!";
+            catImage.SourceName = @"Textures/Cat";
+        }
+
+        /// <summary>
+        /// Here's the mouse-enter event handler method for entering on the dog image.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void catImage_MouseEnter(object sender, MouseEventArgs e)
+        {
+            _label.Content = "MouseEnter event was raised!";
+            //catImage.SourceName = @"Textures/Cat-Bright";
         }
 
         /// <summary>
@@ -129,6 +147,38 @@ namespace XAMLiteDemo
         private void catImage_MouseDown(object sender, MouseButtonEventArgs e)
         {
             _label.Content = "You clicked the cat!";
+        }
+
+        /// <summary>
+        /// Here's the mouse-leave event handler method for leaving the dog image.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void dogImage_MouseLeave(object sender, MouseEventArgs e)
+        {
+            _label.Content = "MouseLeave event was raised!";
+            dogImage.SourceName = @"Textures/Dog";
+        }
+
+        /// <summary>
+        /// Here's the mouse-enter event handler method for entering on the dog image.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void dogImage_MouseEnter(object sender, MouseEventArgs e)
+        {
+            _label.Content = "MouseEnter event was raised!";
+            dogImage.SourceName = @"Textures/Dog-Bright";
+        }
+
+        /// <summary>
+        /// Here's the mouse-down event handler method for clicking on the dog image.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dogImage_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            _label.Content = "You clicked the dog!";
         }
 
         /// <summary>
