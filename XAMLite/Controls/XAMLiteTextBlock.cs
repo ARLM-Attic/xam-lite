@@ -9,6 +9,11 @@ namespace XAMLite
 {
     /// <summary>
     /// This is the wrappable text chunk, which doesn't support user input.
+    /// Here are some projects that might have good references for this contorl:
+    /// http://simplegui.codeplex.com/
+    /// http://xnagui.codeplex.com/
+    /// http://xnatoolgui.codeplex.com/
+    /// http://neoforce.codeplex.com/
     /// </summary>
     public class XAMLiteTextBlock : XAMLiteControl
     {
