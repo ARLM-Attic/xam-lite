@@ -39,11 +39,14 @@ namespace XAMLite
             set {
                     if (this.spriteFont != null)
                     {
-                        RecalculateWidthAndHeight(value);
+                        //RecalculateWidthAndHeight(value);
                     }
                     base.Text = value;
+                    //this.Text = WordWrap(this.Text, this.Width);
             } 
         }
+
+        StringBuilder sb;
 
         /// <summary>
         /// Specifies whether text wraps when it reaches the edge of the containing box.
@@ -173,7 +176,8 @@ namespace XAMLite
             
             //RecalculateWidthAndHeight(this.Text);
             //AdjustPadding();
-            CreateTextBlockContainer();
+            //CreateTextBlockContainer();
+            //this.Text = WordWrap2(this.Text, this.Width);
         }
 
         public override void Update(GameTime gameTime)
@@ -188,7 +192,7 @@ namespace XAMLite
                 else
                     this.spriteFont = courier10SpriteFont;
                 //RecalculateWidthAndHeight(this.Text);
-                CreateTextBlockContainer();
+                //CreateTextBlockContainer();
             }
         }
 
@@ -199,10 +203,13 @@ namespace XAMLite
         public override void Draw(GameTime gameTime)
         {
             //CreateTextBlockContainer();
+
+            this.Text = WordWrap(this.Text, (int)this.spriteFont.MeasureString(this.Text).X);
+
             spriteBatch.Begin();
             if(_backgroundColor != Color.Transparent) 
                 spriteBatch.Draw(_pixel, textBlockContainer, this._backgroundColor);
-            spriteBatch.DrawString(this.spriteFont, Text, Position, this._foregroundColor);
+            spriteBatch.DrawString(this.spriteFont, this.Text, Position, this._foregroundColor);
             spriteBatch.End();
         }
 
@@ -233,12 +240,47 @@ namespace XAMLite
         // Finds the size of the inner rectangle to contain the text based on the padding.
         private void CreateTextBlockContainer()
         {
-            double stringWidth = this.spriteFont.MeasureString(this.Text).X;
+            //this.Text = WordWrap2(this.Text, this.Width);
+            /*double stringWidth = this.spriteFont.MeasureString(this.Text).X;
             double stringHeight = this.spriteFont.MeasureString(this.Text).Y;
             
             if(this.Width != 0  && this.Height != 0)
                 textBlockContainer = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+            */
+        }
 
+        protected const string _newline = "\r\n";
+        /// <summary>
+        /// Word wraps the given text to fit within the specified width.
+        /// </summary>
+        /// <param name="text">Text to be word wrapped</param>
+        /// <param name="width">Width, in pixels, to which the text
+        /// should be word wrapped</param>
+        /// <returns>The modified text</returns>
+        /// 
+
+        public string WordWrap(string text, int width)
+        {
+            if (this.Width > width)
+                return text;
+
+            float wrdLenPixels = this.spriteFont.MeasureString(text).X;
+            int numCharsinString = 0;
+
+            for (int i = 0; i < text.Length; i++)
+                numCharsinString++;
+
+            // Find start of whitespace at end of text
+            while ((numCharsinString - 1) >= 0 && Char.IsWhiteSpace(text[numCharsinString - 1]))
+                numCharsinString--;
+
+            Console.WriteLine("Width of TextBox (Pixels): " + this.Width);
+            Console.WriteLine("Width of Text (Pixels: " + wrdLenPixels);
+            Console.WriteLine("Num Characters: " + numCharsinString + "\n");
+
+            sb = new StringBuilder();
+
+            return sb.ToString();
         }
 
     }

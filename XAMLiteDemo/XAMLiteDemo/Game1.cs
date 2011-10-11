@@ -125,7 +125,7 @@ namespace XAMLiteDemo
             dogImage2.MouseLeave += new MouseEventHandler(dogImage2_MouseLeave);
             Components.Add(dogImage2);
 
-            /*XAMLiteTextBlock textBlock = new XAMLiteTextBlock(this);
+            XAMLiteTextBlock textBlock = new XAMLiteTextBlock(this);
             textBlock.Background = Brushes.Orange;
             textBlock.Foreground = Brushes.Green;
             textBlock.TextWrapping = TextWrapping.Wrap;
@@ -140,7 +140,7 @@ namespace XAMLiteDemo
 
 
             // faking the Run class for WPF programmers
-            XAMLiteTextBlock textBlock2 = new XAMLiteTextBlock(this, new Run("This constructor uses a mock Run class for WPF developers"));
+            XAMLiteTextBlock textBlock2 = new XAMLiteTextBlock(this, new Run("This constructor uses a mock Run class for WPF developers>>>>>>>>>>>>> >>>>>>>>>>>>> MMMMMMMMMMM. MMMMMMMM."));
             textBlock2.Background = Brushes.Bisque;
             textBlock2.Foreground = Brushes.Red;
             textBlock2.Padding = new Thickness(0, 25, 0, 0);
@@ -151,7 +151,8 @@ namespace XAMLiteDemo
             textBlock2.Height = 300;
             textBlock2.HorizontalAlignment = HorizontalAlignment.Center;
             textBlock2.VerticalAlignment = VerticalAlignment.Center;
-            Components.Add(textBlock2);*/
+            Components.Add(textBlock2);
+
 
             // Initialize all game components. (This includes calling Initialize() on all XAMLite controls, 
             // since they are game components).
