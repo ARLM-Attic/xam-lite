@@ -108,6 +108,7 @@ namespace WpfReferenceDemo
         void dogImage_MouseEnter(object sender, MouseEventArgs e)
         {
             _dogImage.Source = new BitmapImage(new Uri(@"Content\Dog-Bright.jpg", UriKind.Relative));
+            _label.Content = "MouseEnter event was raised!";
         }
 
         /// <summary>
@@ -118,6 +119,7 @@ namespace WpfReferenceDemo
         void dogImage_MouseLeave(object sender, MouseEventArgs e)
         {
             _dogImage.Source = new BitmapImage(new Uri(@"Content\Dog.png", UriKind.Relative));
+            _label.Content = "MouseLeave event was raised!";
         }
 
     }
