@@ -15,11 +15,17 @@ namespace XAMLite
     /// </summary>
     public class XAMLiteImage : XAMLiteControl
     {
+        public event EventHandler MouseDown;
 
         /// <summary>
         /// 
         /// </summary>
         Texture2D texture;
+
+        /// <summary>
+        /// For collision detection
+        /// </summary>
+        Rectangle _rect;
 
         /// <summary>
         /// This is the image file path, minus the file extension.
@@ -50,7 +56,19 @@ namespace XAMLite
             this.texture = Game.Content.Load<Texture2D>( SourceName );
             this.Width = this.texture.Width;
             this.Height = this.texture.Height;
+            _rect = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+        }
 
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            Rectangle msRect = new Rectangle(ms.X, ms.Y, 1, 1);
+            if (_mouseDown && _rect.Contains(msRect))
+            {
+                _mouseDown = false;
+                OnMouseDown();
+            }
         }
 
         /// <summary>
@@ -74,6 +92,15 @@ namespace XAMLite
             this.spriteBatch.End();
 
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+         public virtual void OnMouseDown()
+         {
+             if (MouseDown != null)
+                 MouseDown(this, EventArgs.Empty);
+         }
 
     }
 

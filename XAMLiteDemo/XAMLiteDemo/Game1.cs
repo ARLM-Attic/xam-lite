@@ -90,7 +90,7 @@ namespace XAMLiteDemo
             dogImage.Width = 100;
             dogImage.Height = 100;
             dogImage.SourceName = @"Textures/Dog";
-            dogImage.MouseDown += new MouseButtonEventHandler(dogImage_MouseDown);
+            dogImage.MouseDown += new EventHandler(dogImage_MouseDown);
             Components.Add(dogImage);
 
             // Initialize all game components. (This includes calling Initialize() on all XAMLite controls, 
@@ -103,7 +103,7 @@ namespace XAMLiteDemo
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void dogImage_MouseDown(object sender, MouseButtonEventArgs e)
+        private void dogImage_MouseDown(object sender, EventArgs e)
         {
             _label.Content = "You clicked the dog!";
         }

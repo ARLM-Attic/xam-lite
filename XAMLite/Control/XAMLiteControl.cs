@@ -1,19 +1,24 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Input;
+using Microsoft.Xna.Framework.Input;
 
 namespace XAMLite
 {
-
     /// <summary>
     /// 
     /// </summary>
     /// <see cref="http://msdn.microsoft.com/en-us/library/system.windows.controls.control.aspx"/>
     public class XAMLiteControl : DrawableGameComponent
     {
-        public event MouseButtonEventHandler MouseDown;
+
+        public MouseState ms;
+        public Microsoft.Xna.Framework.Point mouseLoc;
+
+        public bool _mouseDown;
 
         /// <summary>
         /// 
@@ -182,7 +187,13 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Update ( GameTime gameTime )
         {
-            base.Update( gameTime );
+            base.Update(gameTime);
+
+            ms = Microsoft.Xna.Framework.Input.Mouse.GetState();
+            if (!_mouseDown && ms.LeftButton == ButtonState.Pressed)
+                _mouseDown = true;
+            else
+                _mouseDown = false;
         }
 
         /// <summary>
@@ -193,7 +204,6 @@ namespace XAMLite
         {
             base.Draw( gameTime );
         }
-
     }
 
 }
