@@ -119,11 +119,33 @@ namespace XAMLiteDemo
             dogImage2.RolloverSourceName = @"Textures/Dog-Bright";
             dogImage2.VerticalAlignment = VerticalAlignment.Top;
             dogImage2.HorizontalAlignment = HorizontalAlignment.Right;
+            dogImage2.MouseEnter += new MouseEventHandler(dogImage2_MouseEnter);
+            dogImage2.MouseLeave += new MouseEventHandler(dogImage2_MouseLeave);
             Components.Add(dogImage2);
 
             // Initialize all game components. (This includes calling Initialize() on all XAMLite controls, 
             // since they are game components).
             base.Initialize();
+        }
+
+        /// <summary>
+        /// Here's another mouse-leave event handler method for leaving the rollover dog image.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void dogImage2_MouseLeave(object sender, MouseEventArgs e)
+        {
+            _label.Content = "MouseLeave event was raised!";
+        }
+
+        /// <summary>
+        /// Here's another mouse-enter event handler method for entering the rollover dog image.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void dogImage2_MouseEnter(object sender, MouseEventArgs e)
+        {
+            _label.Content = "MouseEnter event was raised!";
         }
 
         /// <summary>
@@ -134,7 +156,6 @@ namespace XAMLiteDemo
         void catImage_MouseLeave(object sender, MouseEventArgs e)
         {
             _label.Content = "MouseLeave event was raised!";
-            catImage.SourceName = @"Textures/Cat";
         }
 
         /// <summary>
@@ -145,7 +166,6 @@ namespace XAMLiteDemo
         void catImage_MouseEnter(object sender, MouseEventArgs e)
         {
             _label.Content = "MouseEnter event was raised!";
-            //catImage.SourceName = @"Textures/Cat-Bright";
         }
 
         /// <summary>
