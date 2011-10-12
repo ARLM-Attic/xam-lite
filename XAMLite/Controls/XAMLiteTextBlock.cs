@@ -39,10 +39,9 @@ namespace XAMLite
             set {
                     if (this.spriteFont != null)
                     {
-                        //RecalculateWidthAndHeight(value);
+                        RecalculateWidthAndHeight(value);
                     }
                     base.Text = value;
-                    //this.Text = WordWrap(this.Text, this.Width);
             } 
         }
 
@@ -104,8 +103,16 @@ namespace XAMLite
                 var solidBrush = (SolidColorBrush)value;
                 var color = solidBrush.Color;
                 _backgroundColor = new Color(color.R, color.G, color.B, color.A);
+
+                if ((SolidColorBrush)value == Brushes.Transparent)
+                    transparent = true;
+                else
+                    transparent = false;
+
             }
         }
+
+        private bool transparent;
 
 
         /*
@@ -191,8 +198,6 @@ namespace XAMLite
                     this.spriteFont = arialSpriteFont;
                 else
                     this.spriteFont = courier10SpriteFont;
-                //RecalculateWidthAndHeight(this.Text);
-                //CreateTextBlockContainer();
             }
         }
 
@@ -202,13 +207,18 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            //CreateTextBlockContainer();
+            //
 
             this.Text = WordWrap(this.Text, (int)this.spriteFont.MeasureString(this.Text).X);
 
             spriteBatch.Begin();
-            if(_backgroundColor != Color.Transparent) 
+
+            if (!transparent)
+            {
+                CreateTextBlockContainer();
                 spriteBatch.Draw(_pixel, textBlockContainer, this._backgroundColor);
+            }
+                
             spriteBatch.DrawString(this.spriteFont, this.Text, Position, this._foregroundColor);
             spriteBatch.End();
         }
@@ -240,16 +250,13 @@ namespace XAMLite
         // Finds the size of the inner rectangle to contain the text based on the padding.
         private void CreateTextBlockContainer()
         {
-            //this.Text = WordWrap2(this.Text, this.Width);
-            /*double stringWidth = this.spriteFont.MeasureString(this.Text).X;
-            double stringHeight = this.spriteFont.MeasureString(this.Text).Y;
-            
             if(this.Width != 0  && this.Height != 0)
                 textBlockContainer = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
-            */
         }
 
+        // used to break the string into seperate lines of text
         protected const string _newline = "\r\n";
+
         /// <summary>
         /// Word wraps the given text to fit within the specified width.
         /// </summary>
@@ -261,31 +268,84 @@ namespace XAMLite
 
         public string WordWrap(string text, int width)
         {
+            // return if string length is less than width of textblock
             if (this.Width > width)
                 return text;
 
-            float wrdLenPixels = this.spriteFont.MeasureString(text).X;
+            // just for clarity
+            float strLenPixels = width;
             int numCharsinString = 0;
 
+            // determining total number of characters in the string 
             for (int i = 0; i < text.Length; i++)
                 numCharsinString++;
 
-            // Find start of whitespace at end of text
+            // Now removing any whitespaces that might be at the end of the string
             while ((numCharsinString - 1) >= 0 && Char.IsWhiteSpace(text[numCharsinString - 1]))
                 numCharsinString--;
 
             Console.WriteLine("Width of TextBox (Pixels): " + this.Width);
-            Console.WriteLine("Width of Text (Pixels: " + wrdLenPixels);
+            Console.WriteLine("Width of Text (Pixels: " + strLenPixels);
             Console.WriteLine("Num Characters: " + numCharsinString + "\n");
 
-            sb = new StringBuilder();
+            // finding number of pixels per character in string length
+            float pxPerChar = strLenPixels / numCharsinString;
 
-            return sb.ToString();
+            // determining max number of characters per line to fit textblock
+            int charsPerLine = this.Width / (int)pxPerChar;
+
+            Console.WriteLine(text);
+            sb = new StringBuilder();
+            int pos, next;
+            for (pos = 0; pos < text.Length; pos = next)
+            {
+                // Find end of line
+                int eol = text.IndexOf(_newline, pos);
+                if (eol == -1)
+                    next = eol = text.Length;
+                else
+                    next = eol + _newline.Length;
+                if (eol > pos)
+                {
+                    do
+                    {
+                        int len = eol - pos;
+                        if (len > charsPerLine)
+                            len = BreakLine(text, pos, charsPerLine);
+                        sb.Append(text, pos, len);
+                        sb.Append(_newline);
+                        // Trim whitespace following break
+                        pos += len;
+                        while (pos < eol && Char.IsWhiteSpace(text[pos]))
+                            pos++;
+
+                    } while (eol > pos);
+                }
+                else sb.Append(_newline); // Empty line
+            }
+
+            return sb.ToString();  
+        }
+
+        public int BreakLine(string text, int pos, int max)
+        {
+            // Find last whitespace in line
+            int i = max - 1;
+            while (i >= 0 && !Char.IsWhiteSpace(text[pos + i]))
+                i--;
+            if (i < 0)
+                return max; // No whitespace found; break at maximum length
+            // Find start of whitespace
+            while (i >= 0 && Char.IsWhiteSpace(text[pos + i]))
+                i--;
+            // Return length of text before whitespace
+            return i + 1;
         }
 
     }
 
     // for mocking the WPF constructor
+    // XAMLiteTextBlock textBlock = new XAMLiteTextBlock(this, new Run("This is text."));
     // this value gets placed into the "string Run" of XAMLiteTextBlock.cs
     public class Run
     {
