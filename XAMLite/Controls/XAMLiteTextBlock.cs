@@ -39,7 +39,7 @@ namespace XAMLite
             set {
                     if (this.spriteFont != null)
                     {
-                        RecalculateWidthAndHeight(value);
+                        CalculateWidthAndHeight(value);
                     }
                     base.Text = value;
             } 
@@ -181,10 +181,10 @@ namespace XAMLite
             this.courier10SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Courier10");
             this.spriteFont = courier10SpriteFont;
             
-            //RecalculateWidthAndHeight(this.Text);
+            if(this.Width == 0)
+                CalculateWidthAndHeight(this.Text);
             //AdjustPadding();
             //CreateTextBlockContainer();
-            //this.Text = WordWrap2(this.Text, this.Width);
         }
 
         public override void Update(GameTime gameTime)
@@ -227,7 +227,7 @@ namespace XAMLite
         /// 
         /// </summary>
         /// <param name="text"></param>
-        private void RecalculateWidthAndHeight(string text)
+        private void CalculateWidthAndHeight(string text)
         {
             this.Width = (int)this.spriteFont.MeasureString(text).X;
             this.Height = (int)this.spriteFont.MeasureString(text).Y;
@@ -283,10 +283,6 @@ namespace XAMLite
             // Now removing any whitespaces that might be at the end of the string
             while ((numCharsinString - 1) >= 0 && Char.IsWhiteSpace(text[numCharsinString - 1]))
                 numCharsinString--;
-
-            Console.WriteLine("Width of TextBox (Pixels): " + this.Width);
-            Console.WriteLine("Width of Text (Pixels: " + strLenPixels);
-            Console.WriteLine("Num Characters: " + numCharsinString + "\n");
 
             // finding number of pixels per character in string length
             float pxPerChar = strLenPixels / numCharsinString;
