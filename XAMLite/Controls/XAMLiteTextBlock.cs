@@ -36,13 +36,7 @@ namespace XAMLite
         public string Run 
         { 
             get { return base.Text; } 
-            set {
-                    /*if (this.spriteFont != null)
-                    {
-                        CalculateWidthAndHeight(value);
-                    }*/
-                    base.Text = value;
-            } 
+            set { base.Text = value; } 
         }
 
         StringBuilder sb;
@@ -114,8 +108,13 @@ namespace XAMLite
 
         private bool transparent;
 
+        private bool widthSet;
+        private bool heightSet;
 
-        /*
+        private bool textWrappingSet;
+        private bool widthHeightContainerSet;
+
+        /* A POTENTIAL WISH LIST FOR TEXTBLOCK
          *  TextBlock textBlock = new TextBlock(new Run("A bit of text content..."));
 
             textBlock.FontFamily              = new FontFamily("Century Gothic");
@@ -181,10 +180,16 @@ namespace XAMLite
             this.courier10SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Courier10");
             this.spriteFont = courier10SpriteFont;
             
-            if(this.Width == 0)
-                CalculateWidthAndHeight(this.Text);
-            //AdjustPadding();
-            //CreateTextBlockContainer();
+            // triggers whether Width and Height of textblock were set by user
+            if (this.Width == 0)
+                widthSet = false;
+            else
+                widthSet = true;
+            if (this.Height == 0)
+                heightSet = false;
+            else
+                heightSet = true;
+
         }
 
         public override void Update(GameTime gameTime)
@@ -207,48 +212,45 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-
-            if (TextWrapping == TextWrapping.Wrap)
+            if (TextWrapping == TextWrapping.Wrap && !textWrappingSet)
+            {
+                textWrappingSet = true;
                 this.Text = WordWrap(this.Text, (int)this.spriteFont.MeasureString(this.Text).X);
+            }
 
             spriteBatch.Begin();
 
             if (!transparent)
             {
-                CalculateWidthAndHeight(this.Text);
-                CreateTextBlockContainer();
+                if (!widthHeightContainerSet)
+                {
+                    widthHeightContainerSet = true;
+                    CalculateWidthAndHeight(this.Text);
+                    CreateTextBlockContainer();
+                }
+                
                 spriteBatch.Draw(_pixel, textBlockContainer, this._backgroundColor);
             }
-                
-            spriteBatch.DrawString(this.spriteFont, this.Text, Position, this._foregroundColor);
+
+            Vector2 paddedPosition = new Vector2(textBlockContainer.X + (int)Padding.Left, textBlockContainer.Y + (int)Padding.Top);
+            spriteBatch.DrawString(this.spriteFont, this.Text, paddedPosition, this._foregroundColor);
             spriteBatch.End();
         }
 
         /// <summary>
-        /// Set when the width of the textblock is not specified.
+        /// Set width and height if not already set or adjusting for noWrap
         /// </summary>
         /// <param name="text"></param>
         private void CalculateWidthAndHeight(string text)
         {
-            this.Width = (int)this.spriteFont.MeasureString(text).X;
-            this.Height = (int)this.spriteFont.MeasureString(text).Y;
-        }
+            if (!widthSet || TextWrapping == TextWrapping.NoWrap)
+                this.Width = (int)this.spriteFont.MeasureString(text).X + (int)Padding.Left + (int)Padding.Right;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="text"></param>
-        private void AdjustPadding()
-        {
-            if (this.Width == 0)
-                this.Width = this.viewport.Width - (int)this.Padding.Left - (int)this.Margin.Right;
-
-            if (this.Height == 0)
-                this.Height = this.viewport.Height - (int)this.Margin.Top - (int)this.Margin.Bottom;
+            if (!heightSet || TextWrapping == TextWrapping.NoWrap)
+                this.Height = (int)this.spriteFont.MeasureString(text).Y + (int)Padding.Top + (int)Padding.Bottom;
         }
 
         // Determines the size of the textblock based on Width, Height.
-        // Finds the size of the inner rectangle to contain the text based on the padding.
         private void CreateTextBlockContainer()
         {
             if(this.Width != 0  && this.Height != 0)
@@ -288,7 +290,14 @@ namespace XAMLite
             float pxPerChar = strLenPixels / numCharsinString;
 
             // determining max number of characters per line to fit textblock
-            int charsPerLine = this.Width / (int)pxPerChar;
+            int charsPerLine;
+
+            int paddingAdjust = (int)Padding.Left + (int)Padding.Right;
+            if (paddingAdjust < this.Width)
+                charsPerLine = this.Width / (int)pxPerChar;
+                //charsPerLine = (this.Width - paddingAdjust) / (int)pxPerChar;
+            else
+                charsPerLine = 1;
 
             Console.WriteLine(text);
             sb = new StringBuilder();

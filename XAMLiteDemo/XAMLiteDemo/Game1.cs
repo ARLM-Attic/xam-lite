@@ -144,6 +144,7 @@ namespace XAMLiteDemo
             textBlock2.Background = Brushes.Bisque;
             textBlock2.Foreground = Brushes.Red;
             //textBlock2.Padding = new Thickness(0, 0, 0, 0);
+            textBlock2.Padding = new Thickness(10, 5, 10, 5);
             textBlock2.TextWrapping = TextWrapping.Wrap;
             //textBlock2.TextAlignment = TextAlignment.Center;
             textBlock2.FontFamily = new FontFamily("Courier10");
