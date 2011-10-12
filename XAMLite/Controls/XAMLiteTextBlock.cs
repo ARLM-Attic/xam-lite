@@ -37,10 +37,10 @@ namespace XAMLite
         { 
             get { return base.Text; } 
             set {
-                    if (this.spriteFont != null)
+                    /*if (this.spriteFont != null)
                     {
                         CalculateWidthAndHeight(value);
-                    }
+                    }*/
                     base.Text = value;
             } 
         }
@@ -207,14 +207,15 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            //
 
-            this.Text = WordWrap(this.Text, (int)this.spriteFont.MeasureString(this.Text).X);
+            if(TextWrapping == TextWrapping.Wrap)
+                this.Text = WordWrap(this.Text, (int)this.spriteFont.MeasureString(this.Text).X);
 
             spriteBatch.Begin();
 
             if (!transparent)
             {
+                CalculateWidthAndHeight(this.Text);
                 CreateTextBlockContainer();
                 spriteBatch.Draw(_pixel, textBlockContainer, this._backgroundColor);
             }
@@ -224,7 +225,7 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// Set when the width of the textblock is not specified.
         /// </summary>
         /// <param name="text"></param>
         private void CalculateWidthAndHeight(string text)
@@ -265,7 +266,6 @@ namespace XAMLite
         /// should be word wrapped</param>
         /// <returns>The modified text</returns>
         /// 
-
         public string WordWrap(string text, int width)
         {
             // return if string length is less than width of textblock
