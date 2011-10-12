@@ -208,7 +208,7 @@ namespace XAMLite
         public override void Draw(GameTime gameTime)
         {
 
-            if(TextWrapping == TextWrapping.Wrap)
+            if (TextWrapping == TextWrapping.Wrap)
                 this.Text = WordWrap(this.Text, (int)this.spriteFont.MeasureString(this.Text).X);
 
             spriteBatch.Begin();
@@ -301,6 +301,7 @@ namespace XAMLite
                     next = eol = text.Length;
                 else
                     next = eol + _newline.Length;
+                    
                 if (eol > pos)
                 {
                     do
@@ -309,9 +310,15 @@ namespace XAMLite
                         if (len > charsPerLine)
                             len = BreakLine(text, pos, charsPerLine);
                         sb.Append(text, pos, len);
-                        sb.Append(_newline);
-                        // Trim whitespace following break
+                        
+                        // update position
                         pos += len;
+
+                        // "if" statement prevents extra line being added at end of text for drawing the background block
+                        if(pos != text.Length)
+                            sb.Append(_newline);
+
+                        // Trim whitespace following break
                         while (pos < eol && Char.IsWhiteSpace(text[pos]))
                             pos++;
 

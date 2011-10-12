@@ -148,7 +148,6 @@ namespace XAMLiteDemo
             //textBlock2.TextAlignment = TextAlignment.Center;
             textBlock2.FontFamily = new FontFamily("Courier10");
             textBlock2.Width = 250;
-            textBlock2.Height = 150;
             textBlock2.HorizontalAlignment = HorizontalAlignment.Center;
             textBlock2.VerticalAlignment = VerticalAlignment.Bottom;
             Components.Add(textBlock2);
