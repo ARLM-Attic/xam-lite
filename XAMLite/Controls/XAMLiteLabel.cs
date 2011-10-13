@@ -34,7 +34,6 @@ namespace XAMLite
                     RecalculateWidthAndHeight(value);
                 }
                 base.Text = value;
-
             }
         }
 
@@ -111,9 +110,9 @@ namespace XAMLite
         /// <param name="fontName"></param>
         protected override void LoadContent ()
         {
+            base.LoadContent();
             this.spriteFont = Game.Content.Load<SpriteFont>( "Fonts/Courier10" );
             RecalculateWidthAndHeight( this.Text );
-            base.LoadContent();
         }
 
         /// <summary>

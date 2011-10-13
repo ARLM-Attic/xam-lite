@@ -14,7 +14,6 @@ namespace XAMLite
     /// <see cref="http://msdn.microsoft.com/en-us/library/system.windows.controls.control.aspx"/>
     public class XAMLiteControl : DrawableGameComponent
     {
-
         public MouseState ms;
         public Microsoft.Xna.Framework.Point mouseLoc;
 
@@ -134,7 +133,7 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        protected SpriteBatch spriteBatch;
+        public SpriteBatch spriteBatch { get; set; }
 
         /// <summary>
         /// 

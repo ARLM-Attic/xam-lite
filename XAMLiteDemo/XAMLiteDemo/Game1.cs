@@ -65,6 +65,16 @@ namespace XAMLiteDemo
         protected override void Initialize()
         {
 
+            // Grid example
+            XAMLiteGrid grid = new XAMLiteGrid(this);
+            grid.Width = 200;
+            grid.Height = 150;
+            grid.HorizontalAlignment = HorizontalAlignment.Left;
+            grid.VerticalAlignment = VerticalAlignment.Center;
+            grid.Background = Brushes.Black;
+            grid.Margin = new Thickness(30, 0, 0, 0);
+            Components.Add(grid);
+
             // XAMLite label example.
             _label = new XAMLiteLabel(this);
             _label.Content = "Hello, world!";
@@ -72,6 +82,7 @@ namespace XAMLiteDemo
             _label.HorizontalAlignment = HorizontalAlignment.Center;
             _label.VerticalAlignment = VerticalAlignment.Center;
             Components.Add(_label);
+            //grid.Children.Add(_label);
 
             // Rectangle example #1
             XAMLiteRectangle rectangle1 = new XAMLiteRectangle(this);
@@ -129,7 +140,6 @@ namespace XAMLiteDemo
             textBlock.Background = Brushes.Orange;
             textBlock.Foreground = Brushes.Green;
             textBlock.TextWrapping = TextWrapping.NoWrap;
-            //textBlock.TextAlignment = TextAlignment.Center;
             // we may want enum with possible choices??
             // then: textBlock.FontFamily = FontFamily.Times;
             textBlock.FontFamily = new FontFamily("Arial");
@@ -138,15 +148,12 @@ namespace XAMLiteDemo
             textBlock.Height = 100;
             Components.Add(textBlock);
 
-
             // faking the Run class for WPF programmers
             XAMLiteTextBlock textBlock2 = new XAMLiteTextBlock(this, new Run("This constructor uses a mock Run class for WPF developers>>>>>>>>>>>>> >>>>>>>>>>>>> MMMMMMMMMMM. MMMMMMMM."));
             textBlock2.Background = Brushes.Bisque;
             textBlock2.Foreground = Brushes.Red;
-            //textBlock2.Padding = new Thickness(0, 0, 0, 0);
             textBlock2.Padding = new Thickness(10, 5, 10, 5);
             textBlock2.TextWrapping = TextWrapping.Wrap;
-            //textBlock2.TextAlignment = TextAlignment.Center;
             textBlock2.FontFamily = new FontFamily("Courier10");
             textBlock2.Width = 250;
             textBlock2.HorizontalAlignment = HorizontalAlignment.Center;
