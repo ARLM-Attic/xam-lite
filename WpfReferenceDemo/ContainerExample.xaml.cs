@@ -21,6 +21,12 @@ namespace WpfReferenceDemo
         public ContainerExample()
         {
             InitializeComponent();
+
+            Grid grid = new Grid();
+            grid.Width = 500;
+            grid.Height = 400;
+            grid.Background = Brushes.Green;
+            Content = grid;
         }
     }
 }

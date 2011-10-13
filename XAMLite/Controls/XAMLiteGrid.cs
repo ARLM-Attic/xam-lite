@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -62,6 +63,16 @@ namespace XAMLite
         {
             base.LoadContent();
             _panel = new Rectangle((int)Position.X, (int)Position.Y, this.Width, this.Height);
+
+            for (int i = 0; i < Children.Count; i++)
+            {
+                Children[i].HorizontalAlignment = this.HorizontalAlignment;
+                Children[i].VerticalAlignment = this.VerticalAlignment;
+                Children[i].Margin = new System.Windows.Thickness((this.Margin.Left + Children[i].Margin.Left), (this.Margin.Top + Children[i].Margin.Top), (this.Margin.Right + Children[i].Margin.Right), (this.Margin.Bottom + Children[i].Margin.Bottom));
+            }
+
+            for (int i = 0; i < Children.Count; i++)
+                this.Game.Components.Add(Children[i]);
         }
 
         public override void Update(GameTime gameTime)
@@ -83,8 +94,9 @@ namespace XAMLite
             }
 
             spriteBatch.End();
-                
+
             // Begin.
         }
+
     }
 }

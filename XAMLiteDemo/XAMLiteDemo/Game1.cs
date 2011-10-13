@@ -32,8 +32,6 @@ namespace XAMLiteDemo
 
         public Game1()
         {
-
-            //
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -67,8 +65,8 @@ namespace XAMLiteDemo
 
             // Grid example
             XAMLiteGrid grid = new XAMLiteGrid(this);
-            grid.Width = 200;
-            grid.Height = 150;
+            grid.Width = 250;
+            grid.Height = 250;
             grid.HorizontalAlignment = HorizontalAlignment.Left;
             grid.VerticalAlignment = VerticalAlignment.Center;
             grid.Background = Brushes.Black;
@@ -112,7 +110,8 @@ namespace XAMLiteDemo
             dogImage.MouseDown += new MouseButtonEventHandler(dogImage_MouseDown);
             dogImage.MouseEnter += new MouseEventHandler(dogImage_MouseEnter);
             dogImage.MouseLeave += new MouseEventHandler(dogImage_MouseLeave);
-            Components.Add(dogImage);
+           // Components.Add(dogImage);
+            grid.Children.Add(dogImage);
 
             // Clickable-image example.
             catImage = new XAMLiteImage(this);

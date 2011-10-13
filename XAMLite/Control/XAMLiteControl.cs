@@ -58,10 +58,9 @@ namespace XAMLite
         {
             get
             {
-
                 // X
                 int x = 0;
-                switch ( HorizontalAlignment )
+                switch (HorizontalAlignment)
                 {
 
                     case HorizontalAlignment.Center:
@@ -87,7 +86,7 @@ namespace XAMLite
 
                 // Y
                 int y = 0;
-                switch ( VerticalAlignment )
+                switch (VerticalAlignment)
                 {
 
                     case VerticalAlignment.Bottom:
@@ -112,7 +111,7 @@ namespace XAMLite
                 }
 
                 //
-                return new Vector2( x, y );
+                return new Vector2(x, y);
 
             }
         }
@@ -205,6 +204,7 @@ namespace XAMLite
         {
             base.Draw( gameTime );
         }
+
     }
 
 }
