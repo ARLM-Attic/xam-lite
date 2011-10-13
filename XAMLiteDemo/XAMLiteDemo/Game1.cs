@@ -104,8 +104,9 @@ namespace XAMLiteDemo
             dogImage = new XAMLiteImage(this);
             dogImage.Width = 100;
             dogImage.Height = 100;
-            dogImage.VerticalAlignment = VerticalAlignment.Bottom;
-            dogImage.HorizontalAlignment = HorizontalAlignment.Left;
+            dogImage.Margin = new Thickness(0, 10, 10, 0);
+            dogImage.VerticalAlignment = VerticalAlignment.Top;
+            dogImage.HorizontalAlignment = HorizontalAlignment.Right;
             dogImage.SourceName = @"Textures/Dog";
             dogImage.MouseDown += new MouseButtonEventHandler(dogImage_MouseDown);
             dogImage.MouseEnter += new MouseEventHandler(dogImage_MouseEnter);
