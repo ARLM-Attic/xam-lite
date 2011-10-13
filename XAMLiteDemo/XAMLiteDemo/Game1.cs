@@ -44,7 +44,7 @@ namespace XAMLiteDemo
             // Enable this for random screen to (to test we're not hard-coding anything
             // base on screen size). Note: we're not attempting to support real-time
             // user resizing of the window.
-            bool useRandomWindowSize = true;
+            bool useRandomWindowSize = false;
             if (useRandomWindowSize)
             {
                 var dice = new Random();
@@ -68,12 +68,12 @@ namespace XAMLiteDemo
             grid.Width = 250;
             grid.Height = 250;
             grid.HorizontalAlignment = HorizontalAlignment.Left;
-            grid.VerticalAlignment = VerticalAlignment.Center;
+            grid.VerticalAlignment = VerticalAlignment.Bottom;
             grid.Background = Brushes.Black;
-            grid.Margin = new Thickness(30, 0, 0, 0);
+            grid.Margin = new Thickness(0, 0, 0, 0);
             Components.Add(grid);
 
-            // XAMLite label example.
+            // XAMLite label example. LOADED TO GRID
             _label = new XAMLiteLabel(this);
             _label.Content = "Hello, world!";
             _label.Foreground = Brushes.Yellow;
@@ -100,13 +100,13 @@ namespace XAMLiteDemo
             rectangle2.Stroke = Brushes.Pink;
             Components.Add(rectangle2);
 
-            // Clickable-image example.
+            // Clickable-image example. LOADED TO GRID
             dogImage = new XAMLiteImage(this);
             dogImage.Width = 100;
             dogImage.Height = 100;
-            dogImage.Margin = new Thickness(0, 10, 10, 0);
-            dogImage.VerticalAlignment = VerticalAlignment.Top;
-            dogImage.HorizontalAlignment = HorizontalAlignment.Right;
+            dogImage.Margin = new Thickness(10, 0, 0, 10);
+            dogImage.VerticalAlignment = VerticalAlignment.Bottom;
+            dogImage.HorizontalAlignment = HorizontalAlignment.Left;
             dogImage.SourceName = @"Textures/Dog";
             dogImage.MouseDown += new MouseButtonEventHandler(dogImage_MouseDown);
             dogImage.MouseEnter += new MouseEventHandler(dogImage_MouseEnter);

@@ -62,9 +62,10 @@ namespace XAMLite
         protected override void LoadContent()
         {
             base.LoadContent();
-            _panel = new Rectangle((int)Position.X, (int)Position.Y, this.Width, this.Height);
 
+            _panel = new Rectangle((int)Position.X, (int)Position.Y, this.Width, this.Height);
             adjustGridMargins();
+            
 
             modifyChildren();
             
@@ -97,32 +98,33 @@ namespace XAMLite
 
         private void adjustGridMargins()
         {
-            double left = this.Margin.Left;
-            double top = this.Margin.Top;
-            double right = this.Margin.Right;
-            double bottom = this.Margin.Bottom;
+            int left = 0;
+            int top = 0;
+            int right = 0;
+            int bottom = 0;
 
             if ((this.Margin.Left + this.Margin.Right + this.Width) < viewport.Width)
             {
-                int differenceInWidth = viewport.Width - this.Width - ((int)this.Margin.Left + (int)this.Margin.Right);
+                int differenceInWidth = viewport.Width - this.Width;
 
                 switch (this.HorizontalAlignment)
                 {
                     case HorizontalAlignment.Center:
-                        left += differenceInWidth / 2;
-                        right += differenceInWidth / 2;
+                        left = differenceInWidth / 2 + (int)this.Margin.Left - (int)this.Margin.Right;
                         break;
 
                     case HorizontalAlignment.Left:
-                        right += differenceInWidth;
+                        left = (int)this.Margin.Left;
+                        right = differenceInWidth - left;
                         break;
 
                     case HorizontalAlignment.Right:
-                        left += differenceInWidth;
+                        right = (int)this.Margin.Right;
+                        left = differenceInWidth - right;
                         break;
 
                     case HorizontalAlignment.Stretch:
-                        //this.Width = this.viewport.Width;
+                        this.Width = this.viewport.Width;
                         break;
 
                     default:
@@ -132,26 +134,27 @@ namespace XAMLite
 
             if ((this.Margin.Top + this.Margin.Bottom + this.Height) < viewport.Height)
             {
-                int differenceInHeight = viewport.Height - this.Height - ((int)this.Margin.Top + (int)this.Margin.Bottom);
+                int differenceInHeight = viewport.Height - this.Height;
 
                 switch (VerticalAlignment)
                 {
 
                     case VerticalAlignment.Bottom:
-                        top += differenceInHeight;
+                        bottom = (int)this.Margin.Bottom;
+                        top = differenceInHeight - bottom;
                         break;
 
                     case VerticalAlignment.Center:
-                        top += differenceInHeight / 2;
-                        bottom += differenceInHeight / 2;
+                        top = differenceInHeight / 2 + (int)this.Margin.Top - (int)this.Margin.Bottom;
                         break;
 
                     case VerticalAlignment.Stretch:
-                        // this.Height = this.viewport.Height;
+                        this.Height = this.viewport.Height;
                         break;
 
                     case VerticalAlignment.Top:
-                        bottom += differenceInHeight;
+                        top = (int)this.Margin.Top;
+                        bottom = differenceInHeight - top;
                         break;
 
                     default:
@@ -159,9 +162,9 @@ namespace XAMLite
                 }
 
             }
+            _panel = new Rectangle((int)left, (int)top, this.Width, this.Height);
             this.Margin = new Thickness(left, top, right, bottom);
             Console.WriteLine("Margin of grid: " + this.Margin.Left + ", " + this.Margin.Top + ", " + this.Margin.Right + ", " + this.Margin.Bottom);
-            
         }
 
         /// <summary>
@@ -170,36 +173,229 @@ namespace XAMLite
         /// <param name></param>
         private void modifyChildren()
         {
+            double left = this.Margin.Left;
+            double top = this.Margin.Top;
+            double right = this.Margin.Right;
+            double bottom = this.Margin.Bottom;
+
             for (int i = 0; i < Children.Count; i++)
             {
-                double left = Children[i].Margin.Left;
-                double right = Children[i].Margin.Right;
-                double top = Children[i].Margin.Top;
-                double bottom = Children[i].Margin.Bottom;
+                    int differenceInWidth = this.Width - Children[i].Width;
 
-                if (Children[i].HorizontalAlignment != HorizontalAlignment.Center)
-                {
-                    left += this.Margin.Left;
-                    right += this.Margin.Right;
-                }
-                else
-                {
-                    left += this.Margin.Left;
-                    right += this.Margin.Right;
-                }
-                if (Children[i].VerticalAlignment != VerticalAlignment.Center)
-                {
-                    top += this.Margin.Top;
-                    bottom += this.Margin.Top;
-                }
-                else
-                {
-                    top += this.Margin.Top;
-                    bottom += this.Margin.Top;
-                }
+                    switch (Children[i].HorizontalAlignment)
+                    {
+                        case HorizontalAlignment.Center:
+                            switch (this.HorizontalAlignment)
+                            {
+                                case HorizontalAlignment.Center:
+                                    break;
+                                case HorizontalAlignment.Left:
+                                    break;
+                                case HorizontalAlignment.Right:
+                                    break;
+                                default: 
+                                    break;
+                            }
+                            break;
+
+                        case HorizontalAlignment.Left:
+                            switch (this.HorizontalAlignment)
+                            {
+                                case HorizontalAlignment.Center:
+                                    left = (viewport.Width / 2 - this.Width / 2) + (int)Children[i].Margin.Left - (int)Children[i].Margin.Right;
+                                    break;
+                                case HorizontalAlignment.Left:
+                                    left = (int)Children[i].Margin.Left;
+                                    break;
+                                case HorizontalAlignment.Right:
+                                    left = viewport.Width - this.Width + (int)Children[i].Margin.Left;
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+
+                        case HorizontalAlignment.Right:
+                            switch (this.HorizontalAlignment)
+                            {
+                                case HorizontalAlignment.Center:
+                                    right = (viewport.Width / 2 - this.Width / 2) + (int)Children[i].Margin.Right - (int)Children[i].Margin.Left;
+                                    break;
+                                case HorizontalAlignment.Left:
+                                    right = viewport.Width - this.Width + (int)Children[i].Margin.Right;
+                                    break;
+                                case HorizontalAlignment.Right:
+                                    right = (int)Children[i].Margin.Right;
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+
+                        case HorizontalAlignment.Stretch:
+                            Children[i].Width = this.Width;
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    int differenceInHeight = this.Height - Children[i].Height;
+
+                    switch (Children[i].VerticalAlignment)
+                    {
+                        case VerticalAlignment.Bottom:
+                            switch (this.VerticalAlignment)
+                            {
+                                case VerticalAlignment.Center:
+                                    bottom = (viewport.Height / 2 - this.Height / 2) + (int)Children[i].Margin.Bottom - (int)Children[i].Margin.Top;
+                                    break;
+                                case VerticalAlignment.Top:
+                                    bottom = viewport.Height - this.Height + (int)Children[i].Margin.Bottom;
+                                    break;
+                                case VerticalAlignment.Bottom:
+                                    bottom = (int)Children[i].Margin.Bottom;
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+
+                        case VerticalAlignment.Center:
+                            top = differenceInHeight / 2 + (int)Children[i].Margin.Top - (int)Children[i].Margin.Bottom;
+                            switch (this.VerticalAlignment)
+                            {
+                                case VerticalAlignment.Center:
+                                    break;
+                                case VerticalAlignment.Top:
+                                    break;
+                                case VerticalAlignment.Bottom:
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+
+                        case VerticalAlignment.Stretch:
+                            Children[i].Height = this.Height;
+                            break;
+
+                        case VerticalAlignment.Top:
+                            switch (this.VerticalAlignment)
+                            {
+                                case VerticalAlignment.Center:
+                                    top = (viewport.Height / 2 - this.Height / 2) + (int)Children[i].Margin.Top - (int)Children[i].Margin.Bottom;
+                                    break;
+                                case VerticalAlignment.Top:
+                                    top = (int)Children[i].Margin.Top;
+                                    break;
+                                case VerticalAlignment.Bottom:
+                                    top = viewport.Height - this.Height + (int)Children[i].Margin.Top;
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+
                 Children[i].Margin = new Thickness(left, top, right, bottom);
                 Console.WriteLine("Margin of image: " + Children[i].Margin.Left + ", " + Children[i].Margin.Top + ", " + Children[i].Margin.Right + ", " + Children[i].Margin.Bottom);
             }
         }
+
+        /// <summary>
+        /// Modifies the child's margin properties to adhere to the grid
+        /// </summary>
+        /// <param name></param>
+        /*private void modifyChildren()
+        {
+            double left = this.Margin.Left;
+            double top = this.Margin.Top;
+            double right = this.Margin.Right;
+            double bottom = this.Margin.Bottom;
+
+            for (int i = 0; i < Children.Count; i++)
+            {
+                if (this.HorizontalAlignment == HorizontalAlignment.Left)
+                {
+                    if (Children[i].HorizontalAlignment == HorizontalAlignment.Center)
+                    {
+                        Children[i].HorizontalAlignment = HorizontalAlignment.Left;
+                        left += Children[i].Margin.Left + this.Width / 2 - Children[i].Width / 2;
+                    }
+                    else
+                    {
+                        left += Children[i].Margin.Left;
+                        right += Children[i].Margin.Right;
+                    }
+                }
+                else if (this.HorizontalAlignment == HorizontalAlignment.Right)
+                {
+                    if (Children[i].HorizontalAlignment == HorizontalAlignment.Center)
+                    {
+                        Children[i].HorizontalAlignment = HorizontalAlignment.Right;
+                        right += Children[i].Margin.Right + this.Width / 2 - Children[i].Width / 2;
+                        //left += Children[i].Margin.Left;
+                    }
+                    else
+                    {
+                        left += Children[i].Margin.Left;
+                        right += Children[i].Margin.Right;
+                    }
+                }
+                else if (this.HorizontalAlignment == HorizontalAlignment.Center)
+                {
+                    left += Children[i].Margin.Left;
+                    right += Children[i].Margin.Right; // working
+                }
+
+                if (this.VerticalAlignment == VerticalAlignment.Top)
+                {
+                    Children[i].VerticalAlignment = VerticalAlignment.Top;
+
+                    if (Children[i].VerticalAlignment == VerticalAlignment.Center)
+                    {
+                        //Console.WriteLine("Inhere!!");
+                        Children[i].VerticalAlignment = VerticalAlignment.Top;
+                        top += Children[i].Margin.Top + this.Height / 2 - Children[i].Height / 2;
+                        //bottom += Children[i].Margin.Bottom;
+                    }
+                    else
+                    {
+                        
+                        top += Children[i].Margin.Top;
+                        bottom += Children[i].Margin.Bottom;
+                    }
+                }
+                else if (this.VerticalAlignment == VerticalAlignment.Bottom)
+                {
+                    Children[i].VerticalAlignment = VerticalAlignment.Bottom;
+                    if (Children[i].VerticalAlignment == VerticalAlignment.Center)
+                    {
+                        
+                        bottom += Children[i].Margin.Bottom + this.Height / 2 - Children[i].Height / 2;
+                        //top += Children[i].Margin.Top;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Inhere!!");
+                        top += Children[i].Margin.Top;
+                        bottom += Children[i].Margin.Bottom;
+                    }
+                }
+                else if (this.VerticalAlignment == VerticalAlignment.Center)
+                {
+                    top += Children[i].Margin.Top;
+                    bottom += Children[i].Margin.Bottom; // working
+                }
+                
+
+                Children[i].Margin = new Thickness(left, top, right, bottom);
+                    
+                Console.WriteLine("Margin of image: " + Children[i].Margin.Left + ", " + Children[i].Margin.Top + ", " + Children[i].Margin.Right + ", " + Children[i].Margin.Bottom);
+            }
+        }*/
     }
 }

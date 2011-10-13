@@ -4,7 +4,7 @@
         Title="ContainerExample" Height="350" Width="600
         ">
     <Grid>
-        <Grid Name="gridContainer" Width="300" Height="100" Background="#FFF2DFDF" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,10,10">
+        <Grid Name="gridContainer" Width="250" Height="250" Background="#FFF2DFDF" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,20,0,20">
             <Label Name="label1" Content="Label centered within parent container." HorizontalAlignment="Center"  VerticalAlignment="Center" />
             <Button Content="Button" Height="23" HorizontalAlignment="Left" Margin="276,60,0,0" Name="button1" VerticalAlignment="Top" Width="75" />
         </Grid>
