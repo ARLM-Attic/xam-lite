@@ -28,6 +28,7 @@ namespace XAMLiteDemo
         XAMLiteLabel _label;
         XAMLiteImage catImage;
         XAMLiteImage dogImage;
+        XAMLiteGrid grid;
         XAMLiteImageWithRollover dogImage2;
 
         public Game1()
@@ -66,7 +67,7 @@ namespace XAMLiteDemo
         {
 
             // Grid example
-            XAMLiteGrid grid = new XAMLiteGrid(this);
+            grid = new XAMLiteGrid(this);
             grid.Width = 400;
             grid.Height = 250;
             grid.HorizontalAlignment = HorizontalAlignment.Center;
@@ -74,6 +75,7 @@ namespace XAMLiteDemo
             grid.Background = Brushes.Black;
             grid.Margin = new Thickness(0, 0, 0, 0);
             grid.Opacity = 0.5;
+            grid.MouseDown += new MouseButtonEventHandler(grid_MouseDown);
             Components.Add(grid);
 
             // XAMLite label example. LOADED TO GRID
@@ -173,6 +175,15 @@ namespace XAMLiteDemo
             // Initialize all game components. (This includes calling Initialize() on all XAMLite controls, 
             // since they are game components).
             base.Initialize();
+        }
+
+        void grid_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            int add = 5;
+            //_label.Margin = new Thickness(_label.Margin.Left, _label.Margin.Top, _label.Margin.Right + add, _label.Margin.Bottom);
+            grid.Margin = new Thickness(grid.Margin.Left + add, grid.Margin.Top, grid.Margin.Right, grid.Margin.Bottom);
+            //dogImage.Margin = new Thickness(dogImage.Margin.Left, dogImage.Margin.Top, dogImage.Margin.Right + add, dogImage.Margin.Bottom);
+            //grid.HorizontalAlignment = HorizontalAlignment.Left;
         }
 
         /// <summary>

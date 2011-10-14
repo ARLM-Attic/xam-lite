@@ -71,7 +71,7 @@ namespace XAMLite
             adjustGridMargins();
 
             modifyChildren();
-            
+
             for (int i = 0; i < Children.Count; i++)
                 this.Game.Components.Add(Children[i]);
         }
@@ -79,6 +79,30 @@ namespace XAMLite
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            Rectangle msRect = new Rectangle(ms.X, ms.Y, 1, 1);
+            if (_panel.Contains(msRect))
+            {
+                if (!_mouseEnter)
+                {
+                    _mouseEnter = true;
+                    OnMouseEnter();
+                }
+                if (_mouseDown)
+                {
+                    _mouseDown = false;
+
+                    OnMouseDown();
+                }
+            }
+            else
+            {
+                if (_mouseEnter)
+                {
+                    _mouseEnter = false;
+                    OnMouseLeave();
+                }
+            }
         }
 
         /// <summary>
@@ -183,136 +207,136 @@ namespace XAMLite
 
             for (int i = 0; i < Children.Count; i++)
             {
-                    switch (Children[i].HorizontalAlignment)
-                    {
+                switch (Children[i].HorizontalAlignment)
+                {
 
-                        case HorizontalAlignment.Left:
-                            switch (this.HorizontalAlignment)
-                            {
-                                case HorizontalAlignment.Center:
-                                    left = viewport.Width / 2 - this.Width / 2 + (int)Children[i].Margin.Left - (int)Children[i].Margin.Right;
-                                    break;
-                                case HorizontalAlignment.Left:
-                                    left = (int)Children[i].Margin.Left + this.Margin.Left;
-                                    break;
-                                case HorizontalAlignment.Right:
-                                    left = viewport.Width - this.Width + (int)Children[i].Margin.Left - this.Margin.Right;
-                                    Console.WriteLine(left);
-                                    break;
-                                default:
-                                    break;
-                            }
-                            break;
+                    case HorizontalAlignment.Left:
+                        switch (this.HorizontalAlignment)
+                        {
+                            case HorizontalAlignment.Center:
+                                left = viewport.Width / 2 - this.Width / 2 + (int)Children[i].Margin.Left - (int)Children[i].Margin.Right;
+                                break;
+                            case HorizontalAlignment.Left:
+                                left = (int)Children[i].Margin.Left + this.Margin.Left;
+                                break;
+                            case HorizontalAlignment.Right:
+                                left = viewport.Width - this.Width + (int)Children[i].Margin.Left - this.Margin.Right;
+                                Console.WriteLine(left);
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
 
-                        case HorizontalAlignment.Right:
-                            switch (this.HorizontalAlignment)
-                            {
-                                    
-                                case HorizontalAlignment.Center:
-                                    right = viewport.Width / 2 - this.Width / 2 + (int)Children[i].Margin.Right - (int)Children[i].Margin.Left + _oldMargin.Right - _oldMargin.Left;
-                                    break;
-                                case HorizontalAlignment.Left:
-                                    right = viewport.Width - this.Width + (int)Children[i].Margin.Right - this._oldMargin.Left;
-                                    break;
-                                case HorizontalAlignment.Right:
-                                    right = (int)Children[i].Margin.Right + this.Margin.Right;
-                                    break;
-                                default:
-                                    break;
-                            }
-                            break;
+                    case HorizontalAlignment.Right:
+                        switch (this.HorizontalAlignment)
+                        {
 
-                        case HorizontalAlignment.Center:
-                            switch (this.HorizontalAlignment)
-                            {
-                                case HorizontalAlignment.Center:
-                                    Children[i].HorizontalAlignment = HorizontalAlignment.Left;
-                                    left = (int)Children[i].Margin.Left - (int)Children[i].Margin.Right + this.Margin.Left - this.Margin.Right + this.Width / 2 - Children[i].Width / 2;
-                                    break;
-                                case HorizontalAlignment.Left:
-                                    Children[i].HorizontalAlignment = HorizontalAlignment.Left;
-                                    left = (int)Children[i].Margin.Left - (int)Children[i].Margin.Right + this.Margin.Left + this.Width / 2 - Children[i].Width / 2;
-                                    break;
-                                case HorizontalAlignment.Right:
-                                    Children[i].HorizontalAlignment = HorizontalAlignment.Right;
-                                    right = (int)Children[i].Margin.Right - (int)Children[i].Margin.Left + this.Margin.Right + this.Width / 2 - Children[i].Width / 2;
-                                    break;
-                                default:
-                                    break;
-                            }
-                            break;
+                            case HorizontalAlignment.Center:
+                                right = viewport.Width / 2 - this.Width / 2 + (int)Children[i].Margin.Right - (int)Children[i].Margin.Left + _oldMargin.Right - _oldMargin.Left;
+                                break;
+                            case HorizontalAlignment.Left:
+                                right = viewport.Width - this.Width + (int)Children[i].Margin.Right - this._oldMargin.Left;
+                                break;
+                            case HorizontalAlignment.Right:
+                                right = (int)Children[i].Margin.Right + this.Margin.Right;
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
 
-                        case HorizontalAlignment.Stretch:
-                            Children[i].Width = this.Width;
-                            break;
+                    case HorizontalAlignment.Center:
+                        switch (this.HorizontalAlignment)
+                        {
+                            case HorizontalAlignment.Center:
+                                Children[i].HorizontalAlignment = HorizontalAlignment.Left;
+                                left = (int)Children[i].Margin.Left - (int)Children[i].Margin.Right + this.Margin.Left - this.Margin.Right + this.Width / 2 - Children[i].Width / 2;
+                                break;
+                            case HorizontalAlignment.Left:
+                                Children[i].HorizontalAlignment = HorizontalAlignment.Left;
+                                left = (int)Children[i].Margin.Left - (int)Children[i].Margin.Right + this.Margin.Left + this.Width / 2 - Children[i].Width / 2;
+                                break;
+                            case HorizontalAlignment.Right:
+                                Children[i].HorizontalAlignment = HorizontalAlignment.Right;
+                                right = (int)Children[i].Margin.Right - (int)Children[i].Margin.Left + this.Margin.Right + this.Width / 2 - Children[i].Width / 2;
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
 
-                        default:
-                            break;
-                    }
+                    case HorizontalAlignment.Stretch:
+                        Children[i].Width = this.Width;
+                        break;
 
-                    switch (Children[i].VerticalAlignment)
-                    {
-                        case VerticalAlignment.Bottom:
-                            switch (this.VerticalAlignment)
-                            {
-                                case VerticalAlignment.Center:
-                                    bottom = (viewport.Height / 2 - this.Height / 2) + (int)Children[i].Margin.Bottom - (int)Children[i].Margin.Top;
-                                    break;
-                                case VerticalAlignment.Top:
-                                    bottom = viewport.Height - this.Height + (int)Children[i].Margin.Bottom - this.Margin.Top;
-                                    break;
-                                case VerticalAlignment.Bottom:
-                                    Console.WriteLine(this.Margin.Bottom);
-                                    bottom = (int)Children[i].Margin.Bottom + this.Margin.Bottom;
-                                    break;
-                                default:
-                                    break;
-                            }
-                            break;
+                    default:
+                        break;
+                }
 
-                        case VerticalAlignment.Center:
-                            switch (this.VerticalAlignment)
-                            {
-                                case VerticalAlignment.Center:
-                                    Children[i].VerticalAlignment = VerticalAlignment.Top;
-                                    top = (int)Children[i].Margin.Top - (int)Children[i].Margin.Bottom + this.Margin.Top - this.Margin.Bottom + this.Height / 2 - Children[i].Height / 2;
-                                    break;
-                                case VerticalAlignment.Top:
-                                    Children[i].VerticalAlignment = VerticalAlignment.Top;
-                                    top = (int)Children[i].Margin.Top - (int)Children[i].Margin.Bottom + this.Margin.Top + this.Height / 2 - Children[i].Height / 2;
-                                    break;
-                                case VerticalAlignment.Bottom:
-                                    Children[i].VerticalAlignment = VerticalAlignment.Bottom;
-                                    bottom = (int)Children[i].Margin.Bottom - (int)Children[i].Margin.Top + this.Margin.Bottom + this.Height / 2 - Children[i].Height / 2;
-                                    break;
-                                default:
-                                    break;
-                            }
-                            break;
+                switch (Children[i].VerticalAlignment)
+                {
+                    case VerticalAlignment.Bottom:
+                        switch (this.VerticalAlignment)
+                        {
+                            case VerticalAlignment.Center:
+                                bottom = (viewport.Height / 2 - this.Height / 2) + (int)Children[i].Margin.Bottom - (int)Children[i].Margin.Top;
+                                break;
+                            case VerticalAlignment.Top:
+                                bottom = viewport.Height - this.Height + (int)Children[i].Margin.Bottom - this.Margin.Top;
+                                break;
+                            case VerticalAlignment.Bottom:
+                                Console.WriteLine(this.Margin.Bottom);
+                                bottom = (int)Children[i].Margin.Bottom + this.Margin.Bottom;
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
 
-                        case VerticalAlignment.Stretch:
-                            Children[i].Height = this.Height;
-                            break;
+                    case VerticalAlignment.Center:
+                        switch (this.VerticalAlignment)
+                        {
+                            case VerticalAlignment.Center:
+                                Children[i].VerticalAlignment = VerticalAlignment.Top;
+                                top = (int)Children[i].Margin.Top - (int)Children[i].Margin.Bottom + this.Margin.Top - this.Margin.Bottom + this.Height / 2 - Children[i].Height / 2;
+                                break;
+                            case VerticalAlignment.Top:
+                                Children[i].VerticalAlignment = VerticalAlignment.Top;
+                                top = (int)Children[i].Margin.Top - (int)Children[i].Margin.Bottom + this.Margin.Top + this.Height / 2 - Children[i].Height / 2;
+                                break;
+                            case VerticalAlignment.Bottom:
+                                Children[i].VerticalAlignment = VerticalAlignment.Bottom;
+                                bottom = (int)Children[i].Margin.Bottom - (int)Children[i].Margin.Top + this.Margin.Bottom + this.Height / 2 - Children[i].Height / 2;
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
 
-                        case VerticalAlignment.Top:
-                            switch (this.VerticalAlignment)
-                            {
-                                case VerticalAlignment.Center:
-                                    top = (viewport.Height / 2 - this.Height / 2) + (int)Children[i].Margin.Top - (int)Children[i].Margin.Bottom + this._oldMargin.Top;
-                                    break;
-                                case VerticalAlignment.Top:
-                                    top = (int)Children[i].Margin.Top + this.Margin.Top;
-                                    break;
-                                case VerticalAlignment.Bottom:
-                                    top = viewport.Height - this.Height + (int)Children[i].Margin.Top - this._oldMargin.Bottom;
-                                    break;
-                                default:
-                                    break;
-                            }
-                            break;
-                        default:
-                            break;
-                    }
+                    case VerticalAlignment.Stretch:
+                        Children[i].Height = this.Height;
+                        break;
+
+                    case VerticalAlignment.Top:
+                        switch (this.VerticalAlignment)
+                        {
+                            case VerticalAlignment.Center:
+                                top = (viewport.Height / 2 - this.Height / 2) + (int)Children[i].Margin.Top - (int)Children[i].Margin.Bottom + this._oldMargin.Top;
+                                break;
+                            case VerticalAlignment.Top:
+                                top = (int)Children[i].Margin.Top + this.Margin.Top;
+                                break;
+                            case VerticalAlignment.Bottom:
+                                top = viewport.Height - this.Height + (int)Children[i].Margin.Top - this._oldMargin.Bottom;
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    default:
+                        break;
+                }
 
                 Children[i].Margin = new Thickness(left, top, right, bottom);
             }

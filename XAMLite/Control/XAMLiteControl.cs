@@ -17,9 +17,9 @@ namespace XAMLite
         public MouseState ms;
         public Microsoft.Xna.Framework.Point mouseLoc;
 
-        public bool _mouseDown;
-        public bool _mouseEnter;
-        public bool _mouseLeave;
+        protected bool _mouseDown;
+        protected bool _mouseEnter;
+        protected bool _mouseLeave;
 
         public event MouseButtonEventHandler MouseDown;
         public event MouseEventHandler MouseEnter;
@@ -142,7 +142,7 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        public SpriteBatch spriteBatch { get; set; }
+        protected SpriteBatch spriteBatch { get; set; }
 
         /// <summary>
         /// 
@@ -158,12 +158,12 @@ namespace XAMLite
         /// 
         /// </summary>
         /// <param name="game"></param>
-        public XAMLiteControl ( Game game )
-            : base( game )
+        public XAMLiteControl(Game game)
+            : base(game)
         {
             this.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
             this.VerticalAlignment = System.Windows.VerticalAlignment.Top;
-            this.Margin = new Thickness( 0, 0, 0, 0 );
+            this.Margin = new Thickness(0, 0, 0, 0);
             this.Opacity = 1.0;
             //this.Foreground = Brushes.Black;
         }
@@ -171,7 +171,7 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        public override void Initialize ()
+        public override void Initialize()
         {
 
             //
@@ -186,16 +186,16 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        protected override void LoadContent ()
+        protected override void LoadContent()
         {
-            this.spriteBatch = new SpriteBatch( Game.GraphicsDevice );
+            this.spriteBatch = new SpriteBatch(Game.GraphicsDevice);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="gameTime"></param>
-        public override void Update ( GameTime gameTime )
+        public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
@@ -210,9 +210,9 @@ namespace XAMLite
         /// 
         /// </summary>
         /// <param name="gameTime"></param>
-        public override void Draw ( GameTime gameTime )
+        public override void Draw(GameTime gameTime)
         {
-            base.Draw( gameTime );
+            base.Draw(gameTime);
         }
 
         /// <summary>
