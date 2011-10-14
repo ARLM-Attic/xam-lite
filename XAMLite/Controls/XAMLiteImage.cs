@@ -16,9 +16,9 @@ namespace XAMLite
     /// </summary>
     public class XAMLiteImage : XAMLiteControl
     {
-        public event MouseButtonEventHandler MouseDown;
-        public event MouseEventHandler MouseEnter;
-        public event MouseEventHandler MouseLeave;
+        //public event MouseButtonEventHandler MouseDown;
+        //public event MouseEventHandler MouseEnter;
+        //public event MouseEventHandler MouseLeave;
 
         /// <summary>
         /// 
@@ -114,38 +114,38 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-         public virtual void OnMouseDown()
+         /*public virtual void OnMouseDown()
          {
              if (MouseDown != null)
              {
                  var e = EventArgs.Empty as MouseButtonEventArgs;
                  MouseDown(this, e);
              }        
-         }
+         }*/
 
          /// <summary>
          /// 
          /// </summary>
-         public virtual void OnMouseEnter()
+         /*public virtual void OnMouseEnter()
          {
              if (MouseEnter != null)
              {
                  var e = EventArgs.Empty as MouseEventArgs;
                  MouseEnter(this, e);
              }
-         }
+         }*/
 
          /// <summary>
          /// 
          /// </summary>
-         public virtual void OnMouseLeave()
+         /*public virtual void OnMouseLeave()
          {
              if (MouseLeave != null)
              {
                  var e = EventArgs.Empty as MouseEventArgs;
                  MouseLeave(this, e);
              }
-         }
+         }*/
 
     }
 

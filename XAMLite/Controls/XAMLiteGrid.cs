@@ -91,7 +91,7 @@ namespace XAMLite
 
             if (!transparent)
             {
-                spriteBatch.Draw(_pixel, _panel, _backgroundColor);
+                spriteBatch.Draw(_pixel, _panel, (_backgroundColor * (float)Opacity));
             }
 
             spriteBatch.End();
@@ -298,7 +298,7 @@ namespace XAMLite
                             switch (this.VerticalAlignment)
                             {
                                 case VerticalAlignment.Center:
-                                    top = (viewport.Height / 2 - this.Height / 2) + (int)Children[i].Margin.Top - (int)Children[i].Margin.Bottom;
+                                    top = (viewport.Height / 2 - this.Height / 2) + (int)Children[i].Margin.Top - (int)Children[i].Margin.Bottom + this._oldMargin.Top;
                                     break;
                                 case VerticalAlignment.Top:
                                     top = (int)Children[i].Margin.Top + this.Margin.Top;

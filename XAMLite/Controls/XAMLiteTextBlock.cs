@@ -114,6 +114,8 @@ namespace XAMLite
         private bool textWrappingSet;
         private bool widthHeightContainerSet;
 
+        private bool _applyTransform;
+
         /* A POTENTIAL WISH LIST FOR TEXTBLOCK
          *  TextBlock textBlock = new TextBlock(new Run("A bit of text content..."));
 
@@ -190,6 +192,12 @@ namespace XAMLite
             else
                 heightSet = true;
 
+            if (Rotate90)
+            {
+                //_applyTransform = false;
+                //flipAlignment();
+            }
+
         }
 
         public override void Update(GameTime gameTime)
@@ -204,6 +212,7 @@ namespace XAMLite
                 else
                     this.spriteFont = courier10SpriteFont;
             }
+            
         }
 
         /// <summary>
@@ -217,6 +226,8 @@ namespace XAMLite
                 textWrappingSet = true;
                 this.Text = WordWrap(this.Text, (int)this.spriteFont.MeasureString(this.Text).X);
             }
+
+            
 
             spriteBatch.Begin();
 
@@ -233,8 +244,15 @@ namespace XAMLite
             }
 
             Vector2 paddedPosition = new Vector2(textBlockContainer.X + (int)Padding.Left, textBlockContainer.Y + (int)Padding.Top);
-            spriteBatch.DrawString(this.spriteFont, this.Text, paddedPosition, this._foregroundColor);
+            
+            if(Rotate90)
+                spriteBatch.DrawString(this.spriteFont, this.Text, paddedPosition, this._foregroundColor, -MathHelper.PiOver2, spriteFont.MeasureString(this.Text), 1, SpriteEffects.None, 0);
+            else
+                spriteBatch.DrawString(this.spriteFont, this.Text, paddedPosition, this._foregroundColor);
             spriteBatch.End();
+
+            /*DrawString(_font, _title, _titlePos, Color.White, -MathHelper.PiOver2,
+                _titleSize / 2, 1, SpriteEffects.None, 0);*/
         }
 
         /// <summary>
@@ -352,6 +370,18 @@ namespace XAMLite
                 i--;
             // Return length of text before whitespace
             return i + 1;
+        }
+
+        private void flipAlignment()
+        {
+            if (HorizontalAlignment == HorizontalAlignment.Left)
+                HorizontalAlignment = HorizontalAlignment.Right;
+            else if (HorizontalAlignment == HorizontalAlignment.Right)
+                HorizontalAlignment = HorizontalAlignment.Left;
+            /*if (VerticalAlignment == VerticalAlignment.Top)
+                VerticalAlignment = VerticalAlignment.Bottom;
+            else if (VerticalAlignment == VerticalAlignment.Bottom)
+                VerticalAlignment = VerticalAlignment.Top;*/
         }
 
     }

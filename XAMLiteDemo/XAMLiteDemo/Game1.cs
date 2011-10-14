@@ -41,6 +41,8 @@ namespace XAMLiteDemo
             _graphics.PreferredBackBufferWidth = 600;
             _graphics.PreferredBackBufferHeight = 400;
 
+            
+
             // Enable this for random screen to (to test we're not hard-coding anything
             // base on screen size). Note: we're not attempting to support real-time
             // user resizing of the window.
@@ -71,6 +73,7 @@ namespace XAMLiteDemo
             grid.VerticalAlignment = VerticalAlignment.Center;
             grid.Background = Brushes.Black;
             grid.Margin = new Thickness(0, 0, 0, 0);
+            grid.Opacity = 0.5;
             Components.Add(grid);
 
             // XAMLite label example. LOADED TO GRID

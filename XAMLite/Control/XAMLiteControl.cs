@@ -21,6 +21,10 @@ namespace XAMLite
         public bool _mouseEnter;
         public bool _mouseLeave;
 
+        public event MouseButtonEventHandler MouseDown;
+        public event MouseEventHandler MouseEnter;
+        public event MouseEventHandler MouseLeave;
+
         /// <summary>
         /// 
         /// </summary>
@@ -50,6 +54,12 @@ namespace XAMLite
         /// 
         /// </summary>
         public Thickness Margin { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        //public RotateTransform RotateTransform { get; set; }
+        public bool Rotate90 { get; set; }
 
         /// <summary>
         /// 
@@ -203,6 +213,42 @@ namespace XAMLite
         public override void Draw ( GameTime gameTime )
         {
             base.Draw( gameTime );
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void OnMouseDown()
+        {
+            if (MouseDown != null)
+            {
+                var e = EventArgs.Empty as MouseButtonEventArgs;
+                MouseDown(this, e);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void OnMouseEnter()
+        {
+            if (MouseEnter != null)
+            {
+                var e = EventArgs.Empty as MouseEventArgs;
+                MouseEnter(this, e);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void OnMouseLeave()
+        {
+            if (MouseLeave != null)
+            {
+                var e = EventArgs.Empty as MouseEventArgs;
+                MouseLeave(this, e);
+            }
         }
 
     }
