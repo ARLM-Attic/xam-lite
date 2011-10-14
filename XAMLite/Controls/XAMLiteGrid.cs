@@ -14,7 +14,7 @@ namespace XAMLite
     public class XAMLiteGrid : XAMLiteControl
     {
         public List<XAMLiteControl> Children { get; set; }
-        protected Rectangle _panel;
+        private Rectangle _panel;
         private Texture2D _pixel;
         private Thickness _oldMargin;
 

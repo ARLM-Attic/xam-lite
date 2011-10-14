@@ -14,8 +14,8 @@ namespace XAMLite
     /// <see cref="http://msdn.microsoft.com/en-us/library/system.windows.controls.control.aspx"/>
     public class XAMLiteControl : DrawableGameComponent
     {
-        public MouseState ms;
-        public Microsoft.Xna.Framework.Point mouseLoc;
+        protected MouseState ms;
+        protected Microsoft.Xna.Framework.Point mouseLoc;
 
         protected bool _mouseDown;
         protected bool _mouseEnter;

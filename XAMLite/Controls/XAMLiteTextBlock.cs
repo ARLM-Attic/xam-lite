@@ -21,11 +21,11 @@ namespace XAMLite
     public class XAMLiteTextBlock : XAMLiteControl
     {
         // spritefont is toggled to whichever font the developer chooses
-        protected SpriteFont spriteFont { get; set; }
+        private SpriteFont spriteFont { get; set; }
 
         // the set of possible fonts that are preloaded in LoadContent()
-        protected SpriteFont arialSpriteFont { get; set; }
-        protected SpriteFont courier10SpriteFont { get; set; }
+        private SpriteFont arialSpriteFont { get; set; }
+        private SpriteFont courier10SpriteFont { get; set; }
 
         private Rectangle textBlockContainer;
 
@@ -113,7 +113,7 @@ namespace XAMLite
         private bool textWrappingSet;
         private bool widthHeightContainerSet;
 
-        private bool _applyTransform;
+        //private bool _applyTransform;
 
         /* A POTENTIAL WISH LIST FOR TEXTBLOCK
          *  TextBlock textBlock = new TextBlock(new Run("A bit of text content..."));
