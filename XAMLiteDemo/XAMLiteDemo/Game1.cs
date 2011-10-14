@@ -77,10 +77,10 @@ namespace XAMLiteDemo
             _label = new XAMLiteLabel(this);
             _label.Content = "Hello, world!";
             _label.Foreground = Brushes.Yellow;
-            _label.HorizontalAlignment = HorizontalAlignment.Center;
-            _label.VerticalAlignment = VerticalAlignment.Center;
-            Components.Add(_label);
-            //grid.Children.Add(_label);
+            _label.HorizontalAlignment = HorizontalAlignment.Left;
+            _label.VerticalAlignment = VerticalAlignment.Bottom;
+            //Components.Add(_label);
+            grid.Children.Add(_label);
 
             // Rectangle example #1
             XAMLiteRectangle rectangle1 = new XAMLiteRectangle(this);
@@ -111,8 +111,8 @@ namespace XAMLiteDemo
             dogImage.MouseDown += new MouseButtonEventHandler(dogImage_MouseDown);
             dogImage.MouseEnter += new MouseEventHandler(dogImage_MouseEnter);
             dogImage.MouseLeave += new MouseEventHandler(dogImage_MouseLeave);
-           // Components.Add(dogImage);
-            grid.Children.Add(dogImage);
+            Components.Add(dogImage);
+            //grid.Children.Add(dogImage);
 
             // Clickable-image example.
             catImage = new XAMLiteImage(this);
@@ -156,9 +156,10 @@ namespace XAMLiteDemo
             textBlock2.TextWrapping = TextWrapping.Wrap;
             textBlock2.FontFamily = new FontFamily("Courier10");
             textBlock2.Width = 250;
-            textBlock2.HorizontalAlignment = HorizontalAlignment.Center;
-            textBlock2.VerticalAlignment = VerticalAlignment.Bottom;
-            Components.Add(textBlock2);
+            textBlock2.HorizontalAlignment = HorizontalAlignment.Right;
+            textBlock2.VerticalAlignment = VerticalAlignment.Top;
+            //Components.Add(textBlock2);
+            grid.Children.Add(textBlock2);
 
             // Initialize all game components. (This includes calling Initialize() on all XAMLite controls, 
             // since they are game components).

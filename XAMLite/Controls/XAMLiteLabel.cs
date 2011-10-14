@@ -51,6 +51,11 @@ namespace XAMLite
             set
             {
                 this.Text = value;
+                if (this.spriteFont != null)
+                {
+                    RecalculateWidthAndHeight(value);
+                }
+                base.Text = value;
             }
         }
 
