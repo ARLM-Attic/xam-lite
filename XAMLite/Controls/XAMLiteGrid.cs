@@ -193,10 +193,11 @@ namespace XAMLite
                                     left = viewport.Width / 2 - this.Width / 2 + (int)Children[i].Margin.Left - (int)Children[i].Margin.Right;
                                     break;
                                 case HorizontalAlignment.Left:
-                                    left = (int)Children[i].Margin.Left;
+                                    left = (int)Children[i].Margin.Left + this.Margin.Left;
                                     break;
                                 case HorizontalAlignment.Right:
-                                    left = viewport.Width - this.Width + (int)Children[i].Margin.Left;
+                                    left = viewport.Width - this.Width + (int)Children[i].Margin.Left - this.Margin.Right;
+                                    Console.WriteLine(left);
                                     break;
                                 default:
                                     break;
@@ -208,13 +209,13 @@ namespace XAMLite
                             {
                                     
                                 case HorizontalAlignment.Center:
-                                    right = viewport.Width / 2 - this.Width / 2 + (int)Children[i].Margin.Right - (int)Children[i].Margin.Left + _oldMargin.Right;
+                                    right = viewport.Width / 2 - this.Width / 2 + (int)Children[i].Margin.Right - (int)Children[i].Margin.Left + _oldMargin.Right - _oldMargin.Left;
                                     break;
                                 case HorizontalAlignment.Left:
-                                    right = viewport.Width - this.Width + (int)Children[i].Margin.Right;
+                                    right = viewport.Width - this.Width + (int)Children[i].Margin.Right - this._oldMargin.Left;
                                     break;
                                 case HorizontalAlignment.Right:
-                                    right = (int)Children[i].Margin.Right;
+                                    right = (int)Children[i].Margin.Right + this.Margin.Right;
                                     break;
                                 default:
                                     break;
@@ -258,10 +259,11 @@ namespace XAMLite
                                     bottom = (viewport.Height / 2 - this.Height / 2) + (int)Children[i].Margin.Bottom - (int)Children[i].Margin.Top;
                                     break;
                                 case VerticalAlignment.Top:
-                                    bottom = viewport.Height - this.Height + (int)Children[i].Margin.Bottom;
+                                    bottom = viewport.Height - this.Height + (int)Children[i].Margin.Bottom - this.Margin.Top;
                                     break;
                                 case VerticalAlignment.Bottom:
-                                    bottom = (int)Children[i].Margin.Bottom;
+                                    Console.WriteLine(this.Margin.Bottom);
+                                    bottom = (int)Children[i].Margin.Bottom + this.Margin.Bottom;
                                     break;
                                 default:
                                     break;
@@ -299,10 +301,10 @@ namespace XAMLite
                                     top = (viewport.Height / 2 - this.Height / 2) + (int)Children[i].Margin.Top - (int)Children[i].Margin.Bottom;
                                     break;
                                 case VerticalAlignment.Top:
-                                    top = (int)Children[i].Margin.Top;
+                                    top = (int)Children[i].Margin.Top + this.Margin.Top;
                                     break;
                                 case VerticalAlignment.Bottom:
-                                    top = viewport.Height - this.Height + (int)Children[i].Margin.Top;
+                                    top = viewport.Height - this.Height + (int)Children[i].Margin.Top - this._oldMargin.Bottom;
                                     break;
                                 default:
                                     break;

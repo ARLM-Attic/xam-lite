@@ -97,14 +97,12 @@ namespace XAMLite
         /// <param name="game"></param>
         public XAMLiteLabel ( Game game, string text )
             : base( game )
-        {
-            
+        {     
             //
             this.Text = text;
 
             //
             this._foregroundColor = Color.White;
-
         }
 
         /// <summary>

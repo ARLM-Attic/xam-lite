@@ -70,14 +70,14 @@ namespace XAMLiteDemo
             grid.HorizontalAlignment = HorizontalAlignment.Left;
             grid.VerticalAlignment = VerticalAlignment.Bottom;
             grid.Background = Brushes.Black;
-            grid.Margin = new Thickness(0, 0, 0, 0);
+            grid.Margin = new Thickness(10, 0, 0, 10);
             Components.Add(grid);
 
             // XAMLite label example. LOADED TO GRID
             _label = new XAMLiteLabel(this);
             _label.Content = "Hello, world!";
             _label.Foreground = Brushes.Yellow;
-            _label.HorizontalAlignment = HorizontalAlignment.Left;
+            _label.HorizontalAlignment = HorizontalAlignment.Right;
             _label.VerticalAlignment = VerticalAlignment.Bottom;
             //Components.Add(_label);
             grid.Children.Add(_label);
@@ -111,8 +111,8 @@ namespace XAMLiteDemo
             dogImage.MouseDown += new MouseButtonEventHandler(dogImage_MouseDown);
             dogImage.MouseEnter += new MouseEventHandler(dogImage_MouseEnter);
             dogImage.MouseLeave += new MouseEventHandler(dogImage_MouseLeave);
-            Components.Add(dogImage);
-            //grid.Children.Add(dogImage);
+            //Components.Add(dogImage);
+            grid.Children.Add(dogImage);
 
             // Clickable-image example.
             catImage = new XAMLiteImage(this);
@@ -148,7 +148,7 @@ namespace XAMLiteDemo
             textBlock.Height = 100;
             Components.Add(textBlock);
 
-            // faking the Run class for WPF programmers
+            // faking the Run class for WPF programmers LOADED TO GRID
             XAMLiteTextBlock textBlock2 = new XAMLiteTextBlock(this, new Run("This constructor uses a mock Run class for WPF developers>>>>>>>>>>>>> >>>>>>>>>>>>> MMMMMMMMMMM. MMMMMMMM."));
             textBlock2.Background = Brushes.Bisque;
             textBlock2.Foreground = Brushes.Red;
