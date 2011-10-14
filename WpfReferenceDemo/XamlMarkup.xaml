@@ -7,14 +7,15 @@
         <TextBlock Height="46" HorizontalAlignment="Left" Margin="12,12,0,0" Name="textBlock1" Text="These controls are all laid out with XAML markup, which is what we'll NOT be doing.  Instead our XNA controls will be creating using a code-only approach, but mimicing the code-only API from XAML." VerticalAlignment="Top" TextWrapping="Wrap" Width="657" />
         <Button Content="Button" Height="23" HorizontalAlignment="Left" Margin="50,206,0,0" Name="button1" VerticalAlignment="Top" Width="75" />
         <CheckBox Content="CheckBox" Height="16" HorizontalAlignment="Left" Margin="54,265,0,0" Name="checkBox1" VerticalAlignment="Top" />
-        <ComboBox Height="23" HorizontalAlignment="Left" Margin="31,303,0,0" Name="comboBox1" VerticalAlignment="Top" Width="120">
+        <ComboBox Height="23" HorizontalAlignment="Left" Margin="144,235,0,0" Name="comboBox1" VerticalAlignment="Top" Width="120">
             <ComboBoxItem Content="ComboBox" IsSelected="True" />
         </ComboBox>
         <Image Height="100" HorizontalAlignment="Left" Margin="197,80,0,0" Name="dogImage" Stretch="Fill" VerticalAlignment="Top" Width="100" Source="/WpfReferenceDemo;component/Content/Dog.png" MouseEnter="dogImage_MouseEnter" MouseDown="dogImage_MouseDown" MouseLeave="dogImage_MouseLeave" MouseUp="dogImage_MouseUp" />
         <Label Content="Label" Height="28" HorizontalAlignment="Left" Margin="440,83,0,0" Name="label1" VerticalAlignment="Top" Background="#FFFCF2F2" />
-        <RadioButton Content="RadioButton" Height="16" HorizontalAlignment="Left" Margin="275,303,0,0" Name="radioButton1" VerticalAlignment="Top" />
+        <RadioButton Content="RadioButton" Height="16" HorizontalAlignment="Left" Margin="282,235,0,0" Name="radioButton1" VerticalAlignment="Top" />
         <TextBlock Height="61" HorizontalAlignment="Left" Margin="488,169,0,0" Name="textBlock2" Text="TextBlock.  The quick brown fox jumps over the lazy dog." VerticalAlignment="Top" Width="156" TextWrapping="Wrap" Background="#FFFCFAF5" />
         <Label Content="Rectangle" Height="28" HorizontalAlignment="Left" Margin="60,129,0,0" Name="label2" VerticalAlignment="Top" />
         <Label Content="Image (clickable)" Height="28" HorizontalAlignment="Left" Margin="197,174,0,0" Name="imageLabel" VerticalAlignment="Top" Width="100" HorizontalContentAlignment="Center" />
+        <Label Content="Bottom-Left Text" Margin="0" Name="label" Height="Auto" VerticalAlignment="Bottom" Background="LightGray" HorizontalAlignment="Left" />
     </Grid>
 </Window>

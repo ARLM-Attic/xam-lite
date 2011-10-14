@@ -65,12 +65,12 @@ namespace XAMLiteDemo
 
             // Grid example
             XAMLiteGrid grid = new XAMLiteGrid(this);
-            grid.Width = 250;
+            grid.Width = 400;
             grid.Height = 250;
-            grid.HorizontalAlignment = HorizontalAlignment.Left;
-            grid.VerticalAlignment = VerticalAlignment.Bottom;
+            grid.HorizontalAlignment = HorizontalAlignment.Center;
+            grid.VerticalAlignment = VerticalAlignment.Center;
             grid.Background = Brushes.Black;
-            grid.Margin = new Thickness(10, 0, 0, 10);
+            grid.Margin = new Thickness(0, 0, 0, 0);
             Components.Add(grid);
 
             // XAMLite label example. LOADED TO GRID
@@ -79,7 +79,6 @@ namespace XAMLiteDemo
             _label.Foreground = Brushes.Yellow;
             _label.HorizontalAlignment = HorizontalAlignment.Right;
             _label.VerticalAlignment = VerticalAlignment.Bottom;
-            //Components.Add(_label);
             grid.Children.Add(_label);
 
             // Rectangle example #1
@@ -104,15 +103,22 @@ namespace XAMLiteDemo
             dogImage = new XAMLiteImage(this);
             dogImage.Width = 100;
             dogImage.Height = 100;
-            dogImage.Margin = new Thickness(10, 0, 0, 10);
+            //dogImage.Margin = new Thickness(10, 0, 0, 10);
             dogImage.VerticalAlignment = VerticalAlignment.Bottom;
-            dogImage.HorizontalAlignment = HorizontalAlignment.Left;
+            dogImage.HorizontalAlignment = HorizontalAlignment.Center;
             dogImage.SourceName = @"Textures/Dog";
             dogImage.MouseDown += new MouseButtonEventHandler(dogImage_MouseDown);
             dogImage.MouseEnter += new MouseEventHandler(dogImage_MouseEnter);
             dogImage.MouseLeave += new MouseEventHandler(dogImage_MouseLeave);
-            //Components.Add(dogImage);
             grid.Children.Add(dogImage);
+
+            // XAMLite label example. LOADED TO GRID
+            XAMLiteLabel labelBottomLeft = new XAMLiteLabel(this);
+            labelBottomLeft.Content = "Bottom-Left Label";
+            labelBottomLeft.Foreground = Brushes.White;
+            labelBottomLeft.HorizontalAlignment = HorizontalAlignment.Left;
+            labelBottomLeft.VerticalAlignment = VerticalAlignment.Bottom;
+            grid.Children.Add(labelBottomLeft);
 
             // Clickable-image example.
             catImage = new XAMLiteImage(this);

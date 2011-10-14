@@ -58,10 +58,17 @@
     <Compile Include="ContainerExample.xaml.cs">
       <DependentUpon>ContainerExample.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GridExample.xaml.cs">
+      <DependentUpon>GridExample.xaml</DependentUpon>
+    </Compile>
     <Compile Include="XamlMarkup.xaml.cs">
       <DependentUpon>XamlMarkup.xaml</DependentUpon>
     </Compile>
     <Page Include="ContainerExample.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GridExample.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
