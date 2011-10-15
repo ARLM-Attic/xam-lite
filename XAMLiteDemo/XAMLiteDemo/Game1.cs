@@ -180,7 +180,7 @@ namespace XAMLiteDemo
         void grid_MouseDown(object sender, MouseButtonEventArgs e)
         {
             int add = 5;
-            //_label.Margin = new Thickness(_label.Margin.Left, _label.Margin.Top, _label.Margin.Right + add, _label.Margin.Bottom);
+            _label.Margin = new Thickness(_label.Margin.Left, _label.Margin.Top, _label.Margin.Right + add, _label.Margin.Bottom);
             grid.Margin = new Thickness(grid.Margin.Left + add, grid.Margin.Top, grid.Margin.Right, grid.Margin.Bottom);
             //dogImage.Margin = new Thickness(dogImage.Margin.Left, dogImage.Margin.Top, dogImage.Margin.Right + add, dogImage.Margin.Bottom);
             //grid.HorizontalAlignment = HorizontalAlignment.Left;

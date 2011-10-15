@@ -14,8 +14,7 @@ namespace XAMLite
     public class XAMLiteGrid : XAMLiteControl
     {
         public List<XAMLiteControl> Children { get; set; }
-        private Rectangle _panel;
-        private Texture2D _pixel;
+        
         private Thickness _oldMargin;
 
         /// <summary>
@@ -49,9 +48,7 @@ namespace XAMLite
         {
             Children = new List<XAMLiteControl>();
 
-            // for Background Color
-            _pixel = new Texture2D(game.GraphicsDevice, 1, 1);
-            _pixel.SetData<Color>(new Color[] { Color.White });
+            
 
             _oldMargin = new Thickness(0, 0, 0, 0);
         }
@@ -80,7 +77,7 @@ namespace XAMLite
         {
             base.Update(gameTime);
 
-            Rectangle msRect = new Rectangle(ms.X, ms.Y, 1, 1);
+            /*Rectangle msRect = new Rectangle(ms.X, ms.Y, 1, 1);
             if (_panel.Contains(msRect))
             {
                 if (!_mouseEnter)
@@ -92,7 +89,7 @@ namespace XAMLite
                 {
                     _mouseDown = false;
 
-                    OnMouseDown();
+                    OnMouseDown();                    
                 }
             }
             else
@@ -102,7 +99,9 @@ namespace XAMLite
                     _mouseEnter = false;
                     OnMouseLeave();
                 }
-            }
+            }*/
+
+            
         }
 
         /// <summary>

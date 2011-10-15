@@ -20,16 +20,10 @@ namespace XAMLite
     /// </summary>
     public class XAMLiteTextBlock : XAMLiteControl
     {
-        // spritefont is toggled to whichever font the developer chooses
-        private SpriteFont spriteFont { get; set; }
 
         // the set of possible fonts that are preloaded in LoadContent()
         private SpriteFont arialSpriteFont { get; set; }
         private SpriteFont courier10SpriteFont { get; set; }
-
-        private Rectangle textBlockContainer;
-
-        private Texture2D _pixel;
 
         // for WPF developers, in case they do not load Run in the Constructor.
         // They could then type: textblock.Run
@@ -145,8 +139,8 @@ namespace XAMLite
             this.Padding = new Thickness(0, 0, 0, 0);
 
             // for Background Color
-            _pixel = new Texture2D(game.GraphicsDevice, 1, 1);
-            _pixel.SetData<Color>(new Color[] { Color.White });
+           // _pixel = new Texture2D(game.GraphicsDevice, 1, 1);
+           // _pixel.SetData<Color>(new Color[] { Color.White });
         }
 
         /// <summary>
@@ -162,10 +156,6 @@ namespace XAMLite
             this._foregroundColor = Color.Black;
             this._backgroundColor = Color.Transparent;
             this.Padding = new Thickness(0, 0, 0, 0);
-
-            // for Background Color
-            _pixel = new Texture2D(game.GraphicsDevice, 1, 1);
-            _pixel.SetData<Color>(new Color[] { Color.White });
         }
 
         /// <summary>
@@ -204,6 +194,7 @@ namespace XAMLite
                 else
                     this.spriteFont = courier10SpriteFont;
             }
+
         }
 
         /// <summary>
@@ -229,10 +220,10 @@ namespace XAMLite
                     CreateTextBlockContainer();
                 }
 
-                spriteBatch.Draw(_pixel, textBlockContainer, this._backgroundColor);
+                spriteBatch.Draw(_pixel, _panel, this._backgroundColor);
             }
 
-            Vector2 paddedPosition = new Vector2(textBlockContainer.X + (int)Padding.Left, textBlockContainer.Y + (int)Padding.Top);
+            Vector2 paddedPosition = new Vector2(_panel.X + (int)Padding.Left, _panel.Y + (int)Padding.Top);
 
             if (Rotate90)
                 spriteBatch.DrawString(this.spriteFont, this.Text, paddedPosition, this._foregroundColor, -MathHelper.PiOver2, spriteFont.MeasureString(this.Text), 1, SpriteEffects.None, 0);
@@ -259,7 +250,7 @@ namespace XAMLite
         private void CreateTextBlockContainer()
         {
             if (this.Width != 0 && this.Height != 0)
-                textBlockContainer = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+                _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
         }
 
         // used to break the string into seperate lines of text
@@ -358,19 +349,6 @@ namespace XAMLite
             // Return length of text before whitespace
             return i + 1;
         }
-
-        private void flipAlignment()
-        {
-            if (HorizontalAlignment == HorizontalAlignment.Left)
-                HorizontalAlignment = HorizontalAlignment.Right;
-            else if (HorizontalAlignment == HorizontalAlignment.Right)
-                HorizontalAlignment = HorizontalAlignment.Left;
-            /*if (VerticalAlignment == VerticalAlignment.Top)
-                VerticalAlignment = VerticalAlignment.Bottom;
-            else if (VerticalAlignment == VerticalAlignment.Bottom)
-                VerticalAlignment = VerticalAlignment.Top;*/
-        }
-
     }
 
     // for mocking the WPF constructor

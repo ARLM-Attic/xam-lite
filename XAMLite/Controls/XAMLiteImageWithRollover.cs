@@ -44,11 +44,9 @@ namespace XAMLite
         {
             base.LoadContent();
 
-            this.texture = Game.Content.Load<Texture2D>(SourceName);
             this.rolloverTexture = Game.Content.Load<Texture2D>(RolloverSourceName);
             this.Width = this.texture.Width;
             this.Height = this.texture.Height;
-            rect = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
         }
 
         public override void Update(GameTime gameTime)
@@ -71,9 +69,9 @@ namespace XAMLite
 
             //
             if(_mouseEnter)
-                this.spriteBatch.Draw(this.rolloverTexture, rect, (Color.White * opacity));
+                this.spriteBatch.Draw(this.rolloverTexture, _panel, (Color.White * opacity));
             else
-                this.spriteBatch.Draw(this.texture, rect, (Color.White * opacity));
+                this.spriteBatch.Draw(this.texture, _panel, (Color.White * opacity));
 
             //
             this.spriteBatch.End();

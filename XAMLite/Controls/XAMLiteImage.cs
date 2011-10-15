@@ -59,35 +59,13 @@ namespace XAMLite
             this.texture = Game.Content.Load<Texture2D>( SourceName );
             this.Width = this.texture.Width;
             this.Height = this.texture.Height;
-            rect = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+            _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
-            Rectangle msRect = new Rectangle(ms.X, ms.Y, 1, 1);
-            if (rect.Contains(msRect))
-            {
-                if (!_mouseEnter)
-                {
-                    _mouseEnter = true;
-                    OnMouseEnter();
-                }
-                if (_mouseDown)
-                {
-                    _mouseDown = false;
-                    OnMouseDown();
-                }
-            }
-            else
-            {
-                if (_mouseEnter)
-                {
-                    _mouseEnter = false;
-                    OnMouseLeave();
-                }
-            }
         }
 
         /// <summary>
@@ -96,7 +74,6 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Draw ( GameTime gameTime )
         {
-            
             //
             this.spriteBatch.Begin();
             
@@ -104,7 +81,7 @@ namespace XAMLite
             float opacity = (float)this.Opacity;
 
             //
-            this.spriteBatch.Draw(this.texture, rect, (Color.White * opacity));
+            this.spriteBatch.Draw(this.texture, _panel, (Color.White * opacity));
             
             //
             this.spriteBatch.End();

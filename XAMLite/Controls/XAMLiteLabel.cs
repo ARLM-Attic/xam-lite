@@ -16,11 +16,6 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        protected SpriteFont spriteFont;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public override string Text
         {
             get
@@ -76,8 +71,6 @@ namespace XAMLite
                 _foregroundColor = new Color(color.R, color.G, color.B, color.A);
             }
         }
-
-
         
         public XAMLiteLabel(Game game)
             : base(game)
@@ -128,16 +121,5 @@ namespace XAMLite
             spriteBatch.DrawString( this.spriteFont, Text, Position, this._foregroundColor );
             spriteBatch.End();
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="text"></param>
-        private void RecalculateWidthAndHeight(string text)
-        {
-            this.Width = (int)this.spriteFont.MeasureString(text).X;
-            this.Height = (int)this.spriteFont.MeasureString(text).Y;
-        }
     }
-
 }

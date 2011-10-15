@@ -13,8 +13,6 @@ namespace XAMLite
     public class XAMLiteRectangle : XAMLiteControl
     {
         #region Fields
-        private Rectangle _rect;
-        private Texture2D _pixel;
         private Color _fill;
         private Color _stroke;
 
@@ -77,16 +75,16 @@ namespace XAMLite
             ConfirmHeightAndWidth();
             // Begin.
             this.spriteBatch.Begin();
-            _rect = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
-            this.spriteBatch.Draw(_pixel, _rect, _fill);
-            _rect = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, StrokeThickness);
-            this.spriteBatch.Draw(_pixel, _rect, _stroke);
-            _rect = new Rectangle((int)this.Position.X, ((int)this.Position.Y + this.Height - StrokeThickness), this.Width, StrokeThickness);
-            this.spriteBatch.Draw(_pixel, _rect, _stroke);
-            _rect = new Rectangle((int)this.Position.X, (int)this.Position.Y, StrokeThickness, this.Height);
-            this.spriteBatch.Draw(_pixel, _rect, _stroke);
-            _rect = new Rectangle(((int)this.Position.X + this.Width - StrokeThickness), (int)this.Position.Y, StrokeThickness, this.Height);
-            this.spriteBatch.Draw(_pixel, _rect, _stroke);
+            _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+            this.spriteBatch.Draw(_pixel, _panel, _fill);
+            _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, StrokeThickness);
+            this.spriteBatch.Draw(_pixel, _panel, _stroke);
+            _panel = new Rectangle((int)this.Position.X, ((int)this.Position.Y + this.Height - StrokeThickness), this.Width, StrokeThickness);
+            this.spriteBatch.Draw(_pixel, _panel, _stroke);
+            _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, StrokeThickness, this.Height);
+            this.spriteBatch.Draw(_pixel, _panel, _stroke);
+            _panel = new Rectangle(((int)this.Position.X + this.Width - StrokeThickness), (int)this.Position.Y, StrokeThickness, this.Height);
+            this.spriteBatch.Draw(_pixel, _panel, _stroke);
 
             // End.
             this.spriteBatch.End();

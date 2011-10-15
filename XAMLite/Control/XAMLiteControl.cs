@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Input;
 using Microsoft.Xna.Framework.Input;
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {
@@ -24,6 +25,16 @@ namespace XAMLite
         public event MouseButtonEventHandler MouseDown;
         public event MouseEventHandler MouseEnter;
         public event MouseEventHandler MouseLeave;
+
+        protected Rectangle msRect; // mouse position
+        protected Rectangle _panel; // rectangle containing the control for collision and drawing
+
+        protected Texture2D _pixel; //  fills the space of a control with a color
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected SpriteFont spriteFont;
 
         /// <summary>
         /// 
@@ -91,7 +102,6 @@ namespace XAMLite
 
                     default:
                         break;
-
                 }
 
                 // Y
@@ -117,12 +127,10 @@ namespace XAMLite
 
                     default:
                         break;
-
                 }
 
                 //
                 return new Vector2(x, y);
-
             }
         }
 
@@ -173,7 +181,6 @@ namespace XAMLite
         /// </summary>
         public override void Initialize()
         {
-
             //
             this.device = Game.GraphicsDevice;
             this.viewport = device.Viewport;
@@ -189,6 +196,10 @@ namespace XAMLite
         protected override void LoadContent()
         {
             this.spriteBatch = new SpriteBatch(Game.GraphicsDevice);
+
+            // for Background Color
+            _pixel = new Texture2D(this.GraphicsDevice, 1, 1);
+            _pixel.SetData<Color>(new Color[] { Color.White });
         }
 
         /// <summary>
@@ -204,6 +215,31 @@ namespace XAMLite
                 _mouseDown = true;
             else
                 _mouseDown = false;
+
+            
+            msRect = new Rectangle(ms.X, ms.Y, 1, 1);
+            if (_panel.Contains(msRect))
+            {
+                if (!_mouseEnter)
+                {
+                    _mouseEnter = true;
+                    OnMouseEnter();
+                }
+                if (_mouseDown)
+                {
+                    _mouseDown = false;
+
+                    OnMouseDown();
+                }
+            }
+            else
+            {
+                if (_mouseEnter)
+                {
+                    _mouseEnter = false;
+                    OnMouseLeave();
+                }
+            }
         }
 
         /// <summary>
@@ -249,6 +285,16 @@ namespace XAMLite
                 var e = EventArgs.Empty as MouseEventArgs;
                 MouseLeave(this, e);
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="text"></param>
+        protected void RecalculateWidthAndHeight(string text)
+        {
+            this.Width = (int)this.spriteFont.MeasureString(text).X;
+            this.Height = (int)this.spriteFont.MeasureString(text).Y;
         }
 
     }
