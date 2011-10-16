@@ -66,7 +66,6 @@ namespace XAMLite
             : base(game)
         {
             Children = new List<XAMLiteControl>();
-            this.Margin = new Thickness(0, 0, 0, 0);
         }
 
         /// <summary>

@@ -19,12 +19,13 @@ namespace XAMLite
         protected Microsoft.Xna.Framework.Point mouseLoc;
 
         protected bool _mouseDown;
+        protected bool _mouseUp;
         protected bool _mouseEnter;
         protected bool _mouseLeave;
         protected bool _keyDown;
-        //protected bool _isCentered;
 
         public event MouseButtonEventHandler MouseDown;
+        public event MouseButtonEventHandler MouseUp;
         public event MouseEventHandler MouseEnter;
         public event MouseEventHandler MouseLeave;
         public event KeyEventHandler KeyDown;
@@ -48,6 +49,11 @@ namespace XAMLite
         /// 
         /// </summary>
         public virtual string Text { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Visibility Visible { get; set; }
 
         /// <summary>
         /// 
@@ -93,7 +99,6 @@ namespace XAMLite
                 {
 
                     case HorizontalAlignment.Center:
-                        //x = (this.viewport.Width / 2) - (this.Width / 2);
                         x = (this.viewport.Width - this.Width) / 2;
                         break;
 
@@ -182,6 +187,8 @@ namespace XAMLite
             this.VerticalAlignment = System.Windows.VerticalAlignment.Top;
             this.Margin = new Thickness(0, 0, 0, 0);
             this.Opacity = 1.0;
+            this.Visible = new Visibility();
+            //this.Visible = Visibility.Hidden;
             //this.Foreground = Brushes.Black;
         }
 
@@ -224,8 +231,11 @@ namespace XAMLite
                 _mouseDown = true;
             else
                 _mouseDown = false;
+            if (!_mouseUp && ms.LeftButton == ButtonState.Released)
+                _mouseUp = true;
+            else
+                _mouseUp = false;
 
-            
             _msRect = new Rectangle(ms.X, ms.Y, 1, 1);
             if (_panel.Contains(_msRect))
             {
@@ -240,6 +250,12 @@ namespace XAMLite
 
                     OnMouseDown();
                 }
+
+                if (_mouseUp)
+                {
+                    _mouseUp = false;
+                    OnMouseUp();
+                }
             }
             else
             {
@@ -249,11 +265,6 @@ namespace XAMLite
                     OnMouseLeave();
                 }
             }
-
-            //if (System.Windows.Input.Keyboard.IsKeyDown(Key.F1))
-            //{
-            //    OnKeyDown();
-            //}
         }
 
         /// <summary>
@@ -283,6 +294,18 @@ namespace XAMLite
             {
                 var e = EventArgs.Empty as MouseButtonEventArgs;
                 MouseDown(this, e);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void OnMouseUp()
+        {
+            if (MouseUp != null)
+            {
+                var e = EventArgs.Empty as MouseButtonEventArgs;
+                MouseUp(this, e);
             }
         }
 

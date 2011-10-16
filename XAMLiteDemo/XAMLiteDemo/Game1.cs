@@ -72,7 +72,7 @@ namespace XAMLiteDemo
             grid.HorizontalAlignment = HorizontalAlignment.Left;
             grid.VerticalAlignment = VerticalAlignment.Bottom;
             grid.Background = Brushes.White;
-            grid.Margin = new Thickness(10, 0, 0, 10);
+            grid.Margin = new Thickness(10, 0, -500, 10);
             grid.Opacity = 0.5;
             grid.MouseDown += new MouseButtonEventHandler(grid_MouseDown);
             Components.Add(grid);

@@ -24,6 +24,8 @@ namespace XAMLite
         // the set of possible fonts that are preloaded in LoadContent()
         private SpriteFont arialSpriteFont { get; set; }
         private SpriteFont courier10SpriteFont { get; set; }
+        private SpriteFont kootenay9SpriteFont { get; set; }
+        private SpriteFont kootenay14SpriteFont { get; set; }
 
         // for WPF developers, in case they do not load Run in the Constructor.
         // They could then type: textblock.Run
@@ -141,6 +143,7 @@ namespace XAMLite
             _backgroundColor = Color.Transparent;
             this.spriteFont = courier10SpriteFont;
             this.Padding = new Thickness(0, 0, 0, 0);
+            //this.Visible = Visibility.Hidden;
         }
 
         /// <summary>
@@ -156,6 +159,7 @@ namespace XAMLite
             this._foregroundColor = Color.Black;
             this._backgroundColor = Color.Transparent;
             this.Padding = new Thickness(0, 0, 0, 0);
+            //this.Visible = Visibility.Hidden;
         }
 
         /// <summary>
@@ -169,7 +173,9 @@ namespace XAMLite
             base.LoadContent();
             this.arialSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Arial");
             this.courier10SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Courier10");
-            this.spriteFont = courier10SpriteFont;
+            this.kootenay9SpriteFont = Game.Content.Load<SpriteFont>("Fonts/kootenay9");
+            this.kootenay14SpriteFont = Game.Content.Load<SpriteFont>("Fonts/kootenay14");
+            this.spriteFont = kootenay14SpriteFont;
 
             // triggers whether Width and Height of textblock were set by user
             if (this.Width == 0)
@@ -180,8 +186,7 @@ namespace XAMLite
                 heightSet = false;
             else
                 heightSet = true;
-            
-            //CreateTextBlockContainer();
+
         }
 
         public override void Update(GameTime gameTime)
@@ -196,7 +201,7 @@ namespace XAMLite
                 else
                     this.spriteFont = courier10SpriteFont;
             }
-            CreateTextBlockContainer();
+            _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
         }
 
         /// <summary>
@@ -226,13 +231,14 @@ namespace XAMLite
                     this.Height = this.Width;
                     this.Width = tempHeight;
                     Padding = new Thickness(Padding.Top, Padding.Left, Padding.Bottom, Padding.Right);
+                    CreateTextBlockContainer();
                 }
                 paddedPosition = new Vector2(_panel.X + _panel.Width - (int)Padding.Left, _panel.Y + (int)Padding.Top);
             }
             else
                 paddedPosition = new Vector2(_panel.X + (int)Padding.Left, _panel.Y + (int)Padding.Top);
 
-            CreateTextBlockContainer();
+
 
             spriteBatch.Begin();
 
@@ -249,8 +255,7 @@ namespace XAMLite
             {
                 spriteBatch.DrawString(this.spriteFont, this.Text, paddedPosition, this._foregroundColor);
             }
-                spriteBatch.End();
-
+            spriteBatch.End();
         }
 
         // Determines the size of the textblock based on Width, Height.
