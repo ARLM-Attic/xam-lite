@@ -208,52 +208,55 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            if (TextWrapping == TextWrapping.Wrap && !textWrappingSet)
+            if (Visible == Visibility.Visible)
             {
-                textWrappingSet = true;
-                this.Text = WordWrap(this.Text, (int)this.spriteFont.MeasureString(this.Text).X);
-            }
-
-            if (!widthHeightContainerSet)
-            {
-                widthHeightContainerSet = true;
-                CalculateWidthAndHeight(this.Text);
-            }
-
-            if (Rotate90)
-            {
-                if (!rotated)
+                if (TextWrapping == TextWrapping.Wrap && !textWrappingSet)
                 {
-                    rotated = true;
-                    int tempHeight = this.Height;
-                    this.Height = this.Width;
-                    this.Width = tempHeight;
-                    Padding = new Thickness(Padding.Top, Padding.Left, Padding.Bottom, Padding.Right);
-                    CreateTextBlockContainer();
+                    textWrappingSet = true;
+                    this.Text = WordWrap(this.Text, (int)this.spriteFont.MeasureString(this.Text).X);
                 }
-                paddedPosition = new Vector2(_panel.X + _panel.Width - (int)Padding.Left, _panel.Y + (int)Padding.Top);
+
+                if (!widthHeightContainerSet)
+                {
+                    widthHeightContainerSet = true;
+                    CalculateWidthAndHeight(this.Text);
+                }
+
+                if (Rotate90)
+                {
+                    if (!rotated)
+                    {
+                        rotated = true;
+                        int tempHeight = this.Height;
+                        this.Height = this.Width;
+                        this.Width = tempHeight;
+                        Padding = new Thickness(Padding.Top, Padding.Left, Padding.Bottom, Padding.Right);
+                        CreateTextBlockContainer();
+                    }
+                    paddedPosition = new Vector2(_panel.X + _panel.Width - (int)Padding.Left, _panel.Y + (int)Padding.Top);
+                }
+                else
+                    paddedPosition = new Vector2(_panel.X + (int)Padding.Left, _panel.Y + (int)Padding.Top);
+
+
+
+                spriteBatch.Begin();
+
+                if (!transparent)
+                {
+                    spriteBatch.Draw(_pixel, _panel, this._backgroundColor);
+                }
+
+                if (Rotate90)
+                {
+                    spriteBatch.DrawString(this.spriteFont, this.Text, paddedPosition, this._foregroundColor, -MathHelper.PiOver2, spriteFont.MeasureString(this.Text), 1, SpriteEffects.None, 0);
+                }
+                else
+                {
+                    spriteBatch.DrawString(this.spriteFont, this.Text, paddedPosition, this._foregroundColor);
+                }
+                spriteBatch.End();
             }
-            else
-                paddedPosition = new Vector2(_panel.X + (int)Padding.Left, _panel.Y + (int)Padding.Top);
-
-
-
-            spriteBatch.Begin();
-
-            if (!transparent)
-            {
-                spriteBatch.Draw(_pixel, _panel, this._backgroundColor);
-            }
-
-            if (Rotate90)
-            {
-                spriteBatch.DrawString(this.spriteFont, this.Text, paddedPosition, this._foregroundColor, -MathHelper.PiOver2, spriteFont.MeasureString(this.Text), 1, SpriteEffects.None, 0);
-            }
-            else
-            {
-                spriteBatch.DrawString(this.spriteFont, this.Text, paddedPosition, this._foregroundColor);
-            }
-            spriteBatch.End();
         }
 
         // Determines the size of the textblock based on Width, Height.

@@ -117,9 +117,12 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Draw ( GameTime gameTime )
         {
-            spriteBatch.Begin();
-            spriteBatch.DrawString( this.spriteFont, Text, Position, this._foregroundColor );
-            spriteBatch.End();
+            if (Visible == System.Windows.Visibility.Visible)
+            {
+                spriteBatch.Begin();
+                spriteBatch.DrawString(this.spriteFont, Text, Position, this._foregroundColor);
+                spriteBatch.End();
+            }
         }
     }
 }

@@ -29,20 +29,21 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Draw ( GameTime gameTime )
         {
-            
-            // Begin.
-            this.spriteBatch.Begin();
+            if (Visible == System.Windows.Visibility.Visible)
+            {
+                // Begin.
+                this.spriteBatch.Begin();
 
-            // Draw shadow text.
-            var shadowPos = Position + new Vector2( 1, 1 );
-            this.spriteBatch.DrawString(this.spriteFont, this.Text, shadowPos, Color.Black);
+                // Draw shadow text.
+                var shadowPos = Position + new Vector2(1, 1);
+                this.spriteBatch.DrawString(this.spriteFont, this.Text, shadowPos, Color.Black);
 
-            // Draw text.
-            this.spriteBatch.DrawString(this.spriteFont, this.Text, this.Position, this._foregroundColor);
+                // Draw text.
+                this.spriteBatch.DrawString(this.spriteFont, this.Text, this.Position, this._foregroundColor);
 
-            // End.
-            this.spriteBatch.End();
-
+                // End.
+                this.spriteBatch.End();
+            }
         }
 
     }

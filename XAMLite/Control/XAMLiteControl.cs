@@ -188,8 +188,7 @@ namespace XAMLite
             this.Margin = new Thickness(0, 0, 0, 0);
             this.Opacity = 1.0;
             this.Visible = new Visibility();
-            //this.Visible = Visibility.Hidden;
-            //this.Foreground = Brushes.Black;
+            this.Visible = Visibility.Visible;
         }
 
         /// <summary>

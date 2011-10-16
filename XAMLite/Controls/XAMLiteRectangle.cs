@@ -72,22 +72,26 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            ConfirmHeightAndWidth();
-            // Begin.
-            this.spriteBatch.Begin();
-            _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
-            this.spriteBatch.Draw(_pixel, _panel, _fill);
-            _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, StrokeThickness);
-            this.spriteBatch.Draw(_pixel, _panel, _stroke);
-            _panel = new Rectangle((int)this.Position.X, ((int)this.Position.Y + this.Height - StrokeThickness), this.Width, StrokeThickness);
-            this.spriteBatch.Draw(_pixel, _panel, _stroke);
-            _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, StrokeThickness, this.Height);
-            this.spriteBatch.Draw(_pixel, _panel, _stroke);
-            _panel = new Rectangle(((int)this.Position.X + this.Width - StrokeThickness), (int)this.Position.Y, StrokeThickness, this.Height);
-            this.spriteBatch.Draw(_pixel, _panel, _stroke);
+            if (Visible == System.Windows.Visibility.Visible)
+            {
 
-            // End.
-            this.spriteBatch.End();
+                ConfirmHeightAndWidth();
+                // Begin.
+                this.spriteBatch.Begin();
+                _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+                this.spriteBatch.Draw(_pixel, _panel, _fill);
+                _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, StrokeThickness);
+                this.spriteBatch.Draw(_pixel, _panel, _stroke);
+                _panel = new Rectangle((int)this.Position.X, ((int)this.Position.Y + this.Height - StrokeThickness), this.Width, StrokeThickness);
+                this.spriteBatch.Draw(_pixel, _panel, _stroke);
+                _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, StrokeThickness, this.Height);
+                this.spriteBatch.Draw(_pixel, _panel, _stroke);
+                _panel = new Rectangle(((int)this.Position.X + this.Width - StrokeThickness), (int)this.Position.Y, StrokeThickness, this.Height);
+                this.spriteBatch.Draw(_pixel, _panel, _stroke);
+
+                // End.
+                this.spriteBatch.End();
+            }
         }
 
         /// <summary>

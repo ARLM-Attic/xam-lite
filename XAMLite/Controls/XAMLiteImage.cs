@@ -71,55 +71,20 @@ namespace XAMLite
         public override void Draw ( GameTime gameTime )
         {
             //
-            this.spriteBatch.Begin();
-            
-            // Opacity
-            float opacity = (float)this.Opacity;
+            if (Visible == System.Windows.Visibility.Visible)
+            {
+                this.spriteBatch.Begin();
 
-            //
-            this.spriteBatch.Draw(this.texture, _panel, (Color.White * opacity));
-            
-            //
-            this.spriteBatch.End();
+                // Opacity
+                float opacity = (float)this.Opacity;
 
+                //
+                this.spriteBatch.Draw(this.texture, _panel, (Color.White * opacity));
+
+                //
+                this.spriteBatch.End();
+            }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-         /*public virtual void OnMouseDown()
-         {
-             if (MouseDown != null)
-             {
-                 var e = EventArgs.Empty as MouseButtonEventArgs;
-                 MouseDown(this, e);
-             }        
-         }*/
-
-         /// <summary>
-         /// 
-         /// </summary>
-         /*public virtual void OnMouseEnter()
-         {
-             if (MouseEnter != null)
-             {
-                 var e = EventArgs.Empty as MouseEventArgs;
-                 MouseEnter(this, e);
-             }
-         }*/
-
-         /// <summary>
-         /// 
-         /// </summary>
-         /*public virtual void OnMouseLeave()
-         {
-             if (MouseLeave != null)
-             {
-                 var e = EventArgs.Empty as MouseEventArgs;
-                 MouseLeave(this, e);
-             }
-         }*/
-
     }
 
 }

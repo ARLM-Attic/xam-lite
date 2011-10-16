@@ -109,14 +109,17 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            spriteBatch.Begin();
-
-            if (!transparent)
+            if (Visible == Visibility.Visible)
             {
-                spriteBatch.Draw(_pixel, _panel, (_backgroundColor * (float)Opacity));
-            }
+                spriteBatch.Begin();
 
-            spriteBatch.End();
+                if (!transparent)
+                {
+                    spriteBatch.Draw(_pixel, _panel, (_backgroundColor * (float)Opacity));
+                }
+
+                spriteBatch.End();
+            }
 
             // Begin.
         }
