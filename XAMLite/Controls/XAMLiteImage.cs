@@ -16,10 +16,6 @@ namespace XAMLite
     /// </summary>
     public class XAMLiteImage : XAMLiteControl
     {
-        //public event MouseButtonEventHandler MouseDown;
-        //public event MouseEventHandler MouseEnter;
-        //public event MouseEventHandler MouseLeave;
-
         /// <summary>
         /// 
         /// </summary>
@@ -65,7 +61,7 @@ namespace XAMLite
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
+            _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
         }
 
         /// <summary>

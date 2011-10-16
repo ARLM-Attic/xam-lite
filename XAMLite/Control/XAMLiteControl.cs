@@ -21,12 +21,15 @@ namespace XAMLite
         protected bool _mouseDown;
         protected bool _mouseEnter;
         protected bool _mouseLeave;
+        protected bool _keyDown;
+        //protected bool _isCentered;
 
         public event MouseButtonEventHandler MouseDown;
         public event MouseEventHandler MouseEnter;
         public event MouseEventHandler MouseLeave;
+        public event KeyEventHandler KeyDown;
 
-        protected Rectangle msRect; // mouse position
+        protected Rectangle _msRect; // mouse position
         protected Rectangle _panel; // rectangle containing the control for collision and drawing
 
         protected Texture2D _pixel; //  fills the space of a control with a color
@@ -35,6 +38,11 @@ namespace XAMLite
         /// 
         /// </summary>
         protected SpriteFont spriteFont;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual string Name { get; set; }
 
         /// <summary>
         /// 
@@ -85,7 +93,8 @@ namespace XAMLite
                 {
 
                     case HorizontalAlignment.Center:
-                        x = (this.viewport.Width / 2) - (this.Width / 2);
+                        //x = (this.viewport.Width / 2) - (this.Width / 2);
+                        x = (this.viewport.Width - this.Width) / 2;
                         break;
 
                     case HorizontalAlignment.Left:
@@ -217,8 +226,8 @@ namespace XAMLite
                 _mouseDown = false;
 
             
-            msRect = new Rectangle(ms.X, ms.Y, 1, 1);
-            if (_panel.Contains(msRect))
+            _msRect = new Rectangle(ms.X, ms.Y, 1, 1);
+            if (_panel.Contains(_msRect))
             {
                 if (!_mouseEnter)
                 {
@@ -240,6 +249,11 @@ namespace XAMLite
                     OnMouseLeave();
                 }
             }
+
+            //if (System.Windows.Input.Keyboard.IsKeyDown(Key.F1))
+            //{
+            //    OnKeyDown();
+            //}
         }
 
         /// <summary>
@@ -249,6 +263,15 @@ namespace XAMLite
         public override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
+        }
+
+        public virtual void OnKeyDown()
+        {
+            if (KeyDown != null)
+            {
+                var e = EventArgs.Empty as KeyEventArgs;
+                KeyDown(this, e);
+            }
         }
 
         /// <summary>
@@ -296,7 +319,5 @@ namespace XAMLite
             this.Width = (int)this.spriteFont.MeasureString(text).X;
             this.Height = (int)this.spriteFont.MeasureString(text).Y;
         }
-
     }
-
 }

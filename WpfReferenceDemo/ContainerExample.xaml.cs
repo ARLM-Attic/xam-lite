@@ -23,6 +23,7 @@ namespace WpfReferenceDemo
             InitializeComponent();
 
             //Grid grid = new Grid();
+           // grid.HorizontalAlignment = HorizontalAlignment.
             //grid.Width = 500;
             //grid.Height = 400;
             //grid.Background = Brushes.Green;

@@ -58,6 +58,8 @@ namespace XAMLite
 
         public Thickness Padding { get; set; }
 
+        Vector2 paddedPosition;
+
         /// <summary>
         /// 
         /// </summary>
@@ -107,6 +109,8 @@ namespace XAMLite
         private bool textWrappingSet;
         private bool widthHeightContainerSet;
 
+        private bool rotated;
+
         //private bool _applyTransform;
 
         /* A POTENTIAL WISH LIST FOR TEXTBLOCK
@@ -137,10 +141,6 @@ namespace XAMLite
             _backgroundColor = Color.Transparent;
             this.spriteFont = courier10SpriteFont;
             this.Padding = new Thickness(0, 0, 0, 0);
-
-            // for Background Color
-           // _pixel = new Texture2D(game.GraphicsDevice, 1, 1);
-           // _pixel.SetData<Color>(new Color[] { Color.White });
         }
 
         /// <summary>
@@ -180,6 +180,8 @@ namespace XAMLite
                 heightSet = false;
             else
                 heightSet = true;
+            
+            //CreateTextBlockContainer();
         }
 
         public override void Update(GameTime gameTime)
@@ -194,7 +196,7 @@ namespace XAMLite
                 else
                     this.spriteFont = courier10SpriteFont;
             }
-
+            CreateTextBlockContainer();
         }
 
         /// <summary>
@@ -209,28 +211,53 @@ namespace XAMLite
                 this.Text = WordWrap(this.Text, (int)this.spriteFont.MeasureString(this.Text).X);
             }
 
+            if (!widthHeightContainerSet)
+            {
+                widthHeightContainerSet = true;
+                CalculateWidthAndHeight(this.Text);
+            }
+
+            if (Rotate90)
+            {
+                if (!rotated)
+                {
+                    rotated = true;
+                    int tempHeight = this.Height;
+                    this.Height = this.Width;
+                    this.Width = tempHeight;
+                    Padding = new Thickness(Padding.Top, Padding.Left, Padding.Bottom, Padding.Right);
+                }
+                paddedPosition = new Vector2(_panel.X + _panel.Width - (int)Padding.Left, _panel.Y + (int)Padding.Top);
+            }
+            else
+                paddedPosition = new Vector2(_panel.X + (int)Padding.Left, _panel.Y + (int)Padding.Top);
+
+            CreateTextBlockContainer();
+
             spriteBatch.Begin();
 
             if (!transparent)
             {
-                if (!widthHeightContainerSet)
-                {
-                    widthHeightContainerSet = true;
-                    CalculateWidthAndHeight(this.Text);
-                    CreateTextBlockContainer();
-                }
-
                 spriteBatch.Draw(_pixel, _panel, this._backgroundColor);
             }
 
-            Vector2 paddedPosition = new Vector2(_panel.X + (int)Padding.Left, _panel.Y + (int)Padding.Top);
-
             if (Rotate90)
+            {
                 spriteBatch.DrawString(this.spriteFont, this.Text, paddedPosition, this._foregroundColor, -MathHelper.PiOver2, spriteFont.MeasureString(this.Text), 1, SpriteEffects.None, 0);
+            }
             else
+            {
                 spriteBatch.DrawString(this.spriteFont, this.Text, paddedPosition, this._foregroundColor);
-            spriteBatch.End();
+            }
+                spriteBatch.End();
 
+        }
+
+        // Determines the size of the textblock based on Width, Height.
+        protected void CreateTextBlockContainer()
+        {
+            if (this.Width != 0 && this.Height != 0)
+                _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
         }
 
         /// <summary>
@@ -244,13 +271,6 @@ namespace XAMLite
 
             if (!heightSet || TextWrapping == TextWrapping.NoWrap)
                 this.Height = (int)this.spriteFont.MeasureString(text).Y + (int)Padding.Top + (int)Padding.Bottom;
-        }
-
-        // Determines the size of the textblock based on Width, Height.
-        private void CreateTextBlockContainer()
-        {
-            if (this.Width != 0 && this.Height != 0)
-                _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
         }
 
         // used to break the string into seperate lines of text
@@ -291,7 +311,6 @@ namespace XAMLite
             int paddingAdjust = (int)Padding.Left + (int)Padding.Right;
             if (paddingAdjust < this.Width)
                 charsPerLine = this.Width / (int)pxPerChar;
-            //charsPerLine = (this.Width - paddingAdjust) / (int)pxPerChar;
             else
                 charsPerLine = 1;
 
@@ -349,6 +368,7 @@ namespace XAMLite
             // Return length of text before whitespace
             return i + 1;
         }
+
     }
 
     // for mocking the WPF constructor

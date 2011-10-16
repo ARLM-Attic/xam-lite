@@ -29,6 +29,7 @@ namespace XAMLiteDemo
         XAMLiteImage catImage;
         XAMLiteImage dogImage;
         XAMLiteGrid grid;
+
         XAMLiteImageWithRollover dogImage2;
 
         public Game1()
@@ -41,8 +42,6 @@ namespace XAMLiteDemo
             // Default screen size.
             _graphics.PreferredBackBufferWidth = 600;
             _graphics.PreferredBackBufferHeight = 400;
-
-            
 
             // Enable this for random screen to (to test we're not hard-coding anything
             // base on screen size). Note: we're not attempting to support real-time
@@ -65,25 +64,27 @@ namespace XAMLiteDemo
         /// </summary>
         protected override void Initialize()
         {
-
-            // Grid example
+            // grid Example
             grid = new XAMLiteGrid(this);
+            grid.Name = "grid";
             grid.Width = 400;
             grid.Height = 250;
-            grid.HorizontalAlignment = HorizontalAlignment.Center;
-            grid.VerticalAlignment = VerticalAlignment.Center;
-            grid.Background = Brushes.Black;
-            grid.Margin = new Thickness(0, 0, 0, 0);
+            grid.HorizontalAlignment = HorizontalAlignment.Left;
+            grid.VerticalAlignment = VerticalAlignment.Bottom;
+            grid.Background = Brushes.White;
+            grid.Margin = new Thickness(10, 0, 0, 10);
             grid.Opacity = 0.5;
             grid.MouseDown += new MouseButtonEventHandler(grid_MouseDown);
             Components.Add(grid);
 
             // XAMLite label example. LOADED TO GRID
             _label = new XAMLiteLabel(this);
+            _label.Name = "Right-Bottom";
             _label.Content = "Hello, world!";
             _label.Foreground = Brushes.Yellow;
-            _label.HorizontalAlignment = HorizontalAlignment.Right;
-            _label.VerticalAlignment = VerticalAlignment.Bottom;
+            _label.Margin = new Thickness(0, 0, 0, 0);
+            _label.HorizontalAlignment = HorizontalAlignment.Center;
+            _label.VerticalAlignment = VerticalAlignment.Center;
             grid.Children.Add(_label);
 
             // Rectangle example #1
@@ -106,9 +107,10 @@ namespace XAMLiteDemo
 
             // Clickable-image example. LOADED TO GRID
             dogImage = new XAMLiteImage(this);
+            dogImage.Name = "DogImage";
             dogImage.Width = 100;
             dogImage.Height = 100;
-            //dogImage.Margin = new Thickness(10, 0, 0, 10);
+            dogImage.Margin = new Thickness(0, 0, 0, 5);
             dogImage.VerticalAlignment = VerticalAlignment.Bottom;
             dogImage.HorizontalAlignment = HorizontalAlignment.Center;
             dogImage.SourceName = @"Textures/Dog";
@@ -119,7 +121,9 @@ namespace XAMLiteDemo
 
             // XAMLite label example. LOADED TO GRID
             XAMLiteLabel labelBottomLeft = new XAMLiteLabel(this);
+            labelBottomLeft.Name = "Bottom-Left Label";
             labelBottomLeft.Content = "Bottom-Left Label";
+            labelBottomLeft.Margin = new Thickness(10, 0, 0, 10);
             labelBottomLeft.Foreground = Brushes.White;
             labelBottomLeft.HorizontalAlignment = HorizontalAlignment.Left;
             labelBottomLeft.VerticalAlignment = VerticalAlignment.Bottom;
@@ -164,11 +168,13 @@ namespace XAMLiteDemo
             textBlock2.Background = Brushes.Bisque;
             textBlock2.Foreground = Brushes.Red;
             textBlock2.Padding = new Thickness(10, 5, 10, 5);
+            textBlock2.Margin = new Thickness(0, 0, 5, 0);
             textBlock2.TextWrapping = TextWrapping.Wrap;
             textBlock2.FontFamily = new FontFamily("Courier10");
             textBlock2.Width = 250;
+            textBlock2.Rotate90 = true;
             textBlock2.HorizontalAlignment = HorizontalAlignment.Right;
-            textBlock2.VerticalAlignment = VerticalAlignment.Top;
+            textBlock2.VerticalAlignment = VerticalAlignment.Bottom;
             //Components.Add(textBlock2);
             grid.Children.Add(textBlock2);
 
@@ -180,10 +186,7 @@ namespace XAMLiteDemo
         void grid_MouseDown(object sender, MouseButtonEventArgs e)
         {
             int add = 5;
-            _label.Margin = new Thickness(_label.Margin.Left, _label.Margin.Top, _label.Margin.Right + add, _label.Margin.Bottom);
-            grid.Margin = new Thickness(grid.Margin.Left + add, grid.Margin.Top, grid.Margin.Right, grid.Margin.Bottom);
-            //dogImage.Margin = new Thickness(dogImage.Margin.Left, dogImage.Margin.Top, dogImage.Margin.Right + add, dogImage.Margin.Bottom);
-            //grid.HorizontalAlignment = HorizontalAlignment.Left;
+            grid.Margin = new Thickness(grid.Margin.Left, grid.Margin.Top, grid.Margin.Right + add, grid.Margin.Bottom);
         }
 
         /// <summary>
