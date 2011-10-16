@@ -173,9 +173,7 @@ namespace XAMLite
             base.LoadContent();
             this.arialSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Arial");
             this.courier10SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Courier10");
-            this.kootenay9SpriteFont = Game.Content.Load<SpriteFont>("Fonts/kootenay9");
-            this.kootenay14SpriteFont = Game.Content.Load<SpriteFont>("Fonts/kootenay14");
-            this.spriteFont = kootenay14SpriteFont;
+            this.spriteFont = courier10SpriteFont;
 
             // triggers whether Width and Height of textblock were set by user
             if (this.Width == 0)
