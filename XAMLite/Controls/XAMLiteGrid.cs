@@ -98,7 +98,7 @@ namespace XAMLite
             if (gridMarginChanged)
             {
                 gridMarginChanged = false;
-                _panel = new Rectangle((int)this.Position.X - (int)this.Margin.Right + (int)this.Margin.Left, (int)this.Position.Y + (int)this.Margin.Top - (int)this.Margin.Bottom, this.Width, this.Height);
+                _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
                 modifyChildren();
             }
         }

@@ -105,6 +105,15 @@ namespace XAMLiteDemo
             rectangle2.Stroke = Brushes.Pink;
             Components.Add(rectangle2);
 
+            XAMLiteGrid rect3 = new XAMLiteGrid(this);
+            rect3.Width = 200;
+            rect3.Height = 200;
+            rect3.Margin = new Thickness(5, 0, 0, 0);
+            rect3.HorizontalAlignment = HorizontalAlignment.Left;
+            rect3.VerticalAlignment = VerticalAlignment.Center;
+            rect3.Background = Brushes.BlueViolet;
+            Components.Add(rect3);
+
             // Clickable-image example. LOADED TO GRID
             dogImage = new XAMLiteImage(this);
             dogImage.Name = "DogImage";
