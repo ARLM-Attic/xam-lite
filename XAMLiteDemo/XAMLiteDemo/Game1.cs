@@ -77,16 +77,6 @@ namespace XAMLiteDemo
             grid.MouseDown += new MouseButtonEventHandler(grid_MouseDown);
             Components.Add(grid);
 
-            // XAMLite label example. LOADED TO GRID
-            _label = new XAMLiteLabel(this);
-            _label.Name = "Right-Bottom";
-            _label.Content = "Hello, world!";
-            _label.Foreground = Brushes.Yellow;
-            _label.Margin = new Thickness(0, 0, 0, 0);
-            _label.HorizontalAlignment = HorizontalAlignment.Center;
-            _label.VerticalAlignment = VerticalAlignment.Center;
-            grid.Children.Add(_label);
-
             // Rectangle example #1
             XAMLiteRectangle rectangle1 = new XAMLiteRectangle(this);
             rectangle1.Width = 300;
@@ -119,14 +109,25 @@ namespace XAMLiteDemo
             dogImage.Name = "DogImage";
             dogImage.Width = 100;
             dogImage.Height = 100;
-            dogImage.Margin = new Thickness(0, 0, 0, 5);
-            dogImage.VerticalAlignment = VerticalAlignment.Bottom;
-            dogImage.HorizontalAlignment = HorizontalAlignment.Center;
+            dogImage.Margin = new Thickness(5, 5, 5, 5);
+            dogImage.VerticalAlignment = VerticalAlignment.Stretch;
+            dogImage.HorizontalAlignment = HorizontalAlignment.Stretch;
             dogImage.SourceName = @"Textures/Dog";
             dogImage.MouseDown += new MouseButtonEventHandler(dogImage_MouseDown);
             dogImage.MouseEnter += new MouseEventHandler(dogImage_MouseEnter);
             dogImage.MouseLeave += new MouseEventHandler(dogImage_MouseLeave);
             grid.Children.Add(dogImage);
+
+            // XAMLite label example. LOADED TO GRID
+            _label = new XAMLiteLabel(this);
+            _label.Name = "Right-Bottom";
+            _label.Content = "Hello, world!";
+            _label.Foreground = Brushes.Yellow;
+            _label.Margin = new Thickness(0, 0, 0, 0);
+            _label.HorizontalAlignment = HorizontalAlignment.Center;
+            _label.VerticalAlignment = VerticalAlignment.Center;
+            grid.Children.Add(_label);
+
 
             // XAMLite label example. LOADED TO GRID
             XAMLiteLabel labelBottomLeft = new XAMLiteLabel(this);
