@@ -61,6 +61,9 @@
     <Compile Include="GridExample.xaml.cs">
       <DependentUpon>GridExample.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RadioButtonExample.xaml.cs">
+      <DependentUpon>RadioButtonExample.xaml</DependentUpon>
+    </Compile>
     <Compile Include="XamlMarkup.xaml.cs">
       <DependentUpon>XamlMarkup.xaml</DependentUpon>
     </Compile>
@@ -84,6 +87,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="RadioButtonExample.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="XamlMarkup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
