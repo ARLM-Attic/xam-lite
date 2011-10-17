@@ -18,7 +18,7 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        public Thickness Margin
+        /*public Thickness Margin
         {
             get
             {
@@ -28,9 +28,9 @@ namespace XAMLite
             {
                 base.Margin = value;
                 
-                gridMarginChanged = true;
+                timeForUpdate = true;
             }
-        }
+        }*/
 
         private Thickness _originalGridMargin;
 
@@ -65,7 +65,6 @@ namespace XAMLite
         }
 
         private bool transparent;
-        private bool gridMarginChanged = true;
 
         public XAMLiteGrid(Game game)
             : base(game)
@@ -104,9 +103,9 @@ namespace XAMLite
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            if (gridMarginChanged)
+            if (timeForUpdate)
             {
-                gridMarginChanged = false;
+                timeForUpdate = false;
                 _panel = new Rectangle((int)this.Position.X - (int)_originalGridMargin.Left + 
                     (int)this.Margin.Left + (int)_originalGridMargin.Right - (int)this.Margin.Right, 
                     (int)this.Position.Y - (int)_originalGridMargin.Top + (int)this.Margin.Top + 

@@ -33,6 +33,9 @@ namespace XAMLite
         protected Rectangle _msRect; // mouse position
         protected Rectangle _panel; // rectangle containing the control for collision and drawing
 
+        // prevents each control from perpetually updating each item in its Update method until necessary
+        protected bool timeForUpdate; 
+
         protected Texture2D _pixel; //  fills the space of a control with a color
 
         /// <summary>
@@ -75,10 +78,24 @@ namespace XAMLite
         /// </summary>
         public int Height { get; set; }
 
+
+        private Thickness _margin;
         /// <summary>
         /// 
         /// </summary>
-        public Thickness Margin { get; set; }
+        public Thickness Margin
+        {
+            get
+            {
+                return _margin;
+            }
+            set
+            {
+                _margin = value;
+
+                timeForUpdate = true;
+            }
+        }
 
         /// <summary>
         /// 

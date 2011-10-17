@@ -199,7 +199,11 @@ namespace XAMLite
                 else
                     this.spriteFont = courier10SpriteFont;
             }
-            _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+            if (timeForUpdate)
+            {
+                timeForUpdate = false;
+                _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+            }
         }
 
         /// <summary>
@@ -277,6 +281,8 @@ namespace XAMLite
 
             if (!heightSet || TextWrapping == TextWrapping.NoWrap)
                 this.Height = (int)this.spriteFont.MeasureString(text).Y + (int)Padding.Top + (int)Padding.Bottom;
+            timeForUpdate = true;
+            Console.WriteLine("In here");
         }
 
         // used to break the string into seperate lines of text
