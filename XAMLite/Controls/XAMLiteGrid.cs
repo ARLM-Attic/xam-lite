@@ -26,12 +26,15 @@ namespace XAMLite
             }
             set
             {
-                base.Margin = value;
+                base.Margin = value; // new Thickness(value.Left, value.Top, value.Right, value.Bottom);
+                
                 gridMarginChanged = true;
             }
         }
 
-        private Thickness[] _originalMargin;
+        private Thickness _originalGridMargin;
+
+        private Thickness[] _originalChildMargin;
         private bool[] _isHorCentered;
         private bool[] _isVerCentered;
 
@@ -83,12 +86,14 @@ namespace XAMLite
                 this.Game.Components.Add(Children[i]);
             }
 
-            _originalMargin = new Thickness[Children.Count];
+            _originalGridMargin = this.Margin;
+            _originalChildMargin = new Thickness[Children.Count];
             _isHorCentered = new bool[Children.Count];
             _isVerCentered = new bool[Children.Count];
             for (int i = 0; i < Children.Count; i++)
             {
-                _originalMargin[i] = new Thickness(Children[i].Margin.Left, Children[i].Margin.Top, Children[i].Margin.Right, Children[i].Margin.Bottom);
+                _originalChildMargin[i] = new Thickness(Children[i].Margin.Left, Children[i].Margin.Top, 
+                    Children[i].Margin.Right, Children[i].Margin.Bottom);
             }
         }
 
@@ -98,7 +103,9 @@ namespace XAMLite
             if (gridMarginChanged)
             {
                 gridMarginChanged = false;
-                _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+                _panel = new Rectangle((int)this.Position.X - (int)_originalGridMargin.Left + 
+                    (int)this.Margin.Left + (int)_originalGridMargin.Right - (int)this.Margin.Right, 
+                    (int)this.Position.Y - (int)_originalGridMargin.Top + (int)this.Margin.Top + (int)_originalGridMargin.Bottom - (int)this.Margin.Bottom, this.Width, this.Height);
                 modifyChildren();
             }
         }
@@ -142,17 +149,17 @@ namespace XAMLite
                     // Child component is on the left
                     case HorizontalAlignment.Left:
                         if (!_isHorCentered[i]) // a cheat to override the nature of our centering process
-                            left = _panel.X + _originalMargin[i].Left;
+                            left = _panel.X + _originalChildMargin[i].Left;
                         else
                         {
-                            left = _panel.X + this.Width / 2 - Children[i].Width / 2 + _originalMargin[i].Left - _originalMargin[i].Right;
+                            left = _panel.X + this.Width / 2 - Children[i].Width / 2 + _originalChildMargin[i].Left - _originalChildMargin[i].Right;
 
                         }
                         break;
 
                     // Child component is on the right
                     case HorizontalAlignment.Right:
-                        right = viewport.Width - (_panel.X + this.Width) + _originalMargin[i].Right;
+                        right = viewport.Width - (_panel.X + this.Width) + _originalChildMargin[i].Right;
                         break;
 
                     // Child component is centered
@@ -160,7 +167,7 @@ namespace XAMLite
                         _isHorCentered[i] = true;
                         // a cheat to override the nature of our centering process
                         Children[i].HorizontalAlignment = HorizontalAlignment.Left;
-                        left = _panel.X + this.Width / 2 - Children[i].Width / 2 + _originalMargin[i].Left - _originalMargin[i].Right;
+                        left = _panel.X + this.Width / 2 - Children[i].Width / 2 + _originalChildMargin[i].Left - _originalChildMargin[i].Right;
                         break;
 
                     case HorizontalAlignment.Stretch:
@@ -174,13 +181,13 @@ namespace XAMLite
                 switch (Children[i].VerticalAlignment)
                 {
                     case VerticalAlignment.Bottom:
-                        bottom = viewport.Height - (_panel.Y + this.Height) + _originalMargin[i].Bottom;
+                        bottom = viewport.Height - (_panel.Y + this.Height) + _originalChildMargin[i].Bottom;
                         break;
 
                     case VerticalAlignment.Center:
                         _isVerCentered[i] = true;
                         Children[i].VerticalAlignment = VerticalAlignment.Top;
-                        top = _panel.Y + this.Height / 2 - Children[i].Height / 2 + _originalMargin[i].Top - _originalMargin[i].Bottom;
+                        top = _panel.Y + this.Height / 2 - Children[i].Height / 2 + _originalChildMargin[i].Top - _originalChildMargin[i].Bottom;
                         break;
 
                     case VerticalAlignment.Stretch:
@@ -189,10 +196,10 @@ namespace XAMLite
 
                     case VerticalAlignment.Top:
                         if (!_isVerCentered[i])
-                            top = _panel.Y + _originalMargin[i].Top;
+                            top = _panel.Y + _originalChildMargin[i].Top;
                         else
                         {
-                            top = _panel.Y + this.Height / 2 - Children[i].Height / 2 + _originalMargin[i].Top - _originalMargin[i].Bottom;
+                            top = _panel.Y + this.Height / 2 - Children[i].Height / 2 + _originalChildMargin[i].Top - _originalChildMargin[i].Bottom;
                         }
                         break;
                     default:

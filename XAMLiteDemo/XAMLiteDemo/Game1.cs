@@ -69,10 +69,10 @@ namespace XAMLiteDemo
             grid.Name = "grid";
             grid.Width = 400;
             grid.Height = 250;
-            grid.HorizontalAlignment = HorizontalAlignment.Left;
+            grid.HorizontalAlignment = HorizontalAlignment.Right;
             grid.VerticalAlignment = VerticalAlignment.Bottom;
             grid.Background = Brushes.White;
-            grid.Margin = new Thickness(10, 0, -500, 10);
+            grid.Margin = new Thickness(5, 10, -50, 5);
             grid.Opacity = 0.5;
             grid.MouseDown += new MouseButtonEventHandler(grid_MouseDown);
             Components.Add(grid);
@@ -195,7 +195,7 @@ namespace XAMLiteDemo
         void grid_MouseDown(object sender, MouseButtonEventArgs e)
         {
             int add = 5;
-            grid.Margin = new Thickness(grid.Margin.Left, grid.Margin.Top, grid.Margin.Right + add, grid.Margin.Bottom);
+            grid.Margin = new Thickness(grid.Margin.Left, grid.Margin.Top, grid.Margin.Right + add, grid.Margin.Bottom + add);
         }
 
         /// <summary>
