@@ -1,0 +1,22 @@
+﻿<Window x:Class="WpfReferenceDemo.RadioButtonExample"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="RadioBoxExample" Height="492" Width="898" Background="#FFD8D8D8">
+    <Grid>
+        <Grid Height="355" HorizontalAlignment="Left" Margin="193,53,0,0" Name="OptionsDialogGrid" VerticalAlignment="Top" Width="466">
+            <Image Height="355" HorizontalAlignment="Stretch" Margin="0" Name="image1" Stretch="Fill" VerticalAlignment="Stretch" Width="466" Source="/WpfReferenceDemo;component/Content/OptionsDialogBackground.png" />
+            <RadioButton Content="Day" Height="16" HorizontalAlignment="Left" Margin="43,165,0,0" Name="radioButton1" VerticalAlignment="Top" GroupName="TimeOfDay" IsChecked="True" Foreground="White" />
+            <TextBlock Height="23" HorizontalAlignment="Left" Margin="43,143,0,0" Name="textBlock1" Text="Time of Day" VerticalAlignment="Top" FontWeight="Bold" Foreground="White" />
+            <RadioButton Content="Night" Height="16" HorizontalAlignment="Left" Margin="43,187,0,0" Name="radioButton2" VerticalAlignment="Top" GroupName="TimeOfDay" Foreground="White" />
+            <TextBlock Height="23" HorizontalAlignment="Left" Margin="43,227,0,0" Name="textBlock2" Text="Material Type" VerticalAlignment="Top" FontWeight="Bold" Foreground="White" />
+            <RadioButton Content="Hard rock" Height="16" HorizontalAlignment="Left" Margin="43,249,0,0" Name="radioButton3" VerticalAlignment="Top" GroupName="MaterialType" IsChecked="True" Foreground="White" />
+            <RadioButton Content="Oil sands" Height="16" HorizontalAlignment="Left" Margin="43,271,0,0" Name="radioButton4" VerticalAlignment="Top" GroupName="MaterialType" Foreground="LightGray" IsEnabled="False" />
+            <RadioButton Content="Coal" Height="16" HorizontalAlignment="Left" Margin="43,293,0,0" Name="radioButton5" VerticalAlignment="Top" GroupName="MaterialType" Foreground="LightGray" IsEnabled="False" />
+            <Image Height="25" HorizontalAlignment="Center" Margin="0,0,0,10" Name="image2" Stretch="Fill" VerticalAlignment="Bottom" Width="100" Source="/WpfReferenceDemo;component/Content/BtnOkay.png" />
+            <TextBlock FontWeight="Bold" Foreground="White" Height="23" HorizontalAlignment="Left" Margin="43,41,0,0" Name="textBlock3" Text="Equipment" VerticalAlignment="Top" />
+            <RadioButton Content="4100 XP Electric Rope Shovel" Foreground="White" GroupName="MaterialType" Height="16" HorizontalAlignment="Left" IsChecked="True" Margin="43,63,0,0" Name="radioButton6" VerticalAlignment="Top" />
+            <RadioButton Content="320XPC Blasthole Drill" Foreground="LightGray" GroupName="MaterialType" Height="16" HorizontalAlignment="Left" IsEnabled="False" Margin="43,85,0,0" Name="radioButton7" VerticalAlignment="Top" />
+            <RadioButton Content="L1350 Front End Loader" Foreground="LightGray" GroupName="MaterialType" Height="16" HorizontalAlignment="Left" IsEnabled="False" Margin="43,107,0,0" Name="radioButton8" VerticalAlignment="Top" />
+        </Grid>
+    </Grid>
+</Window>

@@ -61,8 +61,8 @@
     <Compile Include="GridExample.xaml.cs">
       <DependentUpon>GridExample.xaml</DependentUpon>
     </Compile>
-    <Compile Include="RadioButtonExample.xaml.cs">
-      <DependentUpon>RadioButtonExample.xaml</DependentUpon>
+    <Compile Include="OptionsDialog.xaml.cs">
+      <DependentUpon>OptionsDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="XamlMarkup.xaml.cs">
       <DependentUpon>XamlMarkup.xaml</DependentUpon>
@@ -87,7 +87,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="RadioButtonExample.xaml">
+    <Page Include="OptionsDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -126,6 +126,15 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Content\Dog-Bright.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Content\BtnOkay-Disabled.png" />
+    <Resource Include="Content\BtnOkay-Down.png" />
+    <Resource Include="Content\BtnOkay-Over.png" />
+    <Resource Include="Content\BtnOkay.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Content\OptionsDialogBackground.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
