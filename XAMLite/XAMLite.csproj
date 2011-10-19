@@ -95,7 +95,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="Controls\XAMLiteGrid.cs" />
     <Compile Include="Controls\XAMLiteImage.cs" />
     <Compile Include="Controls\XAMLiteImageWithRollover.cs" />
