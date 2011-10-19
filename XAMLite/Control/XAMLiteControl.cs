@@ -166,6 +166,11 @@ namespace XAMLite
         }
 
         /// <summary>
+        /// Any interactive control becomes inactive when this is false.
+        /// </summary>
+        public bool IsEnabled { get; set; }
+
+        /// <summary>
         /// Gets or sets the opacity factor applied to the entire System.Windows.UIElement
         /// when it is rendered in the user interface (UI). Default opacity is 1.0. 
         /// Expected values are between 0.0 and 1.0.
@@ -191,7 +196,7 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        public Viewport viewport;
+        protected Viewport viewport;
 
         /// <summary>
         /// 
@@ -206,6 +211,7 @@ namespace XAMLite
             this.Opacity = 1.0;
             this.Visible = new Visibility();
             this.Visible = Visibility.Visible;
+            this.IsEnabled = true;
         }
 
         /// <summary>
