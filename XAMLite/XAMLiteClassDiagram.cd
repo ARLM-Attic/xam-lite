@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="XAMLite.XAMLiteControl" Collapsed="true">
+    <Position X="6" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAEEAqBgAAg0AghiFEBERAhBIYEAMJKAQBCAACAAQ=</HashCode>
+      <FileName>Control\XAMLiteControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XAMLite.XAMLiteGrid" Collapsed="true">
+    <Position X="7.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAQCAEIAAAAAAgAAAAAEAAAAAiAAAAAAAAQkBAAAAAQ=</HashCode>
+      <FileName>Controls\XAMLiteGrid.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XAMLite.XAMLiteImage" Collapsed="true">
+    <Position X="9.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAgAAAAAAIAAAAAAAAgAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Controls\XAMLiteImage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XAMLite.XAMLiteImageWithRollover" Collapsed="true">
+    <Position X="9.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQAAAAAAAAAAgAIAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Controls\XAMLiteImageWithRollover.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XAMLite.XAMLiteLabel" Collapsed="true">
+    <Position X="2.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAgAAAgAAAAAAAAAAAAAAAAAAAAAACABAAAQ=</HashCode>
+      <FileName>Controls\XAMLiteLabel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XAMLite.XAMLiteLabelWithShadow" Collapsed="true">
+    <Position X="2.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controls\XAMLiteLabelWithShadow.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XAMLite.XAMLiteRadioButton" Collapsed="true">
+    <Position X="11.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAiAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAU=</HashCode>
+      <FileName>Controls\XAMLiteRadioButton.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XAMLite.XAMLiteRectangle" Collapsed="true">
+    <Position X="0.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAgAAAAQAAAIAAAgADAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controls\XAMLiteRectangle.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XAMLite.XAMLiteTextBlock" Collapsed="true">
+    <Position X="5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAQCATAIkAEAAggDUAAgIAAgAAAAACAACAIoEABAAAY=</HashCode>
+      <FileName>Controls\XAMLiteTextBlock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XAMLite.Run" Collapsed="true">
+    <Position X="14" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controls\XAMLiteTextBlock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
