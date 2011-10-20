@@ -199,9 +199,9 @@ namespace XAMLite
                 else
                     this.spriteFont = courier10SpriteFont;
             }
-            if (timeForUpdate)
+            if (marginChanged)
             {
-                timeForUpdate = false;
+                marginChanged = false;
                 _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
             }
         }
@@ -281,7 +281,7 @@ namespace XAMLite
 
             if (!heightSet || TextWrapping == TextWrapping.NoWrap)
                 this.Height = (int)this.spriteFont.MeasureString(text).Y + (int)Padding.Top + (int)Padding.Bottom;
-            timeForUpdate = true;
+            marginChanged = true;
             Console.WriteLine("In here");
         }
 

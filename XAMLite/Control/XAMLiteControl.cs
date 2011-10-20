@@ -35,7 +35,7 @@ namespace XAMLite
         protected Rectangle _panel; // rectangle containing the control for collision and drawing
 
         // prevents each control from perpetually updating each item in its Update method until necessary
-        protected bool timeForUpdate; 
+        protected bool marginChanged; 
 
         protected Texture2D _pixel; //  fills the space of a control with a color
 
@@ -54,10 +54,13 @@ namespace XAMLite
         /// </summary>
         public virtual string Text { get; set; }
 
+        public Visibility _visible;
         /// <summary>
         /// 
         /// </summary>
-        public Visibility Visible { get; set; }
+        public Visibility Visible { get { return _visible; } set { _visible = value; _visibilityChanged = true; } }
+
+        protected bool _visibilityChanged;
 
         /// <summary>
         /// 
@@ -94,7 +97,7 @@ namespace XAMLite
             {
                 _margin = value;
 
-                timeForUpdate = true;
+                marginChanged = true;
             }
         }
 
@@ -294,7 +297,6 @@ namespace XAMLite
 
                     if (_mouseUp)
                     {
-                        //_mouseDown = false;
                         OnMouseUp();
                     }
                 }

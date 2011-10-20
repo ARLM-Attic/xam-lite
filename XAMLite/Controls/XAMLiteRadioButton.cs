@@ -124,9 +124,9 @@ namespace XAMLite
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            if (timeForUpdate)
+            if (marginChanged)
             {
-                timeForUpdate = false;
+                marginChanged = false;
                 radio = new Rectangle((int)this.Position.X, (int)this.Position.Y, _radioSelected.Width, _radioSelected.Height);
                 _textPos = new Vector2((this.Position.X + radio.Width + 10), this.Position.Y);
                 _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, _radioSelected.Width + this.Width + 10, this.Height);

@@ -15,23 +15,6 @@ namespace XAMLite
     {
         public List<XAMLiteControl> Children { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /*public Thickness Margin
-        {
-            get
-            {
-                return base.Margin;
-            }
-            set
-            {
-                base.Margin = value;
-                
-                timeForUpdate = true;
-            }
-        }*/
-
         private Thickness _originalGridMargin;
 
         private Thickness[] _originalChildMargin;
@@ -103,14 +86,22 @@ namespace XAMLite
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            if (timeForUpdate)
+            if (marginChanged)
             {
-                timeForUpdate = false;
+                marginChanged = false;
                 _panel = new Rectangle((int)this.Position.X - (int)_originalGridMargin.Left + 
                     (int)this.Margin.Left + (int)_originalGridMargin.Right - (int)this.Margin.Right, 
                     (int)this.Position.Y - (int)_originalGridMargin.Top + (int)this.Margin.Top + 
                     (int)_originalGridMargin.Bottom - (int)this.Margin.Bottom, this.Width, this.Height);
                 modifyChildren();
+            }
+
+            if (_visibilityChanged)
+            {
+                _visibilityChanged = false;
+
+                // Update Visibility of Children
+                updateChildVisibility();  
             }
         }
 
@@ -128,10 +119,8 @@ namespace XAMLite
                 {
                     spriteBatch.Draw(_pixel, _panel, (_backgroundColor * (float)Opacity));
                 }
-
                 spriteBatch.End();
             }
-
             // Begin.
         }
 
@@ -228,7 +217,19 @@ namespace XAMLite
                         break;
                 }
 
+                // Reset Margin
                 Children[i].Margin = new Thickness(left, top, right, bottom);
+
+                
+                
+            }
+        }
+
+        private void updateChildVisibility()
+        {
+            for (int i = 0; i < Children.Count; i++)
+            {
+                Children[i].Visible = this.Visible;
             }
         }
     }

@@ -56,9 +56,9 @@ namespace XAMLite
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            if (timeForUpdate)
+            if (marginChanged)
             {
-                timeForUpdate = false;
+                marginChanged = false;
                 _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
             }
             

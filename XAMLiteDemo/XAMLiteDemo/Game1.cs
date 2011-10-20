@@ -30,6 +30,7 @@ namespace XAMLiteDemo
         XAMLiteImage dogImage;
         XAMLiteGrid grid;
         XAMLiteLabel label2;
+        XAMLiteGrid gridWithRadioButtons;
 
         XAMLiteImageWithRollover dogImage2;
 
@@ -96,14 +97,29 @@ namespace XAMLiteDemo
             rectangle2.Stroke = Brushes.Pink;
             Components.Add(rectangle2);
 
-            XAMLiteGrid rect3 = new XAMLiteGrid(this);
-            rect3.Width = 300;
-            rect3.Height = 200;
-            rect3.Margin = new Thickness(5, 0, 0, 0);
-            rect3.HorizontalAlignment = HorizontalAlignment.Left;
-            rect3.VerticalAlignment = VerticalAlignment.Center;
-            rect3.Background = Brushes.BlueViolet;
-            Components.Add(rect3);
+            gridWithRadioButtons = new XAMLiteGrid(this);
+            gridWithRadioButtons.Width = 300;
+            gridWithRadioButtons.Height = 200;
+            gridWithRadioButtons.Margin = new Thickness(5, 0, 0, 0);
+            gridWithRadioButtons.HorizontalAlignment = HorizontalAlignment.Left;
+            gridWithRadioButtons.VerticalAlignment = VerticalAlignment.Center;
+            gridWithRadioButtons.Background = Brushes.BlueViolet;
+            Components.Add(gridWithRadioButtons);
+
+            XAMLiteImage background = new XAMLiteImage(this);
+            background.SourceName = @"Images/OptionsDialogBackground";
+            background.HorizontalAlignment = HorizontalAlignment.Stretch;
+            background.VerticalAlignment = VerticalAlignment.Stretch;
+            gridWithRadioButtons.Children.Add(background);
+
+            XAMLiteImageWithRollover OKButton = new XAMLiteImageWithRollover(this);
+            OKButton.SourceName = @"Images/BtnOkay";
+            OKButton.RolloverSourceName = @"Images/BtnOkay-Over";
+            OKButton.HorizontalAlignment = HorizontalAlignment.Center;
+            OKButton.VerticalAlignment = VerticalAlignment.Bottom;
+            OKButton.Margin = new Thickness(0, 0, 0, 10);
+            OKButton.MouseDown += new MouseButtonEventHandler(OKButton_MouseDown);
+            gridWithRadioButtons.Children.Add(OKButton);
 
             XAMLiteRadioButton r1a = new XAMLiteRadioButton(this);
             r1a.Name = "RadioButton1a";
@@ -112,8 +128,8 @@ namespace XAMLiteDemo
             r1a.MouseDown += new MouseButtonEventHandler(r1a_MouseDown);
             r1a.HorizontalAlignment = HorizontalAlignment.Left;
             r1a.VerticalAlignment = VerticalAlignment.Top;
-            r1a.Margin = new Thickness(5, 5, 0, 0);
-            rect3.Children.Add(r1a);
+            r1a.Margin = new Thickness(5, 15, 0, 0);
+            gridWithRadioButtons.Children.Add(r1a);
 
             XAMLiteRadioButton r1b = new XAMLiteRadioButton(this);
             r1b.Name = "RadioButton1b";
@@ -123,8 +139,8 @@ namespace XAMLiteDemo
             r1b.MouseDown += new MouseButtonEventHandler(r1b_MouseDown);
             r1b.HorizontalAlignment = HorizontalAlignment.Left;
             r1b.VerticalAlignment = VerticalAlignment.Top;
-            r1b.Margin = new Thickness(5, 25, 0, 0);
-            rect3.Children.Add(r1b);
+            r1b.Margin = new Thickness(5, 35, 0, 0);
+            gridWithRadioButtons.Children.Add(r1b);
 
             XAMLiteRadioButton r2a = new XAMLiteRadioButton(this);
             r2a.Name = "RadioButton2a";
@@ -135,29 +151,30 @@ namespace XAMLiteDemo
             r2a.RadioButtonSelectedSourceName = "Icons/RadioButtonSelected";
             r2a.MouseDown += new MouseButtonEventHandler(r2a_MouseDown);
             r2a.IsEnabled = false;
-            r2a.HorizontalAlignment = HorizontalAlignment.Left;
-            r2a.VerticalAlignment = VerticalAlignment.Bottom;
-            r2a.Margin = new Thickness(5, 0, 0, 25);
-            rect3.Children.Add(r2a);
+            r2a.HorizontalAlignment = HorizontalAlignment.Right;
+            r2a.VerticalAlignment = VerticalAlignment.Top;
+            r2a.Margin = new Thickness(0, 35, 35, 0);
+            gridWithRadioButtons.Children.Add(r2a);
 
             XAMLiteRadioButton r2b = new XAMLiteRadioButton(this);
             r2b.Name = "RadioButton2b";
             r2b.GroupName = "Set2";;
             r2b.Content = "RB2b";
             r2b.RadioButtonSourceName = "Icons/RadioButton";
+            r2b.IsChecked = true;
             r2b.RadioButtonSelectedSourceName = "Icons/RadioButtonSelected";
             r2b.MouseDown += new MouseButtonEventHandler(r2b_MouseDown);
-            r2b.HorizontalAlignment = HorizontalAlignment.Left;
-            r2b.VerticalAlignment = VerticalAlignment.Bottom;
-            r2b.Margin = new Thickness(5, 0, 0, 5);
-            rect3.Children.Add(r2b);
+            r2b.HorizontalAlignment = HorizontalAlignment.Right;
+            r2b.VerticalAlignment = VerticalAlignment.Top;
+            r2b.Margin = new Thickness(0, 15, 35, 0);
+            gridWithRadioButtons.Children.Add(r2b);
 
             label2 = new XAMLiteLabel(this);
             label2.Content = "";
             label2.HorizontalAlignment = HorizontalAlignment.Right;
             label2.VerticalAlignment = VerticalAlignment.Center;
             label2.Margin = new Thickness(0, 0, 10, 0);
-            rect3.Children.Add(label2);
+            gridWithRadioButtons.Children.Add(label2);
             // Clickable-image example. LOADED TO GRID
             /*dogImage = new XAMLiteImage(this);
             dogImage.Name = "DogImage";
@@ -239,12 +256,17 @@ namespace XAMLiteDemo
             textBlock2.Rotate90 = true;
             textBlock2.HorizontalAlignment = HorizontalAlignment.Right;
             textBlock2.VerticalAlignment = VerticalAlignment.Bottom;
-            //Components.Add(textBlock2);
+
             grid.Children.Add(textBlock2);
 
             // Initialize all game components. (This includes calling Initialize() on all XAMLite controls, 
             // since they are game components).
             base.Initialize();
+        }
+
+        void OKButton_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            gridWithRadioButtons.Visible = Visibility.Hidden;
         }
 
         void r2b_MouseDown(object sender, MouseButtonEventArgs e)
