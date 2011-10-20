@@ -97,7 +97,7 @@ namespace XAMLiteDemo
             Components.Add(rectangle2);
 
             XAMLiteGrid rect3 = new XAMLiteGrid(this);
-            rect3.Width = 400;
+            rect3.Width = 300;
             rect3.Height = 200;
             rect3.Margin = new Thickness(5, 0, 0, 0);
             rect3.HorizontalAlignment = HorizontalAlignment.Left;
@@ -131,6 +131,8 @@ namespace XAMLiteDemo
             r2a.GroupName = "Set2";
             r2a.IsChecked = true;
             r2a.Content = "RB2a";
+            r2a.RadioButtonSourceName = "Icons/RadioButton";
+            r2a.RadioButtonSelectedSourceName = "Icons/RadioButtonSelected";
             r2a.MouseDown += new MouseButtonEventHandler(r2a_MouseDown);
             r2a.IsEnabled = false;
             r2a.HorizontalAlignment = HorizontalAlignment.Left;
@@ -142,6 +144,8 @@ namespace XAMLiteDemo
             r2b.Name = "RadioButton2b";
             r2b.GroupName = "Set2";;
             r2b.Content = "RB2b";
+            r2b.RadioButtonSourceName = "Icons/RadioButton";
+            r2b.RadioButtonSelectedSourceName = "Icons/RadioButtonSelected";
             r2b.MouseDown += new MouseButtonEventHandler(r2b_MouseDown);
             r2b.HorizontalAlignment = HorizontalAlignment.Left;
             r2b.VerticalAlignment = VerticalAlignment.Bottom;

@@ -41,6 +41,24 @@ namespace XAMLite
             }
         }
 
+        /// <summary>
+        /// This is the image file path, minus the file extension.
+        /// </summary>
+        public string RadioButtonSourceName
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// This is the image file path, minus the file extension.
+        /// </summary>
+        public string RadioButtonSelectedSourceName
+        {
+            get;
+            set;
+        }
+
         
         public string GroupName { get; set; }
 
@@ -71,7 +89,10 @@ namespace XAMLite
             this.Content = "";
             this.IsChecked = false;
             this.Text = string.Empty;
-            this._foregroundColor = Color.White;            
+            this._foregroundColor = Color.White;
+
+            RadioButtonSourceName = "Icons/RadioButton";
+            RadioButtonSelectedSourceName = "Icons/RadioButtonSelected";
         }
 
         public override void Initialize()
@@ -90,8 +111,8 @@ namespace XAMLite
             this.spriteFont = Game.Content.Load<SpriteFont>("Fonts/Courier10");
             RecalculateWidthAndHeight(this.Text);
 
-            _radioSelected = Game.Content.Load<Texture2D>(@"Icons/RadioButtonSelected");
-            _radioUnselected = Game.Content.Load<Texture2D>(@"Icons/RadioButton");
+            _radioSelected = Game.Content.Load<Texture2D>(RadioButtonSelectedSourceName);
+            _radioUnselected = Game.Content.Load<Texture2D>(RadioButtonSourceName);
 
             radio = new Rectangle((int)this.Position.X, (int)this.Position.Y, _radioSelected.Width, _radioSelected.Height);
             _textPos = new Vector2((this.Position.X + radio.Width + 10), this.Position.Y);
