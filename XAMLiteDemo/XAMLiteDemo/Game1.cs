@@ -29,6 +29,7 @@ namespace XAMLiteDemo
         XAMLiteImage catImage;
         XAMLiteImage dogImage;
         XAMLiteGrid grid;
+        XAMLiteLabel label2;
 
         XAMLiteImageWithRollover dogImage2;
 
@@ -78,7 +79,7 @@ namespace XAMLiteDemo
             Components.Add(grid);
 
             // Rectangle example #1
-            XAMLiteRectangle rectangle1 = new XAMLiteRectangle(this);
+            /*XAMLiteRectangle rectangle1 = new XAMLiteRectangle(this);
             rectangle1.Width = 300;
             rectangle1.Height = 100;
             rectangle1.Fill = Brushes.LightGray;
@@ -87,7 +88,7 @@ namespace XAMLiteDemo
             rectangle1.HorizontalAlignment = HorizontalAlignment.Center;
             rectangle1.VerticalAlignment = VerticalAlignment.Top;
             rectangle1.Margin = new Thickness(0, 25, 0, 0);
-            Components.Add(rectangle1);
+            Components.Add(rectangle1);*/
 
             // Rectangle example #2.
             XAMLiteRectangle rectangle2 = new XAMLiteRectangle(this);
@@ -96,7 +97,7 @@ namespace XAMLiteDemo
             Components.Add(rectangle2);
 
             XAMLiteGrid rect3 = new XAMLiteGrid(this);
-            rect3.Width = 200;
+            rect3.Width = 400;
             rect3.Height = 200;
             rect3.Margin = new Thickness(5, 0, 0, 0);
             rect3.HorizontalAlignment = HorizontalAlignment.Left;
@@ -104,8 +105,57 @@ namespace XAMLiteDemo
             rect3.Background = Brushes.BlueViolet;
             Components.Add(rect3);
 
+            XAMLiteRadioButton r1a = new XAMLiteRadioButton(this);
+            r1a.Name = "RadioButton1a";
+            r1a.GroupName = "Set1";
+            r1a.Content = "RB1a";
+            r1a.MouseDown += new MouseButtonEventHandler(r1a_MouseDown);
+            r1a.HorizontalAlignment = HorizontalAlignment.Left;
+            r1a.VerticalAlignment = VerticalAlignment.Top;
+            r1a.Margin = new Thickness(5, 5, 0, 0);
+            rect3.Children.Add(r1a);
+
+            XAMLiteRadioButton r1b = new XAMLiteRadioButton(this);
+            r1b.Name = "RadioButton1b";
+            r1b.GroupName = "Set1";
+            r1b.Content = "RB1b";
+            r1b.IsChecked = true;
+            r1b.MouseDown += new MouseButtonEventHandler(r1b_MouseDown);
+            r1b.HorizontalAlignment = HorizontalAlignment.Left;
+            r1b.VerticalAlignment = VerticalAlignment.Top;
+            r1b.Margin = new Thickness(5, 25, 0, 0);
+            rect3.Children.Add(r1b);
+
+            XAMLiteRadioButton r2a = new XAMLiteRadioButton(this);
+            r2a.Name = "RadioButton2a";
+            r2a.GroupName = "Set2";
+            r2a.IsChecked = true;
+            r2a.Content = "RB2a";
+            r2a.MouseDown += new MouseButtonEventHandler(r2a_MouseDown);
+            r2a.IsEnabled = false;
+            r2a.HorizontalAlignment = HorizontalAlignment.Left;
+            r2a.VerticalAlignment = VerticalAlignment.Bottom;
+            r2a.Margin = new Thickness(5, 0, 0, 25);
+            rect3.Children.Add(r2a);
+
+            XAMLiteRadioButton r2b = new XAMLiteRadioButton(this);
+            r2b.Name = "RadioButton2b";
+            r2b.GroupName = "Set2";;
+            r2b.Content = "RB2b";
+            r2b.MouseDown += new MouseButtonEventHandler(r2b_MouseDown);
+            r2b.HorizontalAlignment = HorizontalAlignment.Left;
+            r2b.VerticalAlignment = VerticalAlignment.Bottom;
+            r2b.Margin = new Thickness(5, 0, 0, 5);
+            rect3.Children.Add(r2b);
+
+            label2 = new XAMLiteLabel(this);
+            label2.Content = "";
+            label2.HorizontalAlignment = HorizontalAlignment.Right;
+            label2.VerticalAlignment = VerticalAlignment.Center;
+            label2.Margin = new Thickness(0, 0, 10, 0);
+            rect3.Children.Add(label2);
             // Clickable-image example. LOADED TO GRID
-            dogImage = new XAMLiteImage(this);
+            /*dogImage = new XAMLiteImage(this);
             dogImage.Name = "DogImage";
             dogImage.Width = 100;
             dogImage.Height = 100;
@@ -116,7 +166,7 @@ namespace XAMLiteDemo
             dogImage.MouseDown += new MouseButtonEventHandler(dogImage_MouseDown);
             dogImage.MouseEnter += new MouseEventHandler(dogImage_MouseEnter);
             dogImage.MouseLeave += new MouseEventHandler(dogImage_MouseLeave);
-            grid.Children.Add(dogImage);
+            grid.Children.Add(dogImage);*/
 
             // XAMLite label example. LOADED TO GRID
             _label = new XAMLiteLabel(this);
@@ -153,7 +203,7 @@ namespace XAMLiteDemo
 
             // Rollover example
             dogImage2 = new XAMLiteImageWithRollover(this);
-            dogImage2.SourceName = dogImage.SourceName;
+            dogImage2.SourceName = @"Textures/Dog";
             dogImage2.RolloverSourceName = @"Textures/Dog-Bright";
             dogImage2.VerticalAlignment = VerticalAlignment.Top;
             dogImage2.HorizontalAlignment = HorizontalAlignment.Right;
@@ -191,6 +241,26 @@ namespace XAMLiteDemo
             // Initialize all game components. (This includes calling Initialize() on all XAMLite controls, 
             // since they are game components).
             base.Initialize();
+        }
+
+        void r2b_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            label2.Content = "You've selected RB2b";
+        }
+
+        void r2a_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            label2.Content = "You've selected RB2a";
+        }
+
+        void r1a_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            label2.Content = "You've selected RB1a";
+        }
+
+        void r1b_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            label2.Content = "You've selected RB1b";
         }
 
         void grid_MouseDown(object sender, MouseButtonEventArgs e)

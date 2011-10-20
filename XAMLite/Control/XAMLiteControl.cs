@@ -6,6 +6,7 @@ using System.Windows.Media;
 using System.Windows.Input;
 using Microsoft.Xna.Framework.Input;
 using Color = Microsoft.Xna.Framework.Color;
+using System.Collections.Generic;
 
 namespace XAMLite
 {
@@ -198,6 +199,9 @@ namespace XAMLite
         /// </summary>
         protected Viewport viewport;
 
+        protected static List<XAMLiteRadioButton> _allRadioButtons;
+        protected bool _selected;
+
         /// <summary>
         /// 
         /// </summary>
@@ -212,6 +216,7 @@ namespace XAMLite
             this.Visible = new Visibility();
             this.Visible = Visibility.Visible;
             this.IsEnabled = true;
+            _allRadioButtons = new List<XAMLiteRadioButton>();
         }
 
         /// <summary>
@@ -250,41 +255,48 @@ namespace XAMLite
 
             ms = Microsoft.Xna.Framework.Input.Mouse.GetState();
             if (!_mouseDown && ms.LeftButton == ButtonState.Pressed)
+            {
                 _mouseDown = true;
-            else
-                _mouseDown = false;
-            if (!_mouseUp && ms.LeftButton == ButtonState.Released)
-                _mouseUp = true;
-            else
                 _mouseUp = false;
+            }
+
+            if (!_mouseUp && ms.LeftButton == ButtonState.Released)
+            {
+                _mouseUp = true;
+                _mouseDown = false;
+            }
+
 
             _msRect = new Rectangle(ms.X, ms.Y, 1, 1);
-            if (_panel.Contains(_msRect))
-            {
-                if (!_mouseEnter)
-                {
-                    _mouseEnter = true;
-                    OnMouseEnter();
-                }
-                if (_mouseDown)
-                {
-                    _mouseDown = false;
 
-                    OnMouseDown();
-                }
-
-                if (_mouseUp)
-                {
-                    _mouseUp = false;
-                    OnMouseUp();
-                }
-            }
-            else
+            if (IsEnabled)
             {
-                if (_mouseEnter)
+                if (_panel.Contains(_msRect))
                 {
-                    _mouseEnter = false;
-                    OnMouseLeave();
+                    if (!_mouseEnter)
+                    {
+                        _mouseEnter = true;
+                        OnMouseEnter();
+                    }
+
+                    if (_mouseDown)
+                    {
+                        OnMouseDown();
+                    }
+                }
+                else
+                {
+                    if (_mouseEnter)
+                    {
+                        _mouseEnter = false;
+                        OnMouseLeave();
+                    }
+
+                    if (_mouseUp)
+                    {
+                        //_mouseDown = false;
+                        OnMouseUp();
+                    }
                 }
             }
         }

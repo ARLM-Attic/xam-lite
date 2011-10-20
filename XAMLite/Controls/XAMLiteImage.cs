@@ -22,11 +22,6 @@ namespace XAMLite
         protected Texture2D texture;
 
         /// <summary>
-        /// For collision detection
-        /// </summary>
-        protected Rectangle rect;
-
-        /// <summary>
         /// This is the image file path, minus the file extension.
         /// </summary>
         public string SourceName { 
