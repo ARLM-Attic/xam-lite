@@ -129,6 +129,7 @@ namespace XAMLiteDemo
             r1a.HorizontalAlignment = HorizontalAlignment.Left;
             r1a.VerticalAlignment = VerticalAlignment.Top;
             r1a.Margin = new Thickness(5, 15, 0, 0);
+            r1a.Enabled = false;
             gridWithRadioButtons.Children.Add(r1a);
 
             XAMLiteRadioButton r1b = new XAMLiteRadioButton(this);
