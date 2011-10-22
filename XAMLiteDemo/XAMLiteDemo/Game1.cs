@@ -101,8 +101,8 @@ namespace XAMLiteDemo
             gridWithRadioButtons.Width = 300;
             gridWithRadioButtons.Height = 200;
             gridWithRadioButtons.Margin = new Thickness(5, 0, 0, 0);
-            gridWithRadioButtons.HorizontalAlignment = HorizontalAlignment.Right;
-            gridWithRadioButtons.VerticalAlignment = VerticalAlignment.Bottom;
+            gridWithRadioButtons.HorizontalAlignment = HorizontalAlignment.Left;
+            gridWithRadioButtons.VerticalAlignment = VerticalAlignment.Center;
             gridWithRadioButtons.Background = Brushes.BlueViolet;
             Components.Add(gridWithRadioButtons);
 

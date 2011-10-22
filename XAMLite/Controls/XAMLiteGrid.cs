@@ -13,12 +13,6 @@ namespace XAMLite
 {
     public class XAMLiteGrid : XAMLiteControl
     {
-        /// <summary>
-        /// Holds the list of all controls attached to the grid.
-        /// WARNING: In applications where LoadContent(), Update(), Draw(), etc., are explicitly called,
-        /// the grid MUST be added as a component to the game after all of its children have been added
-        /// as children.
-        /// </summary>
         public List<XAMLiteControl> Children { get; set; }
 
         private Thickness _originalGridMargin;
@@ -84,9 +78,10 @@ namespace XAMLite
             _isVerStretched = new bool[Children.Count];
             for (int i = 0; i < Children.Count; i++)
             {
-                _originalChildMargin[i] = new Thickness(Children[i].Margin.Left, Children[i].Margin.Top, 
+                _originalChildMargin[i] = new Thickness(Children[i].Margin.Left, Children[i].Margin.Top,
                     Children[i].Margin.Right, Children[i].Margin.Bottom);
             }
+            updateChildVisibility();
         }
 
         public override void Update(GameTime gameTime)
@@ -95,9 +90,9 @@ namespace XAMLite
             if (marginChanged)
             {
                 marginChanged = false;
-                _panel = new Rectangle((int)this.Position.X - (int)_originalGridMargin.Left + 
-                    (int)this.Margin.Left + (int)_originalGridMargin.Right - (int)this.Margin.Right, 
-                    (int)this.Position.Y - (int)_originalGridMargin.Top + (int)this.Margin.Top + 
+                _panel = new Rectangle((int)this.Position.X - (int)_originalGridMargin.Left +
+                    (int)this.Margin.Left + (int)_originalGridMargin.Right - (int)this.Margin.Right,
+                    (int)this.Position.Y - (int)_originalGridMargin.Top + (int)this.Margin.Top +
                     (int)_originalGridMargin.Bottom - (int)this.Margin.Bottom, this.Width, this.Height);
                 modifyChildren();
             }
@@ -107,7 +102,7 @@ namespace XAMLite
                 _visibilityChanged = false;
 
                 // Update Visibility of Children
-                updateChildVisibility();  
+                updateChildVisibility();
             }
         }
 
@@ -149,13 +144,13 @@ namespace XAMLite
                     case HorizontalAlignment.Left:
                         if (!_isHorCentered[i]) // a cheat to override the nature of our centering process
                             left = _panel.X + _originalChildMargin[i].Left;
-                        else if(_isHorStretched[i])
+                        else if (_isHorStretched[i])
                         {
                             left = this.Width;
                         }
                         else
                         {
-                            left = _panel.X + this.Width / 2 - Children[i].Width / 2 + _originalChildMargin[i].Left 
+                            left = _panel.X + this.Width / 2 - Children[i].Width / 2 + _originalChildMargin[i].Left
                                 - _originalChildMargin[i].Right;
                         }
                         break;
@@ -210,7 +205,7 @@ namespace XAMLite
                     case VerticalAlignment.Top:
                         if (!_isVerCentered[i])
                             top = _panel.Y + _originalChildMargin[i].Top;
-                        else if(_isVerStretched[i]) 
+                        else if (_isVerStretched[i])
                         {
                             top = Children[i].Height;
                         }
@@ -225,9 +220,6 @@ namespace XAMLite
 
                 // Reset Margin
                 Children[i].Margin = new Thickness(left, top, right, bottom);
-
-                
-                
             }
         }
 

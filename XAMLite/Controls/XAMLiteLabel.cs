@@ -12,7 +12,6 @@ namespace XAMLite
     /// <see cref="http://msdn.microsoft.com/en-us/library/ms611056.aspx"/>
     public class XAMLiteLabel : XAMLiteControl
     {
-
         /// <summary>
         /// 
         /// </summary>
@@ -37,7 +36,8 @@ namespace XAMLite
         /// to set the Content property of a label. Note: This Content property shouldn't be confuse with 
         /// XNA's concept of Content (i.e. textures and models, etc).
         /// </summary>
-        public string Content {
+        public string Content
+        {
             get
             {
                 return this.Text;
@@ -52,6 +52,16 @@ namespace XAMLite
                 }
                 base.Text = value;
             }
+        }
+
+        // An idea for establishing a set of possible preloaded SpriteFonts??
+        private FontFamily _fontFamily;
+        private bool fontFamilyChanged; // used in the Update() method
+
+        public FontFamily FontFamily
+        {
+            get { return _fontFamily; }
+            set { _fontFamily = value; fontFamilyChanged = true; }
         }
 
         /// <summary>
@@ -71,7 +81,7 @@ namespace XAMLite
                 _foregroundColor = new Color(color.R, color.G, color.B, color.A);
             }
         }
-        
+
         public XAMLiteLabel(Game game)
             : base(game)
         {
@@ -88,9 +98,9 @@ namespace XAMLite
         /// 
         /// </summary>
         /// <param name="game"></param>
-        public XAMLiteLabel ( Game game, string text )
-            : base( game )
-        {     
+        public XAMLiteLabel(Game game, string text)
+            : base(game)
+        {
             //
             this.Text = text;
 
@@ -104,18 +114,33 @@ namespace XAMLite
         /// <param name="device"></param>
         /// <param name="content"></param>
         /// <param name="fontName"></param>
-        protected override void LoadContent ()
+        protected override void LoadContent()
         {
             base.LoadContent();
-            this.spriteFont = Game.Content.Load<SpriteFont>( "Fonts/Courier10" );
-            RecalculateWidthAndHeight( this.Text );
+            RecalculateWidthAndHeight(this.Text);
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            if (fontFamilyChanged)
+            {
+                fontFamilyChanged = false;
+                if (_fontFamily.ToString() == "Arial")
+                    this.spriteFont = arialSpriteFont;
+                else if (_fontFamily.ToString() == "Verdana10")
+                    this.spriteFont = verdana10SpriteFont;
+                else
+                    this.spriteFont = courier10SpriteFont;
+            }
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="gameTime"></param>
-        public override void Draw ( GameTime gameTime )
+        public override void Draw(GameTime gameTime)
         {
             if (Visible == System.Windows.Visibility.Visible)
             {

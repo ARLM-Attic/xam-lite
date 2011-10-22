@@ -20,13 +20,6 @@ namespace XAMLite
     /// </summary>
     public class XAMLiteTextBlock : XAMLiteControl
     {
-
-        // the set of possible fonts that are preloaded in LoadContent()
-        private SpriteFont arialSpriteFont { get; set; }
-        private SpriteFont courier10SpriteFont { get; set; }
-        private SpriteFont kootenay9SpriteFont { get; set; }
-        private SpriteFont kootenay14SpriteFont { get; set; }
-
         // for WPF developers, in case they do not load Run in the Constructor.
         // They could then type: textblock.Run
         public string Run
@@ -171,9 +164,6 @@ namespace XAMLite
         protected override void LoadContent()
         {
             base.LoadContent();
-            this.arialSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Arial");
-            this.courier10SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Courier10");
-            this.spriteFont = courier10SpriteFont;
 
             // triggers whether Width and Height of textblock were set by user
             if (this.Width == 0)

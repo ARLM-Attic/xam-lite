@@ -31,11 +31,18 @@ namespace XAMLite
         public event MouseEventHandler MouseLeave;
         public event KeyEventHandler KeyDown;
 
+        // the set of possible fonts that are preloaded in LoadContent()
+        protected SpriteFont arialSpriteFont { get; set; }
+        protected SpriteFont courier10SpriteFont { get; set; }
+        protected SpriteFont kootenay9SpriteFont { get; set; }
+        protected SpriteFont kootenay14SpriteFont { get; set; }
+        protected SpriteFont verdana10SpriteFont { get; set; }
+
         protected Rectangle _msRect; // mouse position
         protected Rectangle _panel; // rectangle containing the control for collision and drawing
 
         // prevents each control from perpetually updating each item in its Update method until necessary
-        protected bool marginChanged; 
+        protected bool marginChanged;
 
         protected Texture2D _pixel; //  fills the space of a control with a color
 
@@ -54,7 +61,7 @@ namespace XAMLite
         /// </summary>
         public virtual string Text { get; set; }
 
-        public Visibility _visible;
+        protected Visibility _visible;
         /// <summary>
         /// 
         /// </summary>
@@ -202,16 +209,7 @@ namespace XAMLite
         /// </summary>
         protected Viewport viewport;
 
-        /// <summary>
-        /// List if all the current radio buttons being used in the UI. 
-        /// Allows the program to search through to determine which buttons
-        /// belong to which groupname.
-        /// </summary>
         protected static List<XAMLiteRadioButton> _allRadioButtons;
-
-        /// <summary>
-        /// 
-        /// </summary>
         protected bool _selected;
 
         /// <summary>
@@ -256,11 +254,10 @@ namespace XAMLite
             _pixel = new Texture2D(this.GraphicsDevice, 1, 1);
             _pixel.SetData<Color>(new Color[] { Color.White });
 
-            if (!this.Enabled)
-            {
-                this.Enabled = true;
-                this.IsEnabled = false;
-            }
+            this.arialSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Arial");
+            this.courier10SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Courier10");
+            this.verdana10SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana10");
+            this.spriteFont = courier10SpriteFont;
         }
 
         /// <summary>
