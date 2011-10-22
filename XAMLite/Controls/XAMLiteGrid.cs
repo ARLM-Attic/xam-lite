@@ -13,6 +13,12 @@ namespace XAMLite
 {
     public class XAMLiteGrid : XAMLiteControl
     {
+        /// <summary>
+        /// Holds the list of all controls attached to the grid.
+        /// WARNING: In applications where LoadContent(), Update(), Draw(), etc., are explicitly called,
+        /// the grid MUST be added as a component to the game after all of its children have been added
+        /// as children.
+        /// </summary>
         public List<XAMLiteControl> Children { get; set; }
 
         private Thickness _originalGridMargin;
