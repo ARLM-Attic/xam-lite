@@ -202,7 +202,16 @@ namespace XAMLite
         /// </summary>
         protected Viewport viewport;
 
+        /// <summary>
+        /// List if all the current radio buttons being used in the UI. 
+        /// Allows the program to search through to determine which buttons
+        /// belong to which groupname.
+        /// </summary>
         protected static List<XAMLiteRadioButton> _allRadioButtons;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected bool _selected;
 
         /// <summary>
@@ -246,6 +255,12 @@ namespace XAMLite
             // for Background Color
             _pixel = new Texture2D(this.GraphicsDevice, 1, 1);
             _pixel.SetData<Color>(new Color[] { Color.White });
+
+            if (!this.Enabled)
+            {
+                this.Enabled = true;
+                this.IsEnabled = false;
+            }
         }
 
         /// <summary>

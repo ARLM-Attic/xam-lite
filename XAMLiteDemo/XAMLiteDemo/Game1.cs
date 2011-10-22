@@ -101,8 +101,8 @@ namespace XAMLiteDemo
             gridWithRadioButtons.Width = 300;
             gridWithRadioButtons.Height = 200;
             gridWithRadioButtons.Margin = new Thickness(5, 0, 0, 0);
-            gridWithRadioButtons.HorizontalAlignment = HorizontalAlignment.Left;
-            gridWithRadioButtons.VerticalAlignment = VerticalAlignment.Center;
+            gridWithRadioButtons.HorizontalAlignment = HorizontalAlignment.Right;
+            gridWithRadioButtons.VerticalAlignment = VerticalAlignment.Bottom;
             gridWithRadioButtons.Background = Brushes.BlueViolet;
             Components.Add(gridWithRadioButtons);
 
@@ -129,13 +129,14 @@ namespace XAMLiteDemo
             r1a.HorizontalAlignment = HorizontalAlignment.Left;
             r1a.VerticalAlignment = VerticalAlignment.Top;
             r1a.Margin = new Thickness(5, 15, 0, 0);
-            r1a.Enabled = false;
+            r1a.IsEnabled = false;
             gridWithRadioButtons.Children.Add(r1a);
 
             XAMLiteRadioButton r1b = new XAMLiteRadioButton(this);
             r1b.Name = "RadioButton1b";
             r1b.GroupName = "Set1";
             r1b.Content = "RB1b";
+            r1b.IsEnabled = false;
             r1b.IsChecked = true;
             r1b.MouseDown += new MouseButtonEventHandler(r1b_MouseDown);
             r1b.HorizontalAlignment = HorizontalAlignment.Left;
@@ -163,6 +164,7 @@ namespace XAMLiteDemo
             r2b.Content = "RB2b";
             r2b.RadioButtonSourceName = "Icons/RadioButton";
             r2b.IsChecked = true;
+            r2b.IsEnabled = false;
             r2b.RadioButtonSelectedSourceName = "Icons/RadioButtonSelected";
             r2b.MouseDown += new MouseButtonEventHandler(r2b_MouseDown);
             r2b.HorizontalAlignment = HorizontalAlignment.Right;

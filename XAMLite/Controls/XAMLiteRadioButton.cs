@@ -177,8 +177,6 @@ namespace XAMLite
                     this.spriteBatch.Draw(this._radioUnselected, radio, (Color.White * (float)0.75));
                 }
 
-                
-
                 this.spriteBatch.End();
             }
         }
