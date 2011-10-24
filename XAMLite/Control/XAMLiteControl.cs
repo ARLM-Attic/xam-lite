@@ -38,6 +38,8 @@ namespace XAMLite
         protected SpriteFont kootenay14SpriteFont { get; set; }
         protected SpriteFont verdana10SpriteFont { get; set; }
         protected SpriteFont verdana10BoldSpriteFont { get; set; }
+        protected SpriteFont verdana11SpriteFont { get; set; }
+        protected SpriteFont verdana11BoldSpriteFont { get; set; }
         protected SpriteFont verdana12SpriteFont { get; set; }
         protected SpriteFont verdana12BoldSpriteFont { get; set; }
         protected SpriteFont verdana14SpriteFont { get; set; }
@@ -265,6 +267,8 @@ namespace XAMLite
             this.courier10SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Courier10");
             this.verdana10SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana10");
             this.verdana10BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana10Bold");
+            this.verdana11SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana11");
+            this.verdana11BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana11Bold");
             this.verdana12SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana12");
             this.verdana12BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana12Bold");
             this.verdana14SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana14");
@@ -341,6 +345,12 @@ namespace XAMLite
                     break;
                 case "Verdana10Bold":
                     this.spriteFont = verdana10BoldSpriteFont;
+                    break;
+                case "Verdana11":
+                    this.spriteFont = verdana11SpriteFont;
+                    break;
+                case "Verdana11Bold":
+                    this.spriteFont = verdana11BoldSpriteFont;
                     break;
                 case "Verdana12":
                     this.spriteFont = verdana12SpriteFont;
