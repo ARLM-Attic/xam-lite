@@ -38,6 +38,8 @@ namespace XAMLite
         protected SpriteFont kootenay14SpriteFont { get; set; }
         protected SpriteFont verdana10SpriteFont { get; set; }
         protected SpriteFont verdana10BoldSpriteFont { get; set; }
+        protected SpriteFont verdana12SpriteFont { get; set; }
+        protected SpriteFont verdana12BoldSpriteFont { get; set; }
         protected SpriteFont verdana16SpriteFont { get; set; }
         protected SpriteFont verdana16BoldSpriteFont { get; set; }
 
@@ -261,6 +263,8 @@ namespace XAMLite
             this.courier10SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Courier10");
             this.verdana10SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana10");
             this.verdana10BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana10Bold");
+            this.verdana12SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana12");
+            this.verdana12BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana12Bold");
             this.verdana16SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana16");
             this.verdana16BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana16Bold");
             this.spriteFont = courier10SpriteFont;
