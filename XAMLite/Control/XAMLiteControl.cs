@@ -338,6 +338,12 @@ namespace XAMLite
                 case "Verdana10Bold":
                     this.spriteFont = verdana10BoldSpriteFont;
                     break;
+                case "Verdana12":
+                    this.spriteFont = verdana10SpriteFont;
+                    break;
+                case "Verdana12Bold":
+                    this.spriteFont = verdana10BoldSpriteFont;
+                    break;
                 case "Verdana16":
                     this.spriteFont = verdana16SpriteFont;
                     break;
