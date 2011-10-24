@@ -38,6 +38,8 @@ namespace XAMLite
         protected SpriteFont kootenay14SpriteFont { get; set; }
         protected SpriteFont verdana10SpriteFont { get; set; }
         protected SpriteFont verdana10BoldSpriteFont { get; set; }
+        protected SpriteFont verdana16SpriteFont { get; set; }
+        protected SpriteFont verdana16BoldSpriteFont { get; set; }
 
         protected Rectangle _msRect; // mouse position
         protected Rectangle _panel; // rectangle containing the control for collision and drawing
@@ -259,6 +261,8 @@ namespace XAMLite
             this.courier10SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Courier10");
             this.verdana10SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana10");
             this.verdana10BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana10Bold");
+            this.verdana16SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana16");
+            this.verdana16BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana16Bold");
             this.spriteFont = courier10SpriteFont;
         }
 
@@ -314,6 +318,31 @@ namespace XAMLite
                         OnMouseUp();
                     }
                 }
+            }
+        }
+
+        protected void UpdateFontFamily(FontFamily _fontFamily)
+        {
+            switch (_fontFamily.ToString())
+            {
+                case "Arial":
+                    this.spriteFont = arialSpriteFont;
+                    break;
+                case "Verdana10":
+                    this.spriteFont = verdana10SpriteFont;
+                    break;
+                case "Verdana10Bold":
+                    this.spriteFont = verdana10BoldSpriteFont;
+                    break;
+                case "Verdana16":
+                    this.spriteFont = verdana16SpriteFont;
+                    break;
+                case "Verdana16Bold":
+                    this.spriteFont = verdana16BoldSpriteFont;
+                    break;
+                default:
+                    this.spriteFont = courier10SpriteFont;
+                    break;
             }
         }
 
