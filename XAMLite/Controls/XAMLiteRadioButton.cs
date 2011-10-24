@@ -41,6 +41,16 @@ namespace XAMLite
             }
         }
 
+        // An idea for establishing a set of possible preloaded SpriteFonts??
+        private FontFamily _fontFamily;
+        private bool fontFamilyChanged; // used in the Update() method
+
+        public FontFamily FontFamily
+        {
+            get { return _fontFamily; }
+            set { _fontFamily = value; fontFamilyChanged = true; }
+        }
+
         /// <summary>
         /// This is the image file path, minus the file extension.
         /// </summary>
@@ -59,7 +69,7 @@ namespace XAMLite
             set;
         }
 
-        
+
         public string GroupName { get; set; }
 
         private Texture2D _radioUnselected;
@@ -98,7 +108,7 @@ namespace XAMLite
         public override void Initialize()
         {
             base.Initialize();
-            
+
         }
 
         /// <summary>
@@ -117,7 +127,7 @@ namespace XAMLite
             radio = new Rectangle((int)this.Position.X, (int)this.Position.Y, _radioSelected.Width, _radioSelected.Height);
             _textPos = new Vector2((this.Position.X + radio.Width + 10), this.Position.Y);
             _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, _radioSelected.Width + this.Width + 10, _radioSelected.Height + this.Height);
-            
+
             _allRadioButtons.Add(this);
         }
 
@@ -130,6 +140,19 @@ namespace XAMLite
                 radio = new Rectangle((int)this.Position.X, (int)this.Position.Y, _radioSelected.Width, _radioSelected.Height);
                 _textPos = new Vector2((this.Position.X + radio.Width + 10), this.Position.Y);
                 _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, _radioSelected.Width + this.Width + 10, this.Height);
+            }
+
+            if (fontFamilyChanged)
+            {
+                fontFamilyChanged = false;
+                if (_fontFamily.ToString() == "Arial")
+                    this.spriteFont = arialSpriteFont;
+                else if (_fontFamily.ToString() == "Verdana10")
+                    this.spriteFont = verdana10SpriteFont;
+                else if (_fontFamily.ToString() == "Verdana10Bold")
+                    this.spriteFont = verdana10BoldSpriteFont;
+                else
+                    this.spriteFont = courier10SpriteFont;
             }
 
             if (_mouseDown && !_selected && _panel.Contains(_msRect) && IsEnabled)

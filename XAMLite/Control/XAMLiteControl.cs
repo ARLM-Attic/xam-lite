@@ -37,6 +37,7 @@ namespace XAMLite
         protected SpriteFont kootenay9SpriteFont { get; set; }
         protected SpriteFont kootenay14SpriteFont { get; set; }
         protected SpriteFont verdana10SpriteFont { get; set; }
+        protected SpriteFont verdana10BoldSpriteFont { get; set; }
 
         protected Rectangle _msRect; // mouse position
         protected Rectangle _panel; // rectangle containing the control for collision and drawing
@@ -257,6 +258,7 @@ namespace XAMLite
             this.arialSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Arial");
             this.courier10SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Courier10");
             this.verdana10SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana10");
+            this.verdana10BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana10Bold");
             this.spriteFont = courier10SpriteFont;
         }
 

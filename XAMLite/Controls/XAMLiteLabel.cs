@@ -131,6 +131,8 @@ namespace XAMLite
                     this.spriteFont = arialSpriteFont;
                 else if (_fontFamily.ToString() == "Verdana10")
                     this.spriteFont = verdana10SpriteFont;
+                else if (_fontFamily.ToString() == "Verdana10Bold")
+                    this.spriteFont = verdana10BoldSpriteFont;
                 else
                     this.spriteFont = courier10SpriteFont;
             }
