@@ -118,7 +118,6 @@ namespace XAMLite
         {
             base.LoadContent();
 
-            this.spriteFont = Game.Content.Load<SpriteFont>("Fonts/Courier10");
             RecalculateWidthAndHeight(this.Text);
 
             _radioSelected = Game.Content.Load<Texture2D>(RadioButtonSelectedSourceName);
@@ -145,14 +144,7 @@ namespace XAMLite
             if (fontFamilyChanged)
             {
                 fontFamilyChanged = false;
-                if (_fontFamily.ToString() == "Arial")
-                    this.spriteFont = arialSpriteFont;
-                else if (_fontFamily.ToString() == "Verdana10")
-                    this.spriteFont = verdana10SpriteFont;
-                else if (_fontFamily.ToString() == "Verdana10Bold")
-                    this.spriteFont = verdana10BoldSpriteFont;
-                else
-                    this.spriteFont = courier10SpriteFont;
+                UpdateFontFamily(_fontFamily);
             }
 
             if (_mouseDown && !_selected && _panel.Contains(_msRect) && IsEnabled)
