@@ -14,6 +14,7 @@ namespace XAMLite
     public class XAMLiteGrid : XAMLiteControl
     {
         public List<XAMLiteControl> Children { get; set; }
+        private bool childrenLoaded;
 
         private Thickness _originalGridMargin;
 
@@ -65,28 +66,26 @@ namespace XAMLite
         {
             base.LoadContent();
 
-            for (int i = 0; i < Children.Count; i++)
-            {
-                this.Game.Components.Add(Children[i]);
-            }
-
             _originalGridMargin = this.Margin;
             _originalChildMargin = new Thickness[Children.Count];
             _isHorCentered = new bool[Children.Count];
             _isVerCentered = new bool[Children.Count];
             _isHorStretched = new bool[Children.Count];
             _isVerStretched = new bool[Children.Count];
-            for (int i = 0; i < Children.Count; i++)
+
+
+            /*for (int i = 0; i < Children.Count; i++)
             {
-                _originalChildMargin[i] = new Thickness(Children[i].Margin.Left, Children[i].Margin.Top,
-                    Children[i].Margin.Right, Children[i].Margin.Bottom);
-            }
-            updateChildVisibility();
+                this.Game.Components.Add(Children[i]);
+            }*/
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+            if (!childrenLoaded)
+                loadChildren(gameTime);
+
             if (marginChanged)
             {
                 marginChanged = false;
@@ -126,6 +125,36 @@ namespace XAMLite
         }
 
         /// <summary>
+        /// Loads the children once the grid has been set up.
+        /// </summary>
+        /// <param name></param>
+        private void loadChildren(GameTime gameTime)
+        {
+            childrenLoaded = true;
+
+            _panel = new Rectangle((int)this.Position.X - (int)_originalGridMargin.Left +
+                    (int)this.Margin.Left + (int)_originalGridMargin.Right - (int)this.Margin.Right,
+                    (int)this.Position.Y - (int)_originalGridMargin.Top + (int)this.Margin.Top +
+                    (int)_originalGridMargin.Bottom - (int)this.Margin.Bottom, this.Width, this.Height);
+
+            for (int i = 0; i < Children.Count; i++)
+            {
+                _originalChildMargin[i] = new Thickness(Children[i].Margin.Left, Children[i].Margin.Top,
+                    Children[i].Margin.Right, Children[i].Margin.Bottom);
+            }
+            
+            modifyChildren();
+            updateChildVisibility();
+
+            // Add the child component to the game with the modified parameters.
+            for (int i = 0; i < Children.Count; i++)
+            {
+                this.Game.Components.Add(Children[i]);
+                Children[i].Update(gameTime);
+            }
+        }
+
+        /// <summary>
         /// Modifies the child's margin properties to adhere to the grid
         /// </summary>
         /// <param name></param>
@@ -138,6 +167,11 @@ namespace XAMLite
 
             for (int i = 0; i < Children.Count; i++)
             {
+                if (Children[i].Width > this.Width)
+                    Children[i].Width = this.Width;
+                if (Children[i].Height > this.Height)
+                    Children[i].Height = this.Height;
+
                 switch (Children[i].HorizontalAlignment)
                 {
                     // Child component is on the left
