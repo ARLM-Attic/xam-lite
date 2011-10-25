@@ -139,7 +139,7 @@ namespace XAMLite
             _backgroundColor = Color.Transparent;
             this.spriteFont = courier10SpriteFont;
             this.Padding = new Thickness(0, 0, 0, 0);
-            //this.Visible = Visibility.Hidden;
+            this.Spacing = 2;
         }
 
         /// <summary>

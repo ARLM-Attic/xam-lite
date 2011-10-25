@@ -105,6 +105,8 @@ namespace XAMLite
 
             RadioButtonSourceName = "Icons/RadioButton";
             RadioButtonSelectedSourceName = "Icons/RadioButtonSelected";
+
+            this.Spacing = 2;
         }
 
         public override void Initialize()
