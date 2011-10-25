@@ -51,6 +51,8 @@ namespace XAMLite
             set { _fontFamily = value; fontFamilyChanged = true; }
         }
 
+        // character spacing
+        public int Spacing { get; set; }
         /// <summary>
         /// This is the image file path, minus the file extension.
         /// </summary>
@@ -178,7 +180,7 @@ namespace XAMLite
 
                 if (this.IsEnabled)
                 {
-                    this.spriteFont.Spacing = 2;
+                    this.spriteFont.Spacing = this.Spacing;
                     spriteBatch.DrawString(this.spriteFont, Text, _textPos, this._foregroundColor);
 
                     if (this.IsChecked)

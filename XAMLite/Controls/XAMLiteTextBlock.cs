@@ -49,6 +49,9 @@ namespace XAMLite
             set { _fontFamily = value; fontFamilyChanged = true; }
         }
 
+        // character spacing for the font
+        public int Spacing { get; set; }
+
         // public FontWeight FontWeight { get; set; }
 
         public Thickness Padding { get; set; }
@@ -233,7 +236,7 @@ namespace XAMLite
 
                 spriteBatch.Begin();
 
-                this.spriteFont.Spacing = 2;
+                this.spriteFont.Spacing = this.Spacing;
                 if (!transparent)
                 {
                     spriteBatch.Draw(_pixel, _panel, this._backgroundColor);
