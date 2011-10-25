@@ -64,6 +64,9 @@ namespace XAMLite
             set { _fontFamily = value; fontFamilyChanged = true; }
         }
 
+        // character spacing
+        public int Spacing { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
@@ -103,6 +106,7 @@ namespace XAMLite
         {
             //
             this.Text = text;
+            this.Spacing = 1;
 
             //
             this._foregroundColor = Color.White;
@@ -140,6 +144,7 @@ namespace XAMLite
             if (Visible == System.Windows.Visibility.Visible)
             {
                 spriteBatch.Begin();
+                this.spriteFont.Spacing = Spacing;
                 spriteBatch.DrawString(this.spriteFont, Text, Position, this._foregroundColor);
                 spriteBatch.End();
             }

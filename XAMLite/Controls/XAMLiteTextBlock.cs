@@ -233,6 +233,7 @@ namespace XAMLite
 
                 spriteBatch.Begin();
 
+                this.spriteFont.Spacing = 2;
                 if (!transparent)
                 {
                     spriteBatch.Draw(_pixel, _panel, this._backgroundColor);

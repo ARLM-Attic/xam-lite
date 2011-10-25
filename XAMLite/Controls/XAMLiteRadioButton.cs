@@ -178,6 +178,7 @@ namespace XAMLite
 
                 if (this.IsEnabled)
                 {
+                    this.spriteFont.Spacing = 2;
                     spriteBatch.DrawString(this.spriteFont, Text, _textPos, this._foregroundColor);
 
                     if (this.IsChecked)
