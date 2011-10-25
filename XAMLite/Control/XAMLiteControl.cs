@@ -48,6 +48,8 @@ namespace XAMLite
         protected SpriteFont verdana14BoldSpriteFont { get; set; }
         protected SpriteFont verdana16SpriteFont { get; set; }
         protected SpriteFont verdana16BoldSpriteFont { get; set; }
+        protected SpriteFont verdana60SpriteFont { get; set; }
+        protected SpriteFont verdana60BoldSpriteFont { get; set; }
 
         protected Rectangle _msRect; // mouse position
         protected Rectangle _panel; // rectangle containing the control for collision and drawing
@@ -279,6 +281,8 @@ namespace XAMLite
             this.verdana14BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana14Bold");
             this.verdana16SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana16");
             this.verdana16BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana16Bold");
+            this.verdana60SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana60");
+            this.verdana60BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana60Bold");
             this.spriteFont = courier10SpriteFont;
         }
 
@@ -379,6 +383,12 @@ namespace XAMLite
                     break;
                 case "Verdana16Bold":
                     this.spriteFont = verdana16BoldSpriteFont;
+                    break;
+                case "Verdana60":
+                    this.spriteFont = verdana60SpriteFont;
+                    break;
+                case "Verdana60Bold":
+                    this.spriteFont = verdana60BoldSpriteFont;
                     break;
                 default:
                     this.spriteFont = courier10SpriteFont;
