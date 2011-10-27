@@ -48,6 +48,7 @@ namespace XAMLite
                 this.Text = value;
                 if (this.spriteFont != null)
                 {
+                    this.spriteFont.Spacing = Spacing;
                     RecalculateWidthAndHeight(value);
                 }
                 base.Text = value;
