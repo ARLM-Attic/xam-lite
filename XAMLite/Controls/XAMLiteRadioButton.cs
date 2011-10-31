@@ -193,8 +193,8 @@ namespace XAMLite
 
                 else
                 {
-                    spriteBatch.DrawString(this.spriteFont, Text, _textPos, (this._foregroundColor * (float)0.75));
-                    this.spriteBatch.Draw(this._radioUnselected, radio, (Color.White * (float)0.75));
+                    spriteBatch.DrawString(this.spriteFont, Text, _textPos, (this._foregroundColor * (float)0.50));
+                    this.spriteBatch.Draw(this._radioUnselected, radio, (Color.White * (float)0.50));
                 }
 
                 this.spriteBatch.End();
