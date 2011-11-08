@@ -222,6 +222,7 @@ namespace XAMLite
         /// </summary>
         protected Viewport viewport;
 
+        // list of every radio button in the UI
         protected static List<XAMLiteRadioButton> _allRadioButtons;
         protected bool _selected;
 

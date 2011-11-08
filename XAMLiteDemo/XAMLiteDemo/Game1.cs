@@ -77,7 +77,7 @@ namespace XAMLiteDemo
             grid.Margin = new Thickness(5, 10, -50, 5);
             grid.Opacity = 0.5;
             grid.MouseDown += new MouseButtonEventHandler(grid_MouseDown);
-            Components.Add(grid);
+            //Components.Add(grid);
 
             // Rectangle example #1
             /*XAMLiteRectangle rectangle1 = new XAMLiteRectangle(this);
@@ -235,7 +235,7 @@ namespace XAMLiteDemo
             dogImage2.MouseLeave += new MouseEventHandler(dogImage2_MouseLeave);
             Components.Add(dogImage2);
 
-            XAMLiteTextBlock textBlock = new XAMLiteTextBlock(this);
+            /*XAMLiteTextBlock textBlock = new XAMLiteTextBlock(this);
             textBlock.Background = Brushes.Orange;
             textBlock.Foreground = Brushes.Green;
             textBlock.TextWrapping = TextWrapping.NoWrap;
@@ -245,10 +245,10 @@ namespace XAMLiteDemo
             textBlock.Run = "Something to talk about!!!";
             textBlock.Width = 100;
             textBlock.Height = 100;
-            Components.Add(textBlock);
+            Components.Add(textBlock);*/
 
             // faking the Run class for WPF programmers LOADED TO GRID
-            XAMLiteTextBlock textBlock2 = new XAMLiteTextBlock(this, new Run("This constructor uses a mock Run class for WPF developers>>>>>>>>>>>>> >>>>>>>>>>>>> MMMMMMMMMMM. MMMMMMMM."));
+            /*XAMLiteTextBlock textBlock2 = new XAMLiteTextBlock(this, new Run("This constructor uses a mock Run class for WPF developers>>>>>>>>>>>>> >>>>>>>>>>>>> MMMMMMMMMMM. MMMMMMMM."));
             textBlock2.Background = Brushes.Bisque;
             textBlock2.Foreground = Brushes.Red;
             textBlock2.Padding = new Thickness(10, 5, 10, 5);
@@ -259,8 +259,35 @@ namespace XAMLiteDemo
             textBlock2.Rotate90 = true;
             textBlock2.HorizontalAlignment = HorizontalAlignment.Right;
             textBlock2.VerticalAlignment = VerticalAlignment.Bottom;
+            grid.Children.Add(textBlock2);*/
 
-            grid.Children.Add(textBlock2);
+            XAMLiteMenu menu1 = new XAMLiteMenu(this);
+            menu1.Width = 75;
+            menu1.Margin = new Thickness(10, 5, 0, 0);
+            menu1.HorizontalAlignment = HorizontalAlignment.Left;
+            menu1.VerticalAlignment = VerticalAlignment.Top;
+            menu1.Background = Brushes.Black;
+            Components.Add(menu1);
+
+            XAMLiteMenuItem menuitem1 = new XAMLiteMenuItem(this);
+            menuitem1.Header = "Head of Menu";
+            menuitem1.Background = Brushes.Black;
+            menuitem1.Foreground = Brushes.White;
+            menu1.Items.Add(menuitem1);
+
+            XAMLiteMenuItem menuitem2 = new XAMLiteMenuItem(this);
+            menuitem2.Header = "Menu Item 2";
+            menuitem2.Background = Brushes.Black;
+            menuitem2.Foreground = Brushes.White;
+            menu1.Items.Add(menuitem2);
+
+            XAMLiteMenuItem menuitem3 = new XAMLiteMenuItem(this);
+            menuitem3.Header = "Menu Item 3";
+            menuitem3.Background = Brushes.Black;
+            menuitem3.Foreground = Brushes.White;
+            menu1.Items.Add(menuitem3);
+
+            
 
             // Initialize all game components. (This includes calling Initialize() on all XAMLite controls, 
             // since they are game components).

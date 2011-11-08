@@ -188,6 +188,8 @@ namespace XAMLite
             {
                 fontFamilyChanged = false;
                 UpdateFontFamily(_fontFamily);
+                this.spriteFont.Spacing = Spacing;
+                RecalculateWidthAndHeight(this.Text);
             }
             if (marginChanged)
             {
@@ -273,7 +275,6 @@ namespace XAMLite
             if (!heightSet || TextWrapping == TextWrapping.NoWrap)
                 this.Height = (int)this.spriteFont.MeasureString(text).Y + (int)Padding.Top + (int)Padding.Bottom;
             marginChanged = true;
-            Console.WriteLine("In here");
         }
 
         // used to break the string into seperate lines of text

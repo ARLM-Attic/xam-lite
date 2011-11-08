@@ -100,6 +100,8 @@
     <Compile Include="Controls\XAMLiteImageWithRollover.cs" />
     <Compile Include="Controls\XAMLiteLabel.cs" />
     <Compile Include="Controls\XAMLiteLabelWithShadow.cs" />
+    <Compile Include="Controls\XAMLiteMenu.cs" />
+    <Compile Include="Controls\XAMLiteMenuItem.cs" />
     <Compile Include="Controls\XAMLiteRadioButton.cs" />
     <Compile Include="Controls\XAMLiteRectangle.cs" />
     <Compile Include="Controls\XAMLiteTextBlock.cs" />

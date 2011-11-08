@@ -1,43 +1,28 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Windows;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Windows.Media;
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <see cref="http://msdn.microsoft.com/en-us/library/ms611056.aspx"/>
-    public class XAMLiteLabel : XAMLiteControl
+    public class XAMLiteMenuItem : XAMLiteControl
     {
         /// <summary>
-        /// 
+        ///  To hold sub-menu items that draw either to the right or left of this menu item
+        ///  depending on its parent's location.
         /// </summary>
-        public override string Text
-        {
-            get
-            {
-                return base.Text;
-            }
-            set
-            {
-                if (this.spriteFont != null)
-                {
-                    this.spriteFont.Spacing = Spacing;
-                    RecalculateWidthAndHeight(value);
-                }
-                base.Text = value;
-            }
-        }
+        List<XAMLiteMenuItem> Items;
 
         /// <summary>
         /// This just duplicates the Text property but is here since XAML developer will expect to be able
-        /// to set the Content property of a label. Note: This Content property shouldn't be confuse with 
-        /// XNA's concept of Content (i.e. textures and models, etc).
+        /// to set the Header property of a menu item.
         /// </summary>
-        public string Content
+        public string Header
         {
             get
             {
@@ -87,56 +72,79 @@ namespace XAMLite
             }
         }
 
-        public XAMLiteLabel(Game game)
-            : base(game)
-        {
-
-            //
-            this.Text = string.Empty;
-
-            //
-            this._foregroundColor = Color.White;
-
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        private Color _backgroundColor;
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="game"></param>
-        public XAMLiteLabel(Game game, string text)
+        public Brush Background
+        {
+            set
+            {
+                var solidBrush = (SolidColorBrush)value;
+                var color = solidBrush.Color;
+                _backgroundColor = new Color(color.R, color.G, color.B, color.A);
+
+                if ((SolidColorBrush)value == Brushes.Transparent)
+                    transparent = true;
+                else
+                    transparent = false;
+
+            }
+        }
+
+        private bool transparent;
+
+        /// <summary>
+        /// If true, the user has clicked on a menu and the menu item should display, unless it is the
+        /// Header for the menu, in which case it will always draw.
+        /// </summary>
+        protected bool draw;
+
+        public XAMLiteMenuItem(Game game)
             : base(game)
         {
-            //
-            this.Text = text;
             this.Spacing = 2;
-
-            //
             this._foregroundColor = Color.White;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="device"></param>
-        /// <param name="content"></param>
-        /// <param name="fontName"></param>
         protected override void LoadContent()
         {
             base.LoadContent();
-            RecalculateWidthAndHeight(this.Text);
+
+            RecalculateWidthAndHeight(this.Header);
+            _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
+            //System.Console.WriteLine(Height);
             if (fontFamilyChanged)
             {
                 fontFamilyChanged = false;
                 UpdateFontFamily(_fontFamily);
                 this.spriteFont.Spacing = Spacing;
-                RecalculateWidthAndHeight(this.Text);
+                RecalculateWidthAndHeight(this.Header);
             }
+
+            if (marginChanged)
+            {
+                marginChanged = false;
+                _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+            }
+
+            //
         }
 
         /// <summary>
@@ -145,12 +153,18 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            if (Visible == System.Windows.Visibility.Visible)
+            if (Visible == Visibility.Visible)
             {
-                spriteBatch.Begin();
-                
-                spriteBatch.DrawString(this.spriteFont, Text, Position, this._foregroundColor);
-                spriteBatch.End();
+                //if (draw)
+                //{
+                    spriteBatch.Begin();
+                    if (!transparent)
+                    {
+                        spriteBatch.Draw(_pixel, _panel, this._backgroundColor);
+                    }
+                    spriteBatch.DrawString(this.spriteFont, Text, Position, this._foregroundColor);
+                    spriteBatch.End();
+               // }
             }
         }
     }
