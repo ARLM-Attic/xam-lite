@@ -148,7 +148,7 @@ namespace XAMLite
         public XAMLiteMenuItem(Game game)
             : base(game)
         {
-            this.Spacing = 2;
+            
             this._foregroundColor = Color.White;
             bc = new System.Windows.Media.BrushConverter();
             _stroke = Color.Black;
@@ -162,7 +162,8 @@ namespace XAMLite
         protected override void LoadContent()
         {
             base.LoadContent();
-
+            this.spriteFont = verdana15SpriteFont;
+            this.Spacing = 2;
             RecalculateWidthAndHeight(this.Header);
             _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
         }

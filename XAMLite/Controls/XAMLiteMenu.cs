@@ -18,6 +18,8 @@ namespace XAMLite
         public List<XAMLiteMenuItem> Items;
         private int lastItemsCount;
 
+        private int longestWidth;
+
         /// <summary>
         /// 
         /// </summary>
@@ -54,6 +56,7 @@ namespace XAMLite
         {
             Items = new List<XAMLiteMenuItem>();
             bc = new System.Windows.Media.BrushConverter();
+            longestWidth = 0;
         }
 
         /// <summary>
@@ -141,13 +144,18 @@ namespace XAMLite
 
             this.Width = Items[0].Width + 10;
             this.Height = Items[0].Height + 10;
+            Items[0].Width = this.Width;
 
             for (int i = 0; i < Items.Count; i++)
             {
-                if (Items[i].Width < this.Width)
-                    Items[i].Width = this.Width;
-                else
-                    Items[i].Width += 10;
+                if (longestWidth <= Items[i].Width)
+                    longestWidth = Items[i].Width;
+            }
+
+            for (int i = 1; i < Items.Count; i++)
+            {
+                Items[i].Width = longestWidth + 10;
+                Items[i].Height = Items[0].Height;
             }
             
             

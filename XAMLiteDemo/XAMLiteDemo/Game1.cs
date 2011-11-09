@@ -282,7 +282,7 @@ namespace XAMLiteDemo
             menu1.Items.Add(menuitem2);
 
             XAMLiteMenuItem menuitem3 = new XAMLiteMenuItem(this);
-            menuitem3.Header = "Menu Item 3";
+            menuitem3.Header = "Menu Item 3 blah blah";
             menuitem3.Background = Brushes.Black;
             menuitem3.Foreground = Brushes.White;
             menu1.Items.Add(menuitem3);
