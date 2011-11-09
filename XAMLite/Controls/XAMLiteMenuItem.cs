@@ -96,7 +96,11 @@ namespace XAMLite
             }
         }
 
+        public Thickness Padding;
+
         private bool transparent;
+
+        BrushConverter bc;
 
         /// <summary>
         /// If true, the user has clicked on a menu and the menu item should display, unless it is the
@@ -109,6 +113,7 @@ namespace XAMLite
         {
             this.Spacing = 2;
             this._foregroundColor = Color.White;
+            bc = new System.Windows.Media.BrushConverter();
         }
 
         /// <summary>
@@ -141,7 +146,17 @@ namespace XAMLite
             if (marginChanged)
             {
                 marginChanged = false;
-                _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+                _panel = new Rectangle((int)this.Position.X - (int)this.Padding.Left, (int)this.Position.Y, this.Width, this.Height);
+            }
+
+            if (_mouseEnter)
+            {
+                this.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cccccc");
+            }
+            else
+            {
+                 if(!_allMenuTitles.Contains(this))
+                    this.Background = Brushes.Black;
             }
 
             //

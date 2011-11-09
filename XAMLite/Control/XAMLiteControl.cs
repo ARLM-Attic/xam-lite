@@ -226,6 +226,8 @@ namespace XAMLite
         protected static List<XAMLiteRadioButton> _allRadioButtons;
         protected bool _selected;
 
+        protected static List<XAMLiteMenuItem> _allMenuTitles;
+
         /// <summary>
         /// 
         /// </summary>
@@ -241,6 +243,7 @@ namespace XAMLite
             this.Visible = Visibility.Visible;
             this.IsEnabled = true;
             _allRadioButtons = new List<XAMLiteRadioButton>();
+            _allMenuTitles = new List<XAMLiteMenuItem>();
         }
 
         /// <summary>

@@ -46,7 +46,6 @@ namespace XAMLite
         private bool _setMenuItems;
 
         private bool alreadyDown;
-        private bool alreadEntered;
 
         BrushConverter bc;
 
@@ -54,6 +53,7 @@ namespace XAMLite
             : base(game)
         {
             Items = new List<XAMLiteMenuItem>();
+            bc = new System.Windows.Media.BrushConverter();
         }
 
         /// <summary>
@@ -76,8 +76,6 @@ namespace XAMLite
 
             if (_mouseEnter)
             {
-                // setting up often used Brush colors
-                bc = new System.Windows.Media.BrushConverter();
                 Items[0].Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cccccc");   
             }
             else
@@ -141,16 +139,25 @@ namespace XAMLite
                 Items[i].Update(gameTime);
             }
 
-            this.Width = Items[0].Width;
+            this.Width = Items[0].Width + 10;
+            this.Height = Items[0].Height + 10;
+
+            for (int i = 0; i < Items.Count; i++)
+            {
+                Items[i].Width += 10;
+            }
+            
+            Items[0].Padding = new Thickness(5, 0, 5, 0);
+            _allMenuTitles.Add(Items[0]);
 
             for (int i = 0; i < Items.Count; i++)
             {
                 Items[i].HorizontalAlignment = this.HorizontalAlignment;
                 Items[i].VerticalAlignment = this.VerticalAlignment;
                 if (i == 0)
-                    Items[i].Margin = this.Margin;
+                    Items[i].Margin = new Thickness(this.Margin.Left + Items[0].Padding.Left, this.Margin.Top + Items[0].Padding.Top, this.Margin.Right + Items[0].Padding.Right, this.Margin.Bottom + Items[0].Padding.Bottom);
                 else
-                    Items[i].Margin = new Thickness(this.Margin.Left, (this.Margin.Top + Items[i].Height * i), this.Margin.Right, this.Margin.Bottom);
+                    Items[i].Margin = new Thickness(this.Margin.Left + Items[0].Padding.Left, (this.Margin.Top + Items[i].Height * i) + Items[0].Padding.Top, this.Margin.Right + Items[0].Padding.Right, this.Margin.Bottom + Items[0].Padding.Bottom);
             }
 
            _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
