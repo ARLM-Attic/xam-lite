@@ -48,6 +48,7 @@ namespace XAMLite
         private bool _setMenuItems;
 
         private bool alreadyDown;
+        //private bool alreadyMouseDown;
 
         BrushConverter bc;
 
@@ -79,11 +80,18 @@ namespace XAMLite
 
             if (_mouseEnter)
             {
-                Items[0].Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cccccc");   
+                Items[0].Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cccccc");
+                
             }
             else
             {
+                if (alreadyDown == true)
+                    _menuSelected = true;
+                else
+                    _menuSelected = false;
+
                 alreadyDown = false;
+
                 Items[0].Background = Brushes.Black;
                 if (Items.Count > 0 )
                 {
@@ -93,11 +101,14 @@ namespace XAMLite
                         Items[i].Visible = Visibility.Hidden;
                     }
                 }
+
                 _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
             }
 
-            if (_mouseEnter && _mouseDown && !alreadyDown)
+
+            if ((_mouseEnter && _mouseDown && !alreadyDown) || (_mouseEnter && _menuSelected))
             {
+                _menuSelected = true;
                 alreadyDown = true;
                 for (int i = 1; i < Items.Count; i++)
                 {
@@ -110,6 +121,7 @@ namespace XAMLite
                 }
                 _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
             }
+
         }
 
         /// <summary>

@@ -287,6 +287,32 @@ namespace XAMLiteDemo
             menuitem3.Foreground = Brushes.White;
             menu1.Items.Add(menuitem3);
 
+            XAMLiteMenu menu2 = new XAMLiteMenu(this);
+            menu2.Width = 75;
+            menu2.Margin = new Thickness(115, 5, 0, 0);
+            menu2.HorizontalAlignment = HorizontalAlignment.Left;
+            menu2.VerticalAlignment = VerticalAlignment.Top;
+            menu2.Background = Brushes.Black;
+            Components.Add(menu2);
+
+            XAMLiteMenuItem menuitem2_1 = new XAMLiteMenuItem(this);
+            menuitem2_1.Header = "Head of Menu";
+            menuitem2_1.Background = Brushes.Black;
+            menuitem2_1.Foreground = Brushes.White;
+            menu2.Items.Add(menuitem2_1);
+
+            XAMLiteMenuItem menuitem2_2 = new XAMLiteMenuItem(this);
+            menuitem2_2.Header = "Menu Item 2";
+            menuitem2_2.Background = Brushes.Black;
+            menuitem2_2.Foreground = Brushes.White;
+            menu2.Items.Add(menuitem2_2);
+
+            XAMLiteMenuItem menuitem2_3 = new XAMLiteMenuItem(this);
+            menuitem2_3.Header = "Menu Item 3 blah blah";
+            menuitem2_3.Background = Brushes.Black;
+            menuitem2_3.Foreground = Brushes.White;
+            menu2.Items.Add(menuitem2_3);
+
             
 
             // Initialize all game components. (This includes calling Initialize() on all XAMLite controls, 

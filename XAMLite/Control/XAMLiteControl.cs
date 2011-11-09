@@ -227,7 +227,9 @@ namespace XAMLite
         protected static List<XAMLiteRadioButton> _allRadioButtons;
         protected bool _selected;
 
+        // list of all menu titles
         protected static List<XAMLiteMenuItem> _allMenuTitles;
+        protected static bool _menuSelected;
 
         /// <summary>
         /// 
