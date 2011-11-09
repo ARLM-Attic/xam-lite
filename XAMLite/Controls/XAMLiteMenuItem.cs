@@ -215,11 +215,13 @@ namespace XAMLite
                     spriteBatch.Begin();
                     if (!transparent)
                     {
-                        spriteBatch.Draw(_pixel, _panel, this._backgroundColor);
-                        if (!_allMenuTitles.Contains(this))
+                        if (_allMenuTitles.Contains(this))
+                            spriteBatch.Draw(_pixel, _panel, this._backgroundColor);
+                        else
                         {
-                           // _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left, (int)this.Position.Y, this.Width, this.Height);
-                            //this.spriteBatch.Draw(_pixel, _strokePanel, _fill);
+                            Rectangle ghostRect = new Rectangle(_panel.X + 5, _panel.Y + 5, _panel.Width, _panel.Height);
+                            spriteBatch.Draw(_pixel, ghostRect, (Color.Black * 0.45f));
+                            spriteBatch.Draw(_pixel, _panel, this._backgroundColor);
                             _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left, (int)this.Position.Y, this.Width, _strokeThickness);
                             this.spriteBatch.Draw(_pixel, _strokePanel, _stroke);
                             _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left, ((int)this.Position.Y + this.Height - _strokeThickness), this.Width, _strokeThickness);
