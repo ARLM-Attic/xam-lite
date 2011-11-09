@@ -144,14 +144,18 @@ namespace XAMLite
 
             for (int i = 0; i < Items.Count; i++)
             {
-                Items[i].Width += 10;
+                if (Items[i].Width < this.Width)
+                    Items[i].Width = this.Width;
+                else
+                    Items[i].Width += 10;
             }
             
-            Items[0].Padding = new Thickness(5, 0, 5, 0);
+            
             _allMenuTitles.Add(Items[0]);
 
             for (int i = 0; i < Items.Count; i++)
             {
+                Items[i].Padding = new Thickness(5, 0, 5, 0);
                 Items[i].HorizontalAlignment = this.HorizontalAlignment;
                 Items[i].VerticalAlignment = this.VerticalAlignment;
                 if (i == 0)

@@ -102,6 +102,43 @@ namespace XAMLite
 
         BrushConverter bc;
 
+        private Color _fill;
+        private Color _stroke;
+
+        private Rectangle _strokePanel;
+
+        /// <summary>
+        /// May become Public used to set up a Fill property later as described by the user.
+        /// </summary>
+        private Brush Fill
+        {
+            set
+            {
+                var solidBrush = (SolidColorBrush)value;
+                var color = solidBrush.Color;
+                _fill = new Color(color.R, color.G, color.B, color.A);
+                
+            }
+        }
+
+        /// <summary>
+        /// May become Public and used to set up a Fill property later as described by the user.
+        /// </summary>
+        private Brush Stroke
+        {
+            set
+            {
+                var solidBrush = (SolidColorBrush)value;
+                var color = solidBrush.Color;
+                _stroke = new Color(color.R, color.G, color.B, color.A);
+            }
+        }
+
+        /// <summary>
+        /// May become public and used to set up a Stroke Thickness later as described by the user.
+        /// </summary>
+        private int _strokeThickness { get; set; }
+
         /// <summary>
         /// If true, the user has clicked on a menu and the menu item should display, unless it is the
         /// Header for the menu, in which case it will always draw.
@@ -114,6 +151,9 @@ namespace XAMLite
             this.Spacing = 2;
             this._foregroundColor = Color.White;
             bc = new System.Windows.Media.BrushConverter();
+            _stroke = Color.Black;
+            _strokeThickness = 2;
+            _strokePanel = new Rectangle();
         }
 
         /// <summary>
@@ -176,6 +216,20 @@ namespace XAMLite
                     if (!transparent)
                     {
                         spriteBatch.Draw(_pixel, _panel, this._backgroundColor);
+                        if (!_allMenuTitles.Contains(this))
+                        {
+                           // _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left, (int)this.Position.Y, this.Width, this.Height);
+                            //this.spriteBatch.Draw(_pixel, _strokePanel, _fill);
+                            _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left, (int)this.Position.Y, this.Width, _strokeThickness);
+                            this.spriteBatch.Draw(_pixel, _strokePanel, _stroke);
+                            _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left, ((int)this.Position.Y + this.Height - _strokeThickness), this.Width, _strokeThickness);
+                            this.spriteBatch.Draw(_pixel, _strokePanel, _stroke);
+                            _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left, (int)this.Position.Y, _strokeThickness, this.Height);
+                            this.spriteBatch.Draw(_pixel, _strokePanel, _stroke);
+                            _strokePanel = new Rectangle(((int)this.Position.X - (int)this.Padding.Left + this.Width - _strokeThickness), (int)this.Position.Y, _strokeThickness, this.Height);
+                            this.spriteBatch.Draw(_pixel, _strokePanel, _stroke);
+                        }
+                            
                     }
                     spriteBatch.DrawString(this.spriteFont, Text, Position, this._foregroundColor);
                     spriteBatch.End();
