@@ -12,7 +12,6 @@
         </ComboBox>
         <Image Height="100" HorizontalAlignment="Left" Margin="197,100,0,0" Name="dogImage" Stretch="Fill" VerticalAlignment="Top" Width="100" Source="/WpfReferenceDemo;component/Content/Dog.png" MouseEnter="dogImage_MouseEnter" MouseDown="dogImage_MouseDown" MouseLeave="dogImage_MouseLeave" MouseUp="dogImage_MouseUp" />
         <Label Content="Label" Height="28" HorizontalAlignment="Left" Margin="440,103,0,0" Name="label1" VerticalAlignment="Top" Background="#FFFCF2F2" />
-        <RadioButton Content="RadioButton" Height="16" HorizontalAlignment="Left" Margin="282,255,0,0" Name="radioButton1" VerticalAlignment="Top" />
         <TextBlock Height="61" HorizontalAlignment="Left" Margin="488,189,0,0" Name="textBlock2" Text="TextBlock.  The quick brown fox jumps over the lazy dog." VerticalAlignment="Top" Width="156" TextWrapping="Wrap" Background="#FFFCFAF5" />
         <Label Content="Rectangle" Height="28" HorizontalAlignment="Left" Margin="60,149,0,0" Name="label2" VerticalAlignment="Top" />
         <Label Content="Image (clickable)" Height="28" HorizontalAlignment="Left" Margin="197,194,0,0" Name="imageLabel" VerticalAlignment="Top" Width="100" HorizontalContentAlignment="Center" />
@@ -30,6 +29,8 @@
                 <MenuItem Header="Paste" Background="Black" />
             </MenuItem>
         </Menu>
-        
+        <RadioButton Content="Disabled RadioButton" Height="16" HorizontalAlignment="Left" Margin="317,285,0,0" Name="radioButton2" VerticalAlignment="Top" IsEnabled="False" />
+        <RadioButton Content="Checked RadioButton " Height="16" HorizontalAlignment="Left" Margin="317,299,0,0" Name="radioButton1" VerticalAlignment="Top" IsChecked="True" />
+        <RadioButton Content="RadioButton" Height="16" HorizontalAlignment="Left" Margin="317,271,0,0" Name="radioButton3" VerticalAlignment="Top" />
     </Grid>
 </Window>
