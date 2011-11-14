@@ -229,6 +229,7 @@ namespace XAMLite
 
         // list of all menu titles
         protected static List<XAMLiteMenuItem> _allMenuTitles;
+        protected static List<XAMLiteMenuItem> _allSubMenuTitles;
         protected static bool _menuSelected;
 
         /// <summary>
@@ -247,6 +248,7 @@ namespace XAMLite
             this.IsEnabled = true;
             _allRadioButtons = new List<XAMLiteRadioButton>();
             _allMenuTitles = new List<XAMLiteMenuItem>();
+            _allSubMenuTitles = new List<XAMLiteMenuItem>();
         }
 
         /// <summary>

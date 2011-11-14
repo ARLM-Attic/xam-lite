@@ -313,7 +313,17 @@ namespace XAMLiteDemo
             menuitem2_3.Foreground = Brushes.White;
             menu2.Items.Add(menuitem2_3);
 
-            
+            XAMLiteMenuItem submenuitem2_3_1 = new XAMLiteMenuItem(this);
+            submenuitem2_3_1.Header = "SubMenu Item 1";
+            submenuitem2_3_1.Background = Brushes.Black;
+            submenuitem2_3_1.Foreground = Brushes.White;
+            menuitem2_3.Items.Add(submenuitem2_3_1);
+
+            XAMLiteMenuItem submenuitem2_3_2 = new XAMLiteMenuItem(this);
+            submenuitem2_3_2.Header = "SubMenu Item 2 plus more words";
+            submenuitem2_3_2.Background = Brushes.Black;
+            submenuitem2_3_2.Foreground = Brushes.White;
+            menuitem2_3.Items.Add(submenuitem2_3_2);
 
             // Initialize all game components. (This includes calling Initialize() on all XAMLite controls, 
             // since they are game components).

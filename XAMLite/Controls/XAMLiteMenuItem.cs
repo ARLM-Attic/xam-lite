@@ -16,7 +16,7 @@ namespace XAMLite
         ///  To hold sub-menu items that draw either to the right or left of this menu item
         ///  depending on its parent's location.
         /// </summary>
-        List<XAMLiteMenuItem> Items;
+        public List<XAMLiteMenuItem> Items;
 
         /// <summary>
         /// This just duplicates the Text property but is here since XAML developer will expect to be able
@@ -145,6 +145,14 @@ namespace XAMLite
         /// </summary>
         protected bool draw;
 
+        protected bool displaySubMenu;
+
+        protected bool _setSubMenu;
+
+        protected bool adjusted;
+
+        protected int longestWidth;
+
         public XAMLiteMenuItem(Game game)
             : base(game)
         {
@@ -154,6 +162,8 @@ namespace XAMLite
             _stroke = Color.Black;
             _strokeThickness = 2;
             _strokePanel = new Rectangle();
+            Items = new List<XAMLiteMenuItem>();
+            longestWidth = 0;
         }
 
         /// <summary>
@@ -175,7 +185,6 @@ namespace XAMLite
         {
             base.Update(gameTime);
 
-            //System.Console.WriteLine(Height);
             if (fontFamilyChanged)
             {
                 fontFamilyChanged = false;
@@ -200,7 +209,33 @@ namespace XAMLite
                     this.Background = Brushes.Black;
             }
 
-            //
+            if (!_setSubMenu) 
+            {
+                _setSubMenu = true;
+                setMenuItems(gameTime);
+            }
+
+            if (_mouseDown && Items.Count > 0 && _panel.Contains(_msRect))
+            {
+                displaySubMenu = true;
+                for (int i = 0; i < Items.Count; i++)
+                {
+                    Items[i].Visible = Visibility.Visible;
+                }
+            }
+
+            if (displaySubMenu && !adjusted)
+            {
+                adjusted = true;
+                
+                int tempHeight = this._panel.Y;
+                for (int i = 0; i < Items.Count; i++)
+                {
+                    Items[i].Margin = new Thickness(this.Margin.Left + this.Width, this.Margin.Top + Items[i].Height * i, Items[i].Margin.Right + Items[i].Padding.Right, this.Margin.Bottom + Items[i].Padding.Bottom);
+                    tempHeight += Items[i].Height;
+                }
+
+            }
         }
 
         /// <summary>
@@ -211,32 +246,58 @@ namespace XAMLite
         {
             if (Visible == Visibility.Visible)
             {
-                //if (draw)
-                //{
-                    spriteBatch.Begin();
-                    if (!transparent)
+                spriteBatch.Begin();
+                if (!transparent)
+                {
+                    if (_allMenuTitles.Contains(this))
+                        spriteBatch.Draw(_pixel, _panel, this._backgroundColor);
+                    else
                     {
-                        if (_allMenuTitles.Contains(this))
-                            spriteBatch.Draw(_pixel, _panel, this._backgroundColor);
-                        else
-                        {
-                            Rectangle ghostRect = new Rectangle(_panel.X + 5, _panel.Y + 5, _panel.Width, _panel.Height);
-                            spriteBatch.Draw(_pixel, ghostRect, (Color.Black * 0.45f));
-                            spriteBatch.Draw(_pixel, _panel, this._backgroundColor);
-                            _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left, (int)this.Position.Y, this.Width, _strokeThickness);
-                            this.spriteBatch.Draw(_pixel, _strokePanel, _stroke);
-                            _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left, ((int)this.Position.Y + this.Height - _strokeThickness), this.Width, _strokeThickness);
-                            this.spriteBatch.Draw(_pixel, _strokePanel, _stroke);
-                            _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left, (int)this.Position.Y, _strokeThickness, this.Height);
-                            this.spriteBatch.Draw(_pixel, _strokePanel, _stroke);
-                            _strokePanel = new Rectangle(((int)this.Position.X - (int)this.Padding.Left + this.Width - _strokeThickness), (int)this.Position.Y, _strokeThickness, this.Height);
-                            this.spriteBatch.Draw(_pixel, _strokePanel, _stroke);
-                        }
-                            
+                        Rectangle ghostRect = new Rectangle(_panel.X + 5, _panel.Y + 5, _panel.Width, _panel.Height);
+                        spriteBatch.Draw(_pixel, ghostRect, (Color.Black * 0.45f));
+                        spriteBatch.Draw(_pixel, _panel, this._backgroundColor);
+                        _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left, (int)this.Position.Y, this.Width, _strokeThickness);
+                        this.spriteBatch.Draw(_pixel, _strokePanel, _stroke);
+                        _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left, ((int)this.Position.Y + this.Height - _strokeThickness), this.Width, _strokeThickness);
+                        this.spriteBatch.Draw(_pixel, _strokePanel, _stroke);
+                        _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left, (int)this.Position.Y, _strokeThickness, this.Height);
+                        this.spriteBatch.Draw(_pixel, _strokePanel, _stroke);
+                        _strokePanel = new Rectangle(((int)this.Position.X - (int)this.Padding.Left + this.Width - _strokeThickness), (int)this.Position.Y, _strokeThickness, this.Height);
+                        this.spriteBatch.Draw(_pixel, _strokePanel, _stroke);
                     }
-                    spriteBatch.DrawString(this.spriteFont, Text, Position, this._foregroundColor);
-                    spriteBatch.End();
-               // }
+                }
+
+                
+                spriteBatch.DrawString(this.spriteFont, Text, Position, this._foregroundColor);
+                
+                spriteBatch.End();
+            }
+        }
+
+        /// <summary>
+        /// Loads the children once the grid has been set up.
+        /// </summary>
+        /// <param name></param>
+        private void setMenuItems(GameTime gameTime)
+        {
+            for (int i = 0; i < Items.Count; i++)
+            {
+                this.Game.Components.Add(Items[i]);
+                Items[i].Visible = Visibility.Hidden;
+                Items[i].Padding = new Thickness(5, 0, 5, 0);
+                Items[i].HorizontalAlignment = this.HorizontalAlignment;
+                Items[i].VerticalAlignment = this.VerticalAlignment;
+            }
+
+            for (int i = 0; i < Items.Count; i++)
+            {
+                if (longestWidth <= Items[i].Width)
+                    longestWidth = Items[i].Width;
+            }
+
+            for (int i = 0; i < Items.Count; i++)
+            {
+                Items[i].Width = longestWidth + 10;  
             }
         }
     }

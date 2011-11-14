@@ -48,7 +48,6 @@ namespace XAMLite
         private bool _setMenuItems;
 
         private bool alreadyDown;
-        //private bool alreadyMouseDown;
 
         BrushConverter bc;
 
@@ -151,6 +150,11 @@ namespace XAMLite
             for (int i = 0; i < Items.Count; i++)
             {
                 this.Game.Components.Add(Items[i]);
+
+                // if it is a sub menu, add it to the list of all sub menus
+                if (Items[i].Items.Count > 0)
+                    _allSubMenuTitles.Add(Items[i]);
+
                 Items[i].Update(gameTime);
             }
 
