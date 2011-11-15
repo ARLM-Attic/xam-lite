@@ -231,6 +231,10 @@ namespace XAMLite
         protected static List<XAMLiteMenuItem> _allMenuTitles;
         protected static List<XAMLiteMenuItem> _allSubMenuTitles;
         protected static bool _menuSelected;
+        protected static bool _subMenuSelected;
+
+        protected Texture2D arrow;
+        protected Rectangle arrowRect;
 
         /// <summary>
         /// 
@@ -276,6 +280,10 @@ namespace XAMLite
             _pixel = new Texture2D(this.GraphicsDevice, 1, 1);
             _pixel.SetData<Color>(new Color[] { Color.White });
 
+            // for sub menu items
+            arrow = Game.Content.Load<Texture2D>("Images/arrow");
+            arrowRect = new Rectangle(0, 0, arrow.Width, arrow.Height);
+
             this.arialSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Arial");
             this.courier10SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Courier10");
             this.verdana10SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana10");
@@ -294,6 +302,8 @@ namespace XAMLite
             this.verdana60SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana60");
             this.verdana60BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana60Bold");
             this.spriteFont = courier10SpriteFont;
+
+            
         }
 
         /// <summary>

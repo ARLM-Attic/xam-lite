@@ -106,6 +106,7 @@ namespace XAMLite
         private Color _stroke;
 
         private Rectangle _strokePanel;
+        private Rectangle _subMenuPanel;
 
         /// <summary>
         /// May become Public used to set up a Fill property later as described by the user.
@@ -162,6 +163,7 @@ namespace XAMLite
             _stroke = Color.Black;
             _strokeThickness = 2;
             _strokePanel = new Rectangle();
+            _subMenuPanel = new Rectangle();
             Items = new List<XAMLiteMenuItem>();
             longestWidth = 0;
         }
@@ -193,10 +195,18 @@ namespace XAMLite
                 RecalculateWidthAndHeight(this.Header);
             }
 
+            if (!_setSubMenu)
+            {
+                _setSubMenu = true;
+                setSubMenuItems(gameTime);
+               // this.marginChanged = true;
+            }
+
             if (marginChanged)
             {
                 marginChanged = false;
                 _panel = new Rectangle((int)this.Position.X - (int)this.Padding.Left, (int)this.Position.Y, this.Width, this.Height);
+                _subMenuPanel = new Rectangle(this._panel.X + this.Width, (int)this.Position.Y, longestWidth + 10, this._panel.Height * Items.Count);
             }
 
             if (_mouseEnter)
@@ -209,18 +219,38 @@ namespace XAMLite
                     this.Background = Brushes.Black;
             }
 
-            if (!_setSubMenu) 
-            {
-                _setSubMenu = true;
-                setMenuItems(gameTime);
-            }
-
-            if (_mouseDown && Items.Count > 0 && _panel.Contains(_msRect))
+            if (_mouseEnter && Items.Count > 0 && _panel.Contains(_msRect) && this.Visible == Visibility.Visible)
             {
                 displaySubMenu = true;
+                _subMenuSelected = true;
                 for (int i = 0; i < Items.Count; i++)
                 {
                     Items[i].Visible = Visibility.Visible;
+                }
+            }
+
+            
+
+            /*if (_mouseEnter && displaySubMenu && this.Visible == Visibility.Visible)
+            {
+                for (int i = 0; i < Items.Count; i++)
+                {
+                    Items[i].Visible = Visibility.Visible;
+                }
+            }*/
+            else
+            {
+                if (!_subMenuSelected)
+                {
+                    displaySubMenu = false;
+                    for (int i = 0; i < Items.Count; i++)
+                    {
+                        Items[i].Visible = Visibility.Hidden;
+                    }
+                }
+                else if (Items.Count > 0 && !_subMenuPanel.Contains(_msRect))
+                {
+                    _subMenuSelected = false;
                 }
             }
 
@@ -234,7 +264,6 @@ namespace XAMLite
                     Items[i].Margin = new Thickness(this.Margin.Left + this.Width, this.Margin.Top + Items[i].Height * i, Items[i].Margin.Right + Items[i].Padding.Right, this.Margin.Bottom + Items[i].Padding.Bottom);
                     tempHeight += Items[i].Height;
                 }
-
             }
         }
 
@@ -265,9 +294,15 @@ namespace XAMLite
                         _strokePanel = new Rectangle(((int)this.Position.X - (int)this.Padding.Left + this.Width - _strokeThickness), (int)this.Position.Y, _strokeThickness, this.Height);
                         this.spriteBatch.Draw(_pixel, _strokePanel, _stroke);
                     }
+
+                    if (_allSubMenuTitles.Contains(this))
+                    {
+                        arrowRect.X = this._panel.X + this.Width - arrow.Width;
+                        arrowRect.Y = this._panel.Y + this.Height / 4;
+                        this.spriteBatch.Draw(arrow, arrowRect, Color.White);
+                    }
                 }
 
-                
                 spriteBatch.DrawString(this.spriteFont, Text, Position, this._foregroundColor);
                 
                 spriteBatch.End();
@@ -278,7 +313,7 @@ namespace XAMLite
         /// Loads the children once the grid has been set up.
         /// </summary>
         /// <param name></param>
-        private void setMenuItems(GameTime gameTime)
+        private void setSubMenuItems(GameTime gameTime)
         {
             for (int i = 0; i < Items.Count; i++)
             {
@@ -291,6 +326,11 @@ namespace XAMLite
 
             for (int i = 0; i < Items.Count; i++)
             {
+                if (_allSubMenuTitles.Contains(Items[i]))
+                {
+                    Items[i].Width += 10;
+                }
+
                 if (longestWidth <= Items[i].Width)
                     longestWidth = Items[i].Width;
             }

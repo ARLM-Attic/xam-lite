@@ -49,7 +49,11 @@ namespace XAMLite
 
         private bool alreadyDown;
 
+        private bool fullMenuIsVisible;
+
         BrushConverter bc;
+
+        Rectangle _menuItemPanel;
 
         public XAMLiteMenu(Game game)
             : base(game)
@@ -80,19 +84,30 @@ namespace XAMLite
             if (_mouseEnter)
             {
                 Items[0].Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cccccc");
-                
+
             }
+
+            else if ((_menuItemPanel.Contains(_msRect) || _subMenuSelected) && fullMenuIsVisible)
+            {
+                Items[0].Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cccccc");
+            }
+
             else
             {
                 if (alreadyDown == true)
+                {
                     _menuSelected = true;
+                }
                 else
+                {
                     _menuSelected = false;
+                    fullMenuIsVisible = false;
+                }
 
                 alreadyDown = false;
 
                 Items[0].Background = Brushes.Black;
-                if (Items.Count > 0 )
+                if (Items.Count > 0)
                 {
                     this.Height = Items[0].Height;
                     for (int i = 1; i < Items.Count; i++)
@@ -109,6 +124,7 @@ namespace XAMLite
             {
                 _menuSelected = true;
                 alreadyDown = true;
+                fullMenuIsVisible = true;
                 for (int i = 1; i < Items.Count; i++)
                 {
                     Items[i].Visible = Visibility.Visible;
@@ -118,9 +134,8 @@ namespace XAMLite
                 {
                     this.Height += Items[i].Height;
                 }
-                _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+                _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, Items[0].Height);
             }
-
         }
 
         /// <summary>
@@ -164,6 +179,14 @@ namespace XAMLite
 
             for (int i = 0; i < Items.Count; i++)
             {
+                if (_allSubMenuTitles.Contains(Items[i]))
+                {
+                    Items[i].Width += 10;
+                }
+            }
+
+            for (int i = 0; i < Items.Count; i++)
+            {
                 if (longestWidth <= Items[i].Width)
                     longestWidth = Items[i].Width;
             }
@@ -172,8 +195,7 @@ namespace XAMLite
             {
                 Items[i].Width = longestWidth + 10;
                 Items[i].Height = Items[0].Height;
-            }
-            
+            } 
             
             _allMenuTitles.Add(Items[0]);
 
@@ -185,10 +207,13 @@ namespace XAMLite
                 if (i == 0)
                     Items[i].Margin = new Thickness(this.Margin.Left + Items[0].Padding.Left, this.Margin.Top + Items[0].Padding.Top, this.Margin.Right + Items[0].Padding.Right, this.Margin.Bottom + Items[0].Padding.Bottom);
                 else
-                    Items[i].Margin = new Thickness(this.Margin.Left + Items[0].Padding.Left, (this.Margin.Top + Items[i].Height * i) + Items[0].Padding.Top, this.Margin.Right + Items[0].Padding.Right, this.Margin.Bottom + Items[0].Padding.Bottom);
+                {
+                    Items[i].Margin = new Thickness(this.Margin.Left + Items[0].Padding.Left, (this.Margin.Top + Items[i].Height * i) + Items[0].Padding.Top, Items[i].Margin.Right + Items[0].Padding.Right, this.Margin.Bottom + Items[0].Padding.Bottom);
+                }
             }
 
-           _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+            _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, Items[0].Height);
+           _menuItemPanel = new Rectangle((int)this.Position.X, (int)this.Position.Y + Items[0].Height, longestWidth + 10, this.Height);
         }
     }
 }
