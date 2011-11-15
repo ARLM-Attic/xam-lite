@@ -108,7 +108,7 @@ namespace XAMLite
         {
             //
             this.Text = text;
-            this.Spacing = 2;
+            this.Spacing = 0;
 
             //
             this._foregroundColor = Color.White;
