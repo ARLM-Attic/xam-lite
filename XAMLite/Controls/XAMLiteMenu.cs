@@ -106,7 +106,7 @@ namespace XAMLite
 
                 alreadyDown = false;
 
-                Items[0].Background = Brushes.Black;
+                Items[0].Background = Brushes.Transparent;
                 if (Items.Count > 0)
                 {
                     this.Height = Items[0].Height;
@@ -146,9 +146,12 @@ namespace XAMLite
         {
             if (Visible == Visibility.Visible)
             {
-                spriteBatch.Begin();
-                spriteBatch.Draw(_pixel, _panel, (_backgroundColor * (float)Opacity));
-                spriteBatch.End();
+                if (!transparent)
+                {
+                    spriteBatch.Begin();
+                    spriteBatch.Draw(_pixel, _panel, (_backgroundColor * (float)Opacity));
+                    spriteBatch.End();
+                }
             }
         }
 
@@ -173,15 +176,15 @@ namespace XAMLite
                 Items[i].Update(gameTime);
             }
 
-            this.Width = Items[0].Width + 10;
-            this.Height = Items[0].Height + 10;
+            this.Width = Items[0].Width + 20;
+            this.Height = Items[0].Height + 20;
             Items[0].Width = this.Width;
 
             for (int i = 0; i < Items.Count; i++)
             {
                 if (_allSubMenuTitles.Contains(Items[i]))
                 {
-                    Items[i].Width += 10;
+                    Items[i].Width += 20;
                 }
             }
 
@@ -193,7 +196,7 @@ namespace XAMLite
 
             for (int i = 1; i < Items.Count; i++)
             {
-                Items[i].Width = longestWidth + 10;
+                Items[i].Width = longestWidth + 20;
                 Items[i].Height = Items[0].Height;
             } 
             
@@ -201,7 +204,7 @@ namespace XAMLite
 
             for (int i = 0; i < Items.Count; i++)
             {
-                Items[i].Padding = new Thickness(5, 0, 5, 0);
+                Items[i].Padding = new Thickness(10, 0, 10, 0);
                 Items[i].HorizontalAlignment = this.HorizontalAlignment;
                 Items[i].VerticalAlignment = this.VerticalAlignment;
                 if (i == 0)
