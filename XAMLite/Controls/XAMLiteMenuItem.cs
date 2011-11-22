@@ -319,7 +319,7 @@ namespace XAMLite
             {
                 this.Game.Components.Add(Items[i]);
                 Items[i].Visible = Visibility.Hidden;
-                Items[i].Padding = new Thickness(5, 0, 5, 0);
+                Items[i].Padding = new Thickness(10, 0, 10, 0);
                 Items[i].HorizontalAlignment = this.HorizontalAlignment;
                 Items[i].VerticalAlignment = this.VerticalAlignment;
             }
@@ -328,7 +328,7 @@ namespace XAMLite
             {
                 if (_allSubMenuTitles.Contains(Items[i]))
                 {
-                    Items[i].Width += 10;
+                    Items[i].Width += 20;
                 }
 
                 if (longestWidth <= Items[i].Width)
@@ -337,7 +337,7 @@ namespace XAMLite
 
             for (int i = 0; i < Items.Count; i++)
             {
-                Items[i].Width = longestWidth + 10;  
+                Items[i].Width = longestWidth + 20;  
             }
         }
     }

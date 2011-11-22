@@ -289,7 +289,7 @@ namespace XAMLiteDemo
 
             XAMLiteMenu menu2 = new XAMLiteMenu(this);
             menu2.Width = 75;
-            menu2.Margin = new Thickness(115, 5, 0, 0);
+            menu2.Margin = new Thickness(125, 5, 0, 0);
             menu2.HorizontalAlignment = HorizontalAlignment.Left;
             menu2.VerticalAlignment = VerticalAlignment.Top;
             menu2.Background = Brushes.Black;
