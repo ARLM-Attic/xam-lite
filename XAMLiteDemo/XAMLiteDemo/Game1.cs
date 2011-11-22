@@ -287,6 +287,18 @@ namespace XAMLiteDemo
             menuitem3.Foreground = Brushes.White;
             menu1.Items.Add(menuitem3);
 
+            XAMLiteMenuItem menuitem4 = new XAMLiteMenuItem(this);
+            menuitem4.Header = "Menu Item 4";
+            menuitem4.Background = Brushes.Black;
+            menuitem4.Foreground = Brushes.White;
+            menu1.Items.Add(menuitem4);
+
+            XAMLiteMenuItem menuitem5 = new XAMLiteMenuItem(this);
+            menuitem5.Header = "Menu Item 5";
+            menuitem5.Background = Brushes.Black;
+            menuitem5.Foreground = Brushes.White;
+            menu1.Items.Add(menuitem5);
+
             XAMLiteMenu menu2 = new XAMLiteMenu(this);
             menu2.Width = 75;
             menu2.Margin = new Thickness(125, 5, 0, 0);

@@ -134,7 +134,7 @@ namespace XAMLite
                 {
                     this.Height += Items[i].Height;
                 }
-                _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, Items[0].Height);
+                _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
             }
         }
 
