@@ -135,7 +135,7 @@ namespace XAMLite
                 }
                 _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
             }
-            else if (_mouseDown && alreadyDown)
+            /*else if (_mouseDown && alreadyDown)
             {
                 _menuSelected = false;
                 alreadyDown = false;
@@ -145,7 +145,7 @@ namespace XAMLite
                     Items[i].Visible = Visibility.Hidden;
                 }
                 this.Height = Items[0].Height;
-            }
+            }*/
         }
 
         /// <summary>
