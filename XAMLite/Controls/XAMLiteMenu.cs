@@ -91,7 +91,7 @@ namespace XAMLite
             {
                 Items[0].Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cccccc");
             }
-
+            // this is the problem area here, causing the menu to sometimes shrink up...
             else
             {
                 if (alreadyDown == true)
@@ -119,7 +119,6 @@ namespace XAMLite
                 _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
             }
 
-
             if ((_mouseEnter && _mouseDown && !alreadyDown) || (_mouseEnter && _menuSelected))
             {
                 _menuSelected = true;
@@ -135,6 +134,17 @@ namespace XAMLite
                     this.Height += Items[i].Height;
                 }
                 _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+            }
+            else if (_mouseDown && alreadyDown)
+            {
+                _menuSelected = false;
+                alreadyDown = false;
+                fullMenuIsVisible = false;
+                for (int i = 1; i < Items.Count; i++)
+                {
+                    Items[i].Visible = Visibility.Hidden;
+                }
+                this.Height = Items[0].Height;
             }
         }
 
