@@ -48,6 +48,7 @@ namespace XAMLite
         private bool _setMenuItems;
 
         private bool alreadyDown;
+        private bool mouseReleased;
 
         private bool fullMenuIsVisible;
 
@@ -61,6 +62,7 @@ namespace XAMLite
             Items = new List<XAMLiteMenuItem>();
             bc = new System.Windows.Media.BrushConverter();
             longestWidth = 0;
+            mouseReleased = true;
         }
 
         /// <summary>
@@ -81,13 +83,43 @@ namespace XAMLite
             if (!_setMenuItems)
                 setMenuItems(gameTime);
 
-            if (_mouseEnter)
+            if (_panel.Contains(_msRect) || (_menuItemPanel.Contains(_msRect) && fullMenuIsVisible))
             {
                 Items[0].Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cccccc");
 
             }
+            else
+            {
+                Items[0].Background = Brushes.Transparent;
+            }
 
-            else if ((_menuItemPanel.Contains(_msRect) || _subMenuSelected) && fullMenuIsVisible)
+            if (_mouseDown && _panel.Contains(_msRect) && mouseReleased)
+            {
+                mouseReleased = false;
+                if (Items[1] != null && Items[1].Visible == Visibility.Hidden)
+                {
+                    for (int i = 1; i < Items.Count; i++)
+                    {
+                        Items[i].Visible = Visibility.Visible;
+                    }
+                    fullMenuIsVisible = true;
+                }
+                else
+                {
+                    for (int i = 1; i < Items.Count; i++)
+                    {
+                        Items[i].Visible = Visibility.Hidden;
+                    }
+                    fullMenuIsVisible = false;
+                }
+            }
+
+            // notifies that a full click has occurred and allows the menu to be selected again, thus making
+            // it visibile or hidden.
+            if (!mouseReleased && _mouseUp)
+                mouseReleased = true;
+
+            /*else if ((_menuItemPanel.Contains(_msRect) || _subMenuSelected) && fullMenuIsVisible)
             {
                 Items[0].Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cccccc");
             }
@@ -174,22 +206,20 @@ namespace XAMLite
             _setMenuItems = true;
             lastItemsCount = Items.Count;
 
-            // Add the child component to the game with the modified parameters.
+            // add the menu items to the game components
             for (int i = 0; i < Items.Count; i++)
             {
                 this.Game.Components.Add(Items[i]);
-
-                // if it is a sub menu, add it to the list of all sub menus
+                // Add the child component to the game with the modified parameters.
                 if (Items[i].Items.Count > 0)
                     _allSubMenuTitles.Add(Items[i]);
-
-                Items[i].Update(gameTime);
             }
 
             this.Width = Items[0].Width + 20;
             this.Height = Items[0].Height + 20;
             Items[0].Width = this.Width;
 
+            // if it's a submenu, it will need room for the white arrow, so the width must be increased to accommodate
             for (int i = 0; i < Items.Count; i++)
             {
                 if (_allSubMenuTitles.Contains(Items[i]))
@@ -198,7 +228,7 @@ namespace XAMLite
                 }
             }
 
-            for (int i = 0; i < Items.Count; i++)
+            for (int i = 1; i < Items.Count; i++)
             {
                 if (longestWidth <= Items[i].Width)
                     longestWidth = Items[i].Width;
@@ -217,11 +247,17 @@ namespace XAMLite
                 Items[i].Padding = new Thickness(10, 0, 10, 0);
                 Items[i].HorizontalAlignment = this.HorizontalAlignment;
                 Items[i].VerticalAlignment = this.VerticalAlignment;
+
                 if (i == 0)
+                {
                     Items[i].Margin = new Thickness(this.Margin.Left + Items[0].Padding.Left, this.Margin.Top + Items[0].Padding.Top, this.Margin.Right + Items[0].Padding.Right, this.Margin.Bottom + Items[0].Padding.Bottom);
+                    Items[i].Background = Brushes.Transparent;
+                }
                 else
                 {
                     Items[i].Margin = new Thickness(this.Margin.Left + Items[0].Padding.Left, (this.Margin.Top + Items[i].Height * i) + Items[0].Padding.Top, Items[i].Margin.Right + Items[0].Padding.Right, this.Margin.Bottom + Items[0].Padding.Bottom);
+                    Items[i].Background = Brushes.Black;
+                    Items[i].Visible = Visibility.Hidden;
                 }
             }
 

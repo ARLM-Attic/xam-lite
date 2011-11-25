@@ -195,13 +195,6 @@ namespace XAMLite
                 RecalculateWidthAndHeight(this.Header);
             }
 
-            if (!_setSubMenu)
-            {
-                _setSubMenu = true;
-                setSubMenuItems(gameTime);
-               // this.marginChanged = true;
-            }
-
             if (marginChanged)
             {
                 marginChanged = false;
@@ -209,7 +202,14 @@ namespace XAMLite
                 _subMenuPanel = new Rectangle(this._panel.X + this.Width, (int)this.Position.Y, longestWidth + 10, this._panel.Height * Items.Count);
             }
 
-            if (_mouseEnter)
+            if (!_setSubMenu)
+            {
+                setSubMenuItems(gameTime);
+            }
+
+            
+
+            /*if (_mouseEnter)
             {
                 this.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cccccc");
             }
@@ -229,15 +229,6 @@ namespace XAMLite
                 }
             }
 
-            
-
-            /*if (_mouseEnter && displaySubMenu && this.Visible == Visibility.Visible)
-            {
-                for (int i = 0; i < Items.Count; i++)
-                {
-                    Items[i].Visible = Visibility.Visible;
-                }
-            }*/
             else
             {
                 if (!_subMenuSelected)
@@ -252,19 +243,20 @@ namespace XAMLite
                 {
                     _subMenuSelected = false;
                 }
-            }
-
-            if (displaySubMenu && !adjusted)
+            }*/
+            //displaySubMenu = true;
+            //if (displaySubMenu && !adjusted)
+            /*if (!adjusted)
             {
                 adjusted = true;
                 
                 int tempHeight = this._panel.Y;
                 for (int i = 0; i < Items.Count; i++)
                 {
-                    Items[i].Margin = new Thickness(this.Margin.Left + this.Width, this.Margin.Top + Items[i].Height * i, Items[i].Margin.Right + Items[i].Padding.Right, this.Margin.Bottom + Items[i].Padding.Bottom);
+                    Items[i].Margin = new Thickness(this._panel.X + this.Width, this._panel.Y + Items[i].Height * i, Items[i].Margin.Right + Items[i].Padding.Right, this.Margin.Bottom + Items[i].Padding.Bottom);
                     tempHeight += Items[i].Height;
                 }
-            }
+            }*/
         }
 
         /// <summary>
@@ -315,29 +307,33 @@ namespace XAMLite
         /// <param name></param>
         private void setSubMenuItems(GameTime gameTime)
         {
-            for (int i = 0; i < Items.Count; i++)
-            {
-                this.Game.Components.Add(Items[i]);
-                Items[i].Visible = Visibility.Hidden;
-                Items[i].Padding = new Thickness(10, 0, 10, 0);
-                Items[i].HorizontalAlignment = this.HorizontalAlignment;
-                Items[i].VerticalAlignment = this.VerticalAlignment;
-            }
+            _setSubMenu = true;
 
-            for (int i = 0; i < Items.Count; i++)
+            if (Items.Count > 0)
             {
-                if (_allSubMenuTitles.Contains(Items[i]))
+                for (int i = 0; i < Items.Count; i++)
                 {
-                    Items[i].Width += 20;
+                    this.Game.Components.Add(Items[i]);
                 }
 
-                if (longestWidth <= Items[i].Width)
-                    longestWidth = Items[i].Width;
-            }
+                for (int i = 0; i < Items.Count; i++)
+                {
+                    Items[i].Width += 20;
 
-            for (int i = 0; i < Items.Count; i++)
-            {
-                Items[i].Width = longestWidth + 20;  
+                    if (longestWidth <= Items[i].Width)
+                        longestWidth = Items[i].Width;
+                }
+
+                for (int i = 0; i < Items.Count; i++)
+                {
+                    Items[i].Visible = Visibility.Hidden;
+                    Items[i].Padding = new Thickness(10, 0, 10, 0);
+                    Items[i].HorizontalAlignment = this.HorizontalAlignment;
+                    Items[i].VerticalAlignment = this.VerticalAlignment;
+                    Items[i].Background = Brushes.Black;
+                    Items[i].Margin = new Thickness(this.Margin.Left + this.Width, this.Margin.Top + Items[i].Height * i, Items[i].Margin.Right + Items[i].Padding.Right, this.Margin.Bottom + Items[i].Padding.Bottom);
+                    Items[i].Width = longestWidth;
+                }
             }
         }
     }
