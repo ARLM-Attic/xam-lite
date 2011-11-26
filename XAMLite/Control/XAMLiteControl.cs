@@ -222,15 +222,42 @@ namespace XAMLite
         /// 
         /// </summary>
         protected Viewport viewport;
-
-        // list of every radio button in the UI
+ 
+        /// <summary>
+        /// List of every radio button in the UI.
+        /// </summary>
         protected static List<XAMLiteRadioButton> _allRadioButtons;
+
+        /// <summary>
+        /// Determines whether a radio button is selected.
+        /// </summary>
         protected bool _selected;
 
-        // list of all menu titles
-        protected static List<XAMLiteMenuItem> _allMenuTitles;
-        protected static List<XAMLiteMenuItem> _allSubMenuTitles;
+        /// <summary>
+        /// List of menu titles.
+        /// </summary>
+        protected static List<string> _allMenuTitles;
+
+        /// <summary>
+        /// List of sub menu titles.
+        /// </summary>
+        protected static List<string> _allSubMenuTitles;
+
+        /// <summary>
+        /// Allows menus to automatically open on mouse over if any menu was previously selected.
+        /// </summary>
         protected static bool _menuSelected;
+
+        /// <summary>
+        /// If zero, this will set _menuSelected to false, thus requiring a mouse down event to open a menu
+        /// rather than a simple mouse over event.
+        /// </summary>
+        protected static int _menuVisibilityCount;
+
+        /// <summary>
+        /// Prevents menus from automatically shutting when the mouse leaves a menu but remains on
+        /// a sub menu.
+        /// </summary>
         protected static bool _subMenuSelected;
 
         protected Texture2D arrow;
@@ -251,8 +278,8 @@ namespace XAMLite
             this.Visible = Visibility.Visible;
             this.IsEnabled = true;
             _allRadioButtons = new List<XAMLiteRadioButton>();
-            _allMenuTitles = new List<XAMLiteMenuItem>();
-            _allSubMenuTitles = new List<XAMLiteMenuItem>();
+            _allMenuTitles = new List<string>();
+            _allSubMenuTitles = new List<string>();
         }
 
         /// <summary>
@@ -330,7 +357,7 @@ namespace XAMLite
 
             _msRect = new Rectangle(ms.X, ms.Y, 1, 1);
 
-            if (IsEnabled)
+            if (IsEnabled && this.Visible == Visibility.Visible)
             {
                 if (_panel.Contains(_msRect))
                 {
@@ -490,6 +517,22 @@ namespace XAMLite
         {
             this.Width = (int)this.spriteFont.MeasureString(text).X;
             this.Height = (int)this.spriteFont.MeasureString(text).Y;
+        }
+
+        /// <summary>
+        /// HACK: When a tutorial is selected, all Menu Title Headers are erased, so currently 
+        /// they are being manually added again.
+        /// </summary>
+        protected void ResetMenuItems()
+        {
+            _allMenuTitles.Add("Session");
+            _allMenuTitles.Add("Ambient Level");
+            _allMenuTitles.Add("Tutorials");
+            _allMenuTitles.Add("Time of Day");
+            _allMenuTitles.Add("Truck");
+            _allMenuTitles.Add("Dev");
+
+            _allSubMenuTitles.Add("Adjust Dust Visibility");
         }
     }
 }

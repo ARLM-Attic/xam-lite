@@ -41,7 +41,6 @@ namespace XAMLite
             }
         }
 
-        // An idea for establishing a set of possible preloaded SpriteFonts??
         private FontFamily _fontFamily;
         private bool fontFamilyChanged; // used in the Update() method
 
@@ -107,11 +106,12 @@ namespace XAMLite
 
         private Rectangle _strokePanel;
         private Rectangle _subMenuPanel;
+        private bool written;
 
         /// <summary>
         /// May become Public used to set up a Fill property later as described by the user.
         /// </summary>
-        private Brush Fill
+        public Brush Fill
         {
             set
             {
@@ -125,7 +125,7 @@ namespace XAMLite
         /// <summary>
         /// May become Public and used to set up a Fill property later as described by the user.
         /// </summary>
-        private Brush Stroke
+        public Brush Stroke
         {
             set
             {
@@ -199,7 +199,6 @@ namespace XAMLite
             {
                 marginChanged = false;
                 _panel = new Rectangle((int)this.Position.X - (int)this.Padding.Left, (int)this.Position.Y, this.Width, this.Height);
-                _subMenuPanel = new Rectangle(this._panel.X + this.Width, (int)this.Position.Y, longestWidth + 10, this._panel.Height * Items.Count);
             }
 
             if (!_setSubMenu)
@@ -207,19 +206,27 @@ namespace XAMLite
                 setSubMenuItems(gameTime);
             }
 
-            
-
-            /*if (_mouseEnter)
+            if (_mouseEnter || _subMenuPanel.Contains(_msRect))
             {
                 this.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cccccc");
             }
             else
             {
-                 if(!_allMenuTitles.Contains(this))
-                    this.Background = Brushes.Black;
+                if (!_allMenuTitles.Contains(this.Header))
+                {
+                    this._backgroundColor = Color.Black;
+                    this._stroke = Color.Black;                    
+                }
             }
 
-            if (_mouseEnter && Items.Count > 0 && _panel.Contains(_msRect) && this.Visible == Visibility.Visible)
+            // HACK: When a tutorial is selected, all Menu Title Headers are erased, so currently 
+            // they are being manually added again.
+            if (_mouseDown && _panel.Contains(_msRect) && this.Header.Contains("Tutorial"))
+            {
+                ResetMenuItems();
+            }
+
+            if (_mouseEnter && Items.Count > 0 && this.Visible == Visibility.Visible)
             {
                 displaySubMenu = true;
                 _subMenuSelected = true;
@@ -243,20 +250,17 @@ namespace XAMLite
                 {
                     _subMenuSelected = false;
                 }
-            }*/
-            //displaySubMenu = true;
-            //if (displaySubMenu && !adjusted)
-            /*if (!adjusted)
+            }
+
+            if (_mouseDown && _subMenuPanel.Contains(_msRect))
             {
-                adjusted = true;
-                
-                int tempHeight = this._panel.Y;
+                displaySubMenu = false;
+                _subMenuSelected = false;
                 for (int i = 0; i < Items.Count; i++)
                 {
-                    Items[i].Margin = new Thickness(this._panel.X + this.Width, this._panel.Y + Items[i].Height * i, Items[i].Margin.Right + Items[i].Padding.Right, this.Margin.Bottom + Items[i].Padding.Bottom);
-                    tempHeight += Items[i].Height;
+                    Items[i].Visible = Visibility.Hidden;
                 }
-            }*/
+            }
         }
 
         /// <summary>
@@ -270,7 +274,7 @@ namespace XAMLite
                 spriteBatch.Begin();
                 if (!transparent)
                 {
-                    if (_allMenuTitles.Contains(this))
+                    if (_allMenuTitles.Contains(this.Header))
                         spriteBatch.Draw(_pixel, _panel, this._backgroundColor);
                     else
                     {
@@ -287,7 +291,7 @@ namespace XAMLite
                         this.spriteBatch.Draw(_pixel, _strokePanel, _stroke);
                     }
 
-                    if (_allSubMenuTitles.Contains(this))
+                    if (_allSubMenuTitles.Contains(this.Header))
                     {
                         arrowRect.X = this._panel.X + this.Width - arrow.Width;
                         arrowRect.Y = this._panel.Y + this.Height / 4;
@@ -331,8 +335,9 @@ namespace XAMLite
                     Items[i].HorizontalAlignment = this.HorizontalAlignment;
                     Items[i].VerticalAlignment = this.VerticalAlignment;
                     Items[i].Background = Brushes.Black;
-                    Items[i].Margin = new Thickness(this.Margin.Left + this.Width, this.Margin.Top + Items[i].Height * i, Items[i].Margin.Right + Items[i].Padding.Right, this.Margin.Bottom + Items[i].Padding.Bottom);
+                    Items[i].Margin = new Thickness(this.Margin.Left + this._panel.Width, this.Margin.Top + Items[i].Height * i, Items[i].Margin.Right + Items[i].Padding.Right, this.Margin.Bottom + Items[i].Padding.Bottom);
                     Items[i].Width = longestWidth;
+                    _subMenuPanel = new Rectangle(this._panel.X + this.Width, (int)this.Position.Y, longestWidth + 10, this._panel.Height * Items.Count);
                 }
             }
         }

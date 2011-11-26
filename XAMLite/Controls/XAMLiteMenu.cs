@@ -37,20 +37,21 @@ namespace XAMLite
                 _backgroundColor = new Color(color.R, color.G, color.B, color.A);
 
                 if ((SolidColorBrush)value == Brushes.Transparent)
-                    transparent = true;
+                    _transparent = true;
                 else
-                    transparent = false;
+                    _transparent = false;
             }
         }
 
-        private bool transparent;
+        private bool _transparent;
 
         private bool _setMenuItems;
 
-        private bool alreadyDown;
-        private bool mouseReleased;
+        private bool _mouseReleased;
+        private bool _closeMenu;
 
-        private bool fullMenuIsVisible;
+        private bool _fullMenuIsVisible;
+        private bool _menuVisibilityCounted;
 
         BrushConverter bc;
 
@@ -62,7 +63,7 @@ namespace XAMLite
             Items = new List<XAMLiteMenuItem>();
             bc = new System.Windows.Media.BrushConverter();
             longestWidth = 0;
-            mouseReleased = true;
+            _mouseReleased = true;
         }
 
         /// <summary>
@@ -80,104 +81,105 @@ namespace XAMLite
         {
             base.Update(gameTime);
 
+            // setting up the menu
             if (!_setMenuItems)
                 setMenuItems(gameTime);
+            
+            if(_closeMenu)
+                closeMenu();
 
-            if (_panel.Contains(_msRect) || (_menuItemPanel.Contains(_msRect) && fullMenuIsVisible))
+            // Sets visibility to hidden for menu items when the mouse is not over the menu.
+            if (_panel.Contains(_msRect) || (_menuItemPanel.Contains(_msRect) && _fullMenuIsVisible) || (_fullMenuIsVisible && _subMenuSelected))
             {
-                Items[0].Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cccccc");
-
+                if (_menuSelected)
+                {
+                    openMenu();
+                }
             }
             else
             {
-                Items[0].Background = Brushes.Transparent;
+                closeMenu();
             }
 
-            if (_mouseDown && _panel.Contains(_msRect) && mouseReleased)
+            // handles mouse clicks on the head of the menu, making the menu visible or
+            // hidden.
+            if (_mouseDown && _panel.Contains(_msRect) && _mouseReleased)
             {
-                mouseReleased = false;
+                _mouseReleased = false;
+                
                 if (Items[1] != null && Items[1].Visible == Visibility.Hidden)
                 {
-                    for (int i = 1; i < Items.Count; i++)
-                    {
-                        Items[i].Visible = Visibility.Visible;
-                    }
-                    fullMenuIsVisible = true;
-                }
-                else
-                {
-                    for (int i = 1; i < Items.Count; i++)
-                    {
-                        Items[i].Visible = Visibility.Hidden;
-                    }
-                    fullMenuIsVisible = false;
-                }
-            }
-
-            // notifies that a full click has occurred and allows the menu to be selected again, thus making
-            // it visibile or hidden.
-            if (!mouseReleased && _mouseUp)
-                mouseReleased = true;
-
-            /*else if ((_menuItemPanel.Contains(_msRect) || _subMenuSelected) && fullMenuIsVisible)
-            {
-                Items[0].Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cccccc");
-            }
-            // this is the problem area here, causing the menu to sometimes shrink up...
-            else
-            {
-                if (alreadyDown == true)
-                {
+                    openMenu();
                     _menuSelected = true;
                 }
                 else
                 {
-                    _menuSelected = false;
-                    fullMenuIsVisible = false;
+                    closeMenu();
                 }
+            }
+       
+            // notifies that a full click has occurred and allows the menu to be selected again, thus making
+            // it visibile or hidden.
+            if (!_mouseReleased && _mouseUp)
+                _mouseReleased = true;
 
-                alreadyDown = false;
-
-                Items[0].Background = Brushes.Transparent;
-                if (Items.Count > 0)
-                {
-                    this.Height = Items[0].Height;
-                    for (int i = 1; i < Items.Count; i++)
-                    {
-                        Items[i].Visible = Visibility.Hidden;
-                    }
-                }
-
-                _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+            // Notifies that the menu must be closed.  Visibility not immediately changed here because it would
+            // cause XAMLiteControl to believe that a hidden menu was selected on _mouseDown, thus changing the
+            // mouse down event to false before it is fired.
+            if (_mouseDown && _menuItemPanel.Contains(_msRect) && !_subMenuSelected)
+            {
+                _closeMenu = true;
             }
 
-            if ((_mouseEnter && _mouseDown && !alreadyDown) || (_mouseEnter && _menuSelected))
+            // updating the menu visibility count.  If zero, the user must make a mouse down event
+            // in order to reopen any menu.  If greater than zero, the menus will open with a mouse
+            // enter event.
+            if (!_fullMenuIsVisible && _menuVisibilityCounted)
             {
-                _menuSelected = true;
-                alreadyDown = true;
-                fullMenuIsVisible = true;
-                for (int i = 1; i < Items.Count; i++)
-                {
-                    Items[i].Visible = Visibility.Visible;
-                }
-                this.Height = 0;
-                for (int i = 0; i < Items.Count; i++)
-                {
-                    this.Height += Items[i].Height;
-                }
-                _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+                _menuVisibilityCounted = false;
+                _menuVisibilityCount--;
             }
-            /*else if (_mouseDown && alreadyDown)
+
+            else if (_fullMenuIsVisible && !_menuVisibilityCounted)
             {
+                _menuVisibilityCounted = true;
+                _menuVisibilityCount++;
+            }
+
+            else if (_menuVisibilityCount == 0)
                 _menuSelected = false;
-                alreadyDown = false;
-                fullMenuIsVisible = false;
-                for (int i = 1; i < Items.Count; i++)
-                {
-                    Items[i].Visible = Visibility.Hidden;
-                }
-                this.Height = Items[0].Height;
-            }*/
+
+            if (_fullMenuIsVisible)
+            {
+                Items[0].Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cccccc");
+            }
+            else
+                Items[0].Background = Brushes.Transparent;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void closeMenu()
+        {
+            _closeMenu = false;
+            for (int i = 1; i < Items.Count; i++)
+            {
+                Items[i].Visible = Visibility.Hidden;
+            }
+            _fullMenuIsVisible = false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void openMenu()
+        {
+            for (int i = 1; i < Items.Count; i++)
+            {
+                Items[i].Visible = Visibility.Visible;
+            }
+            _fullMenuIsVisible = true;
         }
 
         /// <summary>
@@ -188,7 +190,7 @@ namespace XAMLite
         {
             if (Visible == Visibility.Visible)
             {
-                if (!transparent)
+                if (!_transparent)
                 {
                     spriteBatch.Begin();
                     spriteBatch.Draw(_pixel, _panel, (_backgroundColor * (float)Opacity));
@@ -201,7 +203,7 @@ namespace XAMLite
         /// Loads the children once the grid has been set up.
         /// </summary>
         /// <param name></param>
-        private void setMenuItems(GameTime gameTime)
+        protected void setMenuItems(GameTime gameTime)
         {
             _setMenuItems = true;
             lastItemsCount = Items.Count;
@@ -212,7 +214,7 @@ namespace XAMLite
                 this.Game.Components.Add(Items[i]);
                 // Add the child component to the game with the modified parameters.
                 if (Items[i].Items.Count > 0)
-                    _allSubMenuTitles.Add(Items[i]);
+                    _allSubMenuTitles.Add(Items[i].Header);
             }
 
             this.Width = Items[0].Width + 20;
@@ -222,26 +224,31 @@ namespace XAMLite
             // if it's a submenu, it will need room for the white arrow, so the width must be increased to accommodate
             for (int i = 0; i < Items.Count; i++)
             {
-                if (_allSubMenuTitles.Contains(Items[i]))
+                if (_allSubMenuTitles.Contains(Items[i].Header))
                 {
                     Items[i].Width += 20;
                 }
             }
 
+            // determining what the width for all the menu items should be, not including the header of
+            // the menu.
             for (int i = 1; i < Items.Count; i++)
             {
                 if (longestWidth <= Items[i].Width)
                     longestWidth = Items[i].Width;
             }
 
+            // setting the width for all the menu items, not including the header
             for (int i = 1; i < Items.Count; i++)
             {
                 Items[i].Width = longestWidth + 20;
                 Items[i].Height = Items[0].Height;
             } 
             
-            _allMenuTitles.Add(Items[0]);
+            // adding the head of the menu to the list of menus
+            _allMenuTitles.Add(Items[0].Header);
 
+            // setting basic parameters of the menu items
             for (int i = 0; i < Items.Count; i++)
             {
                 Items[i].Padding = new Thickness(10, 0, 10, 0);
@@ -256,13 +263,15 @@ namespace XAMLite
                 else
                 {
                     Items[i].Margin = new Thickness(this.Margin.Left + Items[0].Padding.Left, (this.Margin.Top + Items[i].Height * i) + Items[0].Padding.Top, Items[i].Margin.Right + Items[0].Padding.Right, this.Margin.Bottom + Items[0].Padding.Bottom);
-                    Items[i].Background = Brushes.Black;
+                    if(!_allMenuTitles.Contains(Items[i].Header))
+                        Items[i].Background = Brushes.Black;
                     Items[i].Visible = Visibility.Hidden;
                 }
             }
 
+            // creating the rectangles for determining mouse activities
             _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, Items[0].Height);
-           _menuItemPanel = new Rectangle((int)this.Position.X, (int)this.Position.Y + Items[0].Height, longestWidth + 10, this.Height);
+           _menuItemPanel = new Rectangle((int)this.Position.X, (int)this.Position.Y + Items[0].Height, longestWidth + 10, Items[0].Height * (Items.Count - 1));
         }
     }
 }
