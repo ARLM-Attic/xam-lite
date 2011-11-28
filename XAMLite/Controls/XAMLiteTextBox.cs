@@ -8,10 +8,27 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Windows.Media;
 using Color = Microsoft.Xna.Framework.Color;
 
-namespace XAMLite.Controls
+namespace XAMLite
 {
     public class XAMLiteTextBox : XAMLiteControl
     {
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected Texture2D textBoxTexture;
+
+        protected Rectangle textBoxRectangle;
+
+        /// <summary>
+        /// This is the image file path, minus the file extension.
+        /// </summary>
+        public string SourceName
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// The character string within the text box.
         /// </summary>
@@ -114,10 +131,18 @@ namespace XAMLite.Controls
         /// </summary>
         public int MaxLength;
 
+        /// <summary>
+        /// Determines whether the user selected the text box for typing.
+        /// </summary>
+        private bool _selected;
+
         public XAMLiteTextBox(Game game)
             : base(game)
         {
-
+            this.Text = string.Empty;
+            this._backgroundColor = Color.White;
+            this._foregroundColor = Color.Black;
+            this.SourceName = @"Images/textBox";
         }
 
         /// <summary>
@@ -129,6 +154,11 @@ namespace XAMLite.Controls
         protected override void LoadContent()
         {
             base.LoadContent();
+
+            this.textBoxTexture = Game.Content.Load<Texture2D>(this.SourceName);
+            this.Width = textBoxTexture.Width;
+            this.Height = textBoxTexture.Height;
+            this.textBoxRectangle = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
         }
 
         public override void Update(GameTime gameTime)
@@ -144,7 +174,9 @@ namespace XAMLite.Controls
         {
             if (Visible == Visibility.Visible)
             {
-
+                this.spriteBatch.Begin();
+                this.spriteBatch.Draw(this.textBoxTexture, this.textBoxRectangle, Color.White);
+                this.spriteBatch.End();
             }
         }
     }
