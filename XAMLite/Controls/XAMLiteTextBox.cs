@@ -12,6 +12,108 @@ namespace XAMLite.Controls
 {
     public class XAMLiteTextBox : XAMLiteControl
     {
+        /// <summary>
+        /// The character string within the text box.
+        /// </summary>
+        public override string Text
+        {
+            get
+            {
+                return base.Text;
+            }
+            set
+            {
+                if (this.spriteFont != null)
+                {
+                    this.spriteFont.Spacing = Spacing;
+                    RecalculateWidthAndHeight(value);
+                }
+                base.Text = value;
+            }
+        }
+
+        /// <summary>
+        /// Sets the alignment of the text.
+        /// </summary>
+        public TextAlignment TextAlignment { get; set; }
+
+        private FontFamily _fontFamily;
+        private bool fontFamilyChanged; // used in the Update() method
+
+        /// <summary>
+        /// Sets the font family for the text inside the text box.
+        /// </summary>
+        public FontFamily FontFamily
+        {
+            get { return _fontFamily; }
+            set { _fontFamily = value; fontFamilyChanged = true; }
+        }
+
+        /// <summary>
+        /// Character spacing for the font.
+        /// </summary>
+        public int Spacing { get; set; }
+
+        /// <summary>
+        /// Sets the padding for the text within the text box.
+        /// </summary>
+        public Thickness Padding { get; set; }
+
+        Vector2 paddedPosition;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private Color _foregroundColor;
+
+        /// <summary>
+        /// Sets the text color in the text box.
+        /// </summary>
+        public Brush Foreground
+        {
+            set
+            {
+                var solidBrush = (SolidColorBrush)value;
+                var color = solidBrush.Color;
+                _foregroundColor = new Color(color.R, color.G, color.B, color.A);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private Color _backgroundColor;
+
+        /// <summary>
+        /// Sets the background color of the text box
+        /// </summary>
+        public Brush Background
+        {
+            set
+            {
+                var solidBrush = (SolidColorBrush)value;
+                var color = solidBrush.Color;
+                _backgroundColor = new Color(color.R, color.G, color.B, color.A);
+
+                if ((SolidColorBrush)value == Brushes.Transparent)
+                    transparent = true;
+                else
+                    transparent = false;
+            }
+        }
+
+        private bool transparent;
+
+        /// <summary>
+        /// Determines whether the default text within the text box can be changed.
+        /// </summary>
+        public bool IsReadOnly;
+
+        /// <summary>
+        /// Sets the max number of characters allowed in the text box
+        /// </summary>
+        public int MaxLength;
+
         public XAMLiteTextBox(Game game)
             : base(game)
         {
