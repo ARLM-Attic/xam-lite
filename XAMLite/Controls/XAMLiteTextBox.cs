@@ -19,6 +19,8 @@ namespace XAMLite
         protected Texture2D textBoxTexture;
 
         protected Rectangle textBoxRectangle;
+        protected Vector2 textPosition;
+        protected Vector2 cursorPosition;
 
         /// <summary>
         /// This is the image file path, minus the file extension.
@@ -28,6 +30,8 @@ namespace XAMLite
             get;
             set;
         }
+
+        protected string cursor;
 
         /// <summary>
         /// The character string within the text box.
@@ -135,6 +139,10 @@ namespace XAMLite
         /// Determines whether the user selected the text box for typing.
         /// </summary>
         private bool _selected;
+        private bool initialTyping;
+        private bool cursorVisible;
+        private bool cursorBlink;
+        private TimeSpan cursorBlinkTime;
 
         public XAMLiteTextBox(Game game)
             : base(game)
@@ -142,7 +150,11 @@ namespace XAMLite
             this.Text = string.Empty;
             this._backgroundColor = Color.White;
             this._foregroundColor = Color.Black;
+            this.Padding = new Thickness(0, 0, 0, 0);
             this.SourceName = @"Images/textBox";
+            this.cursor = "|";
+            this.initialTyping = true;
+            this.cursorBlinkTime = TimeSpan.FromSeconds(0.5);
         }
 
         /// <summary>
@@ -158,12 +170,65 @@ namespace XAMLite
             this.textBoxTexture = Game.Content.Load<Texture2D>(this.SourceName);
             this.Width = textBoxTexture.Width;
             this.Height = textBoxTexture.Height;
-            this.textBoxRectangle = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+            this._panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+            this.textPosition = new Vector2(_panel.X + (int)this.Padding.Left, _panel.Y + (int)this.Padding.Top);
+            this.cursorPosition = new Vector2(_panel.X + (int)this.Padding.Left, _panel.Y + (int)this.Padding.Top);
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            if (fontFamilyChanged)
+            {
+                fontFamilyChanged = false;
+                UpdateFontFamily(_fontFamily);
+                this.spriteFont.Spacing = Spacing;
+            }
+
+            // initial text box click where the default text is replaced with just a cursor.
+            if (_mouseDown && _panel.Contains(_msRect) && initialTyping)
+            {
+                _selected = true;
+                initialTyping = false;
+                this.Text = string.Empty;
+                cursorVisible = true;
+                cursorBlink = true;
+            }
+            // user has previously typed something, deselected, and then selected again. 
+            else if (_mouseDown && _panel.Contains(_msRect) && !_selected)
+            {
+                _selected = true;
+                cursorVisible = true;
+                cursorBlink = true;
+            }
+            // text box is deselected.
+            else if (_mouseDown && !_panel.Contains(_msRect) && _selected)
+            {
+                _selected = false;
+                cursorVisible = false;
+                cursorBlink = false;
+            }
+
+            // handling the blinky cursor.
+            if (cursorVisible && cursorBlink)
+            {
+                cursorBlinkTime -= gameTime.ElapsedGameTime;
+                if (cursorBlinkTime <= TimeSpan.Zero)
+                {
+                    cursorBlink = false;
+                    cursorBlinkTime = TimeSpan.FromSeconds(0.5);
+                }
+            }
+            else if (cursorVisible && !cursorBlink)
+            {
+                cursorBlinkTime -= gameTime.ElapsedGameTime;
+                if (cursorBlinkTime <= TimeSpan.Zero)
+                {
+                    cursorBlink = true;
+                    cursorBlinkTime = TimeSpan.FromSeconds(0.5);
+                }
+            }
         }
 
         /// <summary>
@@ -175,7 +240,10 @@ namespace XAMLite
             if (Visible == Visibility.Visible)
             {
                 this.spriteBatch.Begin();
-                this.spriteBatch.Draw(this.textBoxTexture, this.textBoxRectangle, Color.White);
+                this.spriteBatch.Draw(this.textBoxTexture, this._panel, Color.White);
+                this.spriteBatch.DrawString(this.spriteFont, this.Text, textPosition, _foregroundColor);
+                if(cursorBlink)
+                    this.spriteBatch.DrawString(this.spriteFont, this.cursor, cursorPosition, _foregroundColor);
                 this.spriteBatch.End();
             }
         }
