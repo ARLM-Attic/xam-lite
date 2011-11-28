@@ -211,22 +211,16 @@ namespace XAMLite
             }
 
             // handling the blinky cursor.
-            if (cursorVisible && cursorBlink)
+            if (cursorVisible)
             {
                 cursorBlinkTime -= gameTime.ElapsedGameTime;
                 if (cursorBlinkTime <= TimeSpan.Zero)
-                {
-                    cursorBlink = false;
+                { 
                     cursorBlinkTime = TimeSpan.FromSeconds(0.5);
-                }
-            }
-            else if (cursorVisible && !cursorBlink)
-            {
-                cursorBlinkTime -= gameTime.ElapsedGameTime;
-                if (cursorBlinkTime <= TimeSpan.Zero)
-                {
-                    cursorBlink = true;
-                    cursorBlinkTime = TimeSpan.FromSeconds(0.5);
+                    if (cursorBlink)
+                        cursorBlink = false;
+                    else
+                        cursorBlink = true;
                 }
             }
         }
