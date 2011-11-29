@@ -30,9 +30,6 @@ namespace XAMLite
         protected Keys[] standardInputKeys;
         protected Keys[] dInputKeys;
 
-        public EventHandler OnKeyPress = null;
-        public EventHandler OnKeyRelease = null;
-
         /// <summary>
         /// This is the image file path, minus the file extension.
         /// </summary>
@@ -216,7 +213,7 @@ namespace XAMLite
                 Keys.Y, 
                 Keys.Z,
                 Keys.Space,
-                //Keys.Enter,
+                Keys.Enter,
                 //Keys.Home,
                 //Keys.End,
                 //Keys.Add,
@@ -227,8 +224,8 @@ namespace XAMLite
                 //Keys.Right,
                 //Keys.Up,
                 //Keys.Down,
-                //Keys.Back,
-                //Keys.Delete,
+                Keys.Back,
+                Keys.Delete,
                 //Keys.OemQuotes,
                 //Keys.OemTilde,
                 //Keys.OemComma,
@@ -241,18 +238,8 @@ namespace XAMLite
                 //Keys.OemMinus,
                 //Keys.OemQuestion,
                 //Keys.OemPipe,
-                //Keys.Tab
+                Keys.Tab
             };
-        }
-
-        void XAMLiteTextBox_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        void XAMLiteTextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -375,6 +362,17 @@ namespace XAMLite
                         {
                             case Keys.Space:
                                 this.Text += " ";
+                                break;
+                            case Keys.Back:
+                            case Keys.Delete:
+                                this.Text = this.Text.Substring(0, this.Text.Length - 1);
+                                break;
+                            case Keys.Enter:
+                            case Keys.Tab:
+                                _pressed = false;
+                                _selected = false;
+                                cursorVisible = false;
+                                cursorBlink = false;
                                 break;
                             default:
                                 if (!keyShift)
