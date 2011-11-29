@@ -29,6 +29,7 @@ namespace XAMLite
 
         protected Keys[] standardInputKeys;
         protected Keys[] dInputKeys;
+        protected Keys[] functionalInputKeys;
 
         /// <summary>
         /// This is the image file path, minus the file extension.
@@ -213,7 +214,7 @@ namespace XAMLite
                 Keys.Y, 
                 Keys.Z,
                 Keys.Space,
-                Keys.Enter,
+                
                 //Keys.Home,
                 //Keys.End,
                 //Keys.Add,
@@ -224,8 +225,7 @@ namespace XAMLite
                 //Keys.Right,
                 //Keys.Up,
                 //Keys.Down,
-                Keys.Back,
-                Keys.Delete,
+                
                 //Keys.OemQuotes,
                 //Keys.OemTilde,
                 //Keys.OemComma,
@@ -238,6 +238,13 @@ namespace XAMLite
                 //Keys.OemMinus,
                 //Keys.OemQuestion,
                 //Keys.OemPipe,
+                
+            };
+
+            functionalInputKeys = new Keys[] {
+                Keys.Enter,
+                Keys.Back,
+                Keys.Delete,
                 Keys.Tab
             };
         }
@@ -354,16 +361,13 @@ namespace XAMLite
                         keyShift = false;
                 }
 
-                foreach (Keys key in standardInputKeys)
+                foreach (Keys key in functionalInputKeys)
                 {
                     if (keybState.IsKeyDown(key) && !_pressed)
                     {
                         _pressed = true;
                         switch (key)
                         {
-                            case Keys.Space:
-                                this.Text += " ";
-                                break;
                             case Keys.Back:
                             case Keys.Delete:
                                 if (this.Text.Length > 0)
@@ -376,97 +380,116 @@ namespace XAMLite
                                 cursorVisible = false;
                                 cursorBlink = false;
                                 break;
-                            default:
-                                if (!keyShift)
-                                    this.Text += key.ToString().ToLower();
-                                else
-                                    this.Text += key;
-                                break;
-                        } 
+                        }
+
                     }
                 }
 
-                foreach (Keys key in dInputKeys)
+                if (this.Text.Length < MaxLength && (int)this.spriteFont.MeasureString(this.Text).X < textBoxTexture.Width - 20)
                 {
-                    if (keybState.IsKeyDown(key) && !_pressed)
+                    foreach (Keys key in standardInputKeys)
                     {
-                        _pressed = true;
-                        if (keyShift)
+                        if (keybState.IsKeyDown(key) && !_pressed)
                         {
+                            _pressed = true;
                             switch (key)
                             {
-                                case Keys.D1:
-                                    this.Text += "!";
+                                case Keys.Space:
+                                    this.Text += " ";
                                     break;
-                                case Keys.D2:
-                                    this.Text += "@";
-                                    break;
-                                case Keys.D3:
-                                    this.Text += "#";
-                                    break;
-                                case Keys.D4:
-                                    this.Text += "$";
-                                    break;
-                                case Keys.D5:
-                                    this.Text += "%";
-                                    break;
-                                case Keys.D6:
-                                    this.Text += "^";
-                                    break;
-                                case Keys.D7:
-                                    this.Text += "&";
-                                    break;
-                                case Keys.D8:
-                                    this.Text += "*";
-                                    break;
-                                case Keys.D9:
-                                    this.Text += "(";
-                                    break;
-                                case Keys.D0:
-                                    this.Text += ")";
-                                    break;
+
                                 default:
+                                    if (!keyShift)
+                                        this.Text += key.ToString().ToLower();
+                                    else
+                                        this.Text += key;
                                     break;
                             }
                         }
-                        else
+                    }
+
+                    foreach (Keys key in dInputKeys)
+                    {
+                        if (keybState.IsKeyDown(key) && !_pressed)
                         {
-                            switch (key)
+                            _pressed = true;
+                            if (keyShift)
                             {
-                                case Keys.D1:
-                                    this.Text += "1";
-                                    break;
-                                case Keys.D2:
-                                    this.Text += "2";
-                                    break;
-                                case Keys.D3:
-                                    this.Text += "3";
-                                    break;
-                                case Keys.D4:
-                                    this.Text += "4";
-                                    break;
-                                case Keys.D5:
-                                    this.Text += "5";
-                                    break;
-                                case Keys.D6:
-                                    this.Text += "6";
-                                    break;
-                                case Keys.D7:
-                                    this.Text += "7";
-                                    break;
-                                case Keys.D8:
-                                    this.Text += "8";
-                                    break;
-                                case Keys.D9:
-                                    this.Text += "9";
-                                    break;
-                                case Keys.D0:
-                                    this.Text += "0";
-                                    break;
-                                default:
-                                    break;
+                                switch (key)
+                                {
+                                    case Keys.D1:
+                                        this.Text += "!";
+                                        break;
+                                    case Keys.D2:
+                                        this.Text += "@";
+                                        break;
+                                    case Keys.D3:
+                                        this.Text += "#";
+                                        break;
+                                    case Keys.D4:
+                                        this.Text += "$";
+                                        break;
+                                    case Keys.D5:
+                                        this.Text += "%";
+                                        break;
+                                    case Keys.D6:
+                                        this.Text += "^";
+                                        break;
+                                    case Keys.D7:
+                                        this.Text += "&";
+                                        break;
+                                    case Keys.D8:
+                                        this.Text += "*";
+                                        break;
+                                    case Keys.D9:
+                                        this.Text += "(";
+                                        break;
+                                    case Keys.D0:
+                                        this.Text += ")";
+                                        break;
+                                    default:
+                                        break;
+                                }
                             }
-                        }  
+                            else
+                            {
+                                switch (key)
+                                {
+                                    case Keys.D1:
+                                        this.Text += "1";
+                                        break;
+                                    case Keys.D2:
+                                        this.Text += "2";
+                                        break;
+                                    case Keys.D3:
+                                        this.Text += "3";
+                                        break;
+                                    case Keys.D4:
+                                        this.Text += "4";
+                                        break;
+                                    case Keys.D5:
+                                        this.Text += "5";
+                                        break;
+                                    case Keys.D6:
+                                        this.Text += "6";
+                                        break;
+                                    case Keys.D7:
+                                        this.Text += "7";
+                                        break;
+                                    case Keys.D8:
+                                        this.Text += "8";
+                                        break;
+                                    case Keys.D9:
+                                        this.Text += "9";
+                                        break;
+                                    case Keys.D0:
+                                        this.Text += "0";
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                        }
                     }
                 }
 
