@@ -227,14 +227,14 @@ namespace XAMLite
                 Keys.Enter,
                 Keys.Back,
                 Keys.Delete,
-                Keys.Tab
+                Keys.Tab,
+                Keys.Add,
+                Keys.Subtract,
+                Keys.Multiply,
+                Keys.Divide
                 
                 //Keys.Home,
                 //Keys.End,
-                //Keys.Add,
-                //Keys.Subtract,
-                //Keys.Multiply,
-                //Keys.Divide,
                 //Keys.Left,
                 //Keys.Right,
                 //Keys.Up,
@@ -383,6 +383,18 @@ namespace XAMLite
                 {
                     case Keys.Space:
                         newChar += " ";
+                        break;
+                    case Keys.Add:
+                        newChar += "+";
+                        break;
+                    case Keys.Subtract:
+                        newChar += "-";
+                        break;
+                    case Keys.Multiply:
+                        newChar += "*";
+                        break;
+                    case Keys.Divide:
+                        newChar += "/";
                         break;
                     case Keys.Enter:
                     case Keys.Tab:
