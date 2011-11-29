@@ -30,6 +30,7 @@ namespace XAMLite
         public event MouseEventHandler MouseEnter;
         public event MouseEventHandler MouseLeave;
         public event KeyEventHandler KeyDown;
+        public event KeyEventHandler KeyUp;
 
         // the set of possible fonts that are preloaded in LoadContent()
         protected SpriteFont arialSpriteFont { get; set; }
@@ -460,6 +461,15 @@ namespace XAMLite
                 KeyDown(this, e);
             }
         }
+        public virtual void OnKeyUp()
+        {
+            if (KeyUp != null)
+            {
+                var e = EventArgs.Empty as KeyEventArgs;
+                KeyUp(this, e);
+            }
+        }
+
 
         /// <summary>
         /// 

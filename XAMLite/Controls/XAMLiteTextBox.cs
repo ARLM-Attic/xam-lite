@@ -5,7 +5,11 @@ using System.Text;
 using System.Windows;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System.Windows.Media;
+
+using Microsoft.Xna.Framework.Content;
+
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
@@ -21,6 +25,13 @@ namespace XAMLite
         protected Rectangle textBoxRectangle;
         protected Vector2 textPosition;
         protected Vector2 cursorPosition;
+        protected Vector2 cursorStartPosition;
+
+        protected Keys[] standardInputKeys;
+        protected Keys[] dInputKeys;
+
+        public EventHandler OnKeyPress = null;
+        public EventHandler OnKeyRelease = null;
 
         /// <summary>
         /// This is the image file path, minus the file extension.
@@ -144,6 +155,13 @@ namespace XAMLite
         private bool cursorBlink;
         private TimeSpan cursorBlinkTime;
 
+        private bool _pressed;
+        private bool _released;
+
+        KeyboardState keybState;
+        Keys[] current;
+        private bool keyShift;
+
         public XAMLiteTextBox(Game game)
             : base(game)
         {
@@ -155,6 +173,86 @@ namespace XAMLite
             this.cursor = "|";
             this.initialTyping = true;
             this.cursorBlinkTime = TimeSpan.FromSeconds(0.5);
+
+            dInputKeys = new Keys[] {
+                Keys.D0,
+                Keys.D1,
+                Keys.D2,
+                Keys.D3,
+                Keys.D4,
+                Keys.D5,
+                Keys.D5,
+                Keys.D6,
+                Keys.D7,
+                Keys.D8,
+                Keys.D9
+            };
+
+            standardInputKeys = new Keys[] { 
+                Keys.A, 
+                Keys.B, 
+                Keys.C, 
+                Keys.D, 
+                Keys.E, 
+                Keys.F, 
+                Keys.G, 
+                Keys.H, 
+                Keys.I, 
+                Keys.J, 
+                Keys.K, 
+                Keys.L, 
+                Keys.M, 
+                Keys.N, 
+                Keys.O, 
+                Keys.P, 
+                Keys.Q, 
+                Keys.R, 
+                Keys.S, 
+                Keys.T, 
+                Keys.U, 
+                Keys.V, 
+                Keys.W, 
+                Keys.X, 
+                Keys.Y, 
+                Keys.Z,
+                Keys.Space,
+                //Keys.Enter,
+                //Keys.Home,
+                //Keys.End,
+                //Keys.Add,
+                //Keys.Subtract,
+                //Keys.Multiply,
+                //Keys.Divide,
+                //Keys.Left,
+                //Keys.Right,
+                //Keys.Up,
+                //Keys.Down,
+                //Keys.Back,
+                //Keys.Delete,
+                //Keys.OemQuotes,
+                //Keys.OemTilde,
+                //Keys.OemComma,
+                //Keys.OemPeriod,
+                //Keys.OemSemicolon,
+                //Keys.OemBackslash,
+                //Keys.OemCloseBrackets,
+                //Keys.OemOpenBrackets,
+                //Keys.OemPlus,
+                //Keys.OemMinus,
+                //Keys.OemQuestion,
+                //Keys.OemPipe,
+                //Keys.Tab
+            };
+        }
+
+        void XAMLiteTextBox_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        void XAMLiteTextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -173,6 +271,7 @@ namespace XAMLite
             this._panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
             this.textPosition = new Vector2(_panel.X + (int)this.Padding.Left, _panel.Y + (int)this.Padding.Top);
             this.cursorPosition = new Vector2(_panel.X + (int)this.Padding.Left, _panel.Y + (int)this.Padding.Top);
+            this.cursorStartPosition = new Vector2(_panel.X + (int)this.Padding.Left, _panel.Y + (int)this.Padding.Top);
         }
 
         public override void Update(GameTime gameTime)
@@ -223,6 +322,9 @@ namespace XAMLite
                         cursorBlink = true;
                 }
             }
+
+            if (_selected)
+                ProcessKeyboard();
         }
 
         /// <summary>
@@ -239,6 +341,136 @@ namespace XAMLite
                 if(cursorBlink)
                     this.spriteBatch.DrawString(this.spriteFont, this.cursor, cursorPosition, _foregroundColor);
                 this.spriteBatch.End();
+            }
+        }
+
+        private void ProcessKeyboard()
+        {
+            keybState = Keyboard.GetState();
+
+            current = keybState.GetPressedKeys();
+            int keyPressedCount = current.Length;
+            if (keyPressedCount == 0)
+            {
+                _pressed = false;
+            }
+            else
+            {
+                for (int i = 0; i < current.Length; i++)
+                {
+                    if (current[i].Equals(Keys.LeftShift) || current[i].Equals(Keys.RightShift))
+                    {
+                        keyShift = true;
+                    }
+                    else
+                        keyShift = false;
+                }
+
+                foreach (Keys key in standardInputKeys)
+                {
+                    if (keybState.IsKeyDown(key) && !_pressed)
+                    {
+                        _pressed = true;
+                        switch (key)
+                        {
+                            case Keys.Space:
+                                this.Text += " ";
+                                break;
+                            default:
+                                if (!keyShift)
+                                    this.Text += key.ToString().ToLower();
+                                else
+                                    this.Text += key;
+                                break;
+                        } 
+                    }
+                }
+
+                foreach (Keys key in dInputKeys)
+                {
+                    if (keybState.IsKeyDown(key) && !_pressed)
+                    {
+                        _pressed = true;
+                        if (keyShift)
+                        {
+                            switch (key)
+                            {
+                                case Keys.D1:
+                                    this.Text += "!";
+                                    break;
+                                case Keys.D2:
+                                    this.Text += "@";
+                                    break;
+                                case Keys.D3:
+                                    this.Text += "#";
+                                    break;
+                                case Keys.D4:
+                                    this.Text += "$";
+                                    break;
+                                case Keys.D5:
+                                    this.Text += "%";
+                                    break;
+                                case Keys.D6:
+                                    this.Text += "^";
+                                    break;
+                                case Keys.D7:
+                                    this.Text += "&";
+                                    break;
+                                case Keys.D8:
+                                    this.Text += "*";
+                                    break;
+                                case Keys.D9:
+                                    this.Text += "(";
+                                    break;
+                                case Keys.D0:
+                                    this.Text += ")";
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            switch (key)
+                            {
+                                case Keys.D1:
+                                    this.Text += "1";
+                                    break;
+                                case Keys.D2:
+                                    this.Text += "2";
+                                    break;
+                                case Keys.D3:
+                                    this.Text += "3";
+                                    break;
+                                case Keys.D4:
+                                    this.Text += "4";
+                                    break;
+                                case Keys.D5:
+                                    this.Text += "5";
+                                    break;
+                                case Keys.D6:
+                                    this.Text += "6";
+                                    break;
+                                case Keys.D7:
+                                    this.Text += "7";
+                                    break;
+                                case Keys.D8:
+                                    this.Text += "8";
+                                    break;
+                                case Keys.D9:
+                                    this.Text += "9";
+                                    break;
+                                case Keys.D0:
+                                    this.Text += "0";
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }  
+                    }
+                }
+
+                cursorPosition.X = cursorStartPosition.X + (int)this.spriteFont.MeasureString(this.Text).X + 2;
             }
         }
     }
