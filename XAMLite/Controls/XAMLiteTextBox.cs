@@ -154,6 +154,10 @@ namespace XAMLite
 
         private bool keyShift;
         private bool capsLockOn;
+        private bool backspaceheld;
+        private bool deleteNextChar;
+        private TimeSpan deleteTimer;
+        private int numDeletedKeys;
         private bool standardKeyTyped;
 
         KeyboardState currentKeyboardState;
@@ -170,6 +174,10 @@ namespace XAMLite
             this.cursor = "|";
             this.initialTyping = true;
             this.cursorBlinkTime = TimeSpan.FromSeconds(0.5);
+
+            deleteNextChar = true;
+
+            numDeletedKeys = 0;
 
             specialInputKeys = new Keys[] {
                 Keys.D0,
@@ -226,10 +234,8 @@ namespace XAMLite
                 Keys.Z,
                 Keys.Space,
                 Keys.Enter,
-                Keys.Back,
                 Keys.OemClear,
                 Keys.Decimal,
-                Keys.Delete,
                 Keys.Tab,
                 Keys.Add,
                 Keys.Subtract,
@@ -279,8 +285,6 @@ namespace XAMLite
 
         public override void Update(GameTime gameTime)
         {
-            //base.Update(gameTime);
-
             if (fontFamilyChanged)
             {
                 fontFamilyChanged = false;
@@ -323,6 +327,15 @@ namespace XAMLite
                         cursorBlink = false;
                     else
                         cursorBlink = true;
+                }
+            }
+
+            if (backspaceheld)
+            {
+                deleteTimer -= gameTime.ElapsedGameTime;
+                if (deleteTimer <= TimeSpan.Zero)
+                {
+                    deleteNextChar = true;
                 }
             }
 
@@ -379,6 +392,18 @@ namespace XAMLite
 
         private bool CheckKey(Keys key)
         {
+            if ((currentKeyboardState.IsKeyDown(Keys.Back) ||
+                currentKeyboardState.IsKeyDown(Keys.Delete)) && deleteNextChar)
+            {
+                startDelete();
+            }
+
+            if (currentKeyboardState.IsKeyUp(Keys.Back) && 
+                currentKeyboardState.IsKeyUp(Keys.Delete))
+            {
+                stopDelete();
+            }
+
             return lastKeyboardState.IsKeyDown(key) && currentKeyboardState.IsKeyUp(key);
         }
 
@@ -391,7 +416,10 @@ namespace XAMLite
             {
                 keyShift = true;
             }
-            if (this.Text.Length >= MaxLength && key != Keys.Back && (int)this.spriteFont.MeasureString(this.Text).X >= textBoxTexture.Width - 20)
+
+            if (this.Text.Length >= MaxLength && key != Keys.Back && key != Keys.Delete && 
+                key != Keys.Tab && key != Keys.Enter && (int)this.spriteFont.MeasureString(this.Text).X >= 
+                textBoxTexture.Width - 20)
                 return;
             if (standardKeyTyped)
             {
@@ -469,11 +497,6 @@ namespace XAMLite
                         cursorVisible = false;
                         cursorBlink = false;
                         break;
-                    case Keys.Delete:
-                    case Keys.Back:
-                        if (this.Text.Length != 0)
-                            this.Text = Text.Remove(Text.Length - 1);
-                        return;
                     default:
                         if (keyShift)
                             newChar += key;
@@ -634,6 +657,28 @@ namespace XAMLite
                 }
             }
             this.Text += newChar;
+        }
+
+        private void stopDelete()
+        {
+            backspaceheld = false;
+            deleteNextChar = true;
+            numDeletedKeys = 0;
+        }
+
+        private void startDelete()
+        {
+            deleteNextChar = false;
+            backspaceheld = true;
+            numDeletedKeys++;
+            if (this.Text.Length != 0)
+                this.Text = Text.Remove(Text.Length - 1);
+            if(numDeletedKeys <= 2)
+                deleteTimer = TimeSpan.FromSeconds(0.3);
+            else if(numDeletedKeys <= 4)
+                deleteTimer = TimeSpan.FromSeconds(0.2);
+            else
+                deleteTimer = TimeSpan.FromSeconds(0.15);
         }
     }
 }
