@@ -366,7 +366,8 @@ namespace XAMLite
                                 break;
                             case Keys.Back:
                             case Keys.Delete:
-                                this.Text = this.Text.Substring(0, this.Text.Length - 1);
+                                if (this.Text.Length > 0)
+                                    this.Text = this.Text.Substring(0, this.Text.Length - 1);
                                 break;
                             case Keys.Enter:
                             case Keys.Tab:
