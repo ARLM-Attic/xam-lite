@@ -227,19 +227,34 @@ namespace XAMLite
                 Keys.Space,
                 Keys.Enter,
                 Keys.Back,
+                Keys.OemClear,
+                Keys.Decimal,
                 Keys.Delete,
                 Keys.Tab,
                 Keys.Add,
                 Keys.Subtract,
                 Keys.Multiply,
                 Keys.Divide,
-                Keys.CapsLock
+                Keys.CapsLock,
                 //Keys.Home,
                 //Keys.End,
                 //Keys.Left,
                 //Keys.Right,
                 //Keys.Up,
-                //Keys.Down,                
+                //Keys.Down,
+                //Keys.PageUp,
+                //Keys.PageDown,
+                //Keys.Insert,
+                Keys.NumPad0,
+                Keys.NumPad1,
+                Keys.NumPad2,
+                Keys.NumPad3,
+                Keys.NumPad4,
+                Keys.NumPad5,
+                Keys.NumPad6,
+                Keys.NumPad7,
+                Keys.NumPad8,
+                Keys.NumPad9
             };
         }
 
@@ -403,6 +418,51 @@ namespace XAMLite
                         else
                             capsLockOn = false;
                         break;
+                    case Keys.Decimal:
+                        newChar += ".";
+                        break;
+                    case Keys.NumPad7:
+                    //case Keys.Home:
+                        newChar += "7";
+                        break;
+                    case Keys.NumPad1:
+                    //case Keys.End:
+                        newChar += "1";
+                        break;
+                    case Keys.NumPad4:
+                    //case Keys.Left:
+                        newChar += "4";
+                        break;
+                    case Keys.NumPad5:
+                        newChar += "5";
+                        break;
+                    case Keys.NumPad6:
+                    //case Keys.Right:
+                        newChar += "6";
+                        break;
+                    case Keys.NumPad8:
+                    //case Keys.Up:
+                        newChar += "8";
+                        break;
+                    case Keys.NumPad2:
+                    //case Keys.Down:
+                        newChar += "2";
+                        break;
+                    case Keys.NumPad9:
+                    //case Keys.PageUp:
+                        newChar += "9";
+                        break;
+                    case Keys.NumPad3:
+                    //case Keys.PageDown:
+                        newChar += "3";
+                        break;
+                    case Keys.NumPad0:
+                    //case Keys.Insert:
+                        newChar += "0";
+                        break;
+                    case Keys.OemClear:
+                        this.Text = "";
+                        return;
                     case Keys.Enter:
                     case Keys.Tab:
                         _selected = false;
