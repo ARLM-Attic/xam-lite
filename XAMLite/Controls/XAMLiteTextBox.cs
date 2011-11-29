@@ -439,6 +439,42 @@ namespace XAMLite
                         case Keys.D0:
                             newChar += ")";
                             break;
+                        case Keys.OemQuotes:
+                            newChar += "\"";
+                            break;
+                        case Keys.OemTilde:
+                            newChar += "~";
+                            break;
+                        case Keys.OemComma:
+                            newChar += "<";
+                            break;
+                        case Keys.OemPeriod:
+                            newChar += ">";
+                            break;
+                        case Keys.OemSemicolon:
+                            newChar += ":";
+                            break;
+                        case Keys.OemBackslash:
+                            newChar += "|";
+                            break;
+                        case Keys.OemCloseBrackets:
+                            newChar += "}";
+                            break;
+                        case Keys.OemOpenBrackets:
+                            newChar += "{";
+                            break;
+                        case Keys.OemPlus:
+                            newChar += "+";
+                            break;
+                        case Keys.OemMinus:
+                            newChar += "_";
+                            break;
+                        case Keys.OemQuestion:
+                            newChar += "?";
+                            break;
+                        case Keys.OemPipe:
+                            newChar += "|";
+                            break;
                         default:
                             break;
                     }
@@ -476,6 +512,42 @@ namespace XAMLite
                             break;
                         case Keys.D0:
                             newChar += "0";
+                            break;
+                        case Keys.OemQuotes:
+                            newChar += "\'";
+                            break;
+                        case Keys.OemTilde:
+                            newChar += "`";
+                            break;
+                        case Keys.OemComma:
+                            newChar += ",";
+                            break;
+                        case Keys.OemPeriod:
+                            newChar += ".";
+                            break;
+                        case Keys.OemSemicolon:
+                            newChar += ";";
+                            break;
+                        case Keys.OemBackslash:
+                            newChar += "\\";
+                            break;
+                        case Keys.OemCloseBrackets:
+                            newChar += "]";
+                            break;
+                        case Keys.OemOpenBrackets:
+                            newChar += "[";
+                            break;
+                        case Keys.OemPlus:
+                            newChar += "=";
+                            break;
+                        case Keys.OemMinus:
+                            newChar += "-";
+                            break;
+                        case Keys.OemQuestion:
+                            newChar += "/";
+                            break;
+                        case Keys.OemPipe:
+                            newChar += "\\";
                             break;
                         default:
                             break;
