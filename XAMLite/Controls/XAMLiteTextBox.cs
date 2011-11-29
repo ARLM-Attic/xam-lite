@@ -153,6 +153,7 @@ namespace XAMLite
         private TimeSpan cursorBlinkTime;
 
         private bool keyShift;
+        private bool capsLockOn;
         private bool standardKeyTyped;
 
         KeyboardState currentKeyboardState;
@@ -231,8 +232,8 @@ namespace XAMLite
                 Keys.Add,
                 Keys.Subtract,
                 Keys.Multiply,
-                Keys.Divide
-                
+                Keys.Divide,
+                Keys.CapsLock
                 //Keys.Home,
                 //Keys.End,
                 //Keys.Left,
@@ -371,7 +372,7 @@ namespace XAMLite
             string newChar = "";
             keyShift = false;
             if (currentKeyboardState.IsKeyDown(Keys.RightShift) ||
-                currentKeyboardState.IsKeyDown(Keys.LeftShift))
+                currentKeyboardState.IsKeyDown(Keys.LeftShift) || capsLockOn)
             {
                 keyShift = true;
             }
@@ -395,6 +396,12 @@ namespace XAMLite
                         break;
                     case Keys.Divide:
                         newChar += "/";
+                        break;
+                    case Keys.CapsLock:
+                        if (!capsLockOn)
+                            capsLockOn = true;
+                        else
+                            capsLockOn = false;
                         break;
                     case Keys.Enter:
                     case Keys.Tab:
