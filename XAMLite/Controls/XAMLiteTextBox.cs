@@ -337,7 +337,8 @@ namespace XAMLite
 
             current = keybState.GetPressedKeys();
             int keyPressedCount = current.Length;
-            if (keyPressedCount == 0)
+            bool isNoneKeyOnly = ((keyPressedCount == 1) && (current[0] == Keys.None));
+            if (keyPressedCount == 0 || isNoneKeyOnly)
             {
                 _pressed = false;
             }
