@@ -32,5 +32,12 @@
         <RadioButton Content="Disabled RadioButton" Height="16" HorizontalAlignment="Left" Margin="317,285,0,0" Name="radioButton2" VerticalAlignment="Top" IsEnabled="False" />
         <RadioButton Content="Checked RadioButton " Height="16" HorizontalAlignment="Left" Margin="317,299,0,0" Name="radioButton1" VerticalAlignment="Top" IsChecked="True" />
         <RadioButton Content="RadioButton" Height="16" HorizontalAlignment="Left" Margin="317,271,0,0" Name="radioButton3" VerticalAlignment="Top" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="182,324,0,0" Name="textBox1" VerticalAlignment="Top" Width="120" />
+        <Menu Height="23" HorizontalAlignment="Left" Margin="122,0,0,0" Name="menu3" VerticalAlignment="Top" Width="55">
+            <MenuItem Header="Session">
+                <MenuItem Header="Restart" />
+                <MenuItem Header="Exit to Windows" />
+            </MenuItem>
+        </Menu>
     </Grid>
 </Window>
