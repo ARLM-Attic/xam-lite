@@ -264,6 +264,9 @@ namespace XAMLite
         protected Texture2D arrow;
         protected Rectangle arrowRect;
 
+        protected Texture2D checkMark;
+        protected Rectangle checkMarkRect;
+
         /// <summary>
         /// 
         /// </summary>
@@ -311,6 +314,10 @@ namespace XAMLite
             // for sub menu items
             arrow = Game.Content.Load<Texture2D>("Images/arrow");
             arrowRect = new Rectangle(0, 0, arrow.Width, arrow.Height);
+
+            // for menu check marks
+            checkMark = Game.Content.Load<Texture2D>("Icons/MenuCheckMark");
+            checkMarkRect = new Rectangle(0, 0, checkMark.Width, checkMark.Height);
 
             this.arialSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Arial");
             this.courier10SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Courier10");

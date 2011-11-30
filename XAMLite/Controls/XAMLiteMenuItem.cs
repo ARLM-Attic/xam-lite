@@ -108,6 +108,12 @@ namespace XAMLite
         private Rectangle _subMenuPanel;
         private bool written;
 
+        // If set, the menu item has the ability to be checked.
+        public bool IsCheckable;
+
+        // If IsCheckable is true, this will toggle a check mark when a menu item is selected.
+        public bool IsChecked;
+
         /// <summary>
         /// May become Public used to set up a Fill property later as described by the user.
         /// </summary>
