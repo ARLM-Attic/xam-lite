@@ -222,8 +222,9 @@ namespace XAMLite
             Items[0].Width = this.Width;
 
             // if it's a submenu, it will need room for the white arrow, so the width must be increased to accommodate
-            for (int i = 0; i < Items.Count; i++)
+            for (int i = 1; i < Items.Count; i++)
             {
+                // adding space for the arrow to denote that a submenu is available.
                 if (_allSubMenuTitles.Contains(Items[i].Header))
                 {
                     Items[i].Width += 20;
@@ -241,7 +242,7 @@ namespace XAMLite
             // setting the width for all the menu items, not including the header
             for (int i = 1; i < Items.Count; i++)
             {
-                Items[i].Width = longestWidth + 20;
+                Items[i].Width = longestWidth + 40;
                 Items[i].Height = Items[0].Height;
             } 
             
@@ -251,7 +252,7 @@ namespace XAMLite
             // setting basic parameters of the menu items
             for (int i = 0; i < Items.Count; i++)
             {
-                Items[i].Padding = new Thickness(10, 0, 10, 0);
+                Items[i].Padding = new Thickness(30, 0, 10, 0);
                 Items[i].HorizontalAlignment = this.HorizontalAlignment;
                 Items[i].VerticalAlignment = this.VerticalAlignment;
 

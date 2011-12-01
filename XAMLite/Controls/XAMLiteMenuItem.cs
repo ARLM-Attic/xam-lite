@@ -160,6 +160,8 @@ namespace XAMLite
 
         protected int longestWidth;
 
+        private Vector2 textPos;
+
         public XAMLiteMenuItem(Game game)
             : base(game)
         {
@@ -204,7 +206,8 @@ namespace XAMLite
             if (marginChanged)
             {
                 marginChanged = false;
-                _panel = new Rectangle((int)this.Position.X - (int)this.Padding.Left, (int)this.Position.Y, this.Width, this.Height);
+                _panel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20, (int)this.Position.Y, this.Width, this.Height);
+                textPos = new Vector2(this.Position.X + 20, this.Position.Y); ;
             }
 
             if (!_setSubMenu)
@@ -287,13 +290,17 @@ namespace XAMLite
                         Rectangle ghostRect = new Rectangle(_panel.X + 5, _panel.Y + 5, _panel.Width, _panel.Height);
                         spriteBatch.Draw(_pixel, ghostRect, (Color.Black * 0.45f));
                         spriteBatch.Draw(_pixel, _panel, this._backgroundColor);
-                        _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left, (int)this.Position.Y, this.Width, _strokeThickness);
+                        _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20, 
+                            (int)this.Position.Y, this.Width, _strokeThickness);
                         this.spriteBatch.Draw(_pixel, _strokePanel, _stroke);
-                        _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left, ((int)this.Position.Y + this.Height - _strokeThickness), this.Width, _strokeThickness);
+                        _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20, 
+                            ((int)this.Position.Y + this.Height - _strokeThickness), this.Width, _strokeThickness);
                         this.spriteBatch.Draw(_pixel, _strokePanel, _stroke);
-                        _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left, (int)this.Position.Y, _strokeThickness, this.Height);
+                        _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20, 
+                            (int)this.Position.Y, _strokeThickness, this.Height);
                         this.spriteBatch.Draw(_pixel, _strokePanel, _stroke);
-                        _strokePanel = new Rectangle(((int)this.Position.X - (int)this.Padding.Left + this.Width - _strokeThickness), (int)this.Position.Y, _strokeThickness, this.Height);
+                        _strokePanel = new Rectangle(((int)this.Position.X - (int)this.Padding.Left + 
+                            this.Width + 20 - _strokeThickness), (int)this.Position.Y, _strokeThickness, this.Height);
                         this.spriteBatch.Draw(_pixel, _strokePanel, _stroke);
                     }
 
@@ -305,7 +312,10 @@ namespace XAMLite
                     }
                 }
 
-                spriteBatch.DrawString(this.spriteFont, Text, Position, this._foregroundColor);
+                if(!_allMenuTitles.Contains(this.Header))
+                    spriteBatch.DrawString(this.spriteFont, Text, textPos, this._foregroundColor);
+                else
+                    spriteBatch.DrawString(this.spriteFont, Text, Position, this._foregroundColor);
                 
                 spriteBatch.End();
             }
@@ -328,7 +338,7 @@ namespace XAMLite
 
                 for (int i = 0; i < Items.Count; i++)
                 {
-                    Items[i].Width += 20;
+                    Items[i].Width += 40;
 
                     if (longestWidth <= Items[i].Width)
                         longestWidth = Items[i].Width;
@@ -337,7 +347,7 @@ namespace XAMLite
                 for (int i = 0; i < Items.Count; i++)
                 {
                     Items[i].Visible = Visibility.Hidden;
-                    Items[i].Padding = new Thickness(10, 0, 10, 0);
+                    Items[i].Padding = new Thickness(30, 0, 10, 0);
                     Items[i].HorizontalAlignment = this.HorizontalAlignment;
                     Items[i].VerticalAlignment = this.VerticalAlignment;
                     Items[i].Background = Brushes.Black;
