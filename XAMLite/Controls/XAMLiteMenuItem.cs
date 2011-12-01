@@ -108,6 +108,8 @@ namespace XAMLite
         private Rectangle _subMenuPanel;
         private bool written;
 
+        private bool _pressed;
+
         // If set, the menu item has the ability to be checked.
         public bool IsCheckable;
 
@@ -218,6 +220,7 @@ namespace XAMLite
                 setSubMenuItems(gameTime);
             }
 
+            // highlights the hovered menu item.
             if (_mouseEnter || _subMenuPanel.Contains(_msRect))
             {
                 this.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cccccc");
@@ -231,6 +234,24 @@ namespace XAMLite
                 }
             }
 
+            // set bool to toggle check marks if IsCheckable on mouse down.
+            if (IsCheckable && _mouseDown && _panel.Contains(_msRect))
+            {
+                if(!_pressed) 
+                {
+                    _pressed = true;
+                    if (IsChecked)
+                        IsChecked = false;
+                    else
+                        IsChecked = true;
+                }
+            }
+
+            if (_mouseUp && _pressed)
+            {
+                _pressed = false;
+            }
+
             // HACK: When a tutorial is selected, all Menu Title Headers are erased, so currently 
             // they are being manually added again.
             if (_mouseDown && _panel.Contains(_msRect) && this.Header.Contains("Tutorial"))
@@ -238,6 +259,7 @@ namespace XAMLite
                 ResetMenuItems();
             }
 
+            // opens a sub-menu panel, if it exists.
             if (_mouseEnter && Items.Count > 0 && this.Visible == Visibility.Visible)
             {
                 displaySubMenu = true;
@@ -264,6 +286,7 @@ namespace XAMLite
                 }
             }
 
+            // closes sub-menu panel after a menu item has been selected.
             if (_mouseDown && _subMenuPanel.Contains(_msRect))
             {
                 displaySubMenu = false;
@@ -319,6 +342,12 @@ namespace XAMLite
                     spriteBatch.DrawString(this.spriteFont, Text, textPos, this._foregroundColor);
                 else
                     spriteBatch.DrawString(this.spriteFont, Text, Position, this._foregroundColor);
+
+                if (IsChecked)
+                {
+                    checkMarkRect = new Rectangle((int)this.Position.X - 5, (int)this.Position.Y, checkMark.Width, checkMark.Height);
+                    this.spriteBatch.Draw(checkMark, checkMarkRect, Color.White);
+                }
                 
                 spriteBatch.End();
             }
