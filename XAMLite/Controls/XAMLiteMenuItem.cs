@@ -206,7 +206,10 @@ namespace XAMLite
             if (marginChanged)
             {
                 marginChanged = false;
-                _panel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20, (int)this.Position.Y, this.Width, this.Height);
+                if(_allMenuTitles.Contains(this.Header))
+                    _panel = new Rectangle((int)this.Position.X - (int)this.Padding.Left, (int)this.Position.Y, this.Width, this.Height);
+                else
+                    _panel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20, (int)this.Position.Y, this.Width, this.Height);
                 textPos = new Vector2(this.Position.X + 20, this.Position.Y); ;
             }
 
@@ -353,7 +356,7 @@ namespace XAMLite
                     Items[i].Background = Brushes.Black;
                     Items[i].Margin = new Thickness(this.Margin.Left + this._panel.Width, this.Margin.Top + Items[i].Height * i, Items[i].Margin.Right + Items[i].Padding.Right, this.Margin.Bottom + Items[i].Padding.Bottom);
                     Items[i].Width = longestWidth;
-                    _subMenuPanel = new Rectangle(this._panel.X + this.Width, (int)this.Position.Y, longestWidth + 10, this._panel.Height * Items.Count);
+                    _subMenuPanel = new Rectangle(this._panel.X + this.Width, (int)this.Position.Y, longestWidth, this._panel.Height * Items.Count);
                 }
             }
         }

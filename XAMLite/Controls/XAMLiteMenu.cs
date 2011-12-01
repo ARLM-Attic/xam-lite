@@ -244,15 +244,20 @@ namespace XAMLite
             {
                 Items[i].Width = longestWidth + 40;
                 Items[i].Height = Items[0].Height;
-            } 
-            
+            }
+
+            longestWidth += 40;
+
             // adding the head of the menu to the list of menus
             _allMenuTitles.Add(Items[0].Header);
 
             // setting basic parameters of the menu items
             for (int i = 0; i < Items.Count; i++)
             {
-                Items[i].Padding = new Thickness(30, 0, 10, 0);
+                if(i == 0)
+                    Items[i].Padding = new Thickness(10, 0, 10, 0);
+                else
+                    Items[i].Padding = new Thickness(30, 0, 10, 0);
                 Items[i].HorizontalAlignment = this.HorizontalAlignment;
                 Items[i].VerticalAlignment = this.VerticalAlignment;
 
@@ -272,7 +277,7 @@ namespace XAMLite
 
             // creating the rectangles for determining mouse activities
             _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, Items[0].Height);
-           _menuItemPanel = new Rectangle((int)this.Position.X, (int)this.Position.Y + Items[0].Height, longestWidth + 10, Items[0].Height * (Items.Count - 1));
+           _menuItemPanel = new Rectangle((int)this.Position.X, (int)this.Position.Y + Items[0].Height, longestWidth, Items[0].Height * (Items.Count - 1));
         }
     }
 }
