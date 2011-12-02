@@ -291,10 +291,6 @@ namespace XAMLite
             {
                 displaySubMenu = false;
                 _subMenuSelected = false;
-                for (int i = 0; i < Items.Count; i++)
-                {
-                    Items[i].Visible = Visibility.Hidden;
-                }
             }
         }
 
