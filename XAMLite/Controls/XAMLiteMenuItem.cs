@@ -254,7 +254,7 @@ namespace XAMLite
 
             // HACK: When a tutorial is selected, all Menu Title Headers are erased, so currently 
             // they are being manually added again.
-            if (_mouseDown && _panel.Contains(_msRect) && this.Header.Contains("Tutorial"))
+            if (_mouseDown && _panel.Contains(_msRect) && (this.Header.Contains("Tutorial") || this.Header.Contains("Toggle Particle Counter")))
             {
                 ResetMenuItems();
             }
