@@ -153,7 +153,10 @@ namespace XAMLite
         private TimeSpan cursorBlinkTime;
 
         private bool keyShift;
+        private TimeSpan keyShiftTimer;
+        private bool keyShiftTimerStarted;
         private bool capsLockOn;
+        private bool capsLockKeyShift;
         private bool backspaceheld;
         private bool deleteNextChar;
         private TimeSpan deleteTimer;
@@ -341,6 +344,23 @@ namespace XAMLite
 
             currentKeyboardState = Keyboard.GetState();
 
+            if ((currentKeyboardState.IsKeyDown(Keys.RightShift) ||
+                currentKeyboardState.IsKeyDown(Keys.LeftShift)) && !keyShiftTimerStarted)
+            {
+                keyShiftTimer = TimeSpan.FromSeconds(0.1);
+                keyShift = true;
+            }
+
+            if (keyShift)
+            {
+                keyShiftTimer -= gameTime.ElapsedGameTime;
+                if (keyShiftTimer <= TimeSpan.Zero)
+                {
+                    keyShift = false;
+                    keyShiftTimerStarted = false;
+                }
+            }
+
             if (_selected)
                 ProcessKeyboard();
             
@@ -410,12 +430,6 @@ namespace XAMLite
         private void AddKeyToText(Keys key)
         {
             string newChar = "";
-            keyShift = false;
-            if (currentKeyboardState.IsKeyDown(Keys.RightShift) ||
-                currentKeyboardState.IsKeyDown(Keys.LeftShift) || capsLockOn)
-            {
-                keyShift = true;
-            }
 
             if (this.Text.Length >= MaxLength && key != Keys.Back && key != Keys.Delete && 
                 key != Keys.Tab && key != Keys.Enter && (int)this.spriteFont.MeasureString(this.Text).X >= 
@@ -442,9 +456,13 @@ namespace XAMLite
                         break;
                     case Keys.CapsLock:
                         if (!capsLockOn)
+                        {
                             capsLockOn = true;
+                        }
                         else
+                        {
                             capsLockOn = false;
+                        }
                         break;
                     case Keys.Decimal:
                         newChar += ".";
@@ -498,7 +516,7 @@ namespace XAMLite
                         cursorBlink = false;
                         break;
                     default:
-                        if (keyShift)
+                        if (keyShift || capsLockOn)
                             newChar += key;
                         else
                             newChar += key.ToString().ToLower();
