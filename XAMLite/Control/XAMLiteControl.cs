@@ -35,6 +35,7 @@ namespace XAMLite
         // the set of possible fonts that are preloaded in LoadContent()
         protected SpriteFont arialSpriteFont { get; set; }
         protected SpriteFont courier10SpriteFont { get; set; }
+        protected SpriteFont courier20SpriteFont { get; set; }
         protected SpriteFont kootenay9SpriteFont { get; set; }
         protected SpriteFont kootenay14SpriteFont { get; set; }
         protected SpriteFont verdana10SpriteFont { get; set; }
@@ -50,6 +51,8 @@ namespace XAMLite
         protected SpriteFont verdana15SpriteFont { get; set; }
         protected SpriteFont verdana16SpriteFont { get; set; }
         protected SpriteFont verdana16BoldSpriteFont { get; set; }
+        protected SpriteFont verdana20SpriteFont { get; set; }
+        protected SpriteFont verdana20BoldSpriteFont { get; set; }
         protected SpriteFont verdana60SpriteFont { get; set; }
         protected SpriteFont verdana60BoldSpriteFont { get; set; }
 
@@ -321,6 +324,7 @@ namespace XAMLite
 
             this.arialSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Arial");
             this.courier10SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Courier10");
+            this.courier20SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Courier20");
             this.verdana10SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana10");
             this.verdana10BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana10Bold");
             this.verdana11SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana11");
@@ -334,6 +338,8 @@ namespace XAMLite
             this.verdana15SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana15");
             this.verdana16SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana16");
             this.verdana16BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana16Bold");
+            this.verdana20SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana20");
+            this.verdana20BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana20Bold");
             this.verdana60SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana60");
             this.verdana60BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana60Bold");
             this.spriteFont = courier10SpriteFont;
@@ -403,6 +409,9 @@ namespace XAMLite
                 case "Arial":
                     this.spriteFont = arialSpriteFont;
                     break;
+                case "Courier20":
+                    this.spriteFont = courier20SpriteFont;
+                    break;
                 case "Verdana10":
                     this.spriteFont = verdana10SpriteFont;
                     break;
@@ -438,6 +447,12 @@ namespace XAMLite
                     break;
                 case "Verdana16Bold":
                     this.spriteFont = verdana16BoldSpriteFont;
+                    break;
+                case "Verdana20":
+                    this.spriteFont = verdana20SpriteFont;
+                    break;
+                case "Verdana20Bold":
+                    this.spriteFont = verdana20BoldSpriteFont;
                     break;
                 case "Verdana60":
                     this.spriteFont = verdana60SpriteFont;

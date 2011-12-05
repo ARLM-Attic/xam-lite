@@ -156,7 +156,6 @@ namespace XAMLite
         private TimeSpan keyShiftTimer;
         private bool keyShiftTimerStarted;
         private bool capsLockOn;
-        private bool capsLockKeyShift;
         private bool backspaceheld;
         private bool deleteNextChar;
         private TimeSpan deleteTimer;
