@@ -83,7 +83,7 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        public Visibility Visible { get { return _visible; } set { _visible = value; _visibilityChanged = true; } }
+        public Visibility Visible { get { return _visible; } set { _visible = value;  _visibilityChanged = true; } }
 
         protected bool _visibilityChanged;
 

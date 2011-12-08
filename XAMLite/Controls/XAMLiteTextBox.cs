@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Windows.Media;
-
 using Microsoft.Xna.Framework.Content;
 
 using Color = Microsoft.Xna.Framework.Color;
@@ -674,6 +673,7 @@ namespace XAMLite
                 }
             }
             this.Text += newChar;
+            OnKeyDown();
         }
 
         private void stopDelete()
@@ -681,6 +681,7 @@ namespace XAMLite
             backspaceheld = false;
             deleteNextChar = true;
             numDeletedKeys = 0;
+            OnKeyDown();
         }
 
         private void startDelete()
