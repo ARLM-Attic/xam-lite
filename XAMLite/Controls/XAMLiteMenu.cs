@@ -89,7 +89,7 @@ namespace XAMLite
                 closeMenu();
 
             // Sets visibility to hidden for menu items when the mouse is not over the menu.
-            if (_panel.Contains(_msRect) || (_menuItemPanel.Contains(_msRect) && _fullMenuIsVisible) || (_fullMenuIsVisible && _subMenuSelected))
+            if (_panel.Contains(_msRect) || (_menuItemPanel.Contains(_msRect) && _fullMenuIsVisible))
             {
                 if (_menuSelected)
                 {
@@ -98,7 +98,7 @@ namespace XAMLite
             }
             else
             {
-                closeMenu();
+                    closeMenu();
             }
 
             // handles mouse clicks on the head of the menu, making the menu visible or
@@ -126,7 +126,7 @@ namespace XAMLite
             // Notifies that the menu must be closed.  Visibility not immediately changed here because it would
             // cause XAMLiteControl to believe that a hidden menu was selected on _mouseDown, thus changing the
             // mouse down event to false before it is fired.
-            if (_mouseDown && _menuItemPanel.Contains(_msRect) && !_subMenuSelected)
+            if (_mouseDown && _menuItemPanel.Contains(_msRect))
             {
                 _closeMenu = true;
             }
@@ -147,7 +147,11 @@ namespace XAMLite
             }
 
             else if (_menuVisibilityCount == 0)
+            {
                 _menuSelected = false;
+            }
+                
+
 
             if (_fullMenuIsVisible)
             {
@@ -155,6 +159,9 @@ namespace XAMLite
             }
             else
                 Items[0].Background = Brushes.Transparent;
+
+
+            
         }
 
         /// <summary>
@@ -162,12 +169,15 @@ namespace XAMLite
         /// </summary>
         private void closeMenu()
         {
-            _closeMenu = false;
-            for (int i = 1; i < Items.Count; i++)
+            if (!_subMenuOpen.ContainsValue(true))
             {
-                Items[i].Visible = Visibility.Hidden;
+                _closeMenu = false;
+                for (int i = 1; i < Items.Count; i++)
+                {
+                    Items[i].Visible = Visibility.Hidden;
+                }
+                _fullMenuIsVisible = false;
             }
-            _fullMenuIsVisible = false;
         }
 
         /// <summary>
@@ -214,7 +224,11 @@ namespace XAMLite
                 this.Game.Components.Add(Items[i]);
                 // Add the child component to the game with the modified parameters.
                 if (Items[i].Items.Count > 0)
+                {
                     _allSubMenuTitles.Add(Items[i].Header);
+                    _subMenuOpen.Add(Items[i].Header, false);
+                }
+
             }
 
             this.Width = Items[0].Width + 20;

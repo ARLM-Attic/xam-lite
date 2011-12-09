@@ -156,6 +156,10 @@ namespace XAMLite
 
         protected bool displaySubMenu;
 
+        protected bool subMenuOpened;
+
+        protected bool _alreadyAdded;
+
         protected bool _setSubMenu;
 
         protected bool adjusted;
@@ -221,7 +225,7 @@ namespace XAMLite
             }
 
             // highlights the hovered menu item.
-            if (_mouseEnter || _subMenuPanel.Contains(_msRect))
+            if (_mouseEnter || (_subMenuPanel.Contains(_msRect) && this.Items[0].Visible == Visibility.Visible))
             {
                 this.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cccccc");
             }
@@ -262,19 +266,28 @@ namespace XAMLite
             // opens a sub-menu panel, if it exists.
             if (_mouseEnter && Items.Count > 0 && this.Visible == Visibility.Visible)
             {
-                displaySubMenu = true;
-                _subMenuSelected = true;
+                subMenuOpened = true;
+
                 for (int i = 0; i < Items.Count; i++)
                 {
                     Items[i].Visible = Visibility.Visible;
+                }
+
+                if (!_alreadyAdded)
+                {
+                    _alreadyAdded = true;
+                    if (_subMenuOpen.ContainsKey(this.Header))
+                    {
+                        _subMenuOpen.Remove(this.Header);
+                        _subMenuOpen.Add(this.Header, true);
+                    }
                 }
             }
 
             else
             {
-                if (!_subMenuSelected)
+                if (!subMenuOpened)
                 {
-                    displaySubMenu = false;
                     for (int i = 0; i < Items.Count; i++)
                     {
                         Items[i].Visible = Visibility.Hidden;
@@ -282,15 +295,22 @@ namespace XAMLite
                 }
                 else if (Items.Count > 0 && !_subMenuPanel.Contains(_msRect))
                 {
-                    _subMenuSelected = false;
+                    subMenuOpened = false;
+                    _alreadyAdded = false;
+                    if (_subMenuOpen.ContainsKey(this.Header))
+                    {
+                        _subMenuOpen.Remove(this.Header);
+                        _subMenuOpen.Add(this.Header, false);
+                    }
                 }
             }
 
             // closes sub-menu panel after a menu item has been selected.
             if (_mouseDown && _subMenuPanel.Contains(_msRect))
             {
-                displaySubMenu = false;
-                _subMenuSelected = false;
+                subMenuOpened = false;
+                _subMenuOpen.Remove(this.Header);
+                _subMenuOpen.Add(this.Header, false);
             }
         }
 

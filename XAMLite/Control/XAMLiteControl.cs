@@ -259,10 +259,10 @@ namespace XAMLite
         protected static int _menuVisibilityCount;
 
         /// <summary>
-        /// Prevents menus from automatically shutting when the mouse leaves a menu but remains on
-        /// a sub menu.
+        ///Stores true or false depending on whether a sub menu is open.  If any are true, the open parent menu
+        ///will not close.
         /// </summary>
-        protected static bool _subMenuSelected;
+        protected static Dictionary<string, bool> _subMenuOpen;
 
         protected Texture2D arrow;
         protected Rectangle arrowRect;
@@ -287,6 +287,7 @@ namespace XAMLite
             _allRadioButtons = new List<XAMLiteRadioButton>();
             _allMenuTitles = new List<string>();
             _allSubMenuTitles = new List<string>();
+            _subMenuOpen = new Dictionary<string, bool>();
         }
 
         /// <summary>
@@ -558,13 +559,16 @@ namespace XAMLite
         protected void ResetMenuItems()
         {
             _allMenuTitles.Add("Session");
-            _allMenuTitles.Add("Ambient Level");
+            //_allMenuTitles.Add("Ambient Level");
             _allMenuTitles.Add("Tutorials");
-            _allMenuTitles.Add("Time of Day");
-            _allMenuTitles.Add("Truck");
+            //_allMenuTitles.Add("Time of Day");
+            //_allMenuTitles.Add("Truck");
             _allMenuTitles.Add("Dev");
 
             _allSubMenuTitles.Add("Adjust Dust Visibility");
+            _allSubMenuTitles.Add("Ambient Level");
+            _allSubMenuTitles.Add("Time of Day");
+            _allSubMenuTitles.Add("Truck");
         }
     }
 }
