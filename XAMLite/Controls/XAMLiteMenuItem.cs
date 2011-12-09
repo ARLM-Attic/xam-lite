@@ -224,93 +224,96 @@ namespace XAMLite
                 setSubMenuItems(gameTime);
             }
 
-            // highlights the hovered menu item.
-            if (_mouseEnter || (_subMenuPanel.Contains(_msRect) && this.Items[0].Visible == Visibility.Visible))
+            if (IsEnabled)
             {
-                this.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cccccc");
-            }
-            else
-            {
-                if (!_allMenuTitles.Contains(this.Header))
+                // highlights the hovered menu item.
+                if (_mouseEnter || (_subMenuPanel.Contains(_msRect) && this.Items[0].Visible == Visibility.Visible))
                 {
-                    this._backgroundColor = Color.Black;
-                    this._stroke = Color.Black;                    
+                    this.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cccccc");
                 }
-            }
-
-            // set bool to toggle check marks if IsCheckable on mouse down.
-            if (IsCheckable && _mouseDown && _panel.Contains(_msRect))
-            {
-                if(!_pressed) 
+                else
                 {
-                    _pressed = true;
-                    if (IsChecked)
-                        IsChecked = false;
-                    else
-                        IsChecked = true;
-                }
-            }
-
-            if (_mouseUp && _pressed)
-            {
-                _pressed = false;
-            }
-
-            // HACK: When a tutorial is selected, all Menu Title Headers are erased, so currently 
-            // they are being manually added again.
-            if (_mouseDown && _panel.Contains(_msRect) && (this.Header.Contains("Tutorial") || this.Header.Contains("Toggle Particle Counter")))
-            {
-                ResetMenuItems();
-            }
-
-            // opens a sub-menu panel, if it exists.
-            if (_mouseEnter && Items.Count > 0 && this.Visible == Visibility.Visible)
-            {
-                subMenuOpened = true;
-
-                for (int i = 0; i < Items.Count; i++)
-                {
-                    Items[i].Visible = Visibility.Visible;
-                }
-
-                if (!_alreadyAdded)
-                {
-                    _alreadyAdded = true;
-                    if (_subMenuOpen.ContainsKey(this.Header))
+                    if (!_allMenuTitles.Contains(this.Header))
                     {
-                        _subMenuOpen.Remove(this.Header);
-                        _subMenuOpen.Add(this.Header, true);
+                        this._backgroundColor = Color.Black;
+                        this._stroke = Color.Black;
                     }
                 }
-            }
 
-            else
-            {
-                if (!subMenuOpened)
+                // set bool to toggle check marks if IsCheckable on mouse down.
+                if (IsCheckable && _mouseDown && _panel.Contains(_msRect))
                 {
+                    if (!_pressed)
+                    {
+                        _pressed = true;
+                        if (IsChecked)
+                            IsChecked = false;
+                        else
+                            IsChecked = true;
+                    }
+                }
+
+                if (_mouseUp && _pressed)
+                {
+                    _pressed = false;
+                }
+
+                // HACK: When a tutorial is selected, all Menu Title Headers are erased, so currently 
+                // they are being manually added again.
+                if (_mouseDown && _panel.Contains(_msRect) && (this.Header.Contains("Tutorial") || this.Header.Contains("Toggle Particle Counter")))
+                {
+                    ResetMenuItems();
+                }
+
+                // opens a sub-menu panel, if it exists.
+                if (_mouseEnter && Items.Count > 0 && this.Visible == Visibility.Visible)
+                {
+                    subMenuOpened = true;
+
                     for (int i = 0; i < Items.Count; i++)
                     {
-                        Items[i].Visible = Visibility.Hidden;
+                        Items[i].Visible = Visibility.Visible;
+                    }
+
+                    if (!_alreadyAdded)
+                    {
+                        _alreadyAdded = true;
+                        if (_subMenuOpen.ContainsKey(this.Header))
+                        {
+                            _subMenuOpen.Remove(this.Header);
+                            _subMenuOpen.Add(this.Header, true);
+                        }
                     }
                 }
-                else if (Items.Count > 0 && !_subMenuPanel.Contains(_msRect))
+
+                else
+                {
+                    if (!subMenuOpened)
+                    {
+                        for (int i = 0; i < Items.Count; i++)
+                        {
+                            Items[i].Visible = Visibility.Hidden;
+                        }
+                    }
+                    else if (Items.Count > 0 && !_subMenuPanel.Contains(_msRect))
+                    {
+                        subMenuOpened = false;
+                        _alreadyAdded = false;
+                        if (_subMenuOpen.ContainsKey(this.Header))
+                        {
+                            _subMenuOpen.Remove(this.Header);
+                            _subMenuOpen.Add(this.Header, false);
+                        }
+                    }
+                }
+
+                // closes sub-menu panel after a menu item has been selected.
+                if (_mouseDown && _subMenuPanel.Contains(_msRect))
                 {
                     subMenuOpened = false;
-                    _alreadyAdded = false;
-                    if (_subMenuOpen.ContainsKey(this.Header))
-                    {
-                        _subMenuOpen.Remove(this.Header);
-                        _subMenuOpen.Add(this.Header, false);
-                    }
+                    _subMenuOpen.Remove(this.Header);
+                    _subMenuOpen.Add(this.Header, false);
                 }
-            }
-
-            // closes sub-menu panel after a menu item has been selected.
-            if (_mouseDown && _subMenuPanel.Contains(_msRect))
-            {
-                subMenuOpened = false;
-                _subMenuOpen.Remove(this.Header);
-                _subMenuOpen.Add(this.Header, false);
             }
         }
 

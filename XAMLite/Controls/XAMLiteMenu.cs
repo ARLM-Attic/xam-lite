@@ -84,84 +84,84 @@ namespace XAMLite
             // setting up the menu
             if (!_setMenuItems)
                 setMenuItems(gameTime);
-            
-            if(_closeMenu)
-                closeMenu();
 
-            // Sets visibility to hidden for menu items when the mouse is not over the menu.
-            if (_panel.Contains(_msRect) || (_menuItemPanel.Contains(_msRect) && _fullMenuIsVisible))
+            if (IsEnabled)
             {
-                if (_menuSelected)
-                {
-                    openMenu();
-                }
-            }
-            else
-            {
+                if (_closeMenu)
                     closeMenu();
-            }
 
-            // handles mouse clicks on the head of the menu, making the menu visible or
-            // hidden.
-            if (_mouseDown && _panel.Contains(_msRect) && _mouseReleased)
-            {
-                _mouseReleased = false;
-                
-                if (Items[1] != null && Items[1].Visible == Visibility.Hidden)
+                // Sets visibility to hidden for menu items when the mouse is not over the menu.
+                if (_panel.Contains(_msRect) || (_menuItemPanel.Contains(_msRect) && _fullMenuIsVisible))
                 {
-                    openMenu();
-                    _menuSelected = true;
+                    if (_menuSelected)
+                    {
+                        openMenu();
+                    }
                 }
                 else
                 {
                     closeMenu();
                 }
+
+                // handles mouse clicks on the head of the menu, making the menu visible or
+                // hidden.
+                if (_mouseDown && _panel.Contains(_msRect) && _mouseReleased)
+                {
+                    _mouseReleased = false;
+
+                    if (Items[1] != null && Items[1].Visible == Visibility.Hidden)
+                    {
+                        openMenu();
+                        _menuSelected = true;
+                    }
+                    else
+                    {
+                        closeMenu();
+                    }
+                }
+
+                // notifies that a full click has occurred and allows the menu to be selected again, thus making
+                // it visibile or hidden.
+                if (!_mouseReleased && _mouseUp)
+                    _mouseReleased = true;
+
+                // Notifies that the menu must be closed.  Visibility not immediately changed here because it would
+                // cause XAMLiteControl to believe that a hidden menu was selected on _mouseDown, thus changing the
+                // mouse down event to false before it is fired.
+                if (_mouseDown && _menuItemPanel.Contains(_msRect))
+                {
+                    _closeMenu = true;
+                }
+
+                // updating the menu visibility count.  If zero, the user must make a mouse down event
+                // in order to reopen any menu.  If greater than zero, the menus will open with a mouse
+                // enter event.
+                if (!_fullMenuIsVisible && _menuVisibilityCounted)
+                {
+                    _menuVisibilityCounted = false;
+                    _menuVisibilityCount--;
+                }
+
+                else if (_fullMenuIsVisible && !_menuVisibilityCounted)
+                {
+                    _menuVisibilityCounted = true;
+                    _menuVisibilityCount++;
+                }
+
+                else if (_menuVisibilityCount == 0)
+                {
+                    _menuSelected = false;
+                }
+
+
+
+                if (_fullMenuIsVisible)
+                {
+                    Items[0].Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cccccc");
+                }
+                else
+                    Items[0].Background = Brushes.Transparent;
             }
-       
-            // notifies that a full click has occurred and allows the menu to be selected again, thus making
-            // it visibile or hidden.
-            if (!_mouseReleased && _mouseUp)
-                _mouseReleased = true;
-
-            // Notifies that the menu must be closed.  Visibility not immediately changed here because it would
-            // cause XAMLiteControl to believe that a hidden menu was selected on _mouseDown, thus changing the
-            // mouse down event to false before it is fired.
-            if (_mouseDown && _menuItemPanel.Contains(_msRect))
-            {
-                _closeMenu = true;
-            }
-
-            // updating the menu visibility count.  If zero, the user must make a mouse down event
-            // in order to reopen any menu.  If greater than zero, the menus will open with a mouse
-            // enter event.
-            if (!_fullMenuIsVisible && _menuVisibilityCounted)
-            {
-                _menuVisibilityCounted = false;
-                _menuVisibilityCount--;
-            }
-
-            else if (_fullMenuIsVisible && !_menuVisibilityCounted)
-            {
-                _menuVisibilityCounted = true;
-                _menuVisibilityCount++;
-            }
-
-            else if (_menuVisibilityCount == 0)
-            {
-                _menuSelected = false;
-            }
-                
-
-
-            if (_fullMenuIsVisible)
-            {
-                Items[0].Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cccccc");
-            }
-            else
-                Items[0].Background = Brushes.Transparent;
-
-
-            
         }
 
         /// <summary>
