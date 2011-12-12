@@ -63,7 +63,7 @@ namespace XAMLite
         public FontFamily FontFamily
         {
             get { return _fontFamily; }
-            set { _fontFamily = value; fontFamilyChanged = true; }
+            set { _fontFamily = value; fontFamilyChanged = true; firstUpdate = true; }
         }
 
         // character spacing
@@ -87,6 +87,8 @@ namespace XAMLite
             }
         }
 
+        private bool _firstUpdate;
+
         public XAMLiteLabel(Game game)
             : base(game)
         {
@@ -96,7 +98,6 @@ namespace XAMLite
 
             //
             this._foregroundColor = Color.White;
-
         }
 
         /// <summary>
@@ -130,13 +131,18 @@ namespace XAMLite
         {
             base.Update(gameTime);
 
-            if (fontFamilyChanged)
+            if (firstUpdate)
             {
-                fontFamilyChanged = false;
-                UpdateFontFamily(_fontFamily);
-                this.spriteFont.Spacing = Spacing;
-                RecalculateWidthAndHeight(this.Text);
+                if (fontFamilyChanged)
+                {
+                    fontFamilyChanged = false;
+                    UpdateFontFamily(_fontFamily);
+                    this.spriteFont.Spacing = Spacing;
+                    RecalculateWidthAndHeight(this.Text);
+                }
+                firstUpdate = false;
             }
+
         }
 
         /// <summary>
@@ -147,10 +153,13 @@ namespace XAMLite
         {
             if (Visible == System.Windows.Visibility.Visible)
             {
-                spriteBatch.Begin();
-                
-                spriteBatch.DrawString(this.spriteFont, Text, Position, this._foregroundColor);
-                spriteBatch.End();
+                if (_firstUpdate)
+                {
+                    spriteBatch.Begin();
+
+                    spriteBatch.DrawString(this.spriteFont, Text, Position, this._foregroundColor);
+                    spriteBatch.End();
+                }
             }
         }
     }

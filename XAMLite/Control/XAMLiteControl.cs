@@ -270,6 +270,10 @@ namespace XAMLite
         protected Texture2D checkMark;
         protected Rectangle checkMarkRect;
 
+        // used for labels so that the fonts, spacing, etc., will change (especially at startup) 
+        // prior to being drawn to screen to prevent a noticeable size change. 
+        protected bool firstUpdate;
+
         /// <summary>
         /// 
         /// </summary>
