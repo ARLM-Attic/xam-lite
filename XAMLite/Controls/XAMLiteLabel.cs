@@ -153,13 +153,9 @@ namespace XAMLite
         {
             if (Visible == System.Windows.Visibility.Visible)
             {
-                if (_firstUpdate)
-                {
-                    spriteBatch.Begin();
-
-                    spriteBatch.DrawString(this.spriteFont, Text, Position, this._foregroundColor);
-                    spriteBatch.End();
-                }
+                spriteBatch.Begin();
+                spriteBatch.DrawString(this.spriteFont, Text, Position, this._foregroundColor);
+                spriteBatch.End();
             }
         }
     }
