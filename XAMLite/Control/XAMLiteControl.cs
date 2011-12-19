@@ -233,7 +233,7 @@ namespace XAMLite
         protected static List<XAMLiteRadioButton> _allRadioButtons;
 
         /// <summary>
-        /// Determines whether a radio button is selected.
+        /// Determines whether the control is selected.
         /// </summary>
         protected bool _selected;
 
