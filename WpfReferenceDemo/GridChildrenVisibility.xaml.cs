@@ -16,6 +16,9 @@ namespace WpfReferenceDemo
 
     public partial class GridChildrenVisibility : Window
     {
+
+        int _mouseDownCount = 0;
+
         public GridChildrenVisibility ()
         {
             InitializeComponent();
@@ -49,6 +52,12 @@ namespace WpfReferenceDemo
         private void dogCheckBox_Unchecked (object sender, RoutedEventArgs e)
         {
             dogImage.Visibility = Visibility.Hidden;
+        }
+
+        private void clickableImage_MouseDown (object sender, MouseButtonEventArgs e)
+        {
+            _mouseDownCount++;
+            this.Title = "Mouse Down Count = " + _mouseDownCount;
         }
     }
 

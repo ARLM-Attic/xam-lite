@@ -10,5 +10,6 @@
         <CheckBox Content="A) CatsAndDogsGrid Visible" Height="16" HorizontalAlignment="Left" Margin="129,21,0,0" Name="gridCheckBox" VerticalAlignment="Top" Checked="gridCheckBox_Checked" Unchecked="gridCheckBox_Unchecked" IsChecked="True" />
         <CheckBox Content="B) CatImage Visible" Height="16" HorizontalAlignment="Left" Margin="129,43,0,0" Name="catCheckBox" VerticalAlignment="Top" Checked="catCheckBox_Checked" Unchecked="catCheckBox_Unchecked" IsChecked="True" />
         <CheckBox Content="C) DogImage Visible" Height="16" HorizontalAlignment="Left" Margin="129,65,0,0" Name="dogCheckBox" VerticalAlignment="Top" Checked="dogCheckBox_Checked" Unchecked="dogCheckBox_Unchecked" IsChecked="False" />
+        <Image Height="100" HorizontalAlignment="Left" Margin="499,118,0,0" Name="clickableImage" Stretch="Fill" VerticalAlignment="Top" Width="100" Source="/WpfReferenceDemo;component/Content/Button.jpg" MouseDown="clickableImage_MouseDown" />
     </Grid>
 </Window>

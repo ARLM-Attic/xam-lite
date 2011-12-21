@@ -32,6 +32,7 @@ namespace XAMLiteDemo
         XAMLiteImage catImage2;
         XAMLiteImage dogImage2;
 
+        int _mouseDownCount = 0;
 
         public Game2 ()
         {
@@ -81,6 +82,7 @@ namespace XAMLiteDemo
             catImage.VerticalAlignment = VerticalAlignment.Top;
             catImage.HorizontalAlignment = HorizontalAlignment.Left;
             catImage.Margin = new Thickness(13, 12, 0, 0);
+            catImage.Visible = Visibility.Visible;
             catsAndDogsGrid.Children.Add(catImage);
 
             // Child Dog Image
@@ -91,11 +93,31 @@ namespace XAMLiteDemo
             dogImage.VerticalAlignment = VerticalAlignment.Top;
             dogImage.HorizontalAlignment = HorizontalAlignment.Left;
             dogImage.Margin = new Thickness(13, 97, 0, 0);
+            dogImage.Visible = Visibility.Hidden;
             catsAndDogsGrid.Children.Add(dogImage);
+
+            // Clickable image.
+            var clickableImage = new XAMLiteImage(this);
+            clickableImage.Width = 100;
+            clickableImage.Height = 100;
+            clickableImage.VerticalAlignment = VerticalAlignment.Bottom;
+            clickableImage.HorizontalAlignment = HorizontalAlignment.Right;
+            clickableImage.SourceName = @"Textures/Button";
+            clickableImage.MouseDown += new MouseButtonEventHandler(clickableImage_MouseDown);
+            Components.Add(clickableImage);
 
             // Initialize all game components. (This includes calling Initialize() on all XAMLite controls, 
             // since they are game components).
             base.Initialize();
+        }
+
+        void clickableImage_MouseDown (object sender, MouseButtonEventArgs e)
+        {
+            _mouseDownCount++;
+            Window.Title = "MouseDown Count = " + _mouseDownCount;
+
+            catsAndDogsGrid.ToggleVisibility();
+
         }
 
         /// <summary>
