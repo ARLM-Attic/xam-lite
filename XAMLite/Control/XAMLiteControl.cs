@@ -557,6 +557,30 @@ namespace XAMLite
         }
 
         /// <summary>
+        /// Toggles between Visibility.Visible and Visibility.Hidden.
+        /// I'm cheating a bit here since this isn't strictly part of the standard WPF API. -AK
+        /// </summary>
+        public void ToggleVisibility()
+        {
+            switch (Visible)
+            {
+
+                case Visibility.Visible:
+                    Visible = Visibility.Hidden;
+                    break;
+
+                case Visibility.Hidden:
+                    Visible = Visibility.Visible;
+                    break;
+
+                case Visibility.Collapsed:
+                    Visible = Visibility.Visible;
+                    break;
+     
+            }
+        }
+
+        /// <summary>
         /// HACK: When a tutorial is selected, all Menu Title Headers are erased, so currently 
         /// they are being manually added again.
         /// </summary>
