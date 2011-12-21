@@ -30,7 +30,7 @@ namespace XAMLiteDemo
         XAMLiteGrid catsAndDogsGrid;
 
 
-        public Game2()
+        public Game2 ()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -49,9 +49,17 @@ namespace XAMLiteDemo
         /// related content.  Calling base.Initialize will enumerate through any components
         /// and initialize them as well.
         /// </summary>
-        protected override void Initialize()
+        protected override void Initialize ()
         {
-            // grid Example
+
+            // Here's the reference XAML we're mimicing.
+            //<Grid Name="catsAndDogsGrid" Width="101" Height="181" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="22,21,0,0"  Background="LightBlue">
+            //    <Image Name="catImage" Width="75" Height="75" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="13,12,0,0"  Source="/WpfReferenceDemo;component/Content/Cat.png" />
+            //    <Image Name="dogImage" Width="75"  Height="75" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="13,97,0,0"  Source="/WpfReferenceDemo;component/Content/Dog.png" />
+            //</Grid>
+
+
+            // Parent Grid
             catsAndDogsGrid = new XAMLiteGrid(this);
             catsAndDogsGrid.Name = "catsAndDogsGrid";
             catsAndDogsGrid.Width = 101;
@@ -62,21 +70,25 @@ namespace XAMLiteDemo
             catsAndDogsGrid.Margin = new Thickness(22, 21, 0, 0);
             Components.Add(catsAndDogsGrid);
 
-            // Clickable-image example.
+            // Child Cat Image
             catImage = new XAMLiteImage(this);
-            catImage.Width = 100;
-            catImage.Height = 100;
-            catImage.VerticalAlignment = VerticalAlignment.Bottom;
-            catImage.HorizontalAlignment = HorizontalAlignment.Right;
             catImage.SourceName = @"Textures/Cat";
-            Components.Add(catImage);
+            catImage.Width = 75;
+            catImage.Height = 75;
+            catImage.VerticalAlignment = VerticalAlignment.Top;
+            catImage.HorizontalAlignment = HorizontalAlignment.Left;
+            catImage.Margin = new Thickness(13, 12, 0, 0);
+            catsAndDogsGrid.Children.Add(catImage);
 
-            // Rollover example
+            // Child Dog Image
             dogImage = new XAMLiteImage(this);
             dogImage.SourceName = @"Textures/Dog";
+            dogImage.Width = 75;
+            dogImage.Height = 75;
             dogImage.VerticalAlignment = VerticalAlignment.Top;
-            dogImage.HorizontalAlignment = HorizontalAlignment.Right;
-            Components.Add(dogImage);
+            dogImage.HorizontalAlignment = HorizontalAlignment.Left;
+            dogImage.Margin = new Thickness(13, 97, 0, 0);
+            catsAndDogsGrid.Children.Add(dogImage);
 
             // Initialize all game components. (This includes calling Initialize() on all XAMLite controls, 
             // since they are game components).
@@ -88,7 +100,7 @@ namespace XAMLiteDemo
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
         /// </summary>
-        protected override void LoadContent()
+        protected override void LoadContent ()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             _spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -104,7 +116,7 @@ namespace XAMLiteDemo
         /// UnloadContent will be called once per game and is the place to unload
         /// all content.
         /// </summary>
-        protected override void UnloadContent()
+        protected override void UnloadContent ()
         {
             // TODO: Unload any non ContentManager content here
         }
@@ -114,7 +126,7 @@ namespace XAMLiteDemo
         /// checking for collisions, gathering input, and playing audio.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Update(GameTime gameTime)
+        protected override void Update (GameTime gameTime)
         {
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
@@ -128,9 +140,9 @@ namespace XAMLiteDemo
         /// This is called when the game should draw itself.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Draw(GameTime gameTime)
+        protected override void Draw (GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.White);
 
             // TODO: Add your drawing code here
 

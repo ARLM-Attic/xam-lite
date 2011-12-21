@@ -3,12 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="GridChildrenVisibility" Height="365" Width="715">
     <Grid>
-        <Grid Height="181" HorizontalAlignment="Left" Margin="22,21,0,0" Name="catsAndDogsGrid" VerticalAlignment="Top" Width="101" Background="LightBlue">
-            <Image Height="71" HorizontalAlignment="Left" Margin="13,12,0,0" Name="catImage" Stretch="Fill" VerticalAlignment="Top" Width="75" Source="/WpfReferenceDemo;component/Content/Cat.png" />
-            <Image Height="71" HorizontalAlignment="Left" Margin="13,97,0,0" Name="dogImage" Source="/WpfReferenceDemo;component/Content/Dog.png" Stretch="Fill" VerticalAlignment="Top" Width="75" />
+        <Grid Name="catsAndDogsGrid" Width="101" Height="181" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="22,21,0,0"  Background="LightBlue">
+            <Image Name="catImage" Width="75" Height="75" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="13,12,0,0"  Source="/WpfReferenceDemo;component/Content/Cat.png" />
+            <Image Name="dogImage" Width="75"  Height="75" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="13,97,0,0"  Source="/WpfReferenceDemo;component/Content/Dog.png" />
         </Grid>
         <CheckBox Content="A) CatsAndDogsGrid Visible" Height="16" HorizontalAlignment="Left" Margin="129,21,0,0" Name="gridCheckBox" VerticalAlignment="Top" Checked="gridCheckBox_Checked" Unchecked="gridCheckBox_Unchecked" IsChecked="True" />
         <CheckBox Content="B) CatImage Visible" Height="16" HorizontalAlignment="Left" Margin="129,43,0,0" Name="catCheckBox" VerticalAlignment="Top" Checked="catCheckBox_Checked" Unchecked="catCheckBox_Unchecked" IsChecked="True" />
-        <CheckBox Content="C) DogImage Visible" Height="16" HorizontalAlignment="Left" Margin="129,65,0,0" Name="dogCheckBox" VerticalAlignment="Top" Checked="dogCheckBox_Checked" Unchecked="dogCheckBox_Unchecked" IsChecked="True" />
+        <CheckBox Content="C) DogImage Visible" Height="16" HorizontalAlignment="Left" Margin="129,65,0,0" Name="dogCheckBox" VerticalAlignment="Top" Checked="dogCheckBox_Checked" Unchecked="dogCheckBox_Unchecked" IsChecked="False" />
     </Grid>
 </Window>
