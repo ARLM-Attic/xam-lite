@@ -257,6 +257,14 @@ namespace XAMLite
             }
         }
 
+        /// <summary>
+        /// TODO: This currently forces the visibility of all children of the grid to be visible, 
+        /// whenever the grid itself is made visible. Ideally, the visibility of each child can
+        /// be preserved as we toggle the visibility of the parent container.  For example: assume 
+        /// a grid contains a catImage and a dogImage, and the dog is hidden. When we hide and 
+        /// then show the grid, the dog should still be hidden. Currently, both the cat and the 
+        /// dog would be revealed when the parent grid is made visible.
+        /// </summary>
         private void updateChildVisibility()
         {
             for (int i = 0; i < Children.Count; i++)
