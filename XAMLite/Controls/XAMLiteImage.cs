@@ -48,8 +48,16 @@ namespace XAMLite
 
             Debug.Assert( ( SourceName != null), "Must set SourceName property. This is the image file path, minus the file extension." );
             this.texture = Game.Content.Load<Texture2D>( SourceName );
-            this.Width = this.texture.Width;
-            this.Height = this.texture.Height;
+
+            if (this.Width == 0)
+            {
+                this.Width = this.texture.Width;
+            }
+            if (this.Height == 0)
+            {
+                this.Height = this.texture.Height;
+            }
+
             _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
         }
 

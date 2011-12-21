@@ -29,6 +29,9 @@ namespace XAMLiteDemo
         XAMLiteImage dogImage;
         XAMLiteGrid catsAndDogsGrid;
 
+        XAMLiteImage catImage2;
+        XAMLiteImage dogImage2;
+
 
         public Game2 ()
         {
@@ -93,7 +96,6 @@ namespace XAMLiteDemo
             // Initialize all game components. (This includes calling Initialize() on all XAMLite controls, 
             // since they are game components).
             base.Initialize();
-
         }
 
         /// <summary>

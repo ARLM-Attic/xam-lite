@@ -59,10 +59,15 @@ namespace XAMLite
         protected Rectangle _msRect; // mouse position
         protected Rectangle _panel; // rectangle containing the control for collision and drawing
 
-        // prevents each control from perpetually updating each item in its Update method until necessary
+        /// <summary>
+        /// Prevents each control from perpetually updating each item in its Update method until necessary.
+        /// </summary>
         protected bool marginChanged;
 
-        protected Texture2D _pixel; //  fills the space of a control with a color
+        /// <summary>
+        /// Fills the space of a control with a color.
+        /// </summary>
+        protected Texture2D _pixel;
 
         /// <summary>
         /// 
@@ -79,7 +84,11 @@ namespace XAMLite
         /// </summary>
         public virtual string Text { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected Visibility _visible;
+
         /// <summary>
         /// 
         /// </summary>
@@ -98,16 +107,19 @@ namespace XAMLite
         public VerticalAlignment VerticalAlignment { get; set; }
 
         /// <summary>
-        /// 
+        /// Width of the control.
         /// </summary>
         public int Width { get; set; }
 
         /// <summary>
-        /// 
+        /// Height of the control.
         /// </summary>
         public int Height { get; set; }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// 
         private Thickness _margin;
         /// <summary>
         /// 
