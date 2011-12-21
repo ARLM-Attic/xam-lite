@@ -87,7 +87,7 @@ namespace XAMLite
             }
         }
 
-        private bool _firstUpdate;
+        //private bool _firstUpdate;
 
         public XAMLiteLabel(Game game)
             : base(game)

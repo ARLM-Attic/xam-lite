@@ -87,7 +87,7 @@ namespace XAMLite
         /// </summary>
         public Thickness Padding { get; set; }
 
-        Vector2 paddedPosition;
+        //Vector2 paddedPosition;
 
         /// <summary>
         /// 
@@ -123,14 +123,14 @@ namespace XAMLite
                 var color = solidBrush.Color;
                 _backgroundColor = new Color(color.R, color.G, color.B, color.A);
 
-                if ((SolidColorBrush)value == Brushes.Transparent)
-                    transparent = true;
-                else
-                    transparent = false;
+                //if ((SolidColorBrush)value == Brushes.Transparent)
+                //    transparent = true;
+                //else
+                //    transparent = false;
             }
         }
 
-        private bool transparent;
+        //private bool transparent;
 
         /// <summary>
         /// Determines whether the default text within the text box can be changed.
@@ -145,7 +145,7 @@ namespace XAMLite
         /// <summary>
         /// Determines whether the user selected the text box for typing.
         /// </summary>
-        private bool _selected;
+        //private bool _selected;
         private bool initialTyping;
         private bool cursorVisible;
         private bool cursorBlink;

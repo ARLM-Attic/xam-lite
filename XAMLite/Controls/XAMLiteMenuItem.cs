@@ -106,7 +106,7 @@ namespace XAMLite
 
         private Rectangle _strokePanel;
         private Rectangle _subMenuPanel;
-        private bool written;
+        //private bool written;
 
         private bool _pressed;
 
