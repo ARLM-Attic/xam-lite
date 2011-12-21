@@ -17,7 +17,7 @@ namespace XAMLite
     public class XAMLiteImage : XAMLiteControl
     {
         /// <summary>
-        /// 
+        /// The 2-D image.
         /// </summary>
         protected Texture2D texture;
 
@@ -40,7 +40,7 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// Loads the content.
         /// </summary>
         protected override void LoadContent ()
         {
@@ -58,9 +58,14 @@ namespace XAMLite
                 this.Height = this.texture.Height;
             }
 
+            // Sets the size and location of the image.
             _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
         }
 
+        /// <summary>
+        /// Updates the XAMLiteImage.
+        /// </summary>
+        /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -73,7 +78,7 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// Draws the XAMLiteImage to the screen according to its size and opacity.
         /// </summary>
         /// <param name="gameTime"></param>
         public override void Draw ( GameTime gameTime )
@@ -94,5 +99,4 @@ namespace XAMLite
             }
         }
     }
-
 }

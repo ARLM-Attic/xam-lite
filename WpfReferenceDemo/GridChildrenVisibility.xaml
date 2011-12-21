@@ -4,7 +4,7 @@
         Title="GridChildrenVisibility" Height="365" Width="715">
     <Grid>
         <Grid Name="catsAndDogsGrid" Width="101" Height="181" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="22,21,0,0"  Background="LightBlue">
-            <Image Name="catImage" Width="75" Height="75" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="13,12,0,0"  Source="/WpfReferenceDemo;component/Content/Cat.png" />
+            <Image Name="catImage" Opacity=".5" Width="75" Height="75" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="13,12,0,0"  Source="/WpfReferenceDemo;component/Content/Cat.png" />
             <Image Name="dogImage" Width="75"  Height="75" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="13,97,0,0"  Source="/WpfReferenceDemo;component/Content/Dog.png" />
         </Grid>
         <CheckBox Content="A) CatsAndDogsGrid Visible" Height="16" HorizontalAlignment="Left" Margin="129,21,0,0" Name="gridCheckBox" VerticalAlignment="Top" Checked="gridCheckBox_Checked" Unchecked="gridCheckBox_Unchecked" IsChecked="True" />

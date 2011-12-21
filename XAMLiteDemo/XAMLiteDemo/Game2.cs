@@ -70,6 +70,7 @@ namespace XAMLiteDemo
             catsAndDogsGrid.Height = 181;
             catsAndDogsGrid.HorizontalAlignment = HorizontalAlignment.Left;
             catsAndDogsGrid.VerticalAlignment = VerticalAlignment.Top;
+            catsAndDogsGrid.Opacity = 0.25;
             catsAndDogsGrid.Background = Brushes.LightBlue;
             catsAndDogsGrid.Margin = new Thickness(22, 21, 0, 0);
             Components.Add(catsAndDogsGrid);
