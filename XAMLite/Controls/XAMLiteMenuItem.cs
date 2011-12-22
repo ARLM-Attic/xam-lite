@@ -222,7 +222,7 @@ namespace XAMLite
                 }
             }
 
-            if (!_allSubMenuTitles.Contains(this.Header) && this.Visible == Visibility.Visible && !_allMenuTitles.Contains(this.Header))
+            if (!_allSubMenuTitles.Contains(this.Header) && !_allMenuTitles.Contains(this.Header))
             {
                 _menuVisibilityCount = 0;
             }
