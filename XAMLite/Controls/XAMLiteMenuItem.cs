@@ -43,12 +43,13 @@ namespace XAMLite
         }
 
         private FontFamily _fontFamily;
-        private bool fontFamilyChanged; // used in the Update() method
+
+        private bool _fontFamilyChanged; // used in the Update() method
 
         public FontFamily FontFamily
         {
             get { return _fontFamily; }
-            set { _fontFamily = value; fontFamilyChanged = true; }
+            set { _fontFamily = value; _fontFamilyChanged = true; }
         }
 
         // character spacing
@@ -89,18 +90,18 @@ namespace XAMLite
                 _backgroundColor = new Color(color.R, color.G, color.B, color.A);
 
                 if ((SolidColorBrush)value == Brushes.Transparent)
-                    transparent = true;
+                    _transparent = true;
                 else
-                    transparent = false;
+                    _transparent = false;
 
             }
         }
 
         public Thickness Padding;
 
-        private bool transparent;
+        private bool _transparent;
 
-        BrushConverter bc;
+        private BrushConverter _bc;
 
         private Color _fill;
         private Color _stroke;
@@ -156,15 +157,15 @@ namespace XAMLite
 
         protected bool subMenuOpened;
 
-        protected bool _alreadyAdded;
+        protected bool alreadyAdded;
 
-        protected bool _setSubMenu;
+        protected bool setSubMenu;
 
         protected bool adjusted;
 
         protected int longestWidth;
 
-        private Vector2 textPos;
+        private Vector2 _textPos;
         /// <summary>
         /// This is fired when a menu item is closed and it is not contained in the _allSubMenuItems List,
         /// designating that all menus should be closed.
@@ -176,7 +177,7 @@ namespace XAMLite
         {
 
             this._foregroundColor = Color.White;
-            bc = new System.Windows.Media.BrushConverter();
+            _bc = new System.Windows.Media.BrushConverter();
             _stroke = Color.Black;
             _strokeThickness = 2;
             _strokePanel = new Rectangle();
@@ -242,9 +243,9 @@ namespace XAMLite
         {
             base.Update(gameTime);
 
-            if (fontFamilyChanged)
+            if (_fontFamilyChanged)
             {
-                fontFamilyChanged = false;
+                _fontFamilyChanged = false;
                 UpdateFontFamily(_fontFamily);
                 this.spriteFont.Spacing = Spacing;
                 RecalculateWidthAndHeight(this.Header);
@@ -257,10 +258,10 @@ namespace XAMLite
                     _panel = new Rectangle((int)this.Position.X - (int)this.Padding.Left, (int)this.Position.Y, this.Width, this.Height);
                 else
                     _panel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20, (int)this.Position.Y, this.Width, this.Height);
-                textPos = new Vector2(this.Position.X + 20, this.Position.Y); ;
+                _textPos = new Vector2(this.Position.X + 20, this.Position.Y); ;
             }
 
-            if (!_setSubMenu)
+            if (!setSubMenu)
             {
                 setSubMenuItems(gameTime);
             }
@@ -270,7 +271,7 @@ namespace XAMLite
                 // highlights the hovered menu item.
                 if (_mouseEnter || (_subMenuPanel.Contains(_msRect) && this.Items[0].Visible == Visibility.Visible))
                 {
-                    this.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cccccc");
+                    this.Background = (System.Windows.Media.Brush)_bc.ConvertFrom("#cccccc");
                 }
                 else
                 {
@@ -291,9 +292,9 @@ namespace XAMLite
                         Items[i].Visible = Visibility.Visible;
                     }
 
-                    if (!_alreadyAdded)
+                    if (!alreadyAdded)
                     {
-                        _alreadyAdded = true;
+                        alreadyAdded = true;
                         if (_subMenuOpen.ContainsKey(this.Header))
                         {
                             _subMenuOpen.Remove(this.Header);
@@ -314,7 +315,7 @@ namespace XAMLite
                     else if (Items.Count > 0 && !_subMenuPanel.Contains(_msRect))
                     {
                         subMenuOpened = false;
-                        _alreadyAdded = false;
+                        alreadyAdded = false;
                         if (_subMenuOpen.ContainsKey(this.Header))
                         {
                             _subMenuOpen.Remove(this.Header);
@@ -345,7 +346,7 @@ namespace XAMLite
             if (Visible == Visibility.Visible)
             {
                 spriteBatch.Begin();
-                if (!transparent)
+                if (!_transparent)
                 {
                     if (_allMenuTitles.Contains(this.Header))
                         spriteBatch.Draw(_pixel, _panel, this._backgroundColor);
@@ -377,7 +378,7 @@ namespace XAMLite
                 }
 
                 if (!_allMenuTitles.Contains(this.Header))
-                    spriteBatch.DrawString(this.spriteFont, Text, textPos, this._foregroundColor);
+                    spriteBatch.DrawString(this.spriteFont, Text, _textPos, this._foregroundColor);
                 else
                     spriteBatch.DrawString(this.spriteFont, Text, Position, this._foregroundColor);
 
@@ -397,7 +398,7 @@ namespace XAMLite
         /// <param name></param>
         private void setSubMenuItems(GameTime gameTime)
         {
-            _setSubMenu = true;
+            setSubMenu = true;
 
             if (Items.Count > 0)
             {
