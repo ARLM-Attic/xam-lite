@@ -287,6 +287,12 @@ namespace XAMLite
         protected bool firstUpdate;
 
         /// <summary>
+        /// Set to true when all menus should be closed, ie., a button click on a menu item that is
+        /// not contained in the _allSubMenuTitles list.
+        /// </summary>
+        protected bool closeAllMenus;
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="game"></param>
@@ -317,6 +323,8 @@ namespace XAMLite
 
             //
             base.Initialize();
+
+            
 
         }
 
@@ -408,91 +416,6 @@ namespace XAMLite
                     OnMouseUp();
                 }
             }
-
-            /*if (!_mouseUp && ms.LeftButton == ButtonState.Released)
-            {
-                _mouseUp = true;
-                _mouseDown = false;
-            }
-
-
-            _msRect = new Rectangle(ms.X, ms.Y, 1, 1);
-
-            if (IsEnabled && this.Visible == Visibility.Visible)
-            {
-                if (_panel.Contains(_msRect))
-                {
-                    if (!_mouseEnter)
-                    {
-                        _mouseEnter = true;
-                        OnMouseEnter();
-                    }
-
-                    if (_mouseDown)
-                    {
-                       // OnMouseDown();
-                    }
-                }
-                else
-                {
-                    if (_mouseEnter)
-                    {
-                        _mouseEnter = false;
-                        OnMouseLeave();
-                    }
-
-                    if (_mouseUp)
-                    {
-                        OnMouseUp();
-                    }
-                }
-            }*/
-
-            /*ms = Microsoft.Xna.Framework.Input.Mouse.GetState();
-            if (!_mouseDown && ms.LeftButton == ButtonState.Pressed)
-            {
-                _mouseDown = true;
-                _mouseUp = false;
-            }
-
-            if (!_mouseUp && ms.LeftButton == ButtonState.Released)
-            {
-                _mouseUp = true;
-                _mouseDown = false;
-            }
-
-
-            _msRect = new Rectangle(ms.X, ms.Y, 1, 1);
-
-            if (IsEnabled && this.Visible == Visibility.Visible)
-            {
-                if (_panel.Contains(_msRect))
-                {
-                    if (!_mouseEnter)
-                    {
-                        _mouseEnter = true;
-                        OnMouseEnter();
-                    }
-
-                    if (_mouseDown)
-                    {
-                        OnMouseDown();
-                    }
-                }
-                else
-                {
-                    if (_mouseEnter)
-                    {
-                        _mouseEnter = false;
-                        OnMouseLeave();
-                    }
-
-                    if (_mouseUp)
-                    {
-                        OnMouseUp();
-                    }
-                }
-            }*/
         }
 
         protected void UpdateFontFamily(FontFamily _fontFamily)

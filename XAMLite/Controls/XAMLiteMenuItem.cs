@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Windows.Media;
 using Color = Microsoft.Xna.Framework.Color;
+using Microsoft.Xna.Framework.Input;
 
 namespace XAMLite
 {
@@ -164,6 +165,11 @@ namespace XAMLite
         protected int longestWidth;
 
         private Vector2 textPos;
+        /// <summary>
+        /// This is fired when a menu item is closed and it is not contained in the _allSubMenuItems List,
+        /// designating that all menus should be closed.
+        /// </summary>
+
 
         public XAMLiteMenuItem(Game game)
             : base(game)
@@ -185,6 +191,8 @@ namespace XAMLite
         public override void Initialize()
         {
             base.Initialize();
+
+            MouseDown += new System.Windows.Input.MouseButtonEventHandler(XAMLiteMenuItem_MouseDown);
         }
 
         /// <summary>
@@ -197,6 +205,34 @@ namespace XAMLite
             this.Spacing = 2;
             RecalculateWidthAndHeight(this.Header);
             _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+        }
+
+        void XAMLiteMenuItem_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            // set bool to toggle check marks if IsCheckable on mouse down.
+            if (IsCheckable)
+            {
+                if (IsChecked)
+                {
+                    IsChecked = false;
+                }
+                else
+                {
+                    IsChecked = true;
+                }
+            }
+
+            if (!_allSubMenuTitles.Contains(this.Header) && this.Visible == Visibility.Visible && !_allMenuTitles.Contains(this.Header))
+            {
+                _menuVisibilityCount = 0;
+            }
+
+            // HACK: When a tutorial is selected, all Menu Title Headers are erased, so currently 
+            // they are being manually added again.
+            if (this.Header.Contains("Tutorial") || this.Header.Contains("Toggle Particle Counter"))
+            {
+                ResetMenuItems();
+            }
         }
 
         /// <summary>
@@ -245,26 +281,6 @@ namespace XAMLite
                     }
                 }
 
-                // set bool to toggle check marks if IsCheckable on mouse down.
-                if (IsCheckable && _mouseDown && _panel.Contains(_msRect))
-                {
-                    if (IsChecked)
-                    {
-                        IsChecked = false;
-                    }
-                    else
-                    {
-                        IsChecked = true;
-                    }
-                }
-
-                // HACK: When a tutorial is selected, all Menu Title Headers are erased, so currently 
-                // they are being manually added again.
-                if (_mouseDown && _panel.Contains(_msRect) && (this.Header.Contains("Tutorial") || this.Header.Contains("Toggle Particle Counter")))
-                {
-                    ResetMenuItems();
-                }
-
                 // opens a sub-menu panel, if it exists.
                 if (_mouseEnter && Items.Count > 0 && this.Visible == Visibility.Visible)
                 {
@@ -308,11 +324,14 @@ namespace XAMLite
                 }
 
                 // closes sub-menu panel after a menu item has been selected.
-                if (_mouseDown && _subMenuPanel.Contains(_msRect))
+                if (ms.LeftButton == ButtonState.Pressed) 
                 {
-                    subMenuOpened = false;
-                    _subMenuOpen.Remove(this.Header);
-                    _subMenuOpen.Add(this.Header, false);
+                    if (_subMenuPanel.Contains(_msRect))
+                    {
+                        subMenuOpened = false;
+                        _subMenuOpen.Remove(this.Header);
+                        _subMenuOpen.Add(this.Header, false);
+                    }
                 }
             }
         }

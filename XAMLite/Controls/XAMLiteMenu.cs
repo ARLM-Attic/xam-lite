@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Windows.Media;
 using Color = Microsoft.Xna.Framework.Color;
+using Microsoft.Xna.Framework.Input;
 
 namespace XAMLite
 {
@@ -98,7 +99,7 @@ namespace XAMLite
 
             if (IsEnabled)
             {
-                if(!_panel.Contains(_msRect) && !_menuItemPanel.Contains(_msRect))
+                if((!_panel.Contains(_msRect) && !_menuItemPanel.Contains(_msRect)))
                 {
                     closeMenu();
                 }
@@ -120,7 +121,8 @@ namespace XAMLite
 
                 else if (_menuVisibilityCount == 0)
                 {
-                    _menuSelected = false;
+                    closeMenu();
+
                 }
 
                 if (_fullMenuIsVisible)
@@ -139,6 +141,9 @@ namespace XAMLite
         {
             if (!_subMenuOpen.ContainsValue(true))
             {
+                _menuSelected = false;
+                _menuVisibilityCounted = false;
+
                 for (int i = 1; i < Items.Count; i++)
                 {
                     Items[i].Visible = Visibility.Hidden;
@@ -195,7 +200,6 @@ namespace XAMLite
                     _allSubMenuTitles.Add(Items[i].Header);
                     _subMenuOpen.Add(Items[i].Header, false);
                 }
-
             }
 
             this.Width = Items[0].Width + 20;
@@ -274,6 +278,11 @@ namespace XAMLite
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void XAMLiteMenu_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (Items[1] != null && Items[1].Visible == Visibility.Hidden)
@@ -285,6 +294,6 @@ namespace XAMLite
             {
                 closeMenu();
             }
-        }        
+        }
     }
 }
