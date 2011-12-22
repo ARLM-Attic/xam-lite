@@ -106,9 +106,6 @@ namespace XAMLite
 
         private Rectangle _strokePanel;
         private Rectangle _subMenuPanel;
-        //private bool written;
-
-        private bool _pressed;
 
         // If set, the menu item has the ability to be checked.
         public bool IsCheckable;
@@ -251,19 +248,14 @@ namespace XAMLite
                 // set bool to toggle check marks if IsCheckable on mouse down.
                 if (IsCheckable && _mouseDown && _panel.Contains(_msRect))
                 {
-                    if (!_pressed)
+                    if (IsChecked)
                     {
-                        _pressed = true;
-                        if (IsChecked)
-                            IsChecked = false;
-                        else
-                            IsChecked = true;
+                        IsChecked = false;
                     }
-                }
-                if (_pressed)
-                //if (_mouseUp && _pressed)
-                {
-                    _pressed = false;
+                    else
+                    {
+                        IsChecked = true;
+                    }
                 }
 
                 // HACK: When a tutorial is selected, all Menu Title Headers are erased, so currently 

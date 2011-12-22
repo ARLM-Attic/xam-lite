@@ -88,32 +88,6 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void XAMLiteMenu_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            if (_menuSelected)
-            {
-                openMenu();
-            }
-        }
-
-        void XAMLiteMenu_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            if (Items[1] != null && Items[1].Visible == Visibility.Hidden)
-            {
-                openMenu();
-                _menuSelected = true;
-            }
-            else
-            {
-                closeMenu();
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -287,6 +261,30 @@ namespace XAMLite
             _menuItemPanel = new Rectangle((int)this.Position.X, (int)this.Position.Y + Items[0].Height, longestWidth, Items[0].Height * (Items.Count - 1));
         }
 
-        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void XAMLiteMenu_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (_menuSelected)
+            {
+                openMenu();
+            }
+        }
+
+        void XAMLiteMenu_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (Items[1] != null && Items[1].Visible == Visibility.Hidden)
+            {
+                openMenu();
+                _menuSelected = true;
+            }
+            else
+            {
+                closeMenu();
+            }
+        }        
     }
 }
