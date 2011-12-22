@@ -47,8 +47,8 @@ namespace XAMLite
 
         private bool _setMenuItems;
 
-        private bool _mouseReleased;
-        private bool _closeMenu;
+       // private bool _mouseReleased;
+        //private bool _closeMenu;
 
         private bool _fullMenuIsVisible;
         private bool _menuVisibilityCounted;
@@ -63,7 +63,18 @@ namespace XAMLite
             Items = new List<XAMLiteMenuItem>();
             bc = new System.Windows.Media.BrushConverter();
             longestWidth = 0;
-            _mouseReleased = true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void Initialize()
+        {
+            base.Initialize();
+
+            MouseDown += new System.Windows.Input.MouseButtonEventHandler(XAMLiteMenu_MouseDown);
+
+            MouseEnter += new System.Windows.Input.MouseEventHandler(XAMLiteMenu_MouseEnter);
         }
 
         /// <summary>
@@ -72,6 +83,32 @@ namespace XAMLite
         protected override void LoadContent()
         {
             base.LoadContent();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void XAMLiteMenu_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (_menuSelected)
+            {
+                openMenu();
+            }
+        }
+
+        void XAMLiteMenu_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (Items[1] != null && Items[1].Visible == Visibility.Hidden)
+            {
+                openMenu();
+                _menuSelected = true;
+            }
+            else
+            {
+                closeMenu();
+            }
         }
 
         /// <summary>
@@ -87,50 +124,9 @@ namespace XAMLite
 
             if (IsEnabled)
             {
-                if (_closeMenu)
-                    closeMenu();
-
-                // Sets visibility to hidden for menu items when the mouse is not over the menu.
-                if (_panel.Contains(_msRect) || (_menuItemPanel.Contains(_msRect) && _fullMenuIsVisible))
-                {
-                    if (_menuSelected)
-                    {
-                        openMenu();
-                    }
-                }
-                else
+                if(!_panel.Contains(_msRect) && !_menuItemPanel.Contains(_msRect))
                 {
                     closeMenu();
-                }
-
-                // handles mouse clicks on the head of the menu, making the menu visible or
-                // hidden.
-                if (_mouseDown && _panel.Contains(_msRect) && _mouseReleased)
-                {
-                    _mouseReleased = false;
-
-                    if (Items[1] != null && Items[1].Visible == Visibility.Hidden)
-                    {
-                        openMenu();
-                        _menuSelected = true;
-                    }
-                    else
-                    {
-                        closeMenu();
-                    }
-                }
-
-                // notifies that a full click has occurred and allows the menu to be selected again, thus making
-                // it visibile or hidden.
-                if (!_mouseReleased && _mouseUp)
-                    _mouseReleased = true;
-
-                // Notifies that the menu must be closed.  Visibility not immediately changed here because it would
-                // cause XAMLiteControl to believe that a hidden menu was selected on _mouseDown, thus changing the
-                // mouse down event to false before it is fired.
-                if (_mouseDown && _menuItemPanel.Contains(_msRect))
-                {
-                    _closeMenu = true;
                 }
 
                 // updating the menu visibility count.  If zero, the user must make a mouse down event
@@ -153,8 +149,6 @@ namespace XAMLite
                     _menuSelected = false;
                 }
 
-
-
                 if (_fullMenuIsVisible)
                 {
                     Items[0].Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cccccc");
@@ -171,7 +165,6 @@ namespace XAMLite
         {
             if (!_subMenuOpen.ContainsValue(true))
             {
-                _closeMenu = false;
                 for (int i = 1; i < Items.Count; i++)
                 {
                     Items[i].Visible = Visibility.Hidden;
@@ -268,7 +261,7 @@ namespace XAMLite
             // setting basic parameters of the menu items
             for (int i = 0; i < Items.Count; i++)
             {
-                if(i == 0)
+                if (i == 0)
                     Items[i].Padding = new Thickness(10, 0, 10, 0);
                 else
                     Items[i].Padding = new Thickness(30, 0, 10, 0);
@@ -283,7 +276,7 @@ namespace XAMLite
                 else
                 {
                     Items[i].Margin = new Thickness(this.Margin.Left + Items[0].Padding.Left, (this.Margin.Top + Items[i].Height * i) + Items[0].Padding.Top, Items[i].Margin.Right + Items[0].Padding.Right, this.Margin.Bottom + Items[0].Padding.Bottom);
-                    if(!_allMenuTitles.Contains(Items[i].Header))
+                    if (!_allMenuTitles.Contains(Items[i].Header))
                         Items[i].Background = Brushes.Black;
                     Items[i].Visible = Visibility.Hidden;
                 }
@@ -291,7 +284,9 @@ namespace XAMLite
 
             // creating the rectangles for determining mouse activities
             _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, Items[0].Height);
-           _menuItemPanel = new Rectangle((int)this.Position.X, (int)this.Position.Y + Items[0].Height, longestWidth, Items[0].Height * (Items.Count - 1));
+            _menuItemPanel = new Rectangle((int)this.Position.X, (int)this.Position.Y + Items[0].Height, longestWidth, Items[0].Height * (Items.Count - 1));
         }
+
+        
     }
 }

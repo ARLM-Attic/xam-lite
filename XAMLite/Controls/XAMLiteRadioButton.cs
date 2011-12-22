@@ -163,7 +163,8 @@ namespace XAMLite
                 }
                 this.IsChecked = true;
             }
-            else if (_mouseUp && _selected)
+            else if (_selected)
+            //else if (_mouseUp && _selected)
             {
                 _selected = false;
             }

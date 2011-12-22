@@ -20,7 +20,7 @@ namespace XAMLite
         protected Microsoft.Xna.Framework.Point mouseLoc;
 
         protected bool _mouseDown;
-        protected bool _mouseUp;
+        //protected bool _mouseUp;
         protected bool _mouseEnter;
         protected bool _mouseLeave;
         protected bool _keyDown;
@@ -92,7 +92,7 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        new public Visibility Visible { get { return _visible; } set { _visible = value;  _visibilityChanged = true; } }
+        new public Visibility Visible { get { return _visible; } set { _visible = value; _visibilityChanged = true; } }
 
         protected bool _visibilityChanged;
 
@@ -238,7 +238,7 @@ namespace XAMLite
         /// 
         /// </summary>
         protected Viewport viewport;
- 
+
         /// <summary>
         /// List of every radio button in the UI.
         /// </summary>
@@ -360,8 +360,6 @@ namespace XAMLite
             this.verdana60SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana60");
             this.verdana60BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana60Bold");
             this.spriteFont = courier10SpriteFont;
-
-            
         }
 
         /// <summary>
@@ -373,6 +371,84 @@ namespace XAMLite
             base.Update(gameTime);
 
             ms = Microsoft.Xna.Framework.Input.Mouse.GetState();
+            _msRect = new Rectangle(ms.X, ms.Y, 1, 1);
+            if (IsEnabled && this.Visible == Visibility.Visible)
+            {
+                //ms = Microsoft.Xna.Framework.Input.Mouse.GetState();
+                //_msRect = new Rectangle(ms.X, ms.Y, 1, 1);
+
+                if (_panel.Contains(_msRect))
+                {
+                    if (!_mouseEnter)
+                    {
+                        _mouseEnter = true;
+                        OnMouseEnter();
+                    }
+                }
+                else
+                {
+                    if (_mouseEnter)
+                    {
+                        _mouseEnter = false;
+                        OnMouseLeave();
+                    }
+                }
+
+                if (!_mouseDown && ms.LeftButton == ButtonState.Pressed && _panel.Contains(_msRect))
+                {
+                    _mouseDown = true;
+                    OnMouseDown();
+
+                    //_mouseUp = false;
+                }
+
+                else if (_mouseDown && ms.LeftButton == ButtonState.Released && _panel.Contains(_msRect))
+                {
+                    _mouseDown = false;
+                    OnMouseUp();
+                }
+            }
+
+            /*if (!_mouseUp && ms.LeftButton == ButtonState.Released)
+            {
+                _mouseUp = true;
+                _mouseDown = false;
+            }
+
+
+            _msRect = new Rectangle(ms.X, ms.Y, 1, 1);
+
+            if (IsEnabled && this.Visible == Visibility.Visible)
+            {
+                if (_panel.Contains(_msRect))
+                {
+                    if (!_mouseEnter)
+                    {
+                        _mouseEnter = true;
+                        OnMouseEnter();
+                    }
+
+                    if (_mouseDown)
+                    {
+                       // OnMouseDown();
+                    }
+                }
+                else
+                {
+                    if (_mouseEnter)
+                    {
+                        _mouseEnter = false;
+                        OnMouseLeave();
+                    }
+
+                    if (_mouseUp)
+                    {
+                        OnMouseUp();
+                    }
+                }
+            }*/
+
+            /*ms = Microsoft.Xna.Framework.Input.Mouse.GetState();
             if (!_mouseDown && ms.LeftButton == ButtonState.Pressed)
             {
                 _mouseDown = true;
@@ -416,7 +492,7 @@ namespace XAMLite
                         OnMouseUp();
                     }
                 }
-            }
+            }*/
         }
 
         protected void UpdateFontFamily(FontFamily _fontFamily)
@@ -588,7 +664,7 @@ namespace XAMLite
                 case Visibility.Collapsed:
                     Visible = Visibility.Visible;
                     break;
-     
+
             }
         }
 

@@ -13,6 +13,9 @@ namespace XAMLite
 {
     public class XAMLiteCheckBox : XAMLiteControl
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsChecked { get; set; }
 
         private Rectangle _checkBox;
@@ -45,6 +48,9 @@ namespace XAMLite
         private FontFamily _fontFamily;
         private bool fontFamilyChanged; // used in the Update() method
 
+        /// <summary>
+        /// 
+        /// </summary>
         public FontFamily FontFamily
         {
             get { return _fontFamily; }
@@ -71,13 +77,8 @@ namespace XAMLite
             set;
         }
 
-
-        //public string GroupName { get; set; }
-
         private Texture2D _checkBoxUnchecked;
         private Texture2D _checkBoxChecked;
-
-        private bool _checked;
 
         /// <summary>
         /// 
@@ -97,6 +98,10 @@ namespace XAMLite
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="game"></param>
         public XAMLiteCheckBox(Game game)
             : base(game)
         {
@@ -111,10 +116,14 @@ namespace XAMLite
             this.Spacing = 2;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override void Initialize()
         {
             base.Initialize();
 
+            MouseDown += new System.Windows.Input.MouseButtonEventHandler(XAMLiteCheckBox_MouseDown);
         }
 
         /// <summary>
@@ -134,6 +143,10 @@ namespace XAMLite
             _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, _checkBoxChecked.Width + this.Width + 10, _checkBoxChecked.Height + this.Height);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -149,24 +162,6 @@ namespace XAMLite
             {
                 fontFamilyChanged = false;
                 UpdateFontFamily(_fontFamily);
-            }
-
-            if (!_checked && _mouseDown && _panel.Contains(_msRect) && IsEnabled)
-            {
-                if (!this.IsChecked)
-                {
-                    _checked = true;
-                    this.IsChecked = true;
-                }
-                else
-                {
-                    _checked = true;
-                    this.IsChecked = false;  
-                }
-            }
-            else if (_mouseUp && _panel.Contains(_msRect) && IsEnabled)
-            {
-                _checked = false;
             }
         }
 
@@ -199,6 +194,26 @@ namespace XAMLite
                 }
 
                 this.spriteBatch.End();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void XAMLiteCheckBox_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (IsEnabled)
+            {
+                if (!this.IsChecked)
+                {
+                    this.IsChecked = true;
+                }
+                else
+                {
+                    this.IsChecked = false;
+                }
             }
         }
     }

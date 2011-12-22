@@ -126,7 +126,7 @@ namespace XAMLite
                 var solidBrush = (SolidColorBrush)value;
                 var color = solidBrush.Color;
                 _fill = new Color(color.R, color.G, color.B, color.A);
-                
+
             }
         }
 
@@ -171,7 +171,7 @@ namespace XAMLite
         public XAMLiteMenuItem(Game game)
             : base(game)
         {
-            
+
             this._foregroundColor = Color.White;
             bc = new System.Windows.Media.BrushConverter();
             _stroke = Color.Black;
@@ -180,6 +180,14 @@ namespace XAMLite
             _subMenuPanel = new Rectangle();
             Items = new List<XAMLiteMenuItem>();
             longestWidth = 0;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void Initialize()
+        {
+            base.Initialize();
         }
 
         /// <summary>
@@ -212,7 +220,7 @@ namespace XAMLite
             if (marginChanged)
             {
                 marginChanged = false;
-                if(_allMenuTitles.Contains(this.Header))
+                if (_allMenuTitles.Contains(this.Header))
                     _panel = new Rectangle((int)this.Position.X - (int)this.Padding.Left, (int)this.Position.Y, this.Width, this.Height);
                 else
                     _panel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20, (int)this.Position.Y, this.Width, this.Height);
@@ -252,8 +260,8 @@ namespace XAMLite
                             IsChecked = true;
                     }
                 }
-
-                if (_mouseUp && _pressed)
+                if (_pressed)
+                //if (_mouseUp && _pressed)
                 {
                     _pressed = false;
                 }
@@ -335,16 +343,16 @@ namespace XAMLite
                         Rectangle ghostRect = new Rectangle(_panel.X + 5, _panel.Y + 5, _panel.Width, _panel.Height);
                         spriteBatch.Draw(_pixel, ghostRect, (Color.Black * 0.45f));
                         spriteBatch.Draw(_pixel, _panel, this._backgroundColor);
-                        _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20, 
+                        _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20,
                             (int)this.Position.Y, this.Width, _strokeThickness);
                         this.spriteBatch.Draw(_pixel, _strokePanel, _stroke);
-                        _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20, 
+                        _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20,
                             ((int)this.Position.Y + this.Height - _strokeThickness), this.Width, _strokeThickness);
                         this.spriteBatch.Draw(_pixel, _strokePanel, _stroke);
-                        _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20, 
+                        _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20,
                             (int)this.Position.Y, _strokeThickness, this.Height);
                         this.spriteBatch.Draw(_pixel, _strokePanel, _stroke);
-                        _strokePanel = new Rectangle(((int)this.Position.X - (int)this.Padding.Left + 
+                        _strokePanel = new Rectangle(((int)this.Position.X - (int)this.Padding.Left +
                             this.Width + 20 - _strokeThickness), (int)this.Position.Y, _strokeThickness, this.Height);
                         this.spriteBatch.Draw(_pixel, _strokePanel, _stroke);
                     }
@@ -357,7 +365,7 @@ namespace XAMLite
                     }
                 }
 
-                if(!_allMenuTitles.Contains(this.Header))
+                if (!_allMenuTitles.Contains(this.Header))
                     spriteBatch.DrawString(this.spriteFont, Text, textPos, this._foregroundColor);
                 else
                     spriteBatch.DrawString(this.spriteFont, Text, Position, this._foregroundColor);
@@ -367,7 +375,7 @@ namespace XAMLite
                     checkMarkRect = new Rectangle((int)this.Position.X - 5, (int)this.Position.Y, checkMark.Width, checkMark.Height);
                     this.spriteBatch.Draw(checkMark, checkMarkRect, Color.White);
                 }
-                
+
                 spriteBatch.End();
             }
         }
