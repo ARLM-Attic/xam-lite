@@ -199,11 +199,8 @@ namespace XAMLite
 
                 else
                 {
-                    float opacity = (float)Opacity - 0.5f;
-                    if (opacity < 0f)
-                    {
-                        opacity = 0f;
-                    }
+                    float opacity = (float)Opacity * 0.5f;
+
                     spriteBatch.DrawString(this.spriteFont, Text, _textPos, (this._foregroundColor * opacity));
                     this.spriteBatch.Draw(this._radioUnselected, radio, (Color.White * opacity));
                 }

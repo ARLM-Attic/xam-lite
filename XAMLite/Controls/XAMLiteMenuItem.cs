@@ -352,11 +352,7 @@ namespace XAMLite
                         spriteBatch.Draw(_pixel, _panel, this._backgroundColor);
                     else
                     {
-                        float opacity = (float)Opacity - 0.45f;
-                        if (opacity < 0f)
-                        {
-                            opacity = 0f;
-                        }
+                        float opacity = (float)Opacity * 0.45f;
 
                         Rectangle ghostRect = new Rectangle(_panel.X + 5, _panel.Y + 5, _panel.Width, _panel.Height);
                         spriteBatch.Draw(_pixel, ghostRect, (Color.Black * opacity));
