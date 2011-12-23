@@ -87,8 +87,11 @@ namespace XAMLite
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
             if (!childrenLoaded)
+            {
                 loadChildren(gameTime);
+            }
 
             if (marginChanged)
             {
@@ -148,10 +151,9 @@ namespace XAMLite
                 _originalChildMargin[i] = new Thickness(Children[i].Margin.Left, Children[i].Margin.Top,
                     Children[i].Margin.Right, Children[i].Margin.Bottom);
             }
-            
+
             modifyChildren();
             recordChildVisibility();
-            updateChildVisibility();
 
             // Add the child component to the game with the modified parameters.
             for (int i = 0; i < Children.Count; i++)
@@ -290,7 +292,7 @@ namespace XAMLite
         {
             if (this.Visible == Visibility.Hidden)
             {
-                // before making the child visible, record its lateset visibility state.
+                // before making the child hidden, record its lateset visibility state.
                 recordChildVisibility();
 
                 // change the child visibility to hidden, like the grid.
