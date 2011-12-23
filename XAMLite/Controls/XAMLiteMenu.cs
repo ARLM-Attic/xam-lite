@@ -96,7 +96,7 @@ namespace XAMLite
 
             if (IsEnabled)
             {
-                if((!_panel.Contains(_msRect) && !_menuItemPanel.Contains(_msRect)))
+                if((!panel.Contains(msRect) && !_menuItemPanel.Contains(msRect)))
                 {
                     closeMenu();
                 }
@@ -171,7 +171,7 @@ namespace XAMLite
                 if (!_transparent)
                 {
                     spriteBatch.Begin();
-                    spriteBatch.Draw(_pixel, _panel, (_backgroundColor * (float)Opacity));
+                    spriteBatch.Draw(pixel, panel, (_backgroundColor * (float)Opacity));
                     spriteBatch.End();
                 }
             }
@@ -257,7 +257,7 @@ namespace XAMLite
             }
 
             // creating the rectangles for determining mouse activities
-            _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, Items[0].Height);
+            panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, Items[0].Height);
             _menuItemPanel = new Rectangle((int)this.Position.X, (int)this.Position.Y + Items[0].Height, longestWidth, Items[0].Height * (Items.Count - 1));
         }
 

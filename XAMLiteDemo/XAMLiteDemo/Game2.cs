@@ -70,7 +70,7 @@ namespace XAMLiteDemo
             catsAndDogsGrid.Height = 181;
             catsAndDogsGrid.HorizontalAlignment = HorizontalAlignment.Left;
             catsAndDogsGrid.VerticalAlignment = VerticalAlignment.Top;
-            catsAndDogsGrid.Opacity = 0.25;
+            catsAndDogsGrid.Opacity = 0.5;
             catsAndDogsGrid.Background = Brushes.LightBlue;
             catsAndDogsGrid.Visible = Visibility.Hidden;
             catsAndDogsGrid.Margin = new Thickness(22, 21, 0, 0);
@@ -83,6 +83,7 @@ namespace XAMLiteDemo
             catImage.Height = 75;
             catImage.VerticalAlignment = VerticalAlignment.Top;
             catImage.HorizontalAlignment = HorizontalAlignment.Left;
+            catImage.Opacity = 0.3;
             catImage.Margin = new Thickness(13, 12, 0, 0);
             catImage.Visible = Visibility.Visible;
             catsAndDogsGrid.Children.Add(catImage);

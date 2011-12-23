@@ -13,8 +13,15 @@ namespace XAMLite
 {
     public class XAMLiteGrid : XAMLiteControl
     {
+        /// <summary>
+        /// Maintains a list of all controls contained within the grid.
+        /// </summary>
         public List<XAMLiteControl> Children { get; set; }
-        private bool childrenLoaded;
+
+        /// <summary>
+        /// Used to determine whether the child has been loaded into the grid.
+        /// </summary>
+        private bool _childrenLoaded;
 
         private Thickness _originalGridMargin;
 
@@ -24,7 +31,16 @@ namespace XAMLite
         private bool[] _isHorStretched;
         private bool[] _isVerStretched;
 
+        /// <summary>
+        /// Holds a record of the child's natural visibility prior to being affected by the grid.
+        /// </summary>
         private bool[] _childVisibility;
+
+        /// <summary>
+        /// Holds a record of the child's natural opacity and is used to modify its opacity according to
+        /// the opacity of the grid (grid opacity * child opacity).
+        /// </summary>
+        private float[] _childOpacity;
 
         /// <summary>
         /// 
@@ -88,7 +104,7 @@ namespace XAMLite
         {
             base.Update(gameTime);
 
-            if (!childrenLoaded)
+            if (!_childrenLoaded)
             {
                 loadChildren(gameTime);
             }
@@ -96,19 +112,25 @@ namespace XAMLite
             if (marginChanged)
             {
                 marginChanged = false;
-                _panel = new Rectangle((int)this.Position.X - (int)_originalGridMargin.Left +
+                panel = new Rectangle((int)this.Position.X - (int)_originalGridMargin.Left +
                     (int)this.Margin.Left + (int)_originalGridMargin.Right - (int)this.Margin.Right,
                     (int)this.Position.Y - (int)_originalGridMargin.Top + (int)this.Margin.Top +
                     (int)_originalGridMargin.Bottom - (int)this.Margin.Bottom, this.Width, this.Height);
                 modifyChildren();
             }
 
+            // Update Visibility of Children
             if (visibilityChanged)
             {
                 visibilityChanged = false;
-
-                // Update Visibility of Children
                 updateChildVisibility();
+            }
+
+            //Update the opacity of the child.
+            if (opacityChanged)
+            {
+                opacityChanged = false;
+                updateChildOpacity();
             }
         }
 
@@ -124,7 +146,7 @@ namespace XAMLite
 
                 if (!transparent)
                 {
-                    spriteBatch.Draw(_pixel, _panel, (_backgroundColor * (float)Opacity));
+                    spriteBatch.Draw(pixel, panel, (_backgroundColor * (float)Opacity));
                 }
                 spriteBatch.End();
             }
@@ -137,11 +159,13 @@ namespace XAMLite
         /// <param name></param>
         private void loadChildren(GameTime gameTime)
         {
-            childrenLoaded = true;
+            _childrenLoaded = true;
 
             _childVisibility = new bool[Children.Count];
 
-            _panel = new Rectangle((int)this.Position.X - (int)_originalGridMargin.Left +
+            _childOpacity = new float[Children.Count];
+
+            panel = new Rectangle((int)this.Position.X - (int)_originalGridMargin.Left +
                     (int)this.Margin.Left + (int)_originalGridMargin.Right - (int)this.Margin.Right,
                     (int)this.Position.Y - (int)_originalGridMargin.Top + (int)this.Margin.Top +
                     (int)_originalGridMargin.Bottom - (int)this.Margin.Bottom, this.Width, this.Height);
@@ -153,6 +177,7 @@ namespace XAMLite
             }
 
             modifyChildren();
+            recordChildOpacity();
             recordChildVisibility();
 
             // Add the child component to the game with the modified parameters.
@@ -186,21 +211,21 @@ namespace XAMLite
                     // Child component is on the left
                     case HorizontalAlignment.Left:
                         if (!_isHorCentered[i]) // a cheat to override the nature of our centering process
-                            left = _panel.X + _originalChildMargin[i].Left;
+                            left = panel.X + _originalChildMargin[i].Left;
                         else if (_isHorStretched[i])
                         {
                             left = this.Width;
                         }
                         else
                         {
-                            left = _panel.X + this.Width / 2 - Children[i].Width / 2 + _originalChildMargin[i].Left
+                            left = panel.X + this.Width / 2 - Children[i].Width / 2 + _originalChildMargin[i].Left
                                 - _originalChildMargin[i].Right;
                         }
                         break;
 
                     // Child component is on the right
                     case HorizontalAlignment.Right:
-                        right = viewport.Width - (_panel.X + this.Width) + _originalChildMargin[i].Right;
+                        right = viewport.Width - (panel.X + this.Width) + _originalChildMargin[i].Right;
                         break;
 
                     // Child component is centered
@@ -208,7 +233,7 @@ namespace XAMLite
                         _isHorCentered[i] = true;
                         // a cheat to override the nature of our centering process
                         Children[i].HorizontalAlignment = HorizontalAlignment.Left;
-                        left = _panel.X + this.Width / 2 - Children[i].Width / 2 + _originalChildMargin[i].Left - _originalChildMargin[i].Right;
+                        left = panel.X + this.Width / 2 - Children[i].Width / 2 + _originalChildMargin[i].Left - _originalChildMargin[i].Right;
                         break;
 
                     case HorizontalAlignment.Stretch:
@@ -216,8 +241,8 @@ namespace XAMLite
                         // a cheat to override the nature of our centering process
                         Children[i].HorizontalAlignment = HorizontalAlignment.Left;
                         Children[i].Width = this.Width - (int)_originalChildMargin[i].Left - (int)_originalChildMargin[i].Right;
-                        left = _panel.X + _originalChildMargin[i].Left;
-                        right = viewport.Width - (_panel.X + this.Width) + _originalChildMargin[i].Right;
+                        left = panel.X + _originalChildMargin[i].Left;
+                        right = viewport.Width - (panel.X + this.Width) + _originalChildMargin[i].Right;
                         break;
 
                     default:
@@ -227,13 +252,13 @@ namespace XAMLite
                 switch (Children[i].VerticalAlignment)
                 {
                     case VerticalAlignment.Bottom:
-                        bottom = viewport.Height - (_panel.Y + this.Height) + _originalChildMargin[i].Bottom;
+                        bottom = viewport.Height - (panel.Y + this.Height) + _originalChildMargin[i].Bottom;
                         break;
 
                     case VerticalAlignment.Center:
                         _isVerCentered[i] = true;
                         Children[i].VerticalAlignment = VerticalAlignment.Top;
-                        top = _panel.Y + this.Height / 2 - Children[i].Height / 2 + _originalChildMargin[i].Top - _originalChildMargin[i].Bottom;
+                        top = panel.Y + this.Height / 2 - Children[i].Height / 2 + _originalChildMargin[i].Top - _originalChildMargin[i].Bottom;
                         break;
 
                     case VerticalAlignment.Stretch:
@@ -241,20 +266,20 @@ namespace XAMLite
                         // a cheat to override the nature of our centering process
                         Children[i].VerticalAlignment = VerticalAlignment.Top;
                         Children[i].Height = this.Height - (int)_originalChildMargin[i].Top - (int)_originalChildMargin[i].Bottom;
-                        top = _panel.Y + _originalChildMargin[i].Top;
-                        bottom = viewport.Height - (_panel.Y + this.Height) + _originalChildMargin[i].Bottom;
+                        top = panel.Y + _originalChildMargin[i].Top;
+                        bottom = viewport.Height - (panel.Y + this.Height) + _originalChildMargin[i].Bottom;
                         break;
 
                     case VerticalAlignment.Top:
                         if (!_isVerCentered[i])
-                            top = _panel.Y + _originalChildMargin[i].Top;
+                            top = panel.Y + _originalChildMargin[i].Top;
                         else if (_isVerStretched[i])
                         {
                             top = Children[i].Height;
                         }
                         else
                         {
-                            top = _panel.Y + this.Height / 2 - Children[i].Height / 2 + _originalChildMargin[i].Top - _originalChildMargin[i].Bottom;
+                            top = panel.Y + this.Height / 2 - Children[i].Height / 2 + _originalChildMargin[i].Top - _originalChildMargin[i].Bottom;
                         }
                         break;
                     default:
@@ -281,6 +306,30 @@ namespace XAMLite
                 {
                     _childVisibility[i] = false;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Records the current opacity of the child so that it can be used to modify its
+        /// opacity according to the grid's opacity.
+        /// </summary>
+        private void recordChildOpacity()
+        {
+            for (int i = 0; i < Children.Count; i++)
+            {
+                _childOpacity[i] = (float)Children[i].Opacity;
+            }
+        }
+
+        /// <summary>
+        /// Modifies the opacity of the child according to the opacity of the grid and the opacity
+        /// of the child.
+        /// </summary>
+        private void updateChildOpacity()
+        {
+            for (int i = 0; i < Children.Count; i++)
+            {
+                Children[i].Opacity = this.Opacity * _childOpacity[i];
             }
         }
 

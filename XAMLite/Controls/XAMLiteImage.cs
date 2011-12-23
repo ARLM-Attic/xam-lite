@@ -64,7 +64,7 @@ namespace XAMLite
             }
 
             // Sets the size and location of the image.
-            _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+            panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace XAMLite
             if (marginChanged)
             {
                 marginChanged = false;
-                _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+                panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
             }
             
         }
@@ -93,7 +93,7 @@ namespace XAMLite
             {
                 this.spriteBatch.Begin();
 
-                this.spriteBatch.Draw(this.texture, _panel, (Color.White * (float)Opacity));
+                this.spriteBatch.Draw(this.texture, panel, (Color.White * (float)Opacity));
 
                 this.spriteBatch.End();
             }

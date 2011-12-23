@@ -19,11 +19,11 @@ namespace XAMLite
         protected MouseState ms;
         protected Microsoft.Xna.Framework.Point mouseLoc;
 
-        protected bool _mouseDown;
+        protected bool mouseDown;
         //protected bool _mouseUp;
-        protected bool _mouseEnter;
-        protected bool _mouseLeave;
-        protected bool _keyDown;
+        protected bool mouseEnter;
+        protected bool mouseLeave;
+        protected bool keyDown;
 
         public event MouseButtonEventHandler MouseDown;
         public event MouseButtonEventHandler MouseUp;
@@ -56,8 +56,8 @@ namespace XAMLite
         protected SpriteFont verdana60SpriteFont { get; set; }
         protected SpriteFont verdana60BoldSpriteFont { get; set; }
 
-        protected Rectangle _msRect; // mouse position
-        protected Rectangle _panel; // rectangle containing the control for collision and drawing
+        protected Rectangle msRect; // mouse position
+        protected Rectangle panel; // rectangle containing the control for collision and drawing
 
         /// <summary>
         /// Prevents each control from perpetually updating each item in its Update method until necessary.
@@ -67,7 +67,7 @@ namespace XAMLite
         /// <summary>
         /// Fills the space of a control with a color.
         /// </summary>
-        protected Texture2D _pixel;
+        protected Texture2D pixel;
 
         /// <summary>
         /// 
@@ -87,17 +87,34 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        protected Visibility _visible;
+        private Visibility _visible;
 
         /// <summary>
-        /// 
+        /// System.Windows.Visibility.  Maintains the visibility of a control.
         /// </summary>
         new public Visibility Visible { get { return _visible; } set { _visible = value; visibilityChanged = true; } }
 
         /// <summary>
-        /// 
+        /// Notifies an individual control that the Visiblity should be updated.
         /// </summary>
         protected bool visibilityChanged;
+
+        /// <summary>
+        /// Maintains the public double Opacity.
+        /// </summary>
+        private double _opacity;
+
+        /// <summary>
+        /// Gets or sets the opacity factor applied to the entire System.Windows.UIElement
+        /// when it is rendered in the user interface (UI). Default opacity is 1.0. 
+        /// Expected values are between 0.0 and 1.0.
+        /// </summary>
+        public double Opacity { get { return _opacity; } set { _opacity = value; opacityChanged = true; } }
+
+        /// <summary>
+        /// Notifies an individual control that the Opacity should be updated.
+        /// </summary>
+        protected bool opacityChanged;
 
         /// <summary>
         /// 
@@ -216,13 +233,6 @@ namespace XAMLite
         public bool IsEnabled { get; set; }
 
         /// <summary>
-        /// Gets or sets the opacity factor applied to the entire System.Windows.UIElement
-        /// when it is rendered in the user interface (UI). Default opacity is 1.0. 
-        /// Expected values are between 0.0 and 1.0.
-        /// </summary>
-        public double Opacity { get; set; }
-
-        /// <summary>
         /// Gets or sets a brush that describes the foreground color. The default 
         /// color is black.
         /// </summary>
@@ -335,8 +345,8 @@ namespace XAMLite
             this.spriteBatch = new SpriteBatch(Game.GraphicsDevice);
 
             // for Background Color
-            _pixel = new Texture2D(this.GraphicsDevice, 1, 1);
-            _pixel.SetData<Color>(new Color[] { Color.White });
+            pixel = new Texture2D(this.GraphicsDevice, 1, 1);
+            pixel.SetData<Color>(new Color[] { Color.White });
 
             // for sub menu items
             arrow = Game.Content.Load<Texture2D>("Images/arrow");
@@ -378,35 +388,35 @@ namespace XAMLite
             base.Update(gameTime);
 
             ms = Microsoft.Xna.Framework.Input.Mouse.GetState();
-            _msRect = new Rectangle(ms.X, ms.Y, 1, 1);
+            msRect = new Rectangle(ms.X, ms.Y, 1, 1);
             if (IsEnabled && this.Visible == Visibility.Visible)
             {
-                if (_panel.Contains(_msRect))
+                if (panel.Contains(msRect))
                 {
-                    if (!_mouseEnter)
+                    if (!mouseEnter)
                     {
-                        _mouseEnter = true;
+                        mouseEnter = true;
                         OnMouseEnter();
                     }
                 }
                 else
                 {
-                    if (_mouseEnter)
+                    if (mouseEnter)
                     {
-                        _mouseEnter = false;
+                        mouseEnter = false;
                         OnMouseLeave();
                     }
                 }
 
-                if (!_mouseDown && ms.LeftButton == ButtonState.Pressed && _panel.Contains(_msRect))
+                if (!mouseDown && ms.LeftButton == ButtonState.Pressed && panel.Contains(msRect))
                 {
-                    _mouseDown = true;
+                    mouseDown = true;
                     OnMouseDown();
                 }
 
-                else if (_mouseDown && ms.LeftButton == ButtonState.Released && _panel.Contains(_msRect))
+                else if (mouseDown && ms.LeftButton == ButtonState.Released && panel.Contains(msRect))
                 {
-                    _mouseDown = false;
+                    mouseDown = false;
                     OnMouseUp();
                 }
             }

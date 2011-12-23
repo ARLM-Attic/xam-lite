@@ -194,7 +194,7 @@ namespace XAMLite
             if (marginChanged)
             {
                 marginChanged = false;
-                _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+                panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
             }
         }
 
@@ -229,10 +229,10 @@ namespace XAMLite
                         Padding = new Thickness(Padding.Top, Padding.Left, Padding.Bottom, Padding.Right);
                         CreateTextBlockContainer();
                     }
-                    paddedPosition = new Vector2(_panel.X + _panel.Width - (int)Padding.Left, _panel.Y + (int)Padding.Top);
+                    paddedPosition = new Vector2(panel.X + panel.Width - (int)Padding.Left, panel.Y + (int)Padding.Top);
                 }
                 else
-                    paddedPosition = new Vector2(_panel.X + (int)Padding.Left, _panel.Y + (int)Padding.Top);
+                    paddedPosition = new Vector2(panel.X + (int)Padding.Left, panel.Y + (int)Padding.Top);
 
 
 
@@ -241,7 +241,7 @@ namespace XAMLite
                 this.spriteFont.Spacing = this.Spacing;
                 if (!transparent)
                 {
-                    spriteBatch.Draw(_pixel, _panel, (this._backgroundColor * (float)Opacity));
+                    spriteBatch.Draw(pixel, panel, (this._backgroundColor * (float)Opacity));
                 }
 
                 if (Rotate90)
@@ -260,7 +260,7 @@ namespace XAMLite
         protected void CreateTextBlockContainer()
         {
             if (this.Width != 0 && this.Height != 0)
-                _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+                panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
         }
 
         /// <summary>

@@ -131,7 +131,7 @@ namespace XAMLite
 
             radio = new Rectangle((int)this.Position.X, (int)this.Position.Y, _radioSelected.Width, _radioSelected.Height);
             _textPos = new Vector2((this.Position.X + radio.Width + 10), this.Position.Y);
-            _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, _radioSelected.Width + this.Width + 10, _radioSelected.Height + this.Height);
+            panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, _radioSelected.Width + this.Width + 10, _radioSelected.Height + this.Height);
 
             _allRadioButtons.Add(this);
         }
@@ -148,7 +148,7 @@ namespace XAMLite
                 marginChanged = false;
                 radio = new Rectangle((int)this.Position.X, (int)this.Position.Y, _radioSelected.Width, _radioSelected.Height);
                 _textPos = new Vector2((this.Position.X + radio.Width + 10), this.Position.Y);
-                _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, _radioSelected.Width + this.Width + 10, this.Height);
+                panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, _radioSelected.Width + this.Width + 10, this.Height);
             }
 
             if (fontFamilyChanged)
@@ -157,7 +157,7 @@ namespace XAMLite
                 UpdateFontFamily(_fontFamily);
             }
 
-            if (_mouseDown && !_selected && _panel.Contains(_msRect) && IsEnabled)
+            if (mouseDown && !_selected && panel.Contains(msRect) && IsEnabled)
             {
                 _selected = true;
                 for (int i = 0; i < _allRadioButtons.Count; i++)

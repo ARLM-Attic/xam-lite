@@ -205,7 +205,7 @@ namespace XAMLite
             this.spriteFont = verdana15SpriteFont;
             this.Spacing = 2;
             RecalculateWidthAndHeight(this.Header);
-            _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+            panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
         }
 
         void XAMLiteMenuItem_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -255,9 +255,9 @@ namespace XAMLite
             {
                 marginChanged = false;
                 if (_allMenuTitles.Contains(this.Header))
-                    _panel = new Rectangle((int)this.Position.X - (int)this.Padding.Left, (int)this.Position.Y, this.Width, this.Height);
+                    panel = new Rectangle((int)this.Position.X - (int)this.Padding.Left, (int)this.Position.Y, this.Width, this.Height);
                 else
-                    _panel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20, (int)this.Position.Y, this.Width, this.Height);
+                    panel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20, (int)this.Position.Y, this.Width, this.Height);
                 _textPos = new Vector2(this.Position.X + 20, this.Position.Y); ;
             }
 
@@ -269,7 +269,7 @@ namespace XAMLite
             if (IsEnabled)
             {
                 // highlights the hovered menu item.
-                if (_mouseEnter || (_subMenuPanel.Contains(_msRect) && this.Items[0].Visible == Visibility.Visible))
+                if (mouseEnter || (_subMenuPanel.Contains(msRect) && this.Items[0].Visible == Visibility.Visible))
                 {
                     this.Background = (System.Windows.Media.Brush)_bc.ConvertFrom("#cccccc");
                 }
@@ -283,7 +283,7 @@ namespace XAMLite
                 }
 
                 // opens a sub-menu panel, if it exists.
-                if (_mouseEnter && Items.Count > 0 && this.Visible == Visibility.Visible)
+                if (mouseEnter && Items.Count > 0 && this.Visible == Visibility.Visible)
                 {
                     subMenuOpened = true;
 
@@ -312,7 +312,7 @@ namespace XAMLite
                             Items[i].Visible = Visibility.Hidden;
                         }
                     }
-                    else if (Items.Count > 0 && !_subMenuPanel.Contains(_msRect))
+                    else if (Items.Count > 0 && !_subMenuPanel.Contains(msRect))
                     {
                         subMenuOpened = false;
                         alreadyAdded = false;
@@ -327,7 +327,7 @@ namespace XAMLite
                 // closes sub-menu panel after a menu item has been selected.
                 if (ms.LeftButton == ButtonState.Pressed) 
                 {
-                    if (_subMenuPanel.Contains(_msRect))
+                    if (_subMenuPanel.Contains(msRect))
                     {
                         subMenuOpened = false;
                         _subMenuOpen.Remove(this.Header);
@@ -349,32 +349,32 @@ namespace XAMLite
                 if (!_transparent)
                 {
                     if (_allMenuTitles.Contains(this.Header))
-                        spriteBatch.Draw(_pixel, _panel, this._backgroundColor);
+                        spriteBatch.Draw(pixel, panel, this._backgroundColor);
                     else
                     {
                         float opacity = (float)Opacity * 0.45f;
 
-                        Rectangle ghostRect = new Rectangle(_panel.X + 5, _panel.Y + 5, _panel.Width, _panel.Height);
-                        spriteBatch.Draw(_pixel, ghostRect, (Color.Black * opacity));
-                        spriteBatch.Draw(_pixel, _panel, this._backgroundColor);
+                        Rectangle ghostRect = new Rectangle(panel.X + 5, panel.Y + 5, panel.Width, panel.Height);
+                        spriteBatch.Draw(pixel, ghostRect, (Color.Black * opacity));
+                        spriteBatch.Draw(pixel, panel, this._backgroundColor);
                         _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20,
                             (int)this.Position.Y, this.Width, _strokeThickness);
-                        this.spriteBatch.Draw(_pixel, _strokePanel, (_stroke * (float)Opacity));
+                        this.spriteBatch.Draw(pixel, _strokePanel, (_stroke * (float)Opacity));
                         _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20,
                             ((int)this.Position.Y + this.Height - _strokeThickness), this.Width, _strokeThickness);
-                        this.spriteBatch.Draw(_pixel, _strokePanel, (_stroke * (float)Opacity));
+                        this.spriteBatch.Draw(pixel, _strokePanel, (_stroke * (float)Opacity));
                         _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20,
                             (int)this.Position.Y, _strokeThickness, this.Height);
-                        this.spriteBatch.Draw(_pixel, _strokePanel, (_stroke * (float)Opacity));
+                        this.spriteBatch.Draw(pixel, _strokePanel, (_stroke * (float)Opacity));
                         _strokePanel = new Rectangle(((int)this.Position.X - (int)this.Padding.Left +
                             this.Width + 20 - _strokeThickness), (int)this.Position.Y, _strokeThickness, this.Height);
-                        this.spriteBatch.Draw(_pixel, _strokePanel, (_stroke * (float)Opacity));
+                        this.spriteBatch.Draw(pixel, _strokePanel, (_stroke * (float)Opacity));
                     }
 
                     if (_allSubMenuTitles.Contains(this.Header))
                     {
-                        arrowRect.X = this._panel.X + this.Width - arrow.Width;
-                        arrowRect.Y = this._panel.Y + this.Height / 4;
+                        arrowRect.X = this.panel.X + this.Width - arrow.Width;
+                        arrowRect.Y = this.panel.Y + this.Height / 4;
                         this.spriteBatch.Draw(arrow, arrowRect, (Color.White * (float)Opacity));
                     }
                 }
@@ -424,9 +424,9 @@ namespace XAMLite
                     Items[i].HorizontalAlignment = this.HorizontalAlignment;
                     Items[i].VerticalAlignment = this.VerticalAlignment;
                     Items[i].Background = Brushes.Black;
-                    Items[i].Margin = new Thickness(this.Margin.Left + this._panel.Width, this.Margin.Top + Items[i].Height * i, Items[i].Margin.Right + Items[i].Padding.Right, this.Margin.Bottom + Items[i].Padding.Bottom);
+                    Items[i].Margin = new Thickness(this.Margin.Left + this.panel.Width, this.Margin.Top + Items[i].Height * i, Items[i].Margin.Right + Items[i].Padding.Right, this.Margin.Bottom + Items[i].Padding.Bottom);
                     Items[i].Width = longestWidth;
-                    _subMenuPanel = new Rectangle(this._panel.X + this.Width, (int)this.Position.Y, longestWidth, this._panel.Height * Items.Count);
+                    _subMenuPanel = new Rectangle(this.panel.X + this.Width, (int)this.Position.Y, longestWidth, this.panel.Height * Items.Count);
                 }
             }
         }

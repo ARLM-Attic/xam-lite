@@ -140,7 +140,7 @@ namespace XAMLite
 
             _checkBox = new Rectangle((int)this.Position.X, (int)this.Position.Y, _checkBoxChecked.Width, _checkBoxChecked.Height);
             _textPos = new Vector2((this.Position.X + _checkBox.Width + 10), this.Position.Y);
-            _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, _checkBoxChecked.Width + this.Width + 10, _checkBoxChecked.Height + this.Height);
+            panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, _checkBoxChecked.Width + this.Width + 10, _checkBoxChecked.Height + this.Height);
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace XAMLite
                 marginChanged = false;
                 _checkBox = new Rectangle((int)this.Position.X, (int)this.Position.Y, _checkBoxChecked.Width, _checkBoxChecked.Height);
                 _textPos = new Vector2((this.Position.X + _checkBox.Width + 10), this.Position.Y);
-                _panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, _checkBoxChecked.Width + this.Width + 10, this.Height);
+                panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, _checkBoxChecked.Width + this.Width + 10, this.Height);
             }
 
             if (fontFamilyChanged)

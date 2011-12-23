@@ -278,10 +278,10 @@ namespace XAMLite
             this.textBoxTexture = Game.Content.Load<Texture2D>(this.SourceName);
             this.Width = textBoxTexture.Width;
             this.Height = textBoxTexture.Height;
-            this._panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
-            this.textPosition = new Vector2(_panel.X + (int)this.Padding.Left, _panel.Y + (int)this.Padding.Top);
-            this.cursorPosition = new Vector2(_panel.X + (int)this.Padding.Left, _panel.Y + (int)this.Padding.Top);
-            this.cursorStartPosition = new Vector2(_panel.X + (int)this.Padding.Left, _panel.Y + (int)this.Padding.Top);
+            this.panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+            this.textPosition = new Vector2(panel.X + (int)this.Padding.Left, panel.Y + (int)this.Padding.Top);
+            this.cursorPosition = new Vector2(panel.X + (int)this.Padding.Left, panel.Y + (int)this.Padding.Top);
+            this.cursorStartPosition = new Vector2(panel.X + (int)this.Padding.Left, panel.Y + (int)this.Padding.Top);
         }
 
         public override void Update(GameTime gameTime)
@@ -294,7 +294,7 @@ namespace XAMLite
             }
 
             // initial text box click where the default text is replaced with just a cursor.
-            if (_mouseDown && _panel.Contains(_msRect) && initialTyping)
+            if (mouseDown && panel.Contains(msRect) && initialTyping)
             {
                 _selected = true;
                 initialTyping = false;
@@ -303,14 +303,14 @@ namespace XAMLite
                 cursorBlink = true;
             }
             // user has previously typed something, deselected, and then selected again. 
-            else if (_mouseDown && _panel.Contains(_msRect) && !_selected)
+            else if (mouseDown && panel.Contains(msRect) && !_selected)
             {
                 _selected = true;
                 cursorVisible = true;
                 cursorBlink = true;
             }
             // text box is deselected.
-            else if (_mouseDown && !_panel.Contains(_msRect) && _selected)
+            else if (mouseDown && !panel.Contains(msRect) && _selected)
             {
                 _selected = false;
                 cursorVisible = false;
@@ -376,7 +376,7 @@ namespace XAMLite
             if (Visible == Visibility.Visible)
             {
                 this.spriteBatch.Begin();
-                this.spriteBatch.Draw(this.textBoxTexture, this._panel, Color.White);
+                this.spriteBatch.Draw(this.textBoxTexture, this.panel, Color.White);
                 this.spriteBatch.DrawString(this.spriteFont, this.Text, textPosition, _foregroundColor);
                 if(cursorBlink)
                     this.spriteBatch.DrawString(this.spriteFont, this.cursor, cursorPosition, _foregroundColor);
