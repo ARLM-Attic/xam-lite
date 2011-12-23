@@ -171,7 +171,6 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            //
             if (Visible == System.Windows.Visibility.Visible)
             {
                 this.spriteBatch.Begin();
@@ -189,8 +188,13 @@ namespace XAMLite
 
                 else
                 {
-                    spriteBatch.DrawString(this.spriteFont, Text, _textPos, (this._foregroundColor * (float)0.50));
-                    this.spriteBatch.Draw(this._checkBoxUnchecked, _checkBox, (Color.White * (float)0.50));
+                    float opacity = (float)Opacity - 0.5f;
+                    if (opacity < 0f)
+                    {
+                        opacity = 0f;
+                    }
+                    spriteBatch.DrawString(this.spriteFont, Text, _textPos, (this._foregroundColor * opacity));
+                    this.spriteBatch.Draw(this._checkBoxUnchecked, _checkBox, (Color.White * opacity));
                 }
 
                 this.spriteBatch.End();

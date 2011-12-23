@@ -24,10 +24,7 @@ namespace XAMLite
         /// <summary>
         /// This is the image file path, minus the file extension.
         /// </summary>
-        public string SourceName { 
-            get; 
-            set; 
-        }
+        public string SourceName { get; set; }
 
         /// <summary>
         /// 
@@ -37,6 +34,14 @@ namespace XAMLite
         public XAMLiteImage ( Game game  )
             : base( game )
         {
+        }
+
+        /// <summary>
+        /// Initializes the control.
+        /// </summary>
+        public override void Initialize()
+        {
+            base.Initialize();
         }
 
         /// <summary>
@@ -88,13 +93,8 @@ namespace XAMLite
             {
                 this.spriteBatch.Begin();
 
-                // Opacity
-                float opacity = (float)this.Opacity;
+                this.spriteBatch.Draw(this.texture, _panel, (Color.White * (float)Opacity));
 
-                //
-                this.spriteBatch.Draw(this.texture, _panel, (Color.White * opacity));
-
-                //
                 this.spriteBatch.End();
             }
         }

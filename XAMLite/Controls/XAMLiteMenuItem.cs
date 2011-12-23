@@ -352,8 +352,14 @@ namespace XAMLite
                         spriteBatch.Draw(_pixel, _panel, this._backgroundColor);
                     else
                     {
+                        float opacity = (float)Opacity - 0.45f;
+                        if (opacity < 0f)
+                        {
+                            opacity = 0f;
+                        }
+
                         Rectangle ghostRect = new Rectangle(_panel.X + 5, _panel.Y + 5, _panel.Width, _panel.Height);
-                        spriteBatch.Draw(_pixel, ghostRect, (Color.Black * 0.45f));
+                        spriteBatch.Draw(_pixel, ghostRect, (Color.Black * opacity));
                         spriteBatch.Draw(_pixel, _panel, this._backgroundColor);
                         _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20,
                             (int)this.Position.Y, this.Width, _strokeThickness);
