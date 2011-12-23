@@ -126,12 +126,17 @@ namespace XAMLite
                 updateChildVisibility();
             }
 
-            //Update the opacity of the child.
+            //Update the opacity of the child according to the change in the grid's opacity.
             if (opacityChanged)
             {
+                System.Console.WriteLine("Opacity Changed!");
                 opacityChanged = false;
                 updateChildOpacity();
             }
+
+            // makes sure that if Opacity of child was changed separate from grid after initialization, then
+            // it should limit the increase to that of the grid's.
+            checkChildrenOpacity();
         }
 
         /// <summary>
@@ -310,30 +315,6 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// Records the current opacity of the child so that it can be used to modify its
-        /// opacity according to the grid's opacity.
-        /// </summary>
-        private void recordChildOpacity()
-        {
-            for (int i = 0; i < Children.Count; i++)
-            {
-                _childOpacity[i] = (float)Children[i].Opacity;
-            }
-        }
-
-        /// <summary>
-        /// Modifies the opacity of the child according to the opacity of the grid and the opacity
-        /// of the child.
-        /// </summary>
-        private void updateChildOpacity()
-        {
-            for (int i = 0; i < Children.Count; i++)
-            {
-                Children[i].Opacity = this.Opacity * _childOpacity[i];
-            }
-        }
-
-        /// <summary>
         /// This toggles the visibilty of the child to Hidden when the grid becomes hidden.  However, if
         /// the grid becomes visible again, the child visibilities are reset to what they were prior.
         /// </summary>
@@ -366,6 +347,78 @@ namespace XAMLite
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Records the current opacity of the child so that it can be used to modify its
+        /// opacity according to the grid's opacity.
+        /// </summary>
+        private void recordChildOpacity()
+        {
+            for (int i = 0; i < Children.Count; i++)
+            {
+                _childOpacity[i] = (float)Children[i].Opacity;
+            }
+            System.Console.WriteLine("");
+        }
+
+        /// <summary>
+        /// Modifies the opacity of the child according to the opacity of the grid and the opacity
+        /// of the child.
+        /// </summary>
+        private void updateChildOpacity()
+        {
+            for (int i = 0; i < Children.Count; i++)
+            {
+                Children[i].Opacity = this.Opacity * _childOpacity[i];
+            }
+        }
+
+        /// <summary>
+        /// This checks to see whether a child's opacity was changed when the grid's opacity
+        /// was not.  If it was, a method to modify the specific control according to the
+        /// grid's opacity limits is called.
+        /// </summary>
+        private void checkChildrenOpacity()
+        {
+            for (int i = 0; i < Children.Count; i++)
+            {
+                float previousChildOpacity = _childOpacity[i] * (float)this.Opacity;
+
+                if ((float)Children[i].Opacity != previousChildOpacity)
+                {
+                    float opacityDifference = (float)Children[i].Opacity - previousChildOpacity;
+                    modifyChildOpacity(i, opacityDifference);
+                }
+            }
+        }
+
+        /// <summary>
+        /// If a child's opacity was changed when the grid opacity was not changed, this will modify
+        /// the child's opacity according to the grids so that the child's opacity cannot exceed its
+        /// parent.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="difference"></param>
+        private void modifyChildOpacity(int index, float difference)
+        {
+            float newChildOpacity = _childOpacity[index] + difference;
+            if (newChildOpacity <= 1f && newChildOpacity >= 0f)
+            {
+                _childOpacity[index] = newChildOpacity;
+            }
+            else
+            {
+                if (newChildOpacity > 1f)
+                {
+                    _childOpacity[index] = 1f;
+                }
+                else
+                {
+                    _childOpacity[index] = 0f;
+                }
+            }
+            Children[index].Opacity = _childOpacity[index] * (float)this.Opacity;
         }
     }
 }

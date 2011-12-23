@@ -58,6 +58,8 @@ namespace WpfReferenceDemo
         {
             _mouseDownCount++;
             this.Title = "Mouse Down Count = " + _mouseDownCount;
+            dogImage.Opacity += 0.1;
+            catImage.Opacity += 0.1;
         }
     }
 

@@ -109,7 +109,24 @@ namespace XAMLite
         /// when it is rendered in the user interface (UI). Default opacity is 1.0. 
         /// Expected values are between 0.0 and 1.0.
         /// </summary>
-        public double Opacity { get { return _opacity; } set { _opacity = value; opacityChanged = true; } }
+        public double Opacity { get { return _opacity; } 
+            set { 
+                /*if(value <= 1 && value >= 0 ) {
+                    if (value > 1)
+                    {
+                        value = 1;
+                    }
+                    else if (value < 0)
+                    {
+                        value = 0;
+                    }*/
+
+                    _opacity = value;
+                    opacityChanged = true;
+            }
+                
+            
+        }
 
         /// <summary>
         /// Notifies an individual control that the Opacity should be updated.

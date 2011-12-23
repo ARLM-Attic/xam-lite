@@ -29,9 +29,6 @@ namespace XAMLiteDemo
         XAMLiteImage dogImage;
         XAMLiteGrid catsAndDogsGrid;
 
-        XAMLiteImage catImage2;
-        XAMLiteImage dogImage2;
-
         int _mouseDownCount = 0;
 
         public Game2 ()
@@ -72,7 +69,7 @@ namespace XAMLiteDemo
             catsAndDogsGrid.VerticalAlignment = VerticalAlignment.Top;
             catsAndDogsGrid.Opacity = 0.5;
             catsAndDogsGrid.Background = Brushes.LightBlue;
-            catsAndDogsGrid.Visible = Visibility.Hidden;
+            //catsAndDogsGrid.Visible = Visibility.Hidden;
             catsAndDogsGrid.Margin = new Thickness(22, 21, 0, 0);
             Components.Add(catsAndDogsGrid);
 
@@ -96,7 +93,7 @@ namespace XAMLiteDemo
             dogImage.VerticalAlignment = VerticalAlignment.Top;
             dogImage.HorizontalAlignment = HorizontalAlignment.Left;
             dogImage.Margin = new Thickness(13, 97, 0, 0);
-            dogImage.Visible = Visibility.Hidden;
+            //dogImage.Visible = Visibility.Hidden;
             catsAndDogsGrid.Children.Add(dogImage);
 
             // Clickable image.
@@ -119,8 +116,11 @@ namespace XAMLiteDemo
             _mouseDownCount++;
             Window.Title = "MouseDown Count = " + _mouseDownCount;
 
-            dogImage.Visible = Visibility.Hidden;
-            catsAndDogsGrid.ToggleVisibility();
+            dogImage.Opacity -= 0.1;
+            catImage.Opacity -= 0.1;
+
+            //dogImage.Visible = Visibility.Hidden;
+            //catsAndDogsGrid.ToggleVisibility();
 
         }
 
