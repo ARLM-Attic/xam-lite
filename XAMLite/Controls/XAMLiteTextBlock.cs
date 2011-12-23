@@ -241,16 +241,16 @@ namespace XAMLite
                 this.spriteFont.Spacing = this.Spacing;
                 if (!transparent)
                 {
-                    spriteBatch.Draw(_pixel, _panel, this._backgroundColor);
+                    spriteBatch.Draw(_pixel, _panel, (this._backgroundColor * (float)Opacity));
                 }
 
                 if (Rotate90)
                 {
-                    spriteBatch.DrawString(this.spriteFont, this.Text, paddedPosition, this._foregroundColor, -MathHelper.PiOver2, spriteFont.MeasureString(this.Text), 1, SpriteEffects.None, 0);
+                    spriteBatch.DrawString(this.spriteFont, this.Text, paddedPosition, (this._foregroundColor * (float)Opacity), -MathHelper.PiOver2, spriteFont.MeasureString(this.Text), 1, SpriteEffects.None, 0);
                 }
                 else
                 {
-                    spriteBatch.DrawString(this.spriteFont, this.Text, paddedPosition, this._foregroundColor);
+                    spriteBatch.DrawString(this.spriteFont, this.Text, paddedPosition, (this._foregroundColor * (float)Opacity));
                 }
                 spriteBatch.End();
             }

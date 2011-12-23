@@ -109,10 +109,12 @@ namespace XAMLite
             this.Spacing = 2;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override void Initialize()
         {
             base.Initialize();
-
         }
 
         /// <summary>
@@ -134,6 +136,10 @@ namespace XAMLite
             _allRadioButtons.Add(this);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -164,7 +170,6 @@ namespace XAMLite
                 this.IsChecked = true;
             }
             else if (_selected)
-            //else if (_mouseUp && _selected)
             {
                 _selected = false;
             }
@@ -184,7 +189,7 @@ namespace XAMLite
                 if (this.IsEnabled)
                 {
                     this.spriteFont.Spacing = this.Spacing;
-                    spriteBatch.DrawString(this.spriteFont, Text, _textPos, this._foregroundColor);
+                    spriteBatch.DrawString(this.spriteFont, Text, _textPos, (this._foregroundColor * (float)Opacity));
 
                     if (this.IsChecked)
                         this.spriteBatch.Draw(this._radioSelected, radio, (Color.White * (float)Opacity));
@@ -194,8 +199,13 @@ namespace XAMLite
 
                 else
                 {
-                    spriteBatch.DrawString(this.spriteFont, Text, _textPos, (this._foregroundColor * (float)0.50));
-                    this.spriteBatch.Draw(this._radioUnselected, radio, (Color.White * (float)0.50));
+                    float opacity = (float)Opacity - 0.5f;
+                    if (opacity < 0f)
+                    {
+                        opacity = 0f;
+                    }
+                    spriteBatch.DrawString(this.spriteFont, Text, _textPos, (this._foregroundColor * opacity));
+                    this.spriteBatch.Draw(this._radioUnselected, radio, (Color.White * opacity));
                 }
 
                 this.spriteBatch.End();

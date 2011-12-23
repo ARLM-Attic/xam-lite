@@ -363,35 +363,35 @@ namespace XAMLite
                         spriteBatch.Draw(_pixel, _panel, this._backgroundColor);
                         _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20,
                             (int)this.Position.Y, this.Width, _strokeThickness);
-                        this.spriteBatch.Draw(_pixel, _strokePanel, _stroke);
+                        this.spriteBatch.Draw(_pixel, _strokePanel, (_stroke * (float)Opacity));
                         _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20,
                             ((int)this.Position.Y + this.Height - _strokeThickness), this.Width, _strokeThickness);
-                        this.spriteBatch.Draw(_pixel, _strokePanel, _stroke);
+                        this.spriteBatch.Draw(_pixel, _strokePanel, (_stroke * (float)Opacity));
                         _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20,
                             (int)this.Position.Y, _strokeThickness, this.Height);
-                        this.spriteBatch.Draw(_pixel, _strokePanel, _stroke);
+                        this.spriteBatch.Draw(_pixel, _strokePanel, (_stroke * (float)Opacity));
                         _strokePanel = new Rectangle(((int)this.Position.X - (int)this.Padding.Left +
                             this.Width + 20 - _strokeThickness), (int)this.Position.Y, _strokeThickness, this.Height);
-                        this.spriteBatch.Draw(_pixel, _strokePanel, _stroke);
+                        this.spriteBatch.Draw(_pixel, _strokePanel, (_stroke * (float)Opacity));
                     }
 
                     if (_allSubMenuTitles.Contains(this.Header))
                     {
                         arrowRect.X = this._panel.X + this.Width - arrow.Width;
                         arrowRect.Y = this._panel.Y + this.Height / 4;
-                        this.spriteBatch.Draw(arrow, arrowRect, Color.White);
+                        this.spriteBatch.Draw(arrow, arrowRect, (Color.White * (float)Opacity));
                     }
                 }
 
                 if (!_allMenuTitles.Contains(this.Header))
-                    spriteBatch.DrawString(this.spriteFont, Text, _textPos, this._foregroundColor);
+                    spriteBatch.DrawString(this.spriteFont, Text, _textPos, (this._foregroundColor * (float)Opacity));
                 else
-                    spriteBatch.DrawString(this.spriteFont, Text, Position, this._foregroundColor);
+                    spriteBatch.DrawString(this.spriteFont, Text, Position, (this._foregroundColor * (float)Opacity));
 
                 if (IsChecked)
                 {
                     checkMarkRect = new Rectangle((int)this.Position.X - 5, (int)this.Position.Y, checkMark.Width, checkMark.Height);
-                    this.spriteBatch.Draw(checkMark, checkMarkRect, Color.White);
+                    this.spriteBatch.Draw(checkMark, checkMarkRect, (Color.White * (float)Opacity));
                 }
 
                 spriteBatch.End();
