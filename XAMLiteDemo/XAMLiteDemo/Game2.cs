@@ -116,8 +116,8 @@ namespace XAMLiteDemo
             _mouseDownCount++;
             Window.Title = "MouseDown Count = " + _mouseDownCount;
 
-            dogImage.Opacity -= 0.1;
-            catImage.Opacity -= 0.1;
+            dogImage.Opacity += 0.1;
+            catImage.Opacity += 0.1;
 
             //dogImage.Visible = Visibility.Hidden;
             //catsAndDogsGrid.ToggleVisibility();
