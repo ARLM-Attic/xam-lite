@@ -48,9 +48,6 @@ namespace XAMLite
 
         private bool _setMenuItems;
 
-       // private bool _mouseReleased;
-        //private bool _closeMenu;
-
         private bool _fullMenuIsVisible;
         private bool _menuVisibilityCounted;
 
@@ -122,7 +119,6 @@ namespace XAMLite
                 else if (_menuVisibilityCount == 0)
                 {
                     closeMenu();
-
                 }
 
                 if (_fullMenuIsVisible)

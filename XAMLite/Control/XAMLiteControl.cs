@@ -92,9 +92,12 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        new public Visibility Visible { get { return _visible; } set { _visible = value; _visibilityChanged = true; } }
+        new public Visibility Visible { get { return _visible; } set { _visible = value; visibilityChanged = true; } }
 
-        protected bool _visibilityChanged;
+        /// <summary>
+        /// 
+        /// </summary>
+        protected bool visibilityChanged;
 
         /// <summary>
         /// 
@@ -121,6 +124,7 @@ namespace XAMLite
         /// </summary>
         /// 
         private Thickness _margin;
+
         /// <summary>
         /// 
         /// </summary>
@@ -317,15 +321,10 @@ namespace XAMLite
         /// </summary>
         public override void Initialize()
         {
-            //
             this.device = Game.GraphicsDevice;
             this.viewport = device.Viewport;
 
-            //
             base.Initialize();
-
-            
-
         }
 
         /// <summary>
@@ -382,9 +381,6 @@ namespace XAMLite
             _msRect = new Rectangle(ms.X, ms.Y, 1, 1);
             if (IsEnabled && this.Visible == Visibility.Visible)
             {
-                //ms = Microsoft.Xna.Framework.Input.Mouse.GetState();
-                //_msRect = new Rectangle(ms.X, ms.Y, 1, 1);
-
                 if (_panel.Contains(_msRect))
                 {
                     if (!_mouseEnter)
@@ -406,8 +402,6 @@ namespace XAMLite
                 {
                     _mouseDown = true;
                     OnMouseDown();
-
-                    //_mouseUp = false;
                 }
 
                 else if (_mouseDown && ms.LeftButton == ButtonState.Released && _panel.Contains(_msRect))

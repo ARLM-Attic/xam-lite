@@ -24,6 +24,8 @@ namespace XAMLite
         private bool[] _isHorStretched;
         private bool[] _isVerStretched;
 
+        private bool[] _childVisibility;
+
         /// <summary>
         /// 
         /// </summary>
@@ -59,6 +61,14 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
+        public override void Initialize()
+        {
+            base.Initialize();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="device"></param>
         /// <param name="content"></param>
         /// <param name="fontName"></param>
@@ -72,12 +82,6 @@ namespace XAMLite
             _isVerCentered = new bool[Children.Count];
             _isHorStretched = new bool[Children.Count];
             _isVerStretched = new bool[Children.Count];
-
-
-            /*for (int i = 0; i < Children.Count; i++)
-            {
-                this.Game.Components.Add(Children[i]);
-            }*/
         }
 
         public override void Update(GameTime gameTime)
@@ -96,9 +100,9 @@ namespace XAMLite
                 modifyChildren();
             }
 
-            if (_visibilityChanged)
+            if (visibilityChanged)
             {
-                _visibilityChanged = false;
+                visibilityChanged = false;
 
                 // Update Visibility of Children
                 updateChildVisibility();
@@ -132,6 +136,8 @@ namespace XAMLite
         {
             childrenLoaded = true;
 
+            _childVisibility = new bool[Children.Count];
+
             _panel = new Rectangle((int)this.Position.X - (int)_originalGridMargin.Left +
                     (int)this.Margin.Left + (int)_originalGridMargin.Right - (int)this.Margin.Right,
                     (int)this.Position.Y - (int)_originalGridMargin.Top + (int)this.Margin.Top +
@@ -144,6 +150,7 @@ namespace XAMLite
             }
             
             modifyChildren();
+            recordChildVisibility();
             updateChildVisibility();
 
             // Add the child component to the game with the modified parameters.
@@ -258,18 +265,55 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// TODO: This currently forces the visibility of all children of the grid to be visible, 
-        /// whenever the grid itself is made visible. Ideally, the visibility of each child can
-        /// be preserved as we toggle the visibility of the parent container.  For example: assume 
-        /// a grid contains a catImage and a dogImage, and the dog is hidden. When we hide and 
-        /// then show the grid, the dog should still be hidden. Currently, both the cat and the 
-        /// dog would be revealed when the parent grid is made visible.
+        /// Stores the visibilty of the child.
         /// </summary>
-        private void updateChildVisibility()
+        private void recordChildVisibility()
         {
             for (int i = 0; i < Children.Count; i++)
             {
-                Children[i].Visible = this.Visible;
+                if (Children[i].Visible == Visibility.Visible)
+                {
+                    _childVisibility[i] = true;
+                }
+                else
+                {
+                    _childVisibility[i] = false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// This toggles the visibilty of the child to Hidden when the grid becomes hidden.  However, if
+        /// the grid becomes visible again, the child visibilities are reset to what they were prior.
+        /// </summary>
+        private void updateChildVisibility()
+        {
+            if (this.Visible == Visibility.Hidden)
+            {
+                // before making the child visible, record its lateset visibility state.
+                recordChildVisibility();
+
+                // change the child visibility to hidden, like the grid.
+                for (int i = 0; i < Children.Count; i++)
+                {
+                    Children[i].Visible = Visibility.Hidden;
+                }
+            }
+            else
+            {
+                // return the visibility of the child to what it was prior to becoming hidden
+                // like its parent.
+                for (int i = 0; i < _childVisibility.Length; i++)
+                {
+                    if (_childVisibility[i])
+                    {
+                        Children[i].Visible = Visibility.Visible;
+                    }
+                    else
+                    {
+                        Children[i].Visible = Visibility.Hidden;
+                    }
+                }
             }
         }
     }
