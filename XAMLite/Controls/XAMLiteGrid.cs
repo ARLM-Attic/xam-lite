@@ -129,7 +129,6 @@ namespace XAMLite
             //Update the opacity of the child according to the change in the grid's opacity.
             if (opacityChanged)
             {
-                System.Console.WriteLine("Opacity Changed!");
                 opacityChanged = false;
                 updateChildOpacity();
             }
