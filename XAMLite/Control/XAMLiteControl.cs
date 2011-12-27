@@ -623,7 +623,7 @@ namespace XAMLite
             _allMenuTitles.Add("Tutorials");
             //_allMenuTitles.Add("Time of Day");
             //_allMenuTitles.Add("Truck");
-            _allMenuTitles.Add("Dev");
+            _allMenuTitles.Add("Developer [F1]");
 
             _allSubMenuTitles.Add("Adjust Dust Visibility");
             _allSubMenuTitles.Add("Ambient Level");
