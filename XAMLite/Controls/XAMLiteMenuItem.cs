@@ -106,7 +106,14 @@ namespace XAMLite
         private Color _fill;
         private Color _stroke;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private Rectangle _strokePanel;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private Rectangle _subMenuPanel;
 
         // If set, the menu item has the ability to be checked.
@@ -166,11 +173,6 @@ namespace XAMLite
         protected int longestWidth;
 
         private Vector2 _textPos;
-        /// <summary>
-        /// This is fired when a menu item is closed and it is not contained in the _allSubMenuItems List,
-        /// designating that all menus should be closed.
-        /// </summary>
-
 
         public XAMLiteMenuItem(Game game)
             : base(game)
@@ -330,6 +332,7 @@ namespace XAMLite
                     if (_subMenuPanel.Contains(msRect))
                     {
                         subMenuOpened = false;
+                        alreadyAdded = false;
                         _subMenuOpen.Remove(this.Header);
                         _subMenuOpen.Add(this.Header, false);
                     }
