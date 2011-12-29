@@ -415,6 +415,14 @@ namespace XAMLite
         }
 
         /// <summary>
+        /// Destructor
+        /// </summary>
+        ~XAMLiteControl() 
+        {
+            Dispose();
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="gameTime"></param>
