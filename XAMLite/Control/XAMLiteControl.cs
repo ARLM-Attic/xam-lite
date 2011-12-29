@@ -109,8 +109,11 @@ namespace XAMLite
         /// when it is rendered in the user interface (UI). Default opacity is 1.0. 
         /// Expected values are between 0.0 and 1.0.
         /// </summary>
-        public double Opacity { get { return _opacity; } 
-            set { 
+        public double Opacity
+        {
+            get { return _opacity; }
+            set
+            {
                 /*if(value <= 1 && value >= 0 ) {
                     if (value > 1)
                     {
@@ -121,11 +124,11 @@ namespace XAMLite
                         value = 0;
                     }*/
 
-                    _opacity = value;
-                    opacityChanged = true;
+                _opacity = value;
+                opacityChanged = true;
             }
-                
-            
+
+
         }
 
         /// <summary>
@@ -327,7 +330,7 @@ namespace XAMLite
         /// 
         /// </summary>
         /// <param name="game"></param>
-        public XAMLiteControl(Game game)
+        public XAMLiteControl (Game game)
             : base(game)
         {
             this.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
@@ -346,7 +349,7 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        public override void Initialize()
+        public override void Initialize ()
         {
             this.device = Game.GraphicsDevice;
             this.viewport = device.Viewport;
@@ -355,11 +358,26 @@ namespace XAMLite
         }
 
         /// <summary>
+        /// A single spritebatch this is shared across all instances of the XAMLiteControl class 
+        /// (and derived classes).
+        /// </summary>
+        static SpriteBatch staticSpriteBatch;
+
+        /// <summary>
         /// 
         /// </summary>
-        protected override void LoadContent()
+        protected override void LoadContent ()
         {
-            this.spriteBatch = new SpriteBatch(Game.GraphicsDevice);
+
+            // If the sprite batch that is shared across all XAMLite controls
+            // hasn't yet been created, create it.
+            if (staticSpriteBatch == null)
+            {
+                staticSpriteBatch = new SpriteBatch(Game.GraphicsDevice);
+            }
+
+            // Grab a reference to our single shared spritebatch.
+            this.spriteBatch = staticSpriteBatch;
 
             // for Background Color
             pixel = new Texture2D(this.GraphicsDevice, 1, 1);
@@ -400,7 +418,7 @@ namespace XAMLite
         /// 
         /// </summary>
         /// <param name="gameTime"></param>
-        public override void Update(GameTime gameTime)
+        public override void Update (GameTime gameTime)
         {
             base.Update(gameTime);
 
@@ -439,7 +457,7 @@ namespace XAMLite
             }
         }
 
-        protected void UpdateFontFamily(FontFamily _fontFamily)
+        protected void UpdateFontFamily (FontFamily _fontFamily)
         {
             switch (_fontFamily.ToString())
             {
@@ -507,12 +525,12 @@ namespace XAMLite
         /// 
         /// </summary>
         /// <param name="gameTime"></param>
-        public override void Draw(GameTime gameTime)
+        public override void Draw (GameTime gameTime)
         {
             base.Draw(gameTime);
         }
 
-        public virtual void OnKeyDown()
+        public virtual void OnKeyDown ()
         {
             if (KeyDown != null)
             {
@@ -520,7 +538,7 @@ namespace XAMLite
                 KeyDown(this, e);
             }
         }
-        public virtual void OnKeyUp()
+        public virtual void OnKeyUp ()
         {
             if (KeyUp != null)
             {
@@ -533,7 +551,7 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        public virtual void OnMouseDown()
+        public virtual void OnMouseDown ()
         {
             if (MouseDown != null)
             {
@@ -545,7 +563,7 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        public virtual void OnMouseUp()
+        public virtual void OnMouseUp ()
         {
             if (MouseUp != null)
             {
@@ -557,7 +575,7 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        public virtual void OnMouseEnter()
+        public virtual void OnMouseEnter ()
         {
             if (MouseEnter != null)
             {
@@ -569,7 +587,7 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        public virtual void OnMouseLeave()
+        public virtual void OnMouseLeave ()
         {
             if (MouseLeave != null)
             {
@@ -582,7 +600,7 @@ namespace XAMLite
         /// 
         /// </summary>
         /// <param name="text"></param>
-        protected void RecalculateWidthAndHeight(string text)
+        protected void RecalculateWidthAndHeight (string text)
         {
             this.Width = (int)this.spriteFont.MeasureString(text).X;
             this.Height = (int)this.spriteFont.MeasureString(text).Y;
@@ -592,7 +610,7 @@ namespace XAMLite
         /// Toggles between Visibility.Visible and Visibility.Hidden.
         /// I'm cheating a bit here since this isn't strictly part of the standard WPF API. -AK
         /// </summary>
-        public void ToggleVisibility()
+        public void ToggleVisibility ()
         {
             switch (Visible)
             {
@@ -616,7 +634,7 @@ namespace XAMLite
         /// HACK: When a tutorial is selected, all Menu Title Headers are erased, so currently 
         /// they are being manually added again.
         /// </summary>
-        protected void ResetMenuItems()
+        protected void ResetMenuItems ()
         {
             _allMenuTitles.Add("Session");
             //_allMenuTitles.Add("Ambient Level");
