@@ -96,7 +96,7 @@ namespace XAMLite
 
             if (IsEnabled)
             {
-                if((!panel.Contains(msRect) && !_menuItemPanel.Contains(msRect)))
+                if (!panel.Contains(msRect) && !_menuItemPanel.Contains(msRect))
                 {
                     closeMenu();
                 }
@@ -107,18 +107,27 @@ namespace XAMLite
                 if (!_fullMenuIsVisible && _menuVisibilityCounted)
                 {
                     _menuVisibilityCounted = false;
-                    _menuVisibilityCount--;
+                    if (_menuVisibilityCount != 0)
+                    {
+                        _menuVisibilityCount--;
+                    }
                 }
 
                 else if (_fullMenuIsVisible && !_menuVisibilityCounted)
                 {
+
                     _menuVisibilityCounted = true;
                     _menuVisibilityCount++;
                 }
-
                 else if (_menuVisibilityCount == 0)
                 {
-                    closeMenu();
+                    _menuVisibilityCounted = false;
+                    if (!_subMenuOpen.ContainsValue(true))
+                    {
+                        closeMenu();
+                        _menuSelected = false;
+                    }
+
                 }
 
                 if (_fullMenuIsVisible)
@@ -137,14 +146,13 @@ namespace XAMLite
         {
             if (!_subMenuOpen.ContainsValue(true))
             {
-                _menuSelected = false;
-                _menuVisibilityCounted = false;
-
                 for (int i = 1; i < Items.Count; i++)
                 {
                     Items[i].Visible = Visibility.Hidden;
                 }
                 _fullMenuIsVisible = false;
+                //if(_menuVisibilityCount == 0)
+                //    _menuSelected = false;
             }
         }
 

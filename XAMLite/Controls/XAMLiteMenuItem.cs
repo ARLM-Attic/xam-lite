@@ -225,6 +225,8 @@ namespace XAMLite
                 }
             }
 
+            // causes the menu to close when a menu item is clicked, and it is not the head
+            // of the menu.
             if (!_allSubMenuTitles.Contains(this.Header) && !_allMenuTitles.Contains(this.Header))
             {
                 _menuVisibilityCount = 0;
@@ -327,7 +329,7 @@ namespace XAMLite
                 }
 
                 // closes sub-menu panel after a menu item has been selected.
-                if (ms.LeftButton == ButtonState.Pressed) 
+                if (ms.LeftButton == ButtonState.Pressed)
                 {
                     if (_subMenuPanel.Contains(msRect))
                     {
