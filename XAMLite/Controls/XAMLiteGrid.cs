@@ -358,7 +358,6 @@ namespace XAMLite
             {
                 _childOpacity[i] = (float)Children[i].Opacity;
             }
-            System.Console.WriteLine("");
         }
 
         /// <summary>
