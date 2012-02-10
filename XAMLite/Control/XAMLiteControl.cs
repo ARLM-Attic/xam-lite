@@ -11,6 +11,11 @@ using System.Collections.Generic;
 namespace XAMLite
 {
     /// <summary>
+    /// Describes the placement of where a Popup control appears on the screen.
+    /// </summary>
+    public enum PlacementMode { Bottom, Center, Right, Left, Top, Mouse, MousePoint }
+
+    /// <summary>
     /// 
     /// </summary>
     /// <see cref="http://msdn.microsoft.com/en-us/library/system.windows.controls.control.aspx"/>
