@@ -24,6 +24,26 @@ namespace XAMLite
         public XAMLiteToolTipService ToolTipService;
 
         /// <summary>
+        /// 
+        /// </summary>
+        public override string Text
+        {
+            get
+            {
+                return base.Text;
+            }
+            set
+            {
+                if (this.spriteFont != null)
+                {
+                    this.spriteFont.Spacing = Spacing;
+                    RecalculateWidthAndHeight(value);
+                }
+                base.Text = value;
+            }
+        }
+
+        /// <summary>
         /// This just duplicates the Text property but is here since XAML developer will expect to be able
         /// to set the Content property of a label. Note: This Content property shouldn't be confused with 
         /// XNA's concept of Content (i.e. textures and models, etc).
@@ -168,6 +188,8 @@ namespace XAMLite
         private bool _textWrappingSet;
         private bool _widthHeightContainerSet;
 
+        private Rectangle _drawPosition;
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -182,6 +204,13 @@ namespace XAMLite
             spriteFont = courier10SpriteFont;
             Padding = new Thickness(0, 0, 0, 0);
             Spacing = 2;
+            Placement = PlacementMode.Mouse;
+            IsEnabled = false;
+
+            ToolTipService = new XAMLiteToolTipService();
+            ToolTipService.BetweenShowDelay = 0; // milliseconds
+            ToolTipService.InitialShowDelay = 500; // milliseconds
+            ToolTipService.ShowDuration = 3000; // milliseconds (3 seconds)
         }
 
         /// <summary>
@@ -203,6 +232,8 @@ namespace XAMLite
                 _heightSet = false;
             else
                 _heightSet = true;
+
+            _drawPosition = new Rectangle();
         }
 
         /// <summary>
@@ -233,7 +264,7 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            if (Visible == Visibility.Visible)
+            if (Visible == Visibility.Visible && IsEnabled)
             {
                 if (TextWrapping == TextWrapping.Wrap && !_textWrappingSet)
                 {
@@ -247,15 +278,49 @@ namespace XAMLite
                     CalculateWidthAndHeight(this.Text);
                 }
 
-                paddedPosition = new Vector2(panel.X + (int)Padding.Left, panel.Y + (int)Padding.Top);
-
                 spriteBatch.Begin();
 
                 this.spriteFont.Spacing = this.Spacing;
+
+                switch (Placement)
+                {
+                    case PlacementMode.Mouse:
+                        _drawPosition.X = msRect.X + panel.X;
+                        _drawPosition.Y = msRect.Y - panel.Height;
+                        break;
+                    case PlacementMode.MousePoint:
+                        _drawPosition.X = msRect.X + panel.X;
+                        _drawPosition.Y = msRect.Y + panel.Y;
+                        break;
+                    case PlacementMode.Left:
+                        _drawPosition.X = msRect.X + panel.X;
+                        _drawPosition.Y = msRect.Y + panel.Y;
+                        break;
+                    case PlacementMode.Right:
+                        _drawPosition.X = msRect.X + panel.X;
+                        _drawPosition.Y = msRect.Y + panel.Y;
+                        break;
+                    case PlacementMode.Top:
+                        _drawPosition.X = msRect.X + panel.X;
+                        _drawPosition.Y = msRect.Y + panel.Y;
+                        break;
+                    case PlacementMode.Bottom:
+                        _drawPosition.X = msRect.X + panel.X;
+                        _drawPosition.Y = msRect.Y + panel.Y;
+                        break;
+                    default:
+                        break;
+                }
+
+                _drawPosition.Width = panel.Width + (int)Padding.Left + (int)Padding.Right;
+                _drawPosition.Height = panel.Height + (int)Padding.Top + (int)Padding.Bottom;
+
+                paddedPosition = new Vector2(_drawPosition.X + (int)Padding.Left, _drawPosition.Y + (int)Padding.Top);
+
                 if (!_transparent)
                 {
-                    spriteBatch.Draw(pixel, panel, (this._backgroundColor * (float)Opacity));
-                }
+                    spriteBatch.Draw(pixel, _drawPosition, (this._backgroundColor * (float)Opacity));  
+                } 
 
                 spriteBatch.DrawString(this.spriteFont, this.Text, paddedPosition, (this._foregroundColor * (float)Opacity));
                 

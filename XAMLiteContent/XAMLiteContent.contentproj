@@ -48,6 +48,16 @@
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
     </Compile>
+    <Compile Include="Fonts\Verdana10.spritefont">
+      <Name>Verdana10</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
+    <Compile Include="Fonts\Verdana10Bold.spritefont">
+      <Name>Verdana10Bold</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
     <Compile Include="Icons\RadioButton.png">
       <Name>RadioButton</Name>
       <Importer>TextureImporter</Importer>
@@ -84,32 +94,6 @@
       <Name>OptionsDialogBackground</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Fonts\Verdana10.spritefont">
-      <Name>Verdana10</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Fonts\Verdana10Bold.spritefont">
-      <Name>Verdana10Bold</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Fonts\Verdana12.spritefont">
-      <Name>Verdana12</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
-    </Compile>
-    <Compile Include="Fonts\Verdana12Bold.spritefont">
-      <Name>Verdana12Bold</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -232,6 +216,18 @@
     </Compile>
     <Compile Include="Fonts\Verdana20Bold.png">
       <Name>Verdana20Bold</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>FontTextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Fonts\Verdana12.png">
+      <Name>Verdana12</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>FontTextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Fonts\Verdana12Bold.png">
+      <Name>Verdana12Bold</Name>
       <Importer>TextureImporter</Importer>
       <Processor>FontTextureProcessor</Processor>
     </Compile>
