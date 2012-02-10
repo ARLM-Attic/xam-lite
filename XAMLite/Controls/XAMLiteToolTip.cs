@@ -38,6 +38,7 @@ namespace XAMLite
                 {
                     this.spriteFont.Spacing = Spacing;
                     RecalculateWidthAndHeight(value);
+                    _textChanged = true;
                 }
                 base.Text = value;
             }
@@ -62,10 +63,16 @@ namespace XAMLite
                 {
                     this.spriteFont.Spacing = Spacing;
                     RecalculateWidthAndHeight(value);
+                    _textChanged = true;
                 }
                 base.Text = value;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private bool _textChanged;
 
         /// <summary>
         /// Family the font belongs to.
@@ -255,6 +262,13 @@ namespace XAMLite
             {
                 marginChanged = false;
                 panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+            }
+
+            if (_textChanged)
+            {
+                _textChanged = false;
+                _textWrappingSet = false;
+                _widthHeightContainerSet = false;
             }
         }
 
