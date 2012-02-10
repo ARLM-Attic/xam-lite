@@ -130,6 +130,10 @@ namespace XAMLite
 
          */
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="game"></param>
         public XAMLiteTextBlock(Game game)
             : base(game)
         {
@@ -143,7 +147,7 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// Constructor.
         /// </summary>
         /// <param name="game"></param>
         public XAMLiteTextBlock(Game game, Run run)
