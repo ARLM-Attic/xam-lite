@@ -198,6 +198,11 @@ namespace XAMLite
         private Rectangle _drawPosition;
 
         /// <summary>
+        /// Total number of live tooltips instances.
+        /// </summary>
+        public static int TooltipCount;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="game"></param>
@@ -218,6 +223,9 @@ namespace XAMLite
             ToolTipService.BetweenShowDelay = 0; // milliseconds
             ToolTipService.InitialShowDelay = 500; // milliseconds
             ToolTipService.ShowDuration = 3000; // milliseconds (3 seconds)
+
+            TooltipCount++;
+
         }
 
         /// <summary>
