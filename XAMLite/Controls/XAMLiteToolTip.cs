@@ -374,7 +374,7 @@ namespace XAMLite
             _drawPosition.X += (int)HorizontalOffset;
             _drawPosition.Y += (int)VerticalOffset;
             _drawPosition.Width = panel.Width + (int)Padding.Left;
-            _drawPosition.Height = panel.Height + (int)Padding.Top;
+            _drawPosition.Height = panel.Height + (int)Padding.Top + (int)Padding.Bottom;
 
             paddedPosition = new Vector2(_drawPosition.X + (int)Padding.Left, _drawPosition.Y + (int)Padding.Top);
         }
