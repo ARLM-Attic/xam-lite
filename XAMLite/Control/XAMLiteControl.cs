@@ -11,7 +11,10 @@ using System.Collections.Generic;
 namespace XAMLite
 {
     /// <summary>
-    /// Describes the placement of where a Popup control appears on the screen.
+    /// Describes the placement of where a Popup control such as a ToolTip 
+    /// appears on the screen.
+    /// Mouse:  Top left of tool tip should touch the bottom left of the mouse pointer.
+    /// MousePoint:  Top left of tool tip should touch the tip of the mouse pointer.
     /// </summary>
     public enum PlacementMode { Bottom, Center, Right, Left, Top, Mouse, MousePoint }
 

@@ -113,7 +113,7 @@ namespace XAMLite
         /// Gets or sets the rectangular area relative to which the ToolTip 
         /// control is positioned when it opens.
         /// </summary>
-        public Rect PlacementRectangle { get; set; }
+        // public Rect PlacementRectangle { get; set; }
 
         /// <summary>
         /// Get or sets the horizontal distance between the target origin and 
@@ -203,12 +203,25 @@ namespace XAMLite
         public static int TooltipCount;
 
         /// <summary>
+        /// Approximate width in pixels of the mouse pointer.
+        /// </summary>
+        private int _pointerWidth;
+
+        /// <summary>
+        /// Approximate height of the mouse pointer.
+        /// </summary>
+        private int _pointerHeight;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="game"></param>
         public XAMLiteToolTip(Game game)
             : base(game)
         {
+            _pointerHeight = 20;
+            _pointerWidth = 12;
+
             TextAlignment = TextAlignment.Left;
             TextWrapping = TextWrapping.Wrap;
             _foregroundColor = Color.Black;
@@ -304,50 +317,66 @@ namespace XAMLite
 
                 this.spriteFont.Spacing = this.Spacing;
 
-                switch (Placement)
-                {
-                    case PlacementMode.Mouse:
-                        _drawPosition.X = msRect.X + panel.X;
-                        _drawPosition.Y = msRect.Y - panel.Height;
-                        break;
-                    case PlacementMode.MousePoint:
-                        _drawPosition.X = msRect.X + panel.X;
-                        _drawPosition.Y = msRect.Y + panel.Y;
-                        break;
-                    case PlacementMode.Left:
-                        _drawPosition.X = msRect.X + panel.X;
-                        _drawPosition.Y = msRect.Y + panel.Y;
-                        break;
-                    case PlacementMode.Right:
-                        _drawPosition.X = msRect.X + panel.X;
-                        _drawPosition.Y = msRect.Y + panel.Y;
-                        break;
-                    case PlacementMode.Top:
-                        _drawPosition.X = msRect.X + panel.X;
-                        _drawPosition.Y = msRect.Y + panel.Y;
-                        break;
-                    case PlacementMode.Bottom:
-                        _drawPosition.X = msRect.X + panel.X;
-                        _drawPosition.Y = msRect.Y + panel.Y;
-                        break;
-                    default:
-                        break;
-                }
-
-                _drawPosition.Width = panel.Width + (int)Padding.Left + (int)Padding.Right;
-                _drawPosition.Height = panel.Height + (int)Padding.Top;
-
-                paddedPosition = new Vector2(_drawPosition.X + (int)Padding.Left, _drawPosition.Y + (int)Padding.Top);
+                CalculateDrawPosition();
 
                 if (!_transparent)
                 {
-                    spriteBatch.Draw(pixel, _drawPosition, (this._backgroundColor * (float)Opacity));  
-                } 
+                    spriteBatch.Draw(pixel, _drawPosition, (this._backgroundColor * (float)Opacity));
+                }
 
                 spriteBatch.DrawString(this.spriteFont, this.Text, paddedPosition, (this._foregroundColor * (float)Opacity));
-                
+
                 spriteBatch.End();
             }
+        }
+
+        /// <summary>
+        /// Determines where the panel and text should be drawn.
+        /// </summary>
+        private void CalculateDrawPosition()
+        {
+            switch (Placement)
+            {
+                // Top left of tool tip should touch the bottom left of the mouse pointer.
+                case PlacementMode.Mouse:
+                    _drawPosition.X = msRect.X;
+                    _drawPosition.Y = msRect.Y + _pointerHeight;
+                    break;
+                // Top left of tool tip should touch the tip of the mouse pointer.
+                case PlacementMode.MousePoint:
+                    _drawPosition.X = msRect.X;
+                    _drawPosition.Y = msRect.Y;
+                    break;
+                // Top right of tool tip should touch top left of target.
+                case PlacementMode.Left:
+                    _drawPosition.X = msRect.X - (panel.Width + (int)Padding.Left + (int)Padding.Right);
+                    _drawPosition.Y = msRect.Y;
+                    break;
+                // Top left of tool tip should touch top right of target.
+                case PlacementMode.Right:
+                    _drawPosition.X = msRect.X + _pointerWidth;
+                    _drawPosition.Y = msRect.Y;
+                    break;
+                // Bottom left of tool tip should touch the top left of target.
+                case PlacementMode.Top:
+                    _drawPosition.X = msRect.X;
+                    _drawPosition.Y = msRect.Y - (panel.Height + (int)Padding.Bottom);
+                    break;
+                // Top left of tool tip should touch the bottom left of target.
+                case PlacementMode.Bottom:
+                    _drawPosition.X = msRect.X;
+                    _drawPosition.Y = msRect.Y + _pointerHeight;
+                    break;
+                default:
+                    break;
+            }
+
+            _drawPosition.X += (int)HorizontalOffset;
+            _drawPosition.Y += (int)VerticalOffset;
+            _drawPosition.Width = panel.Width + (int)Padding.Left;
+            _drawPosition.Height = panel.Height + (int)Padding.Top;
+
+            paddedPosition = new Vector2(_drawPosition.X + (int)Padding.Left, _drawPosition.Y + (int)Padding.Top);
         }
 
         /// <summary>
