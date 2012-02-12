@@ -324,7 +324,7 @@ namespace XAMLite
                     spriteBatch.Draw(pixel, _drawPosition, (this._backgroundColor * (float)Opacity));
                 }
 
-                spriteBatch.DrawString(this.spriteFont, this.Text, paddedPosition, (this._foregroundColor * (float)Opacity));
+                spriteBatch.DrawString(this.spriteFont, this.Text, paddedPosition, this._foregroundColor);
 
                 spriteBatch.End();
             }
