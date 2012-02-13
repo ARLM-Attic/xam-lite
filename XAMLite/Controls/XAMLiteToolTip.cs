@@ -293,6 +293,7 @@ namespace XAMLite
                 {
                     _textWrappingSet = false;
                     _widthHeightContainerSet = false;
+                    CalculateDrawPosition();
                 }
             }
         }
@@ -320,8 +321,6 @@ namespace XAMLite
                 spriteBatch.Begin();
 
                 this.spriteFont.Spacing = this.Spacing;
-
-                CalculateDrawPosition();
 
                 if (!_transparent)
                 {
@@ -443,7 +442,13 @@ namespace XAMLite
 
             int paddingAdjust = (int)Padding.Left + (int)Padding.Right;
             if (paddingAdjust < this.Width)
+            {
                 charsPerLine = (int)(this.Width / pxPerChar);
+                if ((this.Width / pxPerChar) - charsPerLine >= 0.35)
+                {
+                    charsPerLine -= 1;
+                }
+            }
             else
                 charsPerLine = 1;
 
