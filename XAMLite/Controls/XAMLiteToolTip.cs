@@ -292,6 +292,7 @@ namespace XAMLite
                 if (TextWrapping == TextWrapping.Wrap)
                 {
                     _textWrappingSet = false;
+                    _widthHeightContainerSet = false;
                 }
             }
         }
@@ -396,7 +397,7 @@ namespace XAMLite
             if (!_widthSet || TextWrapping == TextWrapping.NoWrap)
                 this.Width = (int)this.spriteFont.MeasureString(text).X + (int)Padding.Left + (int)Padding.Right;
 
-            if (!_heightSet || TextWrapping == TextWrapping.NoWrap)
+            if (!_heightSet)
                 this.Height = (int)this.spriteFont.MeasureString(text).Y + (int)Padding.Top + (int)Padding.Bottom;
             marginChanged = true;
         }
