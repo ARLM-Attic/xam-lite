@@ -318,7 +318,7 @@ namespace XAMLite
 
             int paddingAdjust = (int)Padding.Left + (int)Padding.Right;
             if (paddingAdjust < this.Width)
-                charsPerLine = this.Width / (int)pxPerChar;
+                charsPerLine = (int)(this.Width / pxPerChar);
             else
                 charsPerLine = 1;
 
