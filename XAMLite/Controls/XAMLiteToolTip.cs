@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Input;
 using Color = Microsoft.Xna.Framework.Color;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace XAMLite
 {
@@ -37,7 +38,7 @@ namespace XAMLite
                 if (this.spriteFont != null)
                 {
                     this.spriteFont.Spacing = Spacing;
-                    RecalculateWidthAndHeight(value);
+                    //CalculateWidthAndHeight(value);
                     _textChanged = true;
                 }
                 base.Text = value;
@@ -62,7 +63,7 @@ namespace XAMLite
                 if (this.spriteFont != null)
                 {
                     this.spriteFont.Spacing = Spacing;
-                    RecalculateWidthAndHeight(value);
+                    //CalculateWidthAndHeight(value);
                     _textChanged = true;
                 }
                 base.Text = value;
@@ -277,7 +278,7 @@ namespace XAMLite
                 fontFamilyChanged = false;
                 UpdateFontFamily(_fontFamily);
                 this.spriteFont.Spacing = Spacing;
-                RecalculateWidthAndHeight(this.Text);
+                CalculateWidthAndHeight(this.Text);
             }
             if (marginChanged)
             {
@@ -288,8 +289,10 @@ namespace XAMLite
             if (_textChanged)
             {
                 _textChanged = false;
-                _textWrappingSet = false;
-                _widthHeightContainerSet = false;
+                if (TextWrapping == TextWrapping.Wrap)
+                {
+                    _textWrappingSet = false;
+                }
             }
         }
 
@@ -304,13 +307,13 @@ namespace XAMLite
                 if (TextWrapping == TextWrapping.Wrap && !_textWrappingSet)
                 {
                     _textWrappingSet = true;
-                    this.Text = WordWrap(this.Text, (int)this.spriteFont.MeasureString(this.Text).X);
+                    this.Text = WordWrap(this.Text, Width);
                 }
 
                 if (!_widthHeightContainerSet)
                 {
                     _widthHeightContainerSet = true;
-                    CalculateWidthAndHeight(this.Text);
+                    CalculateWidthAndHeight(this.Name + this.Text);
                 }
 
                 spriteBatch.Begin();
@@ -322,6 +325,11 @@ namespace XAMLite
                 if (!_transparent)
                 {
                     spriteBatch.Draw(pixel, _drawPosition, (this._backgroundColor * (float)Opacity));
+                }
+
+                if (Name != null && Name != string.Empty)
+                {
+                    spriteBatch.DrawString(this.spriteFont, this.Name, paddedPosition, Color.Yellow);
                 }
 
                 spriteBatch.DrawString(this.spriteFont, this.Text, paddedPosition, this._foregroundColor);
@@ -374,7 +382,7 @@ namespace XAMLite
             _drawPosition.X += (int)HorizontalOffset;
             _drawPosition.Y += (int)VerticalOffset;
             _drawPosition.Width = panel.Width + (int)Padding.Left;
-            _drawPosition.Height = panel.Height + (int)Padding.Top + (int)Padding.Bottom;
+            _drawPosition.Height = panel.Height;// +(int)Padding.Top + (int)Padding.Bottom;
 
             paddedPosition = new Vector2(_drawPosition.X + (int)Padding.Left, _drawPosition.Y + (int)Padding.Top);
         }
@@ -394,7 +402,7 @@ namespace XAMLite
         }
 
         // used to break the string into seperate lines of text
-        protected const string _newline = "\r\n";
+        protected const string _newline = "\n";
 
         /// <summary>
         /// Word wraps the given text to fit within the specified width.
@@ -407,18 +415,22 @@ namespace XAMLite
         public string WordWrap(string text, int width)
         {
             // return if string length is less than width of textblock
-            if (this.Width > width)
+            if (width > (int)this.spriteFont.MeasureString(text).X)
+            {
                 return text;
+            }
 
             // just for clarity
-            float strLenPixels = width;
+            string tempString = Regex.Replace(text, "\n", "");
+
+            float strLenPixels = (int)this.spriteFont.MeasureString(tempString).X;
             int numCharsinString = 0;
 
             // determining total number of characters in the string 
-            for (int i = 0; i < text.Length; i++)
+            for (int i = 0; i < tempString.Length; i++)
                 numCharsinString++;
 
-            // Now removing any whitespaces that might be at the end of the string
+            // Now removing any whitespaces that might be at the end of the original string
             while ((numCharsinString - 1) >= 0 && Char.IsWhiteSpace(text[numCharsinString - 1]))
                 numCharsinString--;
 
@@ -434,7 +446,6 @@ namespace XAMLite
             else
                 charsPerLine = 1;
 
-            Console.WriteLine(text);
             _sb = new StringBuilder();
             int pos, next;
             for (pos = 0; pos < text.Length; pos = next)
