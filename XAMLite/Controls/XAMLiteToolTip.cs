@@ -361,7 +361,7 @@ namespace XAMLite
                 case PlacementMode.Left:
                     if (PlacementRectangle != null)
                     {
-                        _drawPosition.X = (int)PlacementRectangle.X - (panel.Width + (int)Padding.Left + (int)Padding.Right);
+                        _drawPosition.X = (int)PlacementRectangle.X - (panel.Width);
                         _drawPosition.Y = (int)PlacementRectangle.Y;
                     }
                     else
