@@ -114,7 +114,7 @@ namespace XAMLite
         /// Gets or sets the rectangular area relative to which the ToolTip 
         /// control is positioned when it opens.
         /// </summary>
-        // public Rect PlacementRectangle { get; set; }
+        public Rect PlacementRectangle { get; set; }
 
         /// <summary>
         /// Get or sets the horizontal distance between the target origin and 
@@ -230,7 +230,9 @@ namespace XAMLite
             spriteFont = courier10SpriteFont;
             Padding = new Thickness(0, 0, 0, 0);
             Spacing = 2;
-            Placement = PlacementMode.Mouse;
+            HorizontalOffset = 17;
+            VerticalOffset = -Height - 25;
+            Placement = PlacementMode.MousePoint;
             IsEnabled = false;
 
             ToolTipService = new XAMLiteToolTipService();
@@ -357,23 +359,55 @@ namespace XAMLite
                     break;
                 // Top right of tool tip should touch top left of target.
                 case PlacementMode.Left:
-                    _drawPosition.X = msRect.X - (panel.Width + (int)Padding.Left + (int)Padding.Right);
-                    _drawPosition.Y = msRect.Y;
+                    if (PlacementRectangle != null)
+                    {
+                        _drawPosition.X = (int)PlacementRectangle.X - (panel.Width + (int)Padding.Left + (int)Padding.Right);
+                        _drawPosition.Y = (int)PlacementRectangle.Y;
+                    }
+                    else
+                    {
+                        _drawPosition.X = msRect.X - (panel.Width + (int)Padding.Left + (int)Padding.Right);
+                        _drawPosition.Y = msRect.Y;
+                    }
                     break;
                 // Top left of tool tip should touch top right of target.
                 case PlacementMode.Right:
-                    _drawPosition.X = msRect.X + _pointerWidth;
-                    _drawPosition.Y = msRect.Y;
+                    if (PlacementRectangle != null)
+                    {
+                        _drawPosition.X = (int)PlacementRectangle.X + _pointerWidth;
+                        _drawPosition.Y = (int)PlacementRectangle.Y;
+                    }
+                    else
+                    {
+                        _drawPosition.X = msRect.X + _pointerWidth;
+                        _drawPosition.Y = msRect.Y;
+                    }
                     break;
                 // Bottom left of tool tip should touch the top left of target.
                 case PlacementMode.Top:
-                    _drawPosition.X = msRect.X;
-                    _drawPosition.Y = msRect.Y - (panel.Height + (int)Padding.Bottom);
+                    if (PlacementRectangle != null)
+                    {
+                        _drawPosition.X = (int)PlacementRectangle.X;
+                        _drawPosition.Y = (int)PlacementRectangle.Y - (panel.Height + (int)Padding.Bottom);
+                    }
+                    else
+                    {
+                        _drawPosition.X = msRect.X;
+                        _drawPosition.Y = msRect.Y - (panel.Height + (int)Padding.Bottom);
+                    }
                     break;
                 // Top left of tool tip should touch the bottom left of target.
                 case PlacementMode.Bottom:
-                    _drawPosition.X = msRect.X;
-                    _drawPosition.Y = msRect.Y + _pointerHeight;
+                    if (PlacementRectangle != null)
+                    {
+                        _drawPosition.X = (int)PlacementRectangle.X;
+                        _drawPosition.Y = (int)PlacementRectangle.Y + _pointerHeight;
+                    }
+                    else
+                    {
+                        _drawPosition.X = msRect.X;
+                        _drawPosition.Y = msRect.Y + _pointerHeight;
+                    }
                     break;
                 default:
                     break;
