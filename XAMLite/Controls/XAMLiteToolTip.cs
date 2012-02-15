@@ -322,19 +322,25 @@ namespace XAMLite
 
                 spriteBatch.Begin();
 
-                this.spriteFont.Spacing = this.Spacing;
-
-                if (!_transparent)
+                // Make sure our height has been calculated before we try to draw anything.
+                // Otherwise, that means the height and positioning haven't been fully calculated,  
+                // and the text will be displayed at an incorrect position for one frame.
+                if (_drawPosition.Height > 0)
                 {
-                    spriteBatch.Draw(pixel, _drawPosition, (this._backgroundColor * (float)Opacity));
-                }
+                    this.spriteFont.Spacing = this.Spacing;
 
-                if (Name != null && Name != string.Empty)
-                {
-                    spriteBatch.DrawString(this.spriteFont, this.Name, paddedPosition, Color.Yellow);
-                }
+                    if (!_transparent)
+                    {
+                        spriteBatch.Draw(pixel, _drawPosition, (this._backgroundColor * (float)Opacity));
+                    }
 
-                spriteBatch.DrawString(this.spriteFont, this.Text, paddedPosition, this._foregroundColor);
+                    if (Name != null && Name != string.Empty)
+                    {
+                        spriteBatch.DrawString(this.spriteFont, this.Name, paddedPosition, Color.Yellow);
+                    }
+
+                    spriteBatch.DrawString(this.spriteFont, this.Text, paddedPosition, this._foregroundColor);
+                }
 
                 spriteBatch.End();
             }
