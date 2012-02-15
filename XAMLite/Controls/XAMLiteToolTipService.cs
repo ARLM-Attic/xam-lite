@@ -26,5 +26,15 @@ namespace XAMLite
         /// where the second tooltip appears without a delay.
         /// </summary>
         public int BetweenShowDelay;
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public XAMLiteToolTipService()
+        {
+            InitialShowDelay = 0; // standard is mouse hover time.
+            BetweenShowDelay = 100; // standard xaml default value
+            ShowDuration = 5000; // standard xaml default value
+        }
     }
 }

@@ -24,6 +24,8 @@ namespace XAMLite
         /// </summary>
         public XAMLiteToolTipService ToolTipService;
 
+        private TimeSpan VisibleTimeSpan;
+
         /// <summary>
         /// 
         /// </summary>
@@ -236,10 +238,9 @@ namespace XAMLite
             IsEnabled = false;
 
             ToolTipService = new XAMLiteToolTipService();
-            ToolTipService.BetweenShowDelay = 0; // milliseconds
-            ToolTipService.InitialShowDelay = 500; // milliseconds
-            ToolTipService.ShowDuration = 3000; // milliseconds (3 seconds)
 
+            VisibleTimeSpan = TimeSpan.FromMilliseconds(ToolTipService.ShowDuration);
+            
             TooltipCount++;
 
         }
@@ -296,6 +297,16 @@ namespace XAMLite
                     _textWrappingSet = false;
                     _widthHeightContainerSet = false;
                     CalculateDrawPosition();
+                }
+            }
+
+            if (Visible == Visibility.Visible && Placement != PlacementMode.Mouse && Placement != PlacementMode.MousePoint)
+            {
+                VisibleTimeSpan -= gameTime.ElapsedGameTime;
+                if (VisibleTimeSpan <= TimeSpan.Zero)
+                {
+                    Visible = Visibility.Hidden;
+                    VisibleTimeSpan = TimeSpan.FromMilliseconds(ToolTipService.ShowDuration);
                 }
             }
         }
