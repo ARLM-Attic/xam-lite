@@ -380,7 +380,7 @@ namespace XAMLite
                 case PlacementMode.Right:
                     if (PlacementRectangle != null)
                     {
-                        _drawPosition.X = (int)PlacementRectangle.X + _pointerWidth;
+                        _drawPosition.X = (int)PlacementRectangle.X;
                         _drawPosition.Y = (int)PlacementRectangle.Y;
                     }
                     else
@@ -393,7 +393,7 @@ namespace XAMLite
                 case PlacementMode.Top:
                     if (PlacementRectangle != null)
                     {
-                        _drawPosition.X = (int)PlacementRectangle.X;
+                        _drawPosition.X = (int)PlacementRectangle.X - Width / 2;
                         _drawPosition.Y = (int)PlacementRectangle.Y - (panel.Height + (int)Padding.Bottom);
                     }
                     else
@@ -406,8 +406,8 @@ namespace XAMLite
                 case PlacementMode.Bottom:
                     if (PlacementRectangle != null)
                     {
-                        _drawPosition.X = (int)PlacementRectangle.X;
-                        _drawPosition.Y = (int)PlacementRectangle.Y + _pointerHeight;
+                        _drawPosition.X = (int)PlacementRectangle.X - Width / 2;
+                        _drawPosition.Y = (int)PlacementRectangle.Y;
                     }
                     else
                     {
