@@ -522,11 +522,47 @@ namespace XAMLite
                 case PlacementMode.Mouse:
                     _drawPosition.X += msRect.X;
                     _drawPosition.Y += msRect.Y + _pointerHeight;
+
+                    // adjust for screen edges if encountered
+                    if (_drawPosition.X < 0)
+                    {
+                        _drawPosition.X = 0;
+                    }
+                    else if ((_drawPosition.X + panel.Width) > viewport.Width)
+                    {
+                        _drawPosition.X = viewport.Width - panel.Width;
+                    }
+                    if (_drawPosition.Y < 0)
+                    {
+                        _drawPosition.Y = 0;
+                    }
+                    else if ((_drawPosition.Y + panel.Height) > viewport.Height)
+                    {
+                        _drawPosition.Y = viewport.Height - panel.Height;
+                    }
                     break;
                 // Top left of tool tip should touch the tip of the mouse pointer.
                 case PlacementMode.MousePoint:
                     _drawPosition.X += msRect.X;
                     _drawPosition.Y += msRect.Y;
+
+                    // adjust for screen edges if encountered
+                    if (_drawPosition.X < 0)
+                    {
+                        _drawPosition.X = 0;
+                    }
+                    else if ((_drawPosition.X + panel.Width) > viewport.Width)
+                    {
+                        _drawPosition.X = viewport.Width - panel.Width;
+                    }
+                    if (_drawPosition.Y < 0)
+                    {
+                        _drawPosition.Y = 0;
+                    }
+                    else if ((_drawPosition.Y + panel.Height) > viewport.Height)
+                    {
+                        _drawPosition.Y = viewport.Height - panel.Height;
+                    }
                     break;
                 default:
                     break;
@@ -565,6 +601,7 @@ namespace XAMLite
         /// 
         public string WordWrap(string text, int width)
         {
+            width -= (int)Padding.Left + (int)Padding.Right;
             // return if string length is less than width of textblock
             if (width > (int)this.spriteFont.MeasureString(text).X)
             {
@@ -594,11 +631,11 @@ namespace XAMLite
             int paddingAdjust = (int)Padding.Left + (int)Padding.Right;
             if (paddingAdjust < this.Width)
             {
-                charsPerLine = (int)(this.Width / pxPerChar);
-                if ((this.Width / pxPerChar) - charsPerLine >= 0.35)
+                charsPerLine = (int)((this.Width - ((int)Padding.Left + (int)Padding.Right)) / pxPerChar);
+                /*if (((this.Width - ((int)Padding.Left + (int)Padding.Right)) / pxPerChar) - charsPerLine >= 0.35)
                 {
                     charsPerLine -= 1;
-                }
+                }*/
             }
             else
                 charsPerLine = 1;
