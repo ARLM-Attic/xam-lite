@@ -137,7 +137,8 @@ namespace XAMLite
         /// <summary>
         /// Gets or sets the rectangular area relative to which the ToolTip 
         /// control is positioned when it opens.  Works in assocation with the
-        /// PlacementTarget.
+        /// PlacementTarget. Not applicable when Placement = Absolute, Mouse, 
+        /// MousePoint.
         /// </summary>
         public Rect PlacementRectangle { get { return _placementRect; } set { _placementRect = value; _placementRectangleSet = true; } }
 
@@ -148,12 +149,14 @@ namespace XAMLite
         private bool _placementTargetSet;
 
         /// <summary>
-        /// The private PlacementRectangle.
+        /// The private PlacementTarget.
         /// </summary>
         private XAMLiteControl _placementTarget;
 
         /// <summary>
-        /// The control to which the tool tip is assigned.
+        /// The control to which the tool tip is assigned. If not assigned,
+        /// the target becomes the screen.  Not applicable when Placement = 
+        /// Absolute, Mouse, MousePoint.
         /// </summary>
         public XAMLiteControl PlacementTarget { get { return _placementTarget; } set { _placementTarget = value; _placementTargetSet = true; } }
 
@@ -170,7 +173,7 @@ namespace XAMLite
         public double VerticalOffset { get; set; }
 
         /// <summary>
-        /// True when visible.
+        /// When true, control becomes visible.
         /// </summary>
         public bool IsOpen { get; set; }
 
@@ -277,11 +280,6 @@ namespace XAMLite
         public static int TooltipCount;
 
         /// <summary>
-        /// Approximate width in pixels of the mouse pointer.
-        /// </summary>
-        //private int _pointerWidth;
-
-        /// <summary>
         /// Approximate height of the mouse pointer.
         /// </summary>
         private int _pointerHeight;
@@ -294,7 +292,6 @@ namespace XAMLite
             : base(game)
         {
             _pointerHeight = 20;
-            //_pointerWidth = 12;
 
             TextAlignment = TextAlignment.Left;
             TextWrapping = TextWrapping.Wrap;
@@ -629,13 +626,9 @@ namespace XAMLite
             int charsPerLine;
 
             int paddingAdjust = (int)Padding.Left + (int)Padding.Right;
-            if (paddingAdjust < this.Width)
+            if (paddingAdjust < width)
             {
-                charsPerLine = (int)((this.Width - ((int)Padding.Left + (int)Padding.Right)) / pxPerChar);
-                /*if (((this.Width - ((int)Padding.Left + (int)Padding.Right)) / pxPerChar) - charsPerLine >= 0.35)
-                {
-                    charsPerLine -= 1;
-                }*/
+                charsPerLine = (int)(width / pxPerChar);
             }
             else
                 charsPerLine = 1;
