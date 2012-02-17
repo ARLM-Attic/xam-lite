@@ -24,7 +24,12 @@ namespace XAMLite
         /// </summary>
         public XAMLiteToolTipService ToolTipService;
 
-        private TimeSpan VisibleTimeSpan;
+        /// <summary>
+        /// When placement mode is not either MousePoint or Mouse, the tool tip
+        /// will be drawn according to either the default or user-specified
+        /// ToolTipService specifications.
+        /// </summary>
+        private TimeSpan _visibleTimeSpan;
 
         /// <summary>
         /// 
@@ -73,7 +78,8 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// True if some change occurred in the text and the tool tip needs to 
+        /// be remeasured.
         /// </summary>
         private bool _textChanged;
 
@@ -131,12 +137,17 @@ namespace XAMLite
         public double VerticalOffset { get; set; }
 
         /// <summary>
+        /// True when visible.
+        /// </summary>
+        public bool IsOpen { get; set; }
+
+        /// <summary>
         /// 
         /// </summary>
         public Thickness Padding { get; set; }
 
         /// <summary>
-        /// 
+        /// Location of where the text should be drawn.
         /// </summary>
         Vector2 paddedPosition;
 
@@ -181,8 +192,15 @@ namespace XAMLite
             }
         }
 
+        /// <summary>
+        /// The background is set to Transparent
+        /// </summary>
         private bool _transparent;
 
+        /// <summary>
+        /// The organized text or content after it has gone through being text
+        /// wrapped.
+        /// </summary>
         private StringBuilder _sb;
 
         /// <summary>
@@ -190,14 +208,34 @@ namespace XAMLite
         /// </summary>
         public TextWrapping TextWrapping { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public TextAlignment TextAlignment { get; set; }
 
+        /// <summary>
+        /// True when the width of the control was set.
+        /// </summary>
         private bool _widthSet;
+
+        /// <summary>
+        /// True when the height of the control was set.
+        /// </summary>
         private bool _heightSet;
 
+        /// <summary>
+        /// True when the text has been wrapped.
+        /// </summary>
         private bool _textWrappingSet;
+
+        /// <summary>
+        /// True when the width and height of the control have been set.
+        /// </summary>
         private bool _widthHeightContainerSet;
 
+        /// <summary>
+        /// The position where the tool tip will be drawn.
+        /// </summary>
         private Rectangle _drawPosition;
 
         /// <summary>
@@ -236,10 +274,11 @@ namespace XAMLite
             VerticalOffset = -Height - 25;
             Placement = PlacementMode.MousePoint;
             IsEnabled = false;
+            IsOpen = false;
 
             ToolTipService = new XAMLiteToolTipService();
 
-            VisibleTimeSpan = TimeSpan.FromMilliseconds(ToolTipService.ShowDuration);
+            _visibleTimeSpan = TimeSpan.FromMilliseconds(ToolTipService.ShowDuration);
             
             TooltipCount++;
 
@@ -280,7 +319,7 @@ namespace XAMLite
             {
                 fontFamilyChanged = false;
                 UpdateFontFamily(_fontFamily);
-                this.spriteFont.Spacing = Spacing;
+                spriteFont.Spacing = Spacing;
                 CalculateWidthAndHeight(this.Text);
             }
             if (marginChanged)
@@ -300,13 +339,15 @@ namespace XAMLite
                 }
             }
 
-            if (Visible == Visibility.Visible && Placement != PlacementMode.Mouse && Placement != PlacementMode.MousePoint)
+            if ( IsOpen && Placement != PlacementMode.Mouse && Placement != PlacementMode.MousePoint)
             {
-                VisibleTimeSpan -= gameTime.ElapsedGameTime;
-                if (VisibleTimeSpan <= TimeSpan.Zero)
+                Visible = Visibility.Visible;
+                _visibleTimeSpan -= gameTime.ElapsedGameTime;
+                if (_visibleTimeSpan <= TimeSpan.Zero)
                 {
+                    IsOpen = false;
                     Visible = Visibility.Hidden;
-                    VisibleTimeSpan = TimeSpan.FromMilliseconds(ToolTipService.ShowDuration);
+                    _visibleTimeSpan = TimeSpan.FromMilliseconds(ToolTipService.ShowDuration);
                 }
             }
         }
@@ -317,7 +358,7 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            if (Visible == Visibility.Visible && IsEnabled)
+            if (IsOpen && IsEnabled)
             {
                 if (TextWrapping == TextWrapping.Wrap && !_textWrappingSet)
                 {
@@ -364,6 +405,12 @@ namespace XAMLite
         {
             switch (Placement)
             {
+                    // Absolute position of the tool tip as specified by the
+                    // HorizontalOffset and the VerticalOffset
+                case PlacementMode.Absolute:
+                    _drawPosition.X = 0;
+                    _drawPosition.Y = 0;
+                    break;
                 // Top left of tool tip should touch the bottom left of the mouse pointer.
                 case PlacementMode.Mouse:
                     _drawPosition.X = msRect.X;
@@ -430,8 +477,11 @@ namespace XAMLite
                     break;
             }
 
-            _drawPosition.X += (int)HorizontalOffset;
-            _drawPosition.Y += (int)VerticalOffset;
+            //if (Placement != PlacementMode.Absolute)
+            //{
+                _drawPosition.X += (int)HorizontalOffset;
+                _drawPosition.Y += (int)VerticalOffset;
+            //}
             _drawPosition.Width = panel.Width + (int)Padding.Left;
             _drawPosition.Height = panel.Height;// +(int)Padding.Top + (int)Padding.Bottom;
 

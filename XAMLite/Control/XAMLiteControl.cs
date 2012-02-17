@@ -16,7 +16,7 @@ namespace XAMLite
     /// Mouse:  Top left of tool tip should touch the bottom left of the mouse pointer.
     /// MousePoint:  Top left of tool tip should touch the tip of the mouse pointer.
     /// </summary>
-    public enum PlacementMode { Bottom, Center, Right, Left, Top, Mouse, MousePoint }
+    public enum PlacementMode { Absolute, Bottom, Center, Right, Left, Top, Mouse, MousePoint }
 
     /// <summary>
     /// 
