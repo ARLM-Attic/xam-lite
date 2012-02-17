@@ -114,15 +114,48 @@ namespace XAMLite
         public bool HasDropShadow { get; set; }
 
         /// <summary>
+        /// May be used to establish what the tool tip will use to position itself with.
+        /// </summary>
+        //public DependencyObject Parent { get; }
+
+        /// <summary>
         /// Describes the position of the tool tip releative to the control.
         /// </summary>
         public PlacementMode Placement { get; set; }
 
         /// <summary>
-        /// Gets or sets the rectangular area relative to which the ToolTip 
-        /// control is positioned when it opens.
+        /// Determines whether the position of the ToolTIp will be affected by
+        /// the position of the PlacementRectangle
         /// </summary>
-        public Rect PlacementRectangle { get; set; }
+        private bool _placementRectangleSet;
+
+        /// <summary>
+        /// The private PlacementRectangle.
+        /// </summary>
+        private Rect _placementRect;
+
+        /// <summary>
+        /// Gets or sets the rectangular area relative to which the ToolTip 
+        /// control is positioned when it opens.  Works in assocation with the
+        /// PlacementTarget.
+        /// </summary>
+        public Rect PlacementRectangle { get { return _placementRect; } set { _placementRect = value; _placementRectangleSet = true; } }
+
+        /// <summary>
+        /// Determines whether the position of the ToolTIp will be affected by
+        /// the position of the PlacementRectangle
+        /// </summary>
+        private bool _placementTargetSet;
+
+        /// <summary>
+        /// The private PlacementRectangle.
+        /// </summary>
+        private XAMLiteControl _placementTarget;
+
+        /// <summary>
+        /// The control to which the tool tip is assigned.
+        /// </summary>
+        public XAMLiteControl PlacementTarget { get { return _placementTarget; } set { _placementTarget = value; _placementTargetSet = true; } }
 
         /// <summary>
         /// Get or sets the horizontal distance between the target origin and 
@@ -246,7 +279,7 @@ namespace XAMLite
         /// <summary>
         /// Approximate width in pixels of the mouse pointer.
         /// </summary>
-        private int _pointerWidth;
+        //private int _pointerWidth;
 
         /// <summary>
         /// Approximate height of the mouse pointer.
@@ -261,7 +294,7 @@ namespace XAMLite
             : base(game)
         {
             _pointerHeight = 20;
-            _pointerWidth = 12;
+            //_pointerWidth = 12;
 
             TextAlignment = TextAlignment.Left;
             TextWrapping = TextWrapping.Wrap;
@@ -350,6 +383,12 @@ namespace XAMLite
                     _visibleTimeSpan = TimeSpan.FromMilliseconds(ToolTipService.ShowDuration);
                 }
             }
+
+            if (!IsOpen)
+            {
+                _placementRectangleSet = false;
+                _placementTargetSet = false;
+            }
         }
 
         /// <summary>
@@ -403,87 +442,98 @@ namespace XAMLite
         /// </summary>
         private void CalculateDrawPosition()
         {
+            // start by simply adding in the Horizontal and Vertical offsets.
+            _drawPosition.X = (int)HorizontalOffset;
+            _drawPosition.Y = (int)VerticalOffset;
+
+            if (Placement != PlacementMode.Absolute || Placement != PlacementMode.Mouse || Placement != PlacementMode.MousePoint)
+            {
+                if (!_placementTargetSet)
+                {
+                    PlacementTarget = new XAMLiteLabel(this.Game);
+                    PlacementTarget.Width = viewport.Width;
+                    PlacementTarget.Height = viewport.Height;
+                }
+
+                // Add the additional positional info for the PlacementTarget.
+                _drawPosition.X += (int)PlacementTarget.Position.X;
+                _drawPosition.Y += (int)PlacementTarget.Position.Y;
+            }
+
             switch (Placement)
             {
-                    // Absolute position of the tool tip as specified by the
-                    // HorizontalOffset and the VerticalOffset
+                // Absolute position of the tool tip as specified by the
+                // HorizontalOffset and the VerticalOffset was already 
+                // established above.
                 case PlacementMode.Absolute:
-                    _drawPosition.X = 0;
-                    _drawPosition.Y = 0;
                     break;
-                // Top left of tool tip should touch the bottom left of the mouse pointer.
-                case PlacementMode.Mouse:
-                    _drawPosition.X = msRect.X;
-                    _drawPosition.Y = msRect.Y + _pointerHeight;
-                    break;
-                // Top left of tool tip should touch the tip of the mouse pointer.
-                case PlacementMode.MousePoint:
-                    _drawPosition.X = msRect.X;
-                    _drawPosition.Y = msRect.Y;
-                    break;
-                // Top right of tool tip should touch top left of target.
-                case PlacementMode.Left:
-                    if (PlacementRectangle != null)
+                // The center of the tool tip should touch the center of the target.
+                case PlacementMode.Center:                
+                    if (_placementRectangleSet)
                     {
-                        _drawPosition.X = (int)PlacementRectangle.X - (panel.Width);
-                        _drawPosition.Y = (int)PlacementRectangle.Y;
+                        _drawPosition.X += (int)PlacementRectangle.X + (int)PlacementRectangle.Width / 2;
+                        _drawPosition.Y += (int)PlacementRectangle.Y + (int)PlacementRectangle.Height / 2;
                     }
                     else
                     {
-                        _drawPosition.X = msRect.X - (panel.Width + (int)Padding.Left + (int)Padding.Right);
-                        _drawPosition.Y = msRect.Y;
+                        _drawPosition.X += (int)PlacementTarget.Width / 2;
+                        _drawPosition.Y += (int)PlacementTarget.Height / 2;
+                    }
+                    _drawPosition.X -= panel.Width / 2;
+                    _drawPosition.Y -= panel.Height / 2;
+                    break;
+                // Top right of tool tip should touch top left of target.
+                case PlacementMode.Left:
+                    _drawPosition.X -= panel.Width;
+                    if (_placementRectangleSet)
+                    {
+                        _drawPosition.X += (int)PlacementRectangle.X;
+                        _drawPosition.Y += (int)PlacementRectangle.Y;
                     }
                     break;
                 // Top left of tool tip should touch top right of target.
                 case PlacementMode.Right:
-                    if (PlacementRectangle != null)
+                    _drawPosition.X += (int)PlacementTarget.Width;
+                    if (_placementRectangleSet)
                     {
-                        _drawPosition.X = (int)PlacementRectangle.X;
-                        _drawPosition.Y = (int)PlacementRectangle.Y;
-                    }
-                    else
-                    {
-                        _drawPosition.X = msRect.X + _pointerWidth;
-                        _drawPosition.Y = msRect.Y;
+                        _drawPosition.X += -((int)PlacementTarget.Width - ((int)PlacementRectangle.X + (int)PlacementRectangle.Width));
+                        _drawPosition.Y += (int)PlacementRectangle.Y;
                     }
                     break;
                 // Bottom left of tool tip should touch the top left of target.
                 case PlacementMode.Top:
-                    if (PlacementRectangle != null)
+                    _drawPosition.Y -= panel.Height;
+                    if (_placementRectangleSet)
                     {
-                        _drawPosition.X = (int)PlacementRectangle.X;
-                        _drawPosition.Y = (int)PlacementRectangle.Y - panel.Height;
-                    }
-                    else
-                    {
-                        _drawPosition.X = msRect.X;
-                        _drawPosition.Y = msRect.Y - (panel.Height + (int)Padding.Bottom);
+                        _drawPosition.X += (int)PlacementRectangle.X;
+                        _drawPosition.Y += (int)PlacementRectangle.Y;
                     }
                     break;
                 // Top left of tool tip should touch the bottom left of target.
                 case PlacementMode.Bottom:
-                    if (PlacementRectangle != null)
+                    _drawPosition.Y += (int)PlacementTarget.Height;
+                    if (_placementRectangleSet)
                     {
-                        _drawPosition.X = (int)PlacementRectangle.X;
-                        _drawPosition.Y = (int)PlacementRectangle.Y + _pointerHeight;
+                        _drawPosition.X += (int)PlacementRectangle.X;
+                        _drawPosition.Y += (int)PlacementRectangle.Y;
                     }
-                    else
-                    {
-                        _drawPosition.X = msRect.X;
-                        _drawPosition.Y = msRect.Y + _pointerHeight;
-                    }
+                    break;
+                // Top left of tool tip should touch the bottom left of the mouse pointer.
+                case PlacementMode.Mouse:
+                    _drawPosition.X += msRect.X;
+                    _drawPosition.Y += msRect.Y + _pointerHeight;
+                    break;
+                // Top left of tool tip should touch the tip of the mouse pointer.
+                case PlacementMode.MousePoint:
+                    _drawPosition.X += msRect.X;
+                    _drawPosition.Y += msRect.Y;
                     break;
                 default:
                     break;
             }
 
-            //if (Placement != PlacementMode.Absolute)
-            //{
-                _drawPosition.X += (int)HorizontalOffset;
-                _drawPosition.Y += (int)VerticalOffset;
-            //}
-            _drawPosition.Width = panel.Width + (int)Padding.Left;
-            _drawPosition.Height = panel.Height;// +(int)Padding.Top + (int)Padding.Bottom;
+            _drawPosition.Width = panel.Width;
+            _drawPosition.Height = panel.Height;
 
             paddedPosition = new Vector2(_drawPosition.X + (int)Padding.Left, _drawPosition.Y + (int)Padding.Top);
         }
