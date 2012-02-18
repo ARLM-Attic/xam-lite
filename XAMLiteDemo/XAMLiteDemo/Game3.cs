@@ -42,7 +42,6 @@ namespace XAMLiteDemo
             // Default screen size.
             _graphics.PreferredBackBufferWidth = 715;
             _graphics.PreferredBackBufferHeight = 365;
-
         }
 
         /// <summary>
