@@ -24,6 +24,7 @@ namespace XAMLite
         /// <summary>
         /// Gets or sets the maximum time between the display of two tooltips 
         /// where the second tooltip appears without a delay.
+        /// NOTE: Not currently implemented for use in the XAMLiteToolTip class.
         /// </summary>
         public int BetweenShowDelay;
 
