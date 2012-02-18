@@ -450,7 +450,7 @@ namespace XAMLite
                     PlacementTarget.Height = viewport.Height;
                 }
 
-                // Add the additional positional info for the PlacementTar-get.
+                // Add the additional positional info for the PlacementTarget.
                 _drawPosition.X += (int)PlacementTarget.Position.X;
                 _drawPosition.Y += (int)PlacementTarget.Position.Y;
             }

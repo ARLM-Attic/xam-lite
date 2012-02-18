@@ -108,8 +108,7 @@ namespace XAMLiteDemo
         void label_MouseEnter(object sender, MouseEventArgs e)
         {
             toolTip_01.Content = "This is a XAMLiteToolTip.";
-            toolTip_01.Placement = PlacementMode.Right;
-            toolTip_01.PlacementTarget = txtBox;
+            toolTip_01.Placement = PlacementMode.Mouse;
             toolTip_01.IsEnabled = true;
             toolTip_01.IsOpen = true;
         }
