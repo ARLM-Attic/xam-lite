@@ -25,11 +25,17 @@ namespace XAMLite
         public XAMLiteToolTipService ToolTipService;
 
         /// <summary>
-        /// When placement mode is not either MousePoint or Mouse, the tool tip
-        /// will be drawn according to either the default or user-specified
-        /// ToolTipService specifications.
+        /// The duration a tool tip will be displayed as specified by the 
+        /// ToolTipService.ShowDuration.  
         /// </summary>
         private TimeSpan _visibleTimeSpan;
+
+        /// <summary>
+        /// The duration a tool tip must wait to become Visible as specified
+        /// by the user as specified by ToolTipService.InitialShowDelay.  
+        /// Default is 0 milliseconds.
+        /// </summary>
+        private TimeSpan _visibleDelayTimeSpan;
 
         /// <summary>
         /// 
@@ -301,13 +307,15 @@ namespace XAMLite
             Padding = new Thickness(0, 0, 0, 0);
             Spacing = 2;
             Placement = PlacementMode.MousePoint;
+            Visible = Visibility.Hidden;
             IsEnabled = false;
             IsOpen = false;
 
             ToolTipService = new XAMLiteToolTipService();
 
             _visibleTimeSpan = TimeSpan.FromMilliseconds(ToolTipService.ShowDuration);
-            
+            _visibleDelayTimeSpan = TimeSpan.FromMilliseconds(ToolTipService.InitialShowDelay);
+
             TooltipCount++;
         }
 
@@ -377,16 +385,24 @@ namespace XAMLite
                     CalculateDrawPosition();
                 }
             }
-
-            if ( IsOpen && Placement != PlacementMode.Mouse && Placement != PlacementMode.MousePoint)
+            if (IsOpen)
             {
-                Visible = Visibility.Visible;
+                _visibleDelayTimeSpan -= gameTime.ElapsedGameTime;
+                if (_visibleDelayTimeSpan <= TimeSpan.Zero)
+                {
+                    Visible = Visibility.Visible;
+                }
+            }
+
+            if (Visible == Visibility.Visible && Placement != PlacementMode.Mouse && Placement != PlacementMode.MousePoint)
+            {
                 _visibleTimeSpan -= gameTime.ElapsedGameTime;
                 if (_visibleTimeSpan <= TimeSpan.Zero)
                 {
                     IsOpen = false;
                     Visible = Visibility.Hidden;
                     _visibleTimeSpan = TimeSpan.FromMilliseconds(ToolTipService.ShowDuration);
+                    _visibleDelayTimeSpan = TimeSpan.FromMilliseconds(ToolTipService.InitialShowDelay);
                 }
             }
 
@@ -403,7 +419,7 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            if (IsOpen && IsEnabled)
+            if (Visible == Visibility.Visible && IsEnabled)
             {
                 spriteBatch.Begin();
 
