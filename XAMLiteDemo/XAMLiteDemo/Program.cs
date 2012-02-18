@@ -10,7 +10,7 @@ namespace XAMLiteDemo
         /// </summary>
         static void Main(string[] args)
         {
-            using (var game = new Game2())
+            using (var game = new Game3())
             {
                 game.Run();
             }
