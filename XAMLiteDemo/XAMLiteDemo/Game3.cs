@@ -31,6 +31,7 @@ namespace XAMLiteDemo
         SpriteBatch _spriteBatch;
         XAMLiteImage catImage;
         XAMLiteImage dogImage;
+        XAMLiteTextBox txtBox;
         XAMLiteToolTip toolTip_01;
 
         public Game3()
@@ -70,15 +71,26 @@ namespace XAMLiteDemo
             dogImage.HorizontalAlignment = HorizontalAlignment.Center;
             Components.Add(dogImage);
 
+            txtBox = new XAMLiteTextBox(this);
+            txtBox.Text = "This is a Text Box";
+            txtBox.Width = 100;
+            txtBox.Padding = new Thickness(8,5,0,0);
+            txtBox.Background = Brushes.Black;
+            txtBox.FontFamily = new FontFamily("Verdana12");
+            txtBox.VerticalAlignment = VerticalAlignment.Center;
+            txtBox.HorizontalAlignment = HorizontalAlignment.Center;
+            txtBox.MouseEnter += new MouseEventHandler(label_MouseEnter);
+            txtBox.MouseLeave += new MouseEventHandler(label_MouseLeave);
+            Components.Add(txtBox);
+
             toolTip_01 = new XAMLiteToolTip(this);
             toolTip_01.Content = "";
             toolTip_01.TextWrapping = TextWrapping.Wrap;
             toolTip_01.Width = 200;
-            toolTip_01.Placement = PlacementMode.MousePoint;
             toolTip_01.FontFamily = new System.Windows.Media.FontFamily("Verdana12");
             toolTip_01.Background = System.Windows.Media.Brushes.Black;
             toolTip_01.Foreground = System.Windows.Media.Brushes.White;
-            toolTip_01.Padding = new System.Windows.Thickness(10, 5, 5, 10);
+            toolTip_01.Padding = new System.Windows.Thickness(10, 5, 5, 10);            
             Components.Add(toolTip_01);
 
             // Initialize all game components. (This includes calling Initialize() on all XAMLite controls, 
@@ -86,6 +98,27 @@ namespace XAMLiteDemo
             base.Initialize();
         }
 
+        void label_MouseLeave(object sender, MouseEventArgs e)
+        {
+            toolTip_01.Content = "";
+            toolTip_01.IsEnabled = false;
+            toolTip_01.IsOpen = false;
+        }
+
+        void label_MouseEnter(object sender, MouseEventArgs e)
+        {
+            toolTip_01.Content = "This is a XAMLiteToolTip.";
+            toolTip_01.Placement = PlacementMode.Right;
+            toolTip_01.PlacementTarget = txtBox;
+            toolTip_01.IsEnabled = true;
+            toolTip_01.IsOpen = true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void dogImage_MouseLeave(object sender, MouseEventArgs e)
         {
             toolTip_01.Content = "";
@@ -93,6 +126,11 @@ namespace XAMLiteDemo
             toolTip_01.IsOpen = false;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void dogImage_MouseEnter(object sender, MouseEventArgs e)
         {
             toolTip_01.Content = "This is the Dog Image.";
@@ -102,6 +140,11 @@ namespace XAMLiteDemo
             toolTip_01.IsOpen = true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void catImage_MouseLeave(object sender, MouseEventArgs e)
         {
             toolTip_01.Content = "";
@@ -109,6 +152,11 @@ namespace XAMLiteDemo
             toolTip_01.IsOpen = false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void catImage_MouseEnter(object sender, MouseEventArgs e)
         {
             toolTip_01.Content = "This is the Cat Image.";
