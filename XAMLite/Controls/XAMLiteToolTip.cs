@@ -300,8 +300,6 @@ namespace XAMLite
             spriteFont = courier10SpriteFont;
             Padding = new Thickness(0, 0, 0, 0);
             Spacing = 2;
-            HorizontalOffset = 17;
-            VerticalOffset = -Height - 25;
             Placement = PlacementMode.MousePoint;
             IsEnabled = false;
             IsOpen = false;
@@ -445,6 +443,7 @@ namespace XAMLite
 
             if (Placement != PlacementMode.Absolute || Placement != PlacementMode.Mouse || Placement != PlacementMode.MousePoint)
             {
+                // if no target is set, the screen becomes the control.
                 if (!_placementTargetSet)
                 {
                     PlacementTarget = new XAMLiteLabel(this.Game);
@@ -457,6 +456,7 @@ namespace XAMLite
                 _drawPosition.Y += (int)PlacementTarget.Position.Y;
             }
 
+            // Make adjustments to the draw position based on the Placement.
             switch (Placement)
             {
                 // Absolute position of the tool tip as specified by the
@@ -565,10 +565,34 @@ namespace XAMLite
                     break;
             }
 
+            /*if (ScreenEdgeDetected())
+            {
+                AdjustForScreenEdge();
+            }*/
+
             _drawPosition.Width = panel.Width;
             _drawPosition.Height = panel.Height;
 
             paddedPosition = new Vector2(_drawPosition.X + (int)Padding.Left, _drawPosition.Y + (int)Padding.Top);
+        }
+
+        /// <summary>
+        /// Returns true if a screen edge is detected where the tool tip is to
+        /// be drawn.
+        /// </summary>
+        /// <returns></returns>
+        private bool ScreenEdgeDetected()
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// Adjusts the X or Y position of the tool tip when a screen edge is
+        /// detected.
+        /// </summary>
+        private void AdjustForScreenEdge()
+        {
+
         }
 
         /// <summary>
