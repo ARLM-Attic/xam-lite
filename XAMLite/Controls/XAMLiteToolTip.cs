@@ -342,6 +342,18 @@ namespace XAMLite
         {
             base.Update(gameTime);
 
+            if (TextWrapping == TextWrapping.Wrap && !_textWrappingSet)
+            {
+                _textWrappingSet = true;
+                this.Text = WordWrap(this.Text, Width);
+            }
+
+            if (!_widthHeightContainerSet)
+            {
+                _widthHeightContainerSet = true;
+                CalculateWidthAndHeight(this.Name + this.Text);
+            }
+
             if (fontFamilyChanged)
             {
                 fontFamilyChanged = false;
@@ -393,18 +405,6 @@ namespace XAMLite
         {
             if (IsOpen && IsEnabled)
             {
-                if (TextWrapping == TextWrapping.Wrap && !_textWrappingSet)
-                {
-                    _textWrappingSet = true;
-                    this.Text = WordWrap(this.Text, Width);
-                }
-
-                if (!_widthHeightContainerSet)
-                {
-                    _widthHeightContainerSet = true;
-                    CalculateWidthAndHeight(this.Name + this.Text);
-                }
-
                 spriteBatch.Begin();
 
                 // Make sure our height has been calculated before we try to draw anything.
