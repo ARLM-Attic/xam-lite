@@ -309,7 +309,6 @@ namespace XAMLite
             _visibleTimeSpan = TimeSpan.FromMilliseconds(ToolTipService.ShowDuration);
             
             TooltipCount++;
-
         }
 
         /// <summary>
@@ -519,31 +518,58 @@ namespace XAMLite
                 case PlacementMode.Mouse:
                     _drawPosition.X += msRect.X;
                     _drawPosition.Y += msRect.Y + _pointerHeight;
-
-                    // adjust for screen edges if encountered
-                    if (_drawPosition.X < 0)
-                    {
-                        _drawPosition.X = 0;
-                    }
-                    else if ((_drawPosition.X + panel.Width) > viewport.Width)
-                    {
-                        _drawPosition.X = viewport.Width - panel.Width;
-                    }
-                    if (_drawPosition.Y < 0)
-                    {
-                        _drawPosition.Y = 0;
-                    }
-                    else if ((_drawPosition.Y + panel.Height) > viewport.Height)
-                    {
-                        _drawPosition.Y = viewport.Height - panel.Height;
-                    }
                     break;
                 // Top left of tool tip should touch the tip of the mouse pointer.
                 case PlacementMode.MousePoint:
                     _drawPosition.X += msRect.X;
                     _drawPosition.Y += msRect.Y;
+                    break;
+                default:
+                    break;
+            }
 
-                    // adjust for screen edges if encountered
+            // check whether a screen edge is encountered.
+            if (ScreenEdgeDetected())
+            {
+                // in which case, adjust where the panel is drawn.
+                AdjustForScreenEdge();
+            }
+
+            // set the width
+            _drawPosition.Width = panel.Width;
+            _drawPosition.Height = panel.Height;
+
+            // set where the text will be drawn within the tool tip.
+            paddedPosition = new Vector2(_drawPosition.X + (int)Padding.Left, _drawPosition.Y + (int)Padding.Top);
+        }
+
+        /// <summary>
+        /// Returns true if a screen edge is detected where the tool tip is to
+        /// be drawn.
+        /// </summary>
+        /// <returns></returns>
+        private bool ScreenEdgeDetected()
+        {
+            if (_drawPosition.X < 0 || (_drawPosition.X + panel.Width) > viewport.Width || _drawPosition.Y < 0 || (_drawPosition.Y + panel.Height) > viewport.Height)
+            {
+                return true;
+            }
+            
+            return false;
+        }
+
+        /// <summary>
+        /// Adjusts the X or Y position of the tool tip when a screen edge is
+        /// detected.
+        /// </summary>
+        private void AdjustForScreenEdge()
+        {
+            switch (Placement)
+            {
+                case PlacementMode.Absolute:
+                    break;
+                case PlacementMode.MousePoint:
+                case PlacementMode.Mouse:
                     if (_drawPosition.X < 0)
                     {
                         _drawPosition.X = 0;
@@ -564,35 +590,6 @@ namespace XAMLite
                 default:
                     break;
             }
-
-            /*if (ScreenEdgeDetected())
-            {
-                AdjustForScreenEdge();
-            }*/
-
-            _drawPosition.Width = panel.Width;
-            _drawPosition.Height = panel.Height;
-
-            paddedPosition = new Vector2(_drawPosition.X + (int)Padding.Left, _drawPosition.Y + (int)Padding.Top);
-        }
-
-        /// <summary>
-        /// Returns true if a screen edge is detected where the tool tip is to
-        /// be drawn.
-        /// </summary>
-        /// <returns></returns>
-        private bool ScreenEdgeDetected()
-        {
-            return false;
-        }
-
-        /// <summary>
-        /// Adjusts the X or Y position of the tool tip when a screen edge is
-        /// detected.
-        /// </summary>
-        private void AdjustForScreenEdge()
-        {
-
         }
 
         /// <summary>
@@ -620,7 +617,7 @@ namespace XAMLite
         /// should be word wrapped</param>
         /// <returns>The modified text</returns>
         /// 
-        public string WordWrap(string text, int width)
+        private string WordWrap(string text, int width)
         {
             width -= (int)Padding.Left + (int)Padding.Right;
             // return if string length is less than width of textblock
@@ -703,7 +700,7 @@ namespace XAMLite
         /// <param name="pos"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public int BreakLine(string text, int pos, int max)
+        private int BreakLine(string text, int pos, int max)
         {
             // Find last whitespace in line
             int i = max - 1;
