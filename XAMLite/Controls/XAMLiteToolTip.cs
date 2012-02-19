@@ -456,7 +456,7 @@ namespace XAMLite
             _drawPosition.X = (int)HorizontalOffset;
             _drawPosition.Y = (int)VerticalOffset;
 
-            if (Placement != PlacementMode.Absolute || Placement != PlacementMode.Mouse || Placement != PlacementMode.MousePoint)
+            if (Placement != PlacementMode.Absolute && Placement != PlacementMode.Mouse && Placement != PlacementMode.MousePoint)
             {
                 // if no target is set, the screen becomes the control.
                 if (!_placementTargetSet)
