@@ -380,11 +380,12 @@ namespace XAMLite
                 _textChanged = false;
                 if (TextWrapping == TextWrapping.Wrap)
                 {
-                    _textWrappingSet = false;
-                    _widthHeightContainerSet = false;
+                    this.Text = WordWrap(this.Text, Width);
+                    CalculateWidthAndHeight(this.Name + this.Text);
                     CalculateDrawPosition();
                 }
             }
+
             if (IsOpen)
             {
                 _visibleDelayTimeSpan -= gameTime.ElapsedGameTime;
