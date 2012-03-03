@@ -98,7 +98,7 @@
   <ItemGroup>
     <ProjectReference Include="..\XAMLiteContent\XAMLiteContent.contentproj">
       <Project>{E03B3989-D21C-47D0-994D-6AA69BA533B2}</Project>
-      <Name>XAMLiteContent</Name>
+      <Name>XAMLiteContent %28Content%29</Name>
       <XnaReferenceType>Content</XnaReferenceType>
     </ProjectReference>
   </ItemGroup>
