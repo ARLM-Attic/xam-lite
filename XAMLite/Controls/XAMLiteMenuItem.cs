@@ -391,7 +391,7 @@ namespace XAMLite
 
                     if (_allSubMenuTitles.Contains(this.Header))
                     {
-                        arrowRect.X = this.panel.X + this.Width - arrow.Width;
+                        arrowRect.X = this.panel.X + panel.Width - arrow.Width;
                         arrowRect.Y = this.panel.Y + this.Height / 4;
                         this.spriteBatch.Draw(arrow, arrowRect, (Color.White * (float)Opacity));
                     }
