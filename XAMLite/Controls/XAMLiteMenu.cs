@@ -55,6 +55,12 @@ namespace XAMLite
 
         Rectangle _menuItemPanel;
 
+        /// <summary>
+        /// True when the width and height of the menu items have been measured
+        /// once all the Fonts, etc., hav been set.
+        /// </summary>
+        private bool _menuItemsMeasured;
+
         public XAMLiteMenu(Game game)
             : base(game)
         {
@@ -92,7 +98,9 @@ namespace XAMLite
 
             // setting up the menu
             if (!_setMenuItems)
+            {
                 setMenuItems(gameTime);
+            }
 
             if (IsEnabled)
             {
@@ -132,10 +140,18 @@ namespace XAMLite
 
                 if (_fullMenuIsVisible)
                 {
+                    if (!_menuItemsMeasured)
+                    {
+                        _menuItemsMeasured = true;
+                        CalculateLongestMenuItemWidth();
+                    }
+
                     Items[0].Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cccccc");
                 }
                 else
+                {
                     Items[0].Background = Brushes.Transparent;
+                }
             }
         }
 
@@ -220,22 +236,7 @@ namespace XAMLite
                 }
             }
 
-            // determining what the width for all the menu items should be, not including the header of
-            // the menu.
-            for (int i = 1; i < Items.Count; i++)
-            {
-                if (longestWidth <= Items[i].Width)
-                    longestWidth = Items[i].Width;
-            }
-
-            // setting the width for all the menu items, not including the header
-            for (int i = 1; i < Items.Count; i++)
-            {
-                Items[i].Width = longestWidth + 40;
-                Items[i].Height = Items[0].Height;
-            }
-
-            longestWidth += 40;
+            //CalculateLongestMenuItemWidth();
 
             // adding the head of the menu to the list of menus
             _allMenuTitles.Add(Items[0].Header);
@@ -266,7 +267,33 @@ namespace XAMLite
 
             // creating the rectangles for determining mouse activities
             panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, Items[0].Height);
+            
+        }
+
+        /// <summary>
+        /// Calculates the Width of the longest menu item
+        /// </summary>
+        private void CalculateLongestMenuItemWidth()
+        {
+            // determining what the width for all the menu items should be, not including the header of
+            // the menu.
+            for (int i = 1; i < Items.Count; i++)
+            {
+                if (longestWidth <= Items[i].Width)
+                    longestWidth = Items[i].Width;
+            }
+
+            // setting the width for all the menu items, not including the header
+            for (int i = 1; i < Items.Count; i++)
+            {
+                Items[i].Width = longestWidth + 40;
+                Items[i].Height = Items[0].Height;
+            }
+
+            longestWidth += 40;
+            
             _menuItemPanel = new Rectangle((int)this.Position.X, (int)this.Position.Y + Items[0].Height, longestWidth, Items[0].Height * (Items.Count - 1));
+
         }
 
         /// <summary>

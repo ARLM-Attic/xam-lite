@@ -259,10 +259,15 @@ namespace XAMLite
             {
                 marginChanged = false;
                 if (_allMenuTitles.Contains(this.Header))
+                {
                     panel = new Rectangle((int)this.Position.X - (int)this.Padding.Left, (int)this.Position.Y, (int)this.spriteFont.MeasureString(Text).X + (int)Padding.Left + (int)Padding.Right, this.Height);
+                }
                 else
-                    panel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20, (int)this.Position.Y, this.Width, this.Height);
-                _textPos = new Vector2(this.Position.X + 20, this.Position.Y); ;
+                {
+                    panel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20, (int)this.Position.Y, (int)this.spriteFont.MeasureString(Text).X + (int)Padding.Left + (int)Padding.Right, this.Height);
+                }
+
+                _textPos = new Vector2(this.Position.X + 20, this.Position.Y);
             }
 
             if (!setSubMenu)
@@ -362,17 +367,25 @@ namespace XAMLite
                         Rectangle ghostRect = new Rectangle(panel.X + 5, panel.Y + 5, panel.Width, panel.Height);
                         spriteBatch.Draw(pixel, ghostRect, (Color.Black * opacity));
                         spriteBatch.Draw(pixel, panel, this._backgroundColor);
+                        
+                        // borders the top of the menu item.
                         _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20,
-                            (int)this.Position.Y, this.Width, _strokeThickness);
+                            (int)this.Position.Y, panel.Width, _strokeThickness);
                         this.spriteBatch.Draw(pixel, _strokePanel, (_stroke * (float)Opacity));
+                        
+                        // borders the bottom of the menu item.
                         _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20,
-                            ((int)this.Position.Y + this.Height - _strokeThickness), this.Width, _strokeThickness);
+                            ((int)this.Position.Y + this.Height - _strokeThickness), panel.Width, _strokeThickness);
                         this.spriteBatch.Draw(pixel, _strokePanel, (_stroke * (float)Opacity));
+                        
+                        // borders the left side of the menu item.
                         _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20,
-                            (int)this.Position.Y, _strokeThickness, this.Height);
+                            (int)this.Position.Y, _strokeThickness, panel.Height);
                         this.spriteBatch.Draw(pixel, _strokePanel, (_stroke * (float)Opacity));
+                        
+                        // borders the right side of the menu item.
                         _strokePanel = new Rectangle(((int)this.Position.X - (int)this.Padding.Left +
-                            this.Width + 20 - _strokeThickness), (int)this.Position.Y, _strokeThickness, this.Height);
+                            panel.Width + 20 - _strokeThickness), (int)this.Position.Y, _strokeThickness, panel.Height);
                         this.spriteBatch.Draw(pixel, _strokePanel, (_stroke * (float)Opacity));
                     }
 
