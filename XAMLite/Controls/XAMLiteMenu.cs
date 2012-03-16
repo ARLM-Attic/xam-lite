@@ -236,7 +236,7 @@ namespace XAMLite
                 }
             }
 
-            //CalculateLongestMenuItemWidth();
+            CalculateLongestMenuItemWidth();
 
             // adding the head of the menu to the list of menus
             _allMenuTitles.Add(Items[0].Header);
@@ -290,7 +290,10 @@ namespace XAMLite
                 Items[i].Height = Items[0].Height;
             }
 
-            longestWidth += 40;
+            if (_menuItemsMeasured)
+            {
+                longestWidth += 40;
+            }
             
             _menuItemPanel = new Rectangle((int)this.Position.X, (int)this.Position.Y + Items[0].Height, longestWidth, Items[0].Height * (Items.Count - 1));
 
