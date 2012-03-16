@@ -367,22 +367,22 @@ namespace XAMLite
                         Rectangle ghostRect = new Rectangle(panel.X + 5, panel.Y + 5, panel.Width, panel.Height);
                         spriteBatch.Draw(pixel, ghostRect, (Color.Black * opacity));
                         spriteBatch.Draw(pixel, panel, this._backgroundColor);
-                        
+
                         // borders the top of the menu item.
                         _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20,
                             (int)this.Position.Y, panel.Width, _strokeThickness);
                         this.spriteBatch.Draw(pixel, _strokePanel, (_stroke * (float)Opacity));
-                        
+
                         // borders the bottom of the menu item.
                         _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20,
                             ((int)this.Position.Y + this.Height - _strokeThickness), panel.Width, _strokeThickness);
                         this.spriteBatch.Draw(pixel, _strokePanel, (_stroke * (float)Opacity));
-                        
+
                         // borders the left side of the menu item.
                         _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20,
                             (int)this.Position.Y, _strokeThickness, panel.Height);
                         this.spriteBatch.Draw(pixel, _strokePanel, (_stroke * (float)Opacity));
-                        
+
                         // borders the right side of the menu item.
                         _strokePanel = new Rectangle(((int)this.Position.X - (int)this.Padding.Left +
                             panel.Width + 20 - _strokeThickness), (int)this.Position.Y, _strokeThickness, panel.Height);
