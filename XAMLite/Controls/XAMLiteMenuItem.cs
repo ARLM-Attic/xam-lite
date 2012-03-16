@@ -264,7 +264,7 @@ namespace XAMLite
                 }
                 else
                 {
-                    panel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20, (int)this.Position.Y, (int)this.spriteFont.MeasureString(Text).X + (int)Padding.Left + (int)Padding.Right, this.Height);
+                    panel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20, (int)this.Position.Y, this.Width, this.Height);
                 }
 
                 _textPos = new Vector2(this.Position.X + 20, this.Position.Y);

@@ -267,7 +267,7 @@ namespace XAMLite
 
             // creating the rectangles for determining mouse activities
             panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, Items[0].Height);
-            
+            //_menuItemPanel = new Rectangle((int)this.Position.X, (int)this.Position.Y + Items[0].Height, longestWidth, Items[0].Height * (Items.Count - 1));
         }
 
         /// <summary>
