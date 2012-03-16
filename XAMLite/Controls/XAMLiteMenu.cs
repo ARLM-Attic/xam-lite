@@ -290,7 +290,7 @@ namespace XAMLite
                 Items[i].Height = Items[0].Height;
             }
 
-            if (_menuItemsMeasured)
+            if (!_menuItemsMeasured)
             {
                 longestWidth += 40;
             }
