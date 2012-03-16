@@ -259,7 +259,7 @@ namespace XAMLite
             {
                 marginChanged = false;
                 if (_allMenuTitles.Contains(this.Header))
-                    panel = new Rectangle((int)this.Position.X - (int)this.Padding.Left, (int)this.Position.Y, this.Width, this.Height);
+                    panel = new Rectangle((int)this.Position.X - (int)this.Padding.Left, (int)this.Position.Y, (int)this.spriteFont.MeasureString(Text).X + (int)Padding.Left + (int)Padding.Right, this.Height);
                 else
                     panel = new Rectangle((int)this.Position.X - (int)this.Padding.Left + 20, (int)this.Position.Y, this.Width, this.Height);
                 _textPos = new Vector2(this.Position.X + 20, this.Position.Y); ;
