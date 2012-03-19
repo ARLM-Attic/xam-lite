@@ -316,7 +316,7 @@ namespace XAMLite
         ///Stores true or false depending on whether a sub menu is open.  If any are true, the open parent menu
         ///will not close.
         /// </summary>
-        protected static Dictionary<string, bool> _subMenuOpen;
+        protected static Dictionary<string, bool> _openSubMenuDictionary;
 
         protected Texture2D arrow;
         protected Rectangle arrowRect;
@@ -338,7 +338,7 @@ namespace XAMLite
         /// 
         /// </summary>
         /// <param name="game"></param>
-        public XAMLiteControl (Game game)
+        public XAMLiteControl(Game game)
             : base(game)
         {
             this.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
@@ -351,13 +351,13 @@ namespace XAMLite
             _allRadioButtons = new List<XAMLiteRadioButton>();
             _allMenuTitles = new List<string>();
             _allSubMenuTitles = new List<string>();
-            _subMenuOpen = new Dictionary<string, bool>();
+            _openSubMenuDictionary = new Dictionary<string, bool>();
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public override void Initialize ()
+        public override void Initialize()
         {
             this.device = Game.GraphicsDevice;
             this.viewport = device.Viewport;
@@ -374,7 +374,7 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        protected override void LoadContent ()
+        protected override void LoadContent()
         {
 
             // If the sprite batch that is shared across all XAMLite controls
@@ -425,7 +425,7 @@ namespace XAMLite
         /// <summary>
         /// Destructor
         /// </summary>
-        ~XAMLiteControl() 
+        ~XAMLiteControl()
         {
             Dispose();
         }
@@ -434,7 +434,7 @@ namespace XAMLite
         /// 
         /// </summary>
         /// <param name="gameTime"></param>
-        public override void Update (GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
@@ -473,7 +473,7 @@ namespace XAMLite
             }
         }
 
-        protected void UpdateFontFamily (FontFamily _fontFamily)
+        protected void UpdateFontFamily(FontFamily _fontFamily)
         {
             switch (_fontFamily.ToString())
             {
@@ -513,6 +513,9 @@ namespace XAMLite
                 case "Verdana14Bold":
                     this.spriteFont = verdana14BoldSpriteFont;
                     break;
+                case "Verdana15":
+                    this.spriteFont = verdana15SpriteFont;
+                    break;
                 case "Verdana16":
                     this.spriteFont = verdana16SpriteFont;
                     break;
@@ -541,12 +544,12 @@ namespace XAMLite
         /// 
         /// </summary>
         /// <param name="gameTime"></param>
-        public override void Draw (GameTime gameTime)
+        public override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
         }
 
-        public virtual void OnKeyDown ()
+        public virtual void OnKeyDown()
         {
             if (KeyDown != null)
             {
@@ -554,7 +557,7 @@ namespace XAMLite
                 KeyDown(this, e);
             }
         }
-        public virtual void OnKeyUp ()
+        public virtual void OnKeyUp()
         {
             if (KeyUp != null)
             {
@@ -567,7 +570,7 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        public virtual void OnMouseDown ()
+        public virtual void OnMouseDown()
         {
             if (MouseDown != null)
             {
@@ -579,7 +582,7 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        public virtual void OnMouseUp ()
+        public virtual void OnMouseUp()
         {
             if (MouseUp != null)
             {
@@ -591,7 +594,7 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        public virtual void OnMouseEnter ()
+        public virtual void OnMouseEnter()
         {
             if (MouseEnter != null)
             {
@@ -603,7 +606,7 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        public virtual void OnMouseLeave ()
+        public virtual void OnMouseLeave()
         {
             if (MouseLeave != null)
             {
@@ -616,7 +619,7 @@ namespace XAMLite
         /// 
         /// </summary>
         /// <param name="text"></param>
-        protected void RecalculateWidthAndHeight (string text)
+        protected void RecalculateWidthAndHeight(string text)
         {
             this.Width = (int)this.spriteFont.MeasureString(text).X;
             this.Height = (int)this.spriteFont.MeasureString(text).Y;
@@ -626,7 +629,7 @@ namespace XAMLite
         /// Toggles between Visibility.Visible and Visibility.Hidden.
         /// I'm cheating a bit here since this isn't strictly part of the standard WPF API. -AK
         /// </summary>
-        public void ToggleVisibility ()
+        public void ToggleVisibility()
         {
             switch (Visible)
             {
@@ -650,7 +653,7 @@ namespace XAMLite
         /// HACK: When a tutorial is selected, all Menu Title Headers are erased, so currently 
         /// they are being manually added again.
         /// </summary>
-        protected void ResetMenuItems ()
+        protected void ResetMenuItems()
         {
             _allMenuTitles.Add("Session");
             //_allMenuTitles.Add("Ambient Level");

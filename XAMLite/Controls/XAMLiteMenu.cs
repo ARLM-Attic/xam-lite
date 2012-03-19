@@ -17,12 +17,15 @@ namespace XAMLite
         /// Holds a list of all menu items specific to this menu.
         /// </summary>
         public List<XAMLiteMenuItem> Items;
-        private int lastItemsCount;
-
-        private int longestWidth;
 
         /// <summary>
-        /// 
+        /// This holds the value of the greatest menu item width so
+        /// that all widths can be set to this one standard.
+        /// </summary>
+        private int _longestWidth;
+
+        /// <summary>
+        /// The background color of the menu.
         /// </summary>
         private Color _backgroundColor;
 
@@ -46,27 +49,53 @@ namespace XAMLite
 
         private bool _transparent;
 
-        private bool _setMenuItems;
+        /// <summary>
+        /// True when all of the menu items have been set.
+        /// </summary>
+        private bool _lateInitialize;
 
+        /// <summary>
+        /// True when a menu is open.
+        /// </summary>
         private bool _fullMenuIsVisible;
+
         private bool _menuVisibilityCounted;
 
         BrushConverter bc;
 
-        Rectangle _menuItemPanel;
+        /// <summary>
+        /// Used to determine whether the mouse is contained in an open menu.
+        /// </summary>
+        private Rectangle _menuItemPanel;
+
+        /// <summary>
+        /// Used for drawing the background of the panel.
+        /// </summary>
+        private Rectangle _menuItemsDrawPanel;
+
+        /// <summary>
+        /// Width allowed for a check mark to the left of the text.
+        /// </summary>
+        private int _checkMarkWidth;
+
+        private bool _menuItemVariablesFinalized;
+
+        private bool _headerVisibilityOn;
 
         /// <summary>
         /// True when the width and height of the menu items have been measured
         /// once all the Fonts, etc., hav been set.
         /// </summary>
-        private bool _menuItemsMeasured;
+        //private bool _menuItemsMeasured;
 
         public XAMLiteMenu(Game game)
             : base(game)
         {
             Items = new List<XAMLiteMenuItem>();
             bc = new System.Windows.Media.BrushConverter();
-            longestWidth = 0;
+            _longestWidth = 0;
+            _checkMarkWidth = 30;
+            IsEnabled = false;
         }
 
         /// <summary>
@@ -89,6 +118,38 @@ namespace XAMLite
             base.LoadContent();
         }
 
+        public void LateInitialize()
+        {
+            _lateInitialize = true;
+
+            // adding the head of the menu to the list of menus
+            _allMenuTitles.Add(Items[0].Header);
+
+            for (int i = 0; i < Items.Count; i++)
+            {
+                Game.Components.Add(Items[i]);
+                // Add the child component to the game with the modified parameters.
+                if (Items[i].Items.Count > 0)
+                {
+                    _allSubMenuTitles.Add(Items[i].Header);
+                    if (!_openSubMenuDictionary.ContainsKey(Items[i].Header))
+                        _openSubMenuDictionary.Add(Items[i].Header, false);
+                }
+            }
+
+            Items[0].Width += (int)Items[0].Padding.Left + (int)Items[0].Padding.Right;
+            Items[0].Height += (int)Items[0].Padding.Top + (int)Items[0].Padding.Bottom;
+            Items[0].Margin = new Thickness(this.Margin.Left, this.Margin.Top, this.Margin.Right, this.Margin.Bottom);
+            //panel = new Rectangle((int)Items[0].Position.X, (int)Items[0].Position.Y, Items[0].Width, Items[0].Height);
+
+            CalculateGreatestWidth();
+
+            SetWidthAndHeight();
+
+            IsEnabled = true;
+        }
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -96,14 +157,21 @@ namespace XAMLite
         {
             base.Update(gameTime);
 
-            // setting up the menu
-            if (!_setMenuItems)
+            if (!IsEnabled)
             {
-                setMenuItems(gameTime);
+                // setting up the menu
+                if (!_lateInitialize)
+                {
+                    LateInitialize();
+                }
             }
-
-            if (IsEnabled)
+            else
             {
+                if (!_headerVisibilityOn)
+                {
+                    _headerVisibilityOn = true;
+                    Items[0].Visible = Visibility.Visible;
+                }
                 if (!panel.Contains(msRect) && !_menuItemPanel.Contains(msRect))
                 {
                     closeMenu();
@@ -130,22 +198,21 @@ namespace XAMLite
                 else if (_menuVisibilityCount == 0)
                 {
                     _menuVisibilityCounted = false;
-                    if (!_subMenuOpen.ContainsValue(true))
+                    if (!_openSubMenuDictionary.ContainsValue(true))
                     {
                         closeMenu();
                         _menuSelected = false;
                     }
-
                 }
 
                 if (_fullMenuIsVisible)
                 {
-                    if (!_menuItemsMeasured)
+                    if (!_menuItemVariablesFinalized)
                     {
-                        _menuItemsMeasured = true;
-                        CalculateLongestMenuItemWidth();
+                        _menuItemVariablesFinalized = true;
+                        CalculateGreatestWidth();
+                        SetWidthAndHeight();
                     }
-
                     Items[0].Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cccccc");
                 }
                 else
@@ -158,22 +225,43 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Draw(GameTime gameTime)
+        {
+            if (Visible == Visibility.Visible && IsEnabled)
+            {
+                spriteBatch.Begin();
+                if (!_transparent)
+                {
+                    spriteBatch.Draw(pixel, panel, (_backgroundColor * (float)Opacity));
+                }
+
+                if (_fullMenuIsVisible)
+                {
+                    spriteBatch.Draw(pixel, _menuItemsDrawPanel, Color.Black);
+                }
+
+                spriteBatch.End();
+            }
+        }
+
+        /// <summary>
+        /// Closes a menu.
+        /// </summary>
         private void closeMenu()
         {
-            if (!_subMenuOpen.ContainsValue(true))
+            if (!_openSubMenuDictionary.ContainsValue(true))
             {
                 for (int i = 1; i < Items.Count; i++)
                 {
                     Items[i].Visible = Visibility.Hidden;
                 }
                 _fullMenuIsVisible = false;
-                //if(_menuVisibilityCount == 0)
-                //    _menuSelected = false;
             }
         }
 
         /// <summary>
-        /// 
+        /// Opens a menu, making all menu items visible.
         /// </summary>
         private void openMenu()
         {
@@ -185,122 +273,54 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// When a font changes from the default, longest width of all
+        /// menu items must be calculated again so that all menu items
+        /// share the same width.
         /// </summary>
-        /// <param name="gameTime"></param>
-        public override void Draw(GameTime gameTime)
+        private void CalculateGreatestWidth()
         {
-            if (Visible == Visibility.Visible)
-            {
-                if (!_transparent)
-                {
-                    spriteBatch.Begin();
-                    spriteBatch.Draw(pixel, panel, (_backgroundColor * (float)Opacity));
-                    spriteBatch.End();
-                }
-            }
-        }
+            _longestWidth = 0;
 
-        /// <summary>
-        /// Loads the children once the grid has been set up.
-        /// </summary>
-        /// <param name></param>
-        protected void setMenuItems(GameTime gameTime)
-        {
-            _setMenuItems = true;
-            lastItemsCount = Items.Count;
-
-            // add the menu items to the game components
-            for (int i = 0; i < Items.Count; i++)
-            {
-                this.Game.Components.Add(Items[i]);
-                // Add the child component to the game with the modified parameters.
-                if (Items[i].Items.Count > 0)
-                {
-                    _allSubMenuTitles.Add(Items[i].Header);
-                    _subMenuOpen.Add(Items[i].Header, false);
-                }
-            }
-
-            this.Width = Items[0].Width + 20;
-            this.Height = Items[0].Height + 20;
-            Items[0].Width = this.Width;
-
-            // if it's a submenu, it will need room for the white arrow, so the width must be increased to accommodate
             for (int i = 1; i < Items.Count; i++)
             {
+                Items[i].Width += (int)Items[i].Padding.Left + (int)Items[i].Padding.Right + _checkMarkWidth;
+
                 // adding space for the arrow to denote that a submenu is available.
                 if (_allSubMenuTitles.Contains(Items[i].Header))
                 {
                     Items[i].Width += 20;
                 }
-            }
-
-            CalculateLongestMenuItemWidth();
-
-            // adding the head of the menu to the list of menus
-            _allMenuTitles.Add(Items[0].Header);
-
-            // setting basic parameters of the menu items
-            for (int i = 0; i < Items.Count; i++)
-            {
-                if (i == 0)
-                    Items[i].Padding = new Thickness(10, 0, 10, 0);
-                else
-                    Items[i].Padding = new Thickness(30, 0, 10, 0);
-                Items[i].HorizontalAlignment = this.HorizontalAlignment;
-                Items[i].VerticalAlignment = this.VerticalAlignment;
-
-                if (i == 0)
+                if (_longestWidth <= Items[i].Width)
                 {
-                    Items[i].Margin = new Thickness(this.Margin.Left + Items[0].Padding.Left, this.Margin.Top + Items[0].Padding.Top, this.Margin.Right + Items[0].Padding.Right, this.Margin.Bottom + Items[0].Padding.Bottom);
-                    Items[i].Background = Brushes.Transparent;
-                }
-                else
-                {
-                    Items[i].Margin = new Thickness(this.Margin.Left + Items[0].Padding.Left, (this.Margin.Top + Items[i].Height * i) + Items[0].Padding.Top, Items[i].Margin.Right + Items[0].Padding.Right, this.Margin.Bottom + Items[0].Padding.Bottom);
-                    if (!_allMenuTitles.Contains(Items[i].Header))
-                        Items[i].Background = Brushes.Black;
-                    Items[i].Visible = Visibility.Hidden;
+                    _longestWidth = Items[i].Width;
                 }
             }
-
-            // creating the rectangles for determining mouse activities
-            panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, Items[0].Height);
-            //_menuItemPanel = new Rectangle((int)this.Position.X, (int)this.Position.Y + Items[0].Height, longestWidth, Items[0].Height * (Items.Count - 1));
         }
 
         /// <summary>
-        /// Calculates the Width of the longest menu item
+        /// When a font changes from the default, the width and height must be
+        /// reset.
         /// </summary>
-        private void CalculateLongestMenuItemWidth()
+        private void SetWidthAndHeight()
         {
-            // determining what the width for all the menu items should be, not including the header of
-            // the menu.
+            int height = 0;
+            height = (int)this.Margin.Top + Items[0].Height + (int)Items[0].Padding.Top + (int)Items[0].Padding.Bottom;
             for (int i = 1; i < Items.Count; i++)
             {
-                if (longestWidth <= Items[i].Width)
-                    longestWidth = Items[i].Width;
+                Items[i].Width = _longestWidth;
+                Items[i].Height += (int)Items[i].Padding.Top + (int)Items[i].Padding.Bottom;
+                Items[i].Margin = new Thickness(this.Margin.Left, height, this.Margin.Right, this.Margin.Bottom);
+                Items[i].IsEnabled = true;
+                height += Items[i].Height;
             }
 
-            // setting the width for all the menu items, not including the header
-            for (int i = 1; i < Items.Count; i++)
-            {
-                Items[i].Width = longestWidth + 40;
-                Items[i].Height = Items[0].Height;
-            }
-
-            if (!_menuItemsMeasured)
-            {
-                longestWidth += 40;
-            }
-            
-            _menuItemPanel = new Rectangle((int)this.Position.X, (int)this.Position.Y + Items[0].Height, longestWidth, Items[0].Height * (Items.Count - 1));
-
+            panel = new Rectangle((int)Items[0].Position.X, (int)Items[0].Position.Y, Items[0].Width + (int)Items[0].Padding.Left + (int)Items[0].Padding.Right, Items[0].Height);
+            _menuItemPanel = new Rectangle((int)this.Position.X, (int)this.Position.Y + Items[0].Height, _longestWidth, height - (Items[0].Height + (int)this.Margin.Top));
+            _menuItemsDrawPanel = new Rectangle((int)this.Position.X, (int)this.Position.Y + 2 + Items[0].Height, _longestWidth, height - (Items[0].Height + (int)this.Margin.Top) - 2);
         }
 
         /// <summary>
-        /// 
+        /// Will highlight the Head of the menu.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -313,7 +333,7 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// Will either open or close a menu.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
