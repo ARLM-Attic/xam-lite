@@ -409,18 +409,6 @@ namespace XAMLite
 
                 spriteBatch.Begin();
 
-                // when hovering over menu header.
-                if (_transparent)
-                {
-                    if (_allMenuTitles.Contains(this.Header))
-                    {
-                        if (mouseEnter)
-                        {
-                            spriteBatch.Draw(pixel, panel, Color.LightGray * 0.25f);
-                        }
-                    }
-                }
-
                 if (!_transparent)
                 {
                     if (_allMenuTitles.Contains(this.Header))
@@ -445,6 +433,7 @@ namespace XAMLite
                         // highlights the hovered menu item.
                         if (mouseEnter || (_subMenuPanel.Contains(msRect) && this.Items[0].Visible == Visibility.Visible))
                         {
+                            spriteBatch.Draw(pixel, panel, this._backgroundColor);
                             spriteBatch.Draw(pixel, panel, Color.LightGray * 0.25f);
 
                             // borders the top of the menu item

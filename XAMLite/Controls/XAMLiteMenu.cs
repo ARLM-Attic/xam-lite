@@ -111,13 +111,16 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// Loads the base contents.
         /// </summary>
         protected override void LoadContent()
         {
             base.LoadContent();
         }
 
+        /// <summary>
+        /// Initializes the menu components.
+        /// </summary>
         public void LateInitialize()
         {
             _lateInitialize = true;
@@ -140,8 +143,7 @@ namespace XAMLite
             Items[0].Width += (int)Items[0].Padding.Left + (int)Items[0].Padding.Right;
             Items[0].Height += (int)Items[0].Padding.Top + (int)Items[0].Padding.Bottom;
             Items[0].Margin = new Thickness(this.Margin.Left, this.Margin.Top, this.Margin.Right, this.Margin.Bottom);
-            //panel = new Rectangle((int)Items[0].Position.X, (int)Items[0].Position.Y, Items[0].Width, Items[0].Height);
-
+            
             CalculateGreatestWidth();
 
             SetWidthAndHeight();
@@ -151,7 +153,7 @@ namespace XAMLite
 
 
         /// <summary>
-        /// 
+        /// Updates the menu.
         /// </summary>
         public override void Update(GameTime gameTime)
         {
@@ -205,7 +207,7 @@ namespace XAMLite
                     }
                 }
 
-                if (_fullMenuIsVisible)
+                if (_fullMenuIsVisible || mouseEnter)
                 {
                     if (!_menuItemVariablesFinalized)
                     {
@@ -213,17 +215,20 @@ namespace XAMLite
                         CalculateGreatestWidth();
                         SetWidthAndHeight();
                     }
-                    Items[0].Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cccccc");
+                    Background = Brushes.LightGray;
                 }
                 else
                 {
+                    Background = Brushes.Transparent;
                     Items[0].Background = Brushes.Transparent;
                 }
             }
         }
 
         /// <summary>
-        /// 
+        /// Draws the Header background highlight color when the menu is open
+        /// and the mouse is over the menu but not over the header. Also draws
+        /// the backdrop for the open menu.
         /// </summary>
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
@@ -233,7 +238,7 @@ namespace XAMLite
                 spriteBatch.Begin();
                 if (!_transparent)
                 {
-                    spriteBatch.Draw(pixel, panel, (_backgroundColor * (float)Opacity));
+                    spriteBatch.Draw(pixel, panel, _backgroundColor * 0.55f);
                 }
 
                 if (_fullMenuIsVisible)
@@ -313,7 +318,8 @@ namespace XAMLite
                 Items[i].IsEnabled = true;
                 height += Items[i].Height;
             }
-            panel = new Rectangle((int)Items[0].Position.X, (int)Items[0].Position.Y, Items[0].Width + (int)Items[0].Padding.Left + (int)Items[0].Padding.Right, Items[0].Height);
+
+            panel = new Rectangle((int)Items[0].Position.X, (int)Items[0].Position.Y, Items[0].Width + (int)Items[0].Padding.Left + (int)Items[0].Padding.Right, Items[0].Height + (int)Items[0].Padding.Top + (int)Items[0].Padding.Bottom);
             _menuItemPanel = new Rectangle((int)this.Position.X, (int)this.Position.Y + Items[0].Height, _longestWidth, height - (Items[0].Height + (int)this.Margin.Top));
             _menuItemsDrawPanel = new Rectangle((int)this.Position.X, (int)Items[1].Position.Y - 1, _longestWidth, height - (int)Items[1].Position.Y + 2);
         }
