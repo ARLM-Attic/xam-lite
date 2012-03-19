@@ -305,18 +305,20 @@ namespace XAMLite
         {
             int height = 0;
             height = (int)this.Margin.Top + Items[0].Height + (int)Items[0].Padding.Top + (int)Items[0].Padding.Bottom;
+            System.Console.WriteLine("0: " + height);
             for (int i = 1; i < Items.Count; i++)
             {
                 Items[i].Width = _longestWidth;
                 Items[i].Height += (int)Items[i].Padding.Top + (int)Items[i].Padding.Bottom;
+                System.Console.WriteLine(i + ": " + Items[i].Height + "  Total height: " + height);
                 Items[i].Margin = new Thickness(this.Margin.Left, height, this.Margin.Right, this.Margin.Bottom);
                 Items[i].IsEnabled = true;
                 height += Items[i].Height;
             }
-
+            System.Console.WriteLine();
             panel = new Rectangle((int)Items[0].Position.X, (int)Items[0].Position.Y, Items[0].Width + (int)Items[0].Padding.Left + (int)Items[0].Padding.Right, Items[0].Height);
             _menuItemPanel = new Rectangle((int)this.Position.X, (int)this.Position.Y + Items[0].Height, _longestWidth, height - (Items[0].Height + (int)this.Margin.Top));
-            _menuItemsDrawPanel = new Rectangle((int)this.Position.X, (int)this.Position.Y + 2 + Items[0].Height, _longestWidth, height - (Items[0].Height + (int)this.Margin.Top) - 2);
+            _menuItemsDrawPanel = new Rectangle((int)this.Position.X, (int)Items[1].Position.Y - 1, _longestWidth, height - (int)Items[1].Position.Y + 2);
         }
 
         /// <summary>
