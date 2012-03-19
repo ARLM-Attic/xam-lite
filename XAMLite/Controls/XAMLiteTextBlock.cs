@@ -322,7 +322,6 @@ namespace XAMLite
             else
                 charsPerLine = 1;
 
-            Console.WriteLine(text);
             sb = new StringBuilder();
             int pos, next;
             for (pos = 0; pos < text.Length; pos = next)
