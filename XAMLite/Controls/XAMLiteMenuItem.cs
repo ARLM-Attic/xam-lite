@@ -509,7 +509,7 @@ namespace XAMLite
         {
             _longestWidth = 0;
 
-            for (int i = 1; i < Items.Count; i++)
+            for (int i = 0; i < Items.Count; i++)
             {
                 Items[i].Width += (int)Items[i].Padding.Left + (int)Items[i].Padding.Right + _checkMarkWidth;
 
