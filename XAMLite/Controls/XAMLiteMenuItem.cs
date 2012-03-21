@@ -434,7 +434,7 @@ namespace XAMLite
                         if (mouseEnter || (_subMenuPanel.Contains(msRect) && this.Items[0].Visible == Visibility.Visible))
                         {
                             spriteBatch.Draw(pixel, panel, this._backgroundColor);
-                            spriteBatch.Draw(pixel, panel, Color.LightGray * 0.25f);
+                            spriteBatch.Draw(pixel, panel, Color.LightGray * 0.35f);
 
                             // borders the top of the menu item
                             _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left,
