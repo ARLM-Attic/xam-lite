@@ -1,13 +1,8 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System.Windows.Media;
 using Color = Microsoft.Xna.Framework.Color;
-using Microsoft.Xna.Framework.Input;
 
 namespace XAMLite
 {
@@ -40,7 +35,7 @@ namespace XAMLite
                 var color = solidBrush.Color;
                 _backgroundColor = new Color(color.R, color.G, color.B, color.A);
 
-                if ((SolidColorBrush)value == Brushes.Transparent)
+                if (value == Brushes.Transparent)
                     _transparent = true;
                 else
                     _transparent = false;
@@ -92,7 +87,7 @@ namespace XAMLite
             : base(game)
         {
             Items = new List<XAMLiteMenuItem>();
-            bc = new System.Windows.Media.BrushConverter();
+            bc = new BrushConverter();
             _longestWidth = 0;
             _checkMarkWidth = 30;
             IsEnabled = false;
@@ -105,17 +100,9 @@ namespace XAMLite
         {
             base.Initialize();
 
-            MouseDown += new System.Windows.Input.MouseButtonEventHandler(XAMLiteMenu_MouseDown);
+            MouseDown += XamLiteMenuMouseDown;
 
-            MouseEnter += new System.Windows.Input.MouseEventHandler(XAMLiteMenu_MouseEnter);
-        }
-
-        /// <summary>
-        /// Loads the base contents.
-        /// </summary>
-        protected override void LoadContent()
-        {
-            base.LoadContent();
+            MouseEnter += XamLiteMenuMouseEnter;
         }
 
         /// <summary>
@@ -166,6 +153,14 @@ namespace XAMLite
                 {
                     LateInitialize();
                 }
+                else
+                {
+                    CloseMenu();
+                    Items[0].Visible = Visibility.Hidden;
+                    _headerVisibilityOn = false;
+                    _menuVisibilityCounted = false;
+                    _menuVisibilityCount = 0;
+                }
             }
             else
             {
@@ -176,7 +171,7 @@ namespace XAMLite
                 }
                 if (!panel.Contains(msRect) && !_menuItemPanel.Contains(msRect))
                 {
-                    closeMenu();
+                    CloseMenu();
                 }
 
                 // updating the menu visibility count.  If zero, the user must make a mouse down event
@@ -202,7 +197,7 @@ namespace XAMLite
                     _menuVisibilityCounted = false;
                     if (!_openSubMenuDictionary.ContainsValue(true))
                     {
-                        closeMenu();
+                        CloseMenu();
                         _menuSelected = false;
                     }
                 }
@@ -253,7 +248,7 @@ namespace XAMLite
         /// <summary>
         /// Closes a menu.
         /// </summary>
-        private void closeMenu()
+        private void CloseMenu()
         {
             if (!_openSubMenuDictionary.ContainsValue(true))
             {
@@ -268,7 +263,7 @@ namespace XAMLite
         /// <summary>
         /// Opens a menu, making all menu items visible.
         /// </summary>
-        private void openMenu()
+        private void OpenMenu()
         {
             for (int i = 1; i < Items.Count; i++)
             {
@@ -329,11 +324,11 @@ namespace XAMLite
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void XAMLiteMenu_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        void XamLiteMenuMouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
             if (_menuSelected)
             {
-                openMenu();
+                OpenMenu();
             }
         }
 
@@ -342,16 +337,16 @@ namespace XAMLite
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void XAMLiteMenu_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        void XamLiteMenuMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (Items[1] != null && Items[1].Visible == Visibility.Hidden)
             {
-                openMenu();
+                OpenMenu();
                 _menuSelected = true;
             }
             else
             {
-                closeMenu();
+                CloseMenu();
             }
         }
     }
