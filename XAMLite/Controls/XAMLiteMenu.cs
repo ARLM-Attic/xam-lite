@@ -155,11 +155,14 @@ namespace XAMLite
                 }
                 else
                 {
-                    CloseMenu();
-                    Items[0].Visible = Visibility.Hidden;
-                    _headerVisibilityOn = false;
-                    _menuVisibilityCounted = false;
-                    _menuVisibilityCount = 0;
+                    if (_headerVisibilityOn)
+                    {
+                        CloseMenu();
+                        Items[0].Visible = Visibility.Hidden;
+                        _headerVisibilityOn = false;
+                        _menuVisibilityCounted = false;
+                        _menuVisibilityCount = 0;
+                    }
                 }
             }
             else
