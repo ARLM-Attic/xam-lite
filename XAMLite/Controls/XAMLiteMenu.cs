@@ -205,7 +205,7 @@ namespace XAMLite
                     }
                 }
 
-                if (_fullMenuIsVisible || mouseEnter)
+                if (_fullMenuIsVisible || MouseEntered)
                 {
                     if (!_menuItemVariablesFinalized)
                     {

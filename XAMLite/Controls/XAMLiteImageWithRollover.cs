@@ -69,7 +69,7 @@ namespace XAMLite
             {
                 this.SpriteBatch.Begin();
 
-                if (mouseEnter)
+                if (MouseEntered)
                     this.SpriteBatch.Draw(this.rolloverTexture, Panel, (Color.White * (float)Opacity));
                 else
                     this.SpriteBatch.Draw(this.texture, Panel, (Color.White * (float)Opacity));

@@ -157,7 +157,7 @@ namespace XAMLite
                 UpdateFontFamily(_fontFamily);
             }
 
-            if (mouseDown && !Selected && Panel.Contains(MsRect) && IsEnabled)
+            if (MousePressed && !Selected && Panel.Contains(MsRect) && IsEnabled)
             {
                 Selected = true;
                 for (int i = 0; i < AllRadioButtons.Count; i++)

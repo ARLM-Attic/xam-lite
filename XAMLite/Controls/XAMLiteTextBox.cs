@@ -294,7 +294,7 @@ namespace XAMLite
             }
 
             // initial text box click where the default text is replaced with just a cursor.
-            if (mouseDown && Panel.Contains(MsRect) && initialTyping)
+            if (MousePressed && Panel.Contains(MsRect) && initialTyping)
             {
                 Selected = true;
                 initialTyping = false;
@@ -303,14 +303,14 @@ namespace XAMLite
                 cursorBlink = true;
             }
             // user has previously typed something, deselected, and then selected again. 
-            else if (mouseDown && Panel.Contains(MsRect) && !Selected)
+            else if (MousePressed && Panel.Contains(MsRect) && !Selected)
             {
                 Selected = true;
                 cursorVisible = true;
                 cursorBlink = true;
             }
             // text box is deselected.
-            else if (mouseDown && !Panel.Contains(MsRect) && Selected)
+            else if (MousePressed && !Panel.Contains(MsRect) && Selected)
             {
                 Selected = false;
                 cursorVisible = false;

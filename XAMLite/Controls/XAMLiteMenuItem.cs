@@ -338,7 +338,7 @@ namespace XAMLite
             if (IsEnabled)
             {
                 // opens a sub-menu panel, if it exists.
-                if (mouseEnter && Items.Count > 0 && this.Visible == Visibility.Visible)
+                if (MouseEntered && Items.Count > 0 && this.Visible == Visibility.Visible)
                 {
                     subMenuOpened = true;
 
@@ -379,7 +379,7 @@ namespace XAMLite
                 }
 
                 // closes sub-menu panel after a menu item has been selected.
-                if (ms.LeftButton == ButtonState.Pressed)
+                if (Ms.LeftButton == ButtonState.Pressed)
                 {
                     if (_subMenuPanel.Contains(MsRect))
                     {
@@ -413,7 +413,7 @@ namespace XAMLite
                 {
                     if (AllMenuTitles.Contains(this.Header))
                     {
-                        if (mouseEnter)
+                        if (MouseEntered)
                         {
                             SpriteBatch.Draw(Pixel, Panel, Color.LightGray * 0.25f);
                         }
@@ -431,7 +431,7 @@ namespace XAMLite
                         SpriteBatch.Draw(Pixel, ghostRect, (Color.Black * opacity));
 
                         // highlights the hovered menu item.
-                        if (mouseEnter || (_subMenuPanel.Contains(MsRect) && this.Items[0].Visible == Visibility.Visible))
+                        if (MouseEntered || (_subMenuPanel.Contains(MsRect) && this.Items[0].Visible == Visibility.Visible))
                         {
                             SpriteBatch.Draw(Pixel, Panel, this._backgroundColor);
                             SpriteBatch.Draw(Pixel, Panel, Color.LightGray * 0.35f);

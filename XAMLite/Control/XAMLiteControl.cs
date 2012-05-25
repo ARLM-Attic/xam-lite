@@ -34,80 +34,193 @@
     /// <see cref="http://msdn.microsoft.com/en-us/library/system.windows.controls.control.aspx"/>
     public class XAMLiteControl : DrawableGameComponent
     {
-        protected MouseState ms;
-        protected Microsoft.Xna.Framework.Point mouseLoc;
+        /// <summary>
+        /// The state of the mouse, whether pressed, released, etc.
+        /// </summary>
+        protected MouseState Ms;
 
-        protected bool mouseDown;
+        /// <summary>
+        /// The position of the mouse on the screen.
+        /// </summary>
+        protected Microsoft.Xna.Framework.Point MouseLoc;
+
+        /// <summary>
+        /// True when the mouse has been pressed while over a control.
+        /// </summary>
+        protected bool MousePressed;
 
         //protected bool _mouseUp;
 
-        protected bool mouseEnter;
+        /// <summary>
+        /// True when a control has been entered.
+        /// </summary>
+        protected bool MouseEntered;
 
-        protected bool mouseLeave;
+        /// <summary>
+        /// True when a control has been left.
+        /// </summary>
+        protected bool MouseLeft;
 
-        protected bool keyDown;
+        /// <summary>
+        /// True when a key has been pressed.
+        /// </summary>
+        protected bool KeyPressed;
 
+        /// <summary>
+        /// Event fired when MousePressed becomes true.
+        /// </summary>
         public event MouseButtonEventHandler MouseDown;
 
+        /// <summary>
+        /// Event fired when Mouse is released.
+        /// </summary>
         public event MouseButtonEventHandler MouseUp;
 
+        /// <summary>
+        /// Event fired when a control is entered.
+        /// </summary>
         public event MouseEventHandler MouseEnter;
 
+        /// <summary>
+        /// Event fired when a control is left.
+        /// </summary>
         public event MouseEventHandler MouseLeave;
 
+        /// <summary>
+        /// Event fired when a key is pressed.
+        /// </summary>
         public event KeyEventHandler KeyDown;
 
+        /// <summary>
+        /// Event fired when a key is released.
+        /// </summary>
         public event KeyEventHandler KeyUp;
 
-        // the set of possible fonts that are preloaded in LoadContent()
+
+        /// <summary>
+        /// Arial 10 pt font
+        /// </summary>
         protected SpriteFont ArialSpriteFont { get; set; }
 
+        /// <summary>
+        /// Courier 10 pt font
+        /// </summary>
         protected SpriteFont Courier10SpriteFont { get; set; }
 
+        /// <summary>
+        /// Courier 20pt font.
+        /// </summary>
         protected SpriteFont Courier20SpriteFont { get; set; }
 
+        /// <summary>
+        /// Kootenay 9 pt font.
+        /// </summary>
         protected SpriteFont Kootenay9SpriteFont { get; set; }
 
+        /// <summary>
+        /// Kootenay 20 pt font.
+        /// </summary>
         protected SpriteFont Kootenay14SpriteFont { get; set; }
 
+        /// <summary>
+        /// Verdana 10 pt font.
+        /// </summary>
         protected SpriteFont Verdana10SpriteFont { get; set; }
 
+        /// <summary>
+        /// Verdana 10 pt Bold font.
+        /// </summary>
         protected SpriteFont Verdana10BoldSpriteFont { get; set; }
 
+        /// <summary>
+        /// Verdana 11 pt font.
+        /// </summary>
         protected SpriteFont Verdana11SpriteFont { get; set; }
 
+        /// <summary>
+        /// Verdana 11 pt Bold font.
+        /// </summary>
         protected SpriteFont Verdana11BoldSpriteFont { get; set; }
 
+        /// <summary>
+        /// Verdana 12 pt font.
+        /// </summary>
         protected SpriteFont Verdana12SpriteFont { get; set; }
 
+        /// <summary>
+        /// Verdana 12 pt Bold font.
+        /// </summary>
         protected SpriteFont Verdana12BoldSpriteFont { get; set; }
 
+        /// <summary>
+        /// Verdana 13 pt font.
+        /// </summary>
         protected SpriteFont Verdana13SpriteFont { get; set; }
 
+        /// <summary>
+        /// Verdana 13 pt Bold font.
+        /// </summary>
         protected SpriteFont Verdana13BoldSpriteFont { get; set; }
 
+        /// <summary>
+        /// Verdana 14 pt font.
+        /// </summary>
         protected SpriteFont Verdana14SpriteFont { get; set; }
 
+        /// <summary>
+        /// Verdana 14 pt Bold font.
+        /// </summary>
         protected SpriteFont Verdana14BoldSpriteFont { get; set; }
 
+        /// <summary>
+        /// Verdana 15 pt font.
+        /// </summary>
         protected SpriteFont Verdana15SpriteFont { get; set; }
 
+        /// <summary>
+        /// Verdana 16 pt font.
+        /// </summary>
         protected SpriteFont Verdana16SpriteFont { get; set; }
 
+        /// <summary>
+        /// Verdana 16 pt Bold font.
+        /// </summary>
         protected SpriteFont Verdana16BoldSpriteFont { get; set; }
 
+        /// <summary>
+        /// Verdana 20 pt font.
+        /// </summary>
         protected SpriteFont Verdana20SpriteFont { get; set; }
 
+        /// <summary>
+        /// Verdana 20 pt Bold font.
+        /// </summary>
         protected SpriteFont Verdana20BoldSpriteFont { get; set; }
 
+        /// <summary>
+        /// Verdana 24 pt Bold font.
+        /// </summary>
         protected SpriteFont Verdana24BoldSpriteFont { get; set; }
 
+        /// <summary>
+        /// Verdana 60 pt font.
+        /// </summary>
         protected SpriteFont Verdana60SpriteFont { get; set; }
 
+        /// <summary>
+        /// Verdana 60 pt Bold font.
+        /// </summary>
         protected SpriteFont Verdana60BoldSpriteFont { get; set; }
 
-        protected Rectangle MsRect; // mouse position
-        protected Rectangle Panel; // rectangle containing the control for collision and drawing
+        /// <summary>
+        /// Mouse position.
+        /// </summary>
+        protected Rectangle MsRect;
+
+        /// <summary>
+        /// rectangle containing the control for collision and drawing
+        /// </summary>
+        protected Rectangle Panel;
 
         /// <summary>
         /// Prevents each control from perpetually updating each item in its Update method until necessary.
@@ -120,22 +233,22 @@
         protected Texture2D Pixel;
 
         /// <summary>
-        /// 
+        /// Font texture.
         /// </summary>
         protected SpriteFont SpriteFont;
 
         /// <summary>
-        /// 
+        /// The name of the control.
         /// </summary>
         public virtual string Name { get; set; }
 
         /// <summary>
-        /// 
+        /// Text contained in the control.
         /// </summary>
         public virtual string Text { get; set; }
 
         /// <summary>
-        /// 
+        /// True when the control is Visible.
         /// </summary>
         private Visibility _visible;
 
@@ -201,12 +314,12 @@
         protected bool OpacityChanged;
 
         /// <summary>
-        /// 
+        /// The horizontal alignment of the control.
         /// </summary>
         public HorizontalAlignment HorizontalAlignment { get; set; }
 
         /// <summary>
-        /// 
+        /// The vertical alignment of the control.
         /// </summary>
         public VerticalAlignment VerticalAlignment { get; set; }
 
@@ -221,13 +334,13 @@
         public int Height { get; set; }
 
         /// <summary>
-        /// 
+        /// The margin of the control.
         /// </summary>
         /// 
         private Thickness _margin;
 
         /// <summary>
-        /// 
+        /// The margins on all sides of the control.
         /// </summary>
         public Thickness Margin
         {
@@ -245,12 +358,12 @@
         }
 
         /// <summary>
-        /// 
+        /// True when the control has been rotated.
         /// </summary>
         public bool Rotate90 { get; set; }
 
         /// <summary>
-        /// 
+        /// The position of the control on the screen.
         /// </summary>
         public Vector2 Position
         {
@@ -315,17 +428,23 @@
         //public Brush Foreground { get; set; }
 
         /// <summary>
-        /// 
+        /// A single spritebatch this is shared across all instances of the XAMLiteControl class 
+        /// (and derived classes).
+        /// </summary>
+        private static SpriteBatch staticSpriteBatch;
+
+        /// <summary>
+        /// The spritebatch for the control.
         /// </summary>
         protected SpriteBatch SpriteBatch { get; set; }
 
         /// <summary>
-        /// 
+        /// The graphic device.
         /// </summary>
         private GraphicsDevice _device;
 
         /// <summary>
-        /// 
+        /// The screen width and height.
         /// </summary>
         protected Viewport Viewport;
 
@@ -366,10 +485,24 @@
         /// </summary>
         protected static Dictionary<string, bool> OpenSubMenuDictionary;
 
+        /// <summary>
+        /// Texture placed next to menu items that have a sub menu.
+        /// </summary>
         protected Texture2D Arrow;
+
+        /// <summary>
+        /// The rectangle that contains the arrow texture.
+        /// </summary>
         protected Rectangle ArrowRect;
 
+        /// <summary>
+        /// The check mark that may be placed in front of a menu item when it is selected.
+        /// </summary>
         protected Texture2D CheckMark;
+
+        /// <summary>
+        /// The rectangle that contains the check mark.
+        /// </summary>
         protected Rectangle CheckMarkRect;
 
         // used for labels so that the fonts, spacing, etc., will change (especially at startup) 
@@ -383,7 +516,7 @@
         protected bool CloseAllMenus;
 
         /// <summary>
-        /// 
+        /// Constructor.
         /// </summary>
         /// <param name="game"></param>
         public XAMLiteControl(Game game)
@@ -403,7 +536,7 @@
         }
 
         /// <summary>
-        /// 
+        /// Initializes the graphics device and viewport.
         /// </summary>
         public override void Initialize()
         {
@@ -414,13 +547,7 @@
         }
 
         /// <summary>
-        /// A single spritebatch this is shared across all instances of the XAMLiteControl class 
-        /// (and derived classes).
-        /// </summary>
-        private static SpriteBatch staticSpriteBatch;
-
-        /// <summary>
-        /// 
+        /// Loads the content of the control.
         /// </summary>
         protected override void LoadContent()
         {
@@ -479,47 +606,51 @@
         }
 
         /// <summary>
-        /// 
+        /// Updates the control.
         /// </summary>
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
-            ms = Microsoft.Xna.Framework.Input.Mouse.GetState();
-            MsRect = new Rectangle(ms.X, ms.Y, 1, 1);
+            Ms = Microsoft.Xna.Framework.Input.Mouse.GetState();
+            MsRect = new Rectangle(Ms.X, Ms.Y, 1, 1);
             if (IsEnabled && Visible == Visibility.Visible)
             {
                 if (Panel.Contains(MsRect))
                 {
-                    if (!mouseEnter)
+                    if (!MouseEntered)
                     {
-                        mouseEnter = true;
+                        MouseEntered = true;
                         OnMouseEnter();
                     }
                 }
                 else
                 {
-                    if (mouseEnter)
+                    if (MouseEntered)
                     {
-                        mouseEnter = false;
+                        MouseEntered = false;
                         OnMouseLeave();
                     }
                 }
 
-                if (!mouseDown && ms.LeftButton == ButtonState.Pressed && mouseEnter)
+                if (!MousePressed && Ms.LeftButton == ButtonState.Pressed && MouseEntered)
                 {
-                    mouseDown = true;
+                    MousePressed = true;
                     OnMouseDown();
                 }
-                else if (mouseDown && ms.LeftButton == ButtonState.Released && mouseEnter)
+                else if (MousePressed && Ms.LeftButton == ButtonState.Released && MouseEntered)
                 {
-                    mouseDown = false;
+                    MousePressed = false;
                     OnMouseUp();
                 }
             }
         }
 
+        /// <summary>
+        /// Updates the font family.
+        /// </summary>
+        /// <param name="fontFamily"></param>
         protected void UpdateFontFamily(FontFamily fontFamily)
         {
             switch (fontFamily.ToString())
@@ -590,6 +721,9 @@
             }
         }
 
+        /// <summary>
+        /// Fires off the key down event.
+        /// </summary>
         public virtual void OnKeyDown()
         {
             if (KeyDown != null)
@@ -600,7 +734,7 @@
         }
 
         /// <summary>
-        /// 
+        /// Fires off the key up event.
         /// </summary>
         public virtual void OnKeyUp()
         {
@@ -612,7 +746,7 @@
         }
 
         /// <summary>
-        /// 
+        /// Fires off the MouseDown event.
         /// </summary>
         public virtual void OnMouseDown()
         {
@@ -624,7 +758,7 @@
         }
 
         /// <summary>
-        /// 
+        /// Fires off the Mouse Up event.
         /// </summary>
         public virtual void OnMouseUp()
         {
@@ -636,7 +770,7 @@
         }
 
         /// <summary>
-        /// 
+        /// Fires off the Mouse Enter event.
         /// </summary>
         public virtual void OnMouseEnter()
         {
@@ -648,7 +782,7 @@
         }
 
         /// <summary>
-        /// 
+        /// Fires off the Mouse Leave event.
         /// </summary>
         public virtual void OnMouseLeave()
         {
@@ -660,7 +794,7 @@
         }
 
         /// <summary>
-        /// 
+        /// Recalculate the width and height of the control.
         /// </summary>
         /// <param name="text"></param>
         protected void RecalculateWidthAndHeight(string text)
