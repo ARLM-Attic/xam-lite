@@ -1,22 +1,32 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Windows;
-using System.Windows.Media;
-using System.Windows.Input;
-using Microsoft.Xna.Framework.Input;
-using Color = Microsoft.Xna.Framework.Color;
-using System.Collections.Generic;
-
-namespace XAMLite
+﻿namespace XAMLite
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Windows;
+    using System.Windows.Input;
+    using System.Windows.Media;
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+    using Microsoft.Xna.Framework.Input;
+    using Color = Microsoft.Xna.Framework.Color;
+
     /// <summary>
     /// Describes the placement of where a Popup control such as a ToolTip 
     /// appears on the screen.
     /// Mouse:  Top left of tool tip should touch the bottom left of the mouse pointer.
     /// MousePoint:  Top left of tool tip should touch the tip of the mouse pointer.
     /// </summary>
-    public enum PlacementMode { Absolute, Bottom, Center, Right, Left, Top, Mouse, MousePoint }
+    public enum PlacementMode
+    {
+        Absolute,
+        Bottom,
+        Center,
+        Right,
+        Left,
+        Top,
+        Mouse,
+        MousePoint
+    }
 
     /// <summary>
     /// 
@@ -28,60 +38,91 @@ namespace XAMLite
         protected Microsoft.Xna.Framework.Point mouseLoc;
 
         protected bool mouseDown;
+
         //protected bool _mouseUp;
+
         protected bool mouseEnter;
+
         protected bool mouseLeave;
+
         protected bool keyDown;
 
         public event MouseButtonEventHandler MouseDown;
+
         public event MouseButtonEventHandler MouseUp;
+
         public event MouseEventHandler MouseEnter;
+
         public event MouseEventHandler MouseLeave;
+
         public event KeyEventHandler KeyDown;
+
         public event KeyEventHandler KeyUp;
 
         // the set of possible fonts that are preloaded in LoadContent()
-        protected SpriteFont arialSpriteFont { get; set; }
-        protected SpriteFont courier10SpriteFont { get; set; }
-        protected SpriteFont courier20SpriteFont { get; set; }
-        protected SpriteFont kootenay9SpriteFont { get; set; }
-        protected SpriteFont kootenay14SpriteFont { get; set; }
-        protected SpriteFont verdana10SpriteFont { get; set; }
-        protected SpriteFont verdana10BoldSpriteFont { get; set; }
-        protected SpriteFont verdana11SpriteFont { get; set; }
-        protected SpriteFont verdana11BoldSpriteFont { get; set; }
-        protected SpriteFont verdana12SpriteFont { get; set; }
-        protected SpriteFont verdana12BoldSpriteFont { get; set; }
-        protected SpriteFont verdana13SpriteFont { get; set; }
-        protected SpriteFont verdana13BoldSpriteFont { get; set; }
-        protected SpriteFont verdana14SpriteFont { get; set; }
-        protected SpriteFont verdana14BoldSpriteFont { get; set; }
-        protected SpriteFont verdana15SpriteFont { get; set; }
-        protected SpriteFont verdana16SpriteFont { get; set; }
-        protected SpriteFont verdana16BoldSpriteFont { get; set; }
-        protected SpriteFont verdana20SpriteFont { get; set; }
-        protected SpriteFont verdana20BoldSpriteFont { get; set; }
-        protected SpriteFont verdana24BoldSpriteFont { get; set; }
-        protected SpriteFont verdana60SpriteFont { get; set; }
-        protected SpriteFont verdana60BoldSpriteFont { get; set; }
+        protected SpriteFont ArialSpriteFont { get; set; }
 
-        protected Rectangle msRect; // mouse position
-        protected Rectangle panel; // rectangle containing the control for collision and drawing
+        protected SpriteFont Courier10SpriteFont { get; set; }
+
+        protected SpriteFont Courier20SpriteFont { get; set; }
+
+        protected SpriteFont Kootenay9SpriteFont { get; set; }
+
+        protected SpriteFont Kootenay14SpriteFont { get; set; }
+
+        protected SpriteFont Verdana10SpriteFont { get; set; }
+
+        protected SpriteFont Verdana10BoldSpriteFont { get; set; }
+
+        protected SpriteFont Verdana11SpriteFont { get; set; }
+
+        protected SpriteFont Verdana11BoldSpriteFont { get; set; }
+
+        protected SpriteFont Verdana12SpriteFont { get; set; }
+
+        protected SpriteFont Verdana12BoldSpriteFont { get; set; }
+
+        protected SpriteFont Verdana13SpriteFont { get; set; }
+
+        protected SpriteFont Verdana13BoldSpriteFont { get; set; }
+
+        protected SpriteFont Verdana14SpriteFont { get; set; }
+
+        protected SpriteFont Verdana14BoldSpriteFont { get; set; }
+
+        protected SpriteFont Verdana15SpriteFont { get; set; }
+
+        protected SpriteFont Verdana16SpriteFont { get; set; }
+
+        protected SpriteFont Verdana16BoldSpriteFont { get; set; }
+
+        protected SpriteFont Verdana20SpriteFont { get; set; }
+
+        protected SpriteFont Verdana20BoldSpriteFont { get; set; }
+
+        protected SpriteFont Verdana24BoldSpriteFont { get; set; }
+
+        protected SpriteFont Verdana60SpriteFont { get; set; }
+
+        protected SpriteFont Verdana60BoldSpriteFont { get; set; }
+
+        protected Rectangle MsRect; // mouse position
+        protected Rectangle Panel; // rectangle containing the control for collision and drawing
 
         /// <summary>
         /// Prevents each control from perpetually updating each item in its Update method until necessary.
         /// </summary>
-        protected bool marginChanged;
+        protected bool MarginChanged;
 
         /// <summary>
         /// Fills the space of a control with a color.
         /// </summary>
-        protected Texture2D pixel;
+        protected Texture2D Pixel;
 
         /// <summary>
         /// 
         /// </summary>
-        protected SpriteFont spriteFont;
+        protected SpriteFont SpriteFont;
 
         /// <summary>
         /// 
@@ -101,12 +142,24 @@ namespace XAMLite
         /// <summary>
         /// System.Windows.Visibility.  Maintains the visibility of a control.
         /// </summary>
-        new public Visibility Visible { get { return _visible; } set { _visible = value; visibilityChanged = true; } }
+        new public Visibility Visible
+        {
+            get
+            {
+                return _visible;
+            }
+
+            set
+            {
+                _visible = value;
+                VisibilityChanged = true;
+            }
+        }
 
         /// <summary>
         /// Notifies an individual control that the Visiblity should be updated.
         /// </summary>
-        protected bool visibilityChanged;
+        protected bool VisibilityChanged;
 
         /// <summary>
         /// Maintains the public double Opacity.
@@ -120,7 +173,11 @@ namespace XAMLite
         /// </summary>
         public double Opacity
         {
-            get { return _opacity; }
+            get
+            {
+                return _opacity;
+            }
+
             set
             {
                 /*if(value <= 1 && value >= 0 ) {
@@ -134,16 +191,14 @@ namespace XAMLite
                     }*/
 
                 _opacity = value;
-                opacityChanged = true;
+                OpacityChanged = true;
             }
-
-
         }
 
         /// <summary>
         /// Notifies an individual control that the Opacity should be updated.
         /// </summary>
-        protected bool opacityChanged;
+        protected bool OpacityChanged;
 
         /// <summary>
         /// 
@@ -180,18 +235,18 @@ namespace XAMLite
             {
                 return _margin;
             }
+
             set
             {
                 _margin = value;
 
-                marginChanged = true;
+                MarginChanged = true;
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        //public RotateTransform RotateTransform { get; set; }
         public bool Rotate90 { get; set; }
 
         /// <summary>
@@ -202,52 +257,44 @@ namespace XAMLite
             get
             {
                 // X
-                int x = 0;
+                var x = 0;
                 switch (HorizontalAlignment)
                 {
-
                     case HorizontalAlignment.Center:
-                        x = (this.viewport.Width - this.Width) / 2;
+                        x = (Viewport.Width - Width) / 2;
                         break;
 
                     case HorizontalAlignment.Left:
-                        x = (int)this.Margin.Left;
+                        x = (int)Margin.Left;
                         break;
 
                     case HorizontalAlignment.Right:
-                        x = this.viewport.Width - (int)this.Margin.Right - this.Width;
+                        x = Viewport.Width - (int)Margin.Right - Width;
                         break;
 
                     case HorizontalAlignment.Stretch:
-                        this.Width = this.viewport.Width;
-                        break;
-
-                    default:
+                        Width = Viewport.Width;
                         break;
                 }
 
                 // Y
-                int y = 0;
+                var y = 0;
                 switch (VerticalAlignment)
                 {
-
                     case VerticalAlignment.Bottom:
-                        y = this.viewport.Height - this.Height - (int)this.Margin.Bottom;
+                        y = Viewport.Height - Height - (int)Margin.Bottom;
                         break;
 
                     case VerticalAlignment.Center:
-                        y = (this.viewport.Height / 2) - (this.Height / 2);
+                        y = (Viewport.Height / 2) - (Height / 2);
                         break;
 
                     case VerticalAlignment.Stretch:
-                        this.Height = this.viewport.Height;
+                        Height = Viewport.Height;
                         break;
 
                     case VerticalAlignment.Top:
-                        y = (int)this.Margin.Top;
-                        break;
-
-                    default:
+                        y = (int)Margin.Top;
                         break;
                 }
 
@@ -270,70 +317,70 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        protected SpriteBatch spriteBatch { get; set; }
+        protected SpriteBatch SpriteBatch { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        GraphicsDevice device;
+        private GraphicsDevice _device;
 
         /// <summary>
         /// 
         /// </summary>
-        protected Viewport viewport;
+        protected Viewport Viewport;
 
         /// <summary>
         /// List of every radio button in the UI.
         /// </summary>
-        protected static List<XAMLiteRadioButton> _allRadioButtons;
+        protected static List<XAMLiteRadioButton> AllRadioButtons;
 
         /// <summary>
         /// Determines whether the control is selected.
         /// </summary>
-        protected bool _selected;
+        protected bool Selected;
 
         /// <summary>
         /// List of menu titles.
         /// </summary>
-        protected static List<string> _allMenuTitles;
+        protected static List<string> AllMenuTitles;
 
         /// <summary>
         /// List of sub menu titles.
         /// </summary>
-        protected static List<string> _allSubMenuTitles;
+        protected static List<string> AllSubMenuTitles;
 
         /// <summary>
         /// Allows menus to automatically open on mouse over if any menu was previously selected.
         /// </summary>
-        protected static bool _menuSelected;
+        protected static bool MenuSelected;
 
         /// <summary>
         /// If zero, this will set _menuSelected to false, thus requiring a mouse down event to open a menu
         /// rather than a simple mouse over event.
         /// </summary>
-        protected static int _menuVisibilityCount;
+        protected static int MenuVisibilityCount;
 
         /// <summary>
-        ///Stores true or false depending on whether a sub menu is open.  If any are true, the open parent menu
-        ///will not close.
+        /// Stores true or false depending on whether a sub menu is open.  If any are true, the open parent menu
+        /// will not close.
         /// </summary>
-        protected static Dictionary<string, bool> _openSubMenuDictionary;
+        protected static Dictionary<string, bool> OpenSubMenuDictionary;
 
-        protected Texture2D arrow;
-        protected Rectangle arrowRect;
+        protected Texture2D Arrow;
+        protected Rectangle ArrowRect;
 
-        protected Texture2D checkMark;
-        protected Rectangle checkMarkRect;
+        protected Texture2D CheckMark;
+        protected Rectangle CheckMarkRect;
 
         // used for labels so that the fonts, spacing, etc., will change (especially at startup) 
         // prior to being drawn to screen to prevent a noticeable size change. 
-        protected bool firstUpdate;
+        protected bool FirstUpdate;
 
         /// <summary>
         /// Set to true when all menus should be closed, ie., a button click on a menu item that is
         /// not contained in the _allSubMenuTitles list.
         /// </summary>
-        protected bool closeAllMenus;
+        protected bool CloseAllMenus;
 
         /// <summary>
         /// 
@@ -342,17 +389,17 @@ namespace XAMLite
         public XAMLiteControl(Game game)
             : base(game)
         {
-            this.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-            this.VerticalAlignment = System.Windows.VerticalAlignment.Top;
-            this.Margin = new Thickness(0, 0, 0, 0);
-            this.Opacity = 1.0;
-            this.Visible = new Visibility();
-            this.Visible = Visibility.Visible;
-            this.IsEnabled = true;
-            _allRadioButtons = new List<XAMLiteRadioButton>();
-            _allMenuTitles = new List<string>();
-            _allSubMenuTitles = new List<string>();
-            _openSubMenuDictionary = new Dictionary<string, bool>();
+            HorizontalAlignment = HorizontalAlignment.Left;
+            VerticalAlignment = VerticalAlignment.Top;
+            Margin = new Thickness(0, 0, 0, 0);
+            Opacity = 1.0;
+            Visible = new Visibility();
+            Visible = Visibility.Visible;
+            IsEnabled = true;
+            AllRadioButtons = new List<XAMLiteRadioButton>();
+            AllMenuTitles = new List<string>();
+            AllSubMenuTitles = new List<string>();
+            OpenSubMenuDictionary = new Dictionary<string, bool>();
         }
 
         /// <summary>
@@ -360,8 +407,8 @@ namespace XAMLite
         /// </summary>
         public override void Initialize()
         {
-            this.device = Game.GraphicsDevice;
-            this.viewport = device.Viewport;
+            _device = Game.GraphicsDevice;
+            Viewport = _device.Viewport;
 
             base.Initialize();
         }
@@ -370,14 +417,13 @@ namespace XAMLite
         /// A single spritebatch this is shared across all instances of the XAMLiteControl class 
         /// (and derived classes).
         /// </summary>
-        static SpriteBatch staticSpriteBatch;
+        private static SpriteBatch staticSpriteBatch;
 
         /// <summary>
         /// 
         /// </summary>
         protected override void LoadContent()
         {
-
             // If the sprite batch that is shared across all XAMLite controls
             // hasn't yet been created, create it.
             if (staticSpriteBatch == null)
@@ -386,42 +432,42 @@ namespace XAMLite
             }
 
             // Grab a reference to our single shared spritebatch.
-            this.spriteBatch = staticSpriteBatch;
+            SpriteBatch = staticSpriteBatch;
 
             // for Background Color
-            pixel = new Texture2D(this.GraphicsDevice, 1, 1);
-            pixel.SetData<Color>(new Color[] { Color.White });
+            Pixel = new Texture2D(GraphicsDevice, 1, 1);
+            Pixel.SetData(new[] { Color.White });
 
             // for sub menu items
-            arrow = Game.Content.Load<Texture2D>("Images/arrow");
-            arrowRect = new Rectangle(0, 0, arrow.Width, arrow.Height);
+            Arrow = Game.Content.Load<Texture2D>("Images/arrow");
+            ArrowRect = new Rectangle(0, 0, Arrow.Width, Arrow.Height);
 
             // for menu check marks
-            checkMark = Game.Content.Load<Texture2D>("Icons/MenuCheckMark");
-            checkMarkRect = new Rectangle(0, 0, checkMark.Width, checkMark.Height);
+            CheckMark = Game.Content.Load<Texture2D>("Icons/MenuCheckMark");
+            CheckMarkRect = new Rectangle(0, 0, CheckMark.Width, CheckMark.Height);
 
-            this.arialSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Arial");
-            this.courier10SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Courier10");
-            this.courier20SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Courier20");
-            this.verdana10SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana10");
-            this.verdana10BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana10Bold");
-            this.verdana11SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana11");
-            this.verdana11BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana11Bold");
-            this.verdana12SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana12");
-            this.verdana12BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana12Bold");
-            this.verdana13SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana13");
-            this.verdana13BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana13Bold");
-            this.verdana14SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana14");
-            this.verdana14BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana14Bold");
-            this.verdana15SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana15");
-            this.verdana16SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana16");
-            this.verdana16BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana16Bold");
-            this.verdana20SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana20");
-            this.verdana20BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana20Bold");
-            this.verdana24BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana24Bold");
-            this.verdana60SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana60");
-            this.verdana60BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana60Bold");
-            this.spriteFont = courier10SpriteFont;
+            ArialSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Arial");
+            Courier10SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Courier10");
+            Courier20SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Courier20");
+            Verdana10SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana10");
+            Verdana10BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana10Bold");
+            Verdana11SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana11");
+            Verdana11BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana11Bold");
+            Verdana12SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana12");
+            Verdana12BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana12Bold");
+            Verdana13SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana13");
+            Verdana13BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana13Bold");
+            Verdana14SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana14");
+            Verdana14BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana14Bold");
+            Verdana15SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana15");
+            Verdana16SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana16");
+            Verdana16BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana16Bold");
+            Verdana20SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana20");
+            Verdana20BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana20Bold");
+            Verdana24BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana24Bold");
+            Verdana60SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana60");
+            Verdana60BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana60Bold");
+            SpriteFont = Courier10SpriteFont;
         }
 
         /// <summary>
@@ -441,10 +487,10 @@ namespace XAMLite
             base.Update(gameTime);
 
             ms = Microsoft.Xna.Framework.Input.Mouse.GetState();
-            msRect = new Rectangle(ms.X, ms.Y, 1, 1);
-            if (IsEnabled && this.Visible == Visibility.Visible)
+            MsRect = new Rectangle(ms.X, ms.Y, 1, 1);
+            if (IsEnabled && Visible == Visibility.Visible)
             {
-                if (panel.Contains(msRect))
+                if (Panel.Contains(MsRect))
                 {
                     if (!mouseEnter)
                     {
@@ -461,13 +507,12 @@ namespace XAMLite
                     }
                 }
 
-                if (!mouseDown && ms.LeftButton == ButtonState.Pressed && panel.Contains(msRect))
+                if (!mouseDown && ms.LeftButton == ButtonState.Pressed && mouseEnter)
                 {
                     mouseDown = true;
                     OnMouseDown();
                 }
-
-                else if (mouseDown && ms.LeftButton == ButtonState.Released && panel.Contains(msRect))
+                else if (mouseDown && ms.LeftButton == ButtonState.Released && mouseEnter)
                 {
                     mouseDown = false;
                     OnMouseUp();
@@ -475,83 +520,74 @@ namespace XAMLite
             }
         }
 
-        protected void UpdateFontFamily(FontFamily _fontFamily)
+        protected void UpdateFontFamily(FontFamily fontFamily)
         {
-            switch (_fontFamily.ToString())
+            switch (fontFamily.ToString())
             {
                 case "Arial":
-                    this.spriteFont = arialSpriteFont;
+                    SpriteFont = ArialSpriteFont;
                     break;
                 case "Courier20":
-                    this.spriteFont = courier20SpriteFont;
+                    SpriteFont = Courier20SpriteFont;
                     break;
                 case "Verdana10":
-                    this.spriteFont = verdana10SpriteFont;
+                    SpriteFont = Verdana10SpriteFont;
                     break;
                 case "Verdana10Bold":
-                    this.spriteFont = verdana10BoldSpriteFont;
+                    SpriteFont = Verdana10BoldSpriteFont;
                     break;
                 case "Verdana11":
-                    this.spriteFont = verdana11SpriteFont;
+                    SpriteFont = Verdana11SpriteFont;
                     break;
                 case "Verdana11Bold":
-                    this.spriteFont = verdana11BoldSpriteFont;
+                    SpriteFont = Verdana11BoldSpriteFont;
                     break;
                 case "Verdana12":
-                    this.spriteFont = verdana12SpriteFont;
+                    SpriteFont = Verdana12SpriteFont;
                     break;
                 case "Verdana12Bold":
-                    this.spriteFont = verdana12BoldSpriteFont;
+                    SpriteFont = Verdana12BoldSpriteFont;
                     break;
                 case "Verdana13":
-                    this.spriteFont = verdana13SpriteFont;
+                    SpriteFont = Verdana13SpriteFont;
                     break;
                 case "Verdana13Bold":
-                    this.spriteFont = verdana13BoldSpriteFont;
+                    SpriteFont = Verdana13BoldSpriteFont;
                     break;
                 case "Verdana14":
-                    this.spriteFont = verdana14SpriteFont;
+                    SpriteFont = Verdana14SpriteFont;
                     break;
                 case "Verdana14Bold":
-                    this.spriteFont = verdana14BoldSpriteFont;
+                    SpriteFont = Verdana14BoldSpriteFont;
                     break;
                 case "Verdana15":
-                    this.spriteFont = verdana15SpriteFont;
+                    SpriteFont = Verdana15SpriteFont;
                     break;
                 case "Verdana16":
-                    this.spriteFont = verdana16SpriteFont;
+                    SpriteFont = Verdana16SpriteFont;
                     break;
                 case "Verdana16Bold":
-                    this.spriteFont = verdana16BoldSpriteFont;
+                    SpriteFont = Verdana16BoldSpriteFont;
                     break;
                 case "Verdana20":
-                    this.spriteFont = verdana20SpriteFont;
+                    SpriteFont = Verdana20SpriteFont;
                     break;
                 case "Verdana20Bold":
-                    this.spriteFont = verdana20BoldSpriteFont;
+                    SpriteFont = Verdana20BoldSpriteFont;
                     break;
                 case "Verdana24Bold":
-                    this.spriteFont = verdana24BoldSpriteFont;
+                    SpriteFont = Verdana24BoldSpriteFont;
                     break;
                 case "Verdana60":
-                    this.spriteFont = verdana60SpriteFont;
+                    SpriteFont = Verdana60SpriteFont;
                     break;
                 case "Verdana60Bold":
-                    this.spriteFont = verdana60BoldSpriteFont;
+                    SpriteFont = Verdana60BoldSpriteFont;
                     break;
                 default:
-                    this.spriteFont = courier10SpriteFont;
+                    SpriteFont = Courier10SpriteFont;
                     break;
             }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="gameTime"></param>
-        public override void Draw(GameTime gameTime)
-        {
-            base.Draw(gameTime);
         }
 
         public virtual void OnKeyDown()
@@ -562,6 +598,10 @@ namespace XAMLite
                 KeyDown(this, e);
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual void OnKeyUp()
         {
             if (KeyUp != null)
@@ -570,7 +610,6 @@ namespace XAMLite
                 KeyUp(this, e);
             }
         }
-
 
         /// <summary>
         /// 
@@ -626,8 +665,8 @@ namespace XAMLite
         /// <param name="text"></param>
         protected void RecalculateWidthAndHeight(string text)
         {
-            this.Width = (int)this.spriteFont.MeasureString(text).X;
-            this.Height = (int)this.spriteFont.MeasureString(text).Y;
+            Width = (int)SpriteFont.MeasureString(text).X;
+            Height = (int)SpriteFont.MeasureString(text).Y;
         }
 
         /// <summary>
@@ -638,7 +677,6 @@ namespace XAMLite
         {
             switch (Visible)
             {
-
                 case Visibility.Visible:
                     Visible = Visibility.Hidden;
                     break;
@@ -650,7 +688,6 @@ namespace XAMLite
                 case Visibility.Collapsed:
                     Visible = Visibility.Visible;
                     break;
-
             }
         }
 
@@ -660,17 +697,17 @@ namespace XAMLite
         /// </summary>
         protected void ResetMenuItems()
         {
-            _allMenuTitles.Add("Session");
+            AllMenuTitles.Add("Session");
             //_allMenuTitles.Add("Ambient Level");
-            _allMenuTitles.Add("Tutorials");
+            AllMenuTitles.Add("Tutorials");
             //_allMenuTitles.Add("Time of Day");
             //_allMenuTitles.Add("Truck");
-            _allMenuTitles.Add("Developer [F1]");
+            AllMenuTitles.Add("Developer [F1]");
 
-            _allSubMenuTitles.Add("Adjust Dust Visibility");
-            _allSubMenuTitles.Add("Ambient Level");
-            _allSubMenuTitles.Add("Time of Day");
-            _allSubMenuTitles.Add("Truck");
+            AllSubMenuTitles.Add("Adjust Dust Visibility");
+            AllSubMenuTitles.Add("Ambient Level");
+            AllSubMenuTitles.Add("Time of Day");
+            AllSubMenuTitles.Add("Truck");
         }
     }
 }

@@ -64,7 +64,7 @@ namespace XAMLite
             }
 
             // Sets the size and location of the image.
-            panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+            Panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
         }
 
         /// <summary>
@@ -74,10 +74,10 @@ namespace XAMLite
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            if (marginChanged)
+            if (MarginChanged)
             {
-                marginChanged = false;
-                panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+                MarginChanged = false;
+                Panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
             }
             
         }
@@ -91,11 +91,11 @@ namespace XAMLite
             //
             if (Visible == System.Windows.Visibility.Visible)
             {
-                this.spriteBatch.Begin();
+                this.SpriteBatch.Begin();
 
-                this.spriteBatch.Draw(this.texture, panel, (Color.White * (float)Opacity));
+                this.SpriteBatch.Draw(this.texture, Panel, (Color.White * (float)Opacity));
 
-                this.spriteBatch.End();
+                this.SpriteBatch.End();
             }
         }
     }

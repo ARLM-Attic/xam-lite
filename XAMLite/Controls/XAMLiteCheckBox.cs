@@ -36,7 +36,7 @@ namespace XAMLite
             set
             {
                 this.Text = value;
-                if (this.spriteFont != null)
+                if (this.SpriteFont != null)
                 {
                     RecalculateWidthAndHeight(value);
                 }
@@ -140,7 +140,7 @@ namespace XAMLite
 
             _checkBox = new Rectangle((int)this.Position.X, (int)this.Position.Y, _checkBoxChecked.Width, _checkBoxChecked.Height);
             _textPos = new Vector2((this.Position.X + _checkBox.Width + 10), this.Position.Y);
-            panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, _checkBoxChecked.Width + this.Width + 10, _checkBoxChecked.Height + this.Height);
+            Panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, _checkBoxChecked.Width + this.Width + 10, _checkBoxChecked.Height + this.Height);
         }
 
         /// <summary>
@@ -150,12 +150,12 @@ namespace XAMLite
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            if (marginChanged)
+            if (MarginChanged)
             {
-                marginChanged = false;
+                MarginChanged = false;
                 _checkBox = new Rectangle((int)this.Position.X, (int)this.Position.Y, _checkBoxChecked.Width, _checkBoxChecked.Height);
                 _textPos = new Vector2((this.Position.X + _checkBox.Width + 10), this.Position.Y);
-                panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, _checkBoxChecked.Width + this.Width + 10, this.Height);
+                Panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, _checkBoxChecked.Width + this.Width + 10, this.Height);
             }
 
             if (fontFamilyChanged)
@@ -173,17 +173,17 @@ namespace XAMLite
         {
             if (Visible == System.Windows.Visibility.Visible)
             {
-                this.spriteBatch.Begin();
+                this.SpriteBatch.Begin();
 
                 if (this.IsEnabled)
                 {
-                    this.spriteFont.Spacing = this.Spacing;
-                    spriteBatch.DrawString(this.spriteFont, Text, _textPos, this._foregroundColor);
+                    this.SpriteFont.Spacing = this.Spacing;
+                    SpriteBatch.DrawString(this.SpriteFont, Text, _textPos, this._foregroundColor);
 
                     if (this.IsChecked)
-                        this.spriteBatch.Draw(this._checkBoxChecked, _checkBox, (Color.White * (float)Opacity));
+                        this.SpriteBatch.Draw(this._checkBoxChecked, _checkBox, (Color.White * (float)Opacity));
                     else
-                        this.spriteBatch.Draw(this._checkBoxUnchecked, _checkBox, (Color.White * (float)Opacity));
+                        this.SpriteBatch.Draw(this._checkBoxUnchecked, _checkBox, (Color.White * (float)Opacity));
                 }
 
                 else
@@ -193,11 +193,11 @@ namespace XAMLite
                     {
                         opacity = 0f;
                     }
-                    spriteBatch.DrawString(this.spriteFont, Text, _textPos, (this._foregroundColor * opacity));
-                    this.spriteBatch.Draw(this._checkBoxUnchecked, _checkBox, (Color.White * opacity));
+                    SpriteBatch.DrawString(this.SpriteFont, Text, _textPos, (this._foregroundColor * opacity));
+                    this.SpriteBatch.Draw(this._checkBoxUnchecked, _checkBox, (Color.White * opacity));
                 }
 
-                this.spriteBatch.End();
+                this.SpriteBatch.End();
             }
         }
 

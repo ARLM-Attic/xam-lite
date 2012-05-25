@@ -141,7 +141,7 @@ namespace XAMLite
             TextWrapping = TextWrapping.Wrap;
             _foregroundColor = Color.Black;
             _backgroundColor = Color.Transparent;
-            this.spriteFont = courier10SpriteFont;
+            this.SpriteFont = Courier10SpriteFont;
             this.Padding = new Thickness(0, 0, 0, 0);
             this.Spacing = 2;
         }
@@ -192,13 +192,13 @@ namespace XAMLite
             {
                 fontFamilyChanged = false;
                 UpdateFontFamily(_fontFamily);
-                this.spriteFont.Spacing = Spacing;
+                this.SpriteFont.Spacing = Spacing;
                 RecalculateWidthAndHeight(this.Text);
             }
-            if (marginChanged)
+            if (MarginChanged)
             {
-                marginChanged = false;
-                panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+                MarginChanged = false;
+                Panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
             }
         }
 
@@ -213,7 +213,7 @@ namespace XAMLite
                 if (TextWrapping == TextWrapping.Wrap && !textWrappingSet)
                 {
                     textWrappingSet = true;
-                    this.Text = WordWrap(this.Text, (int)this.spriteFont.MeasureString(this.Text).X);
+                    this.Text = WordWrap(this.Text, (int)this.SpriteFont.MeasureString(this.Text).X);
                 }
 
                 if (!widthHeightContainerSet)
@@ -233,30 +233,30 @@ namespace XAMLite
                         Padding = new Thickness(Padding.Top, Padding.Left, Padding.Bottom, Padding.Right);
                         CreateTextBlockContainer();
                     }
-                    paddedPosition = new Vector2(panel.X + panel.Width - (int)Padding.Left, panel.Y + (int)Padding.Top);
+                    paddedPosition = new Vector2(Panel.X + Panel.Width - (int)Padding.Left, Panel.Y + (int)Padding.Top);
                 }
                 else
-                    paddedPosition = new Vector2(panel.X + (int)Padding.Left, panel.Y + (int)Padding.Top);
+                    paddedPosition = new Vector2(Panel.X + (int)Padding.Left, Panel.Y + (int)Padding.Top);
 
 
 
-                spriteBatch.Begin();
+                SpriteBatch.Begin();
 
-                this.spriteFont.Spacing = this.Spacing;
+                this.SpriteFont.Spacing = this.Spacing;
                 if (!transparent)
                 {
-                    spriteBatch.Draw(pixel, panel, (this._backgroundColor * (float)Opacity));
+                    SpriteBatch.Draw(Pixel, Panel, (this._backgroundColor * (float)Opacity));
                 }
 
                 if (Rotate90)
                 {
-                    spriteBatch.DrawString(this.spriteFont, this.Text, paddedPosition, (this._foregroundColor * (float)Opacity), -MathHelper.PiOver2, spriteFont.MeasureString(this.Text), 1, SpriteEffects.None, 0);
+                    SpriteBatch.DrawString(this.SpriteFont, this.Text, paddedPosition, (this._foregroundColor * (float)Opacity), -MathHelper.PiOver2, SpriteFont.MeasureString(this.Text), 1, SpriteEffects.None, 0);
                 }
                 else
                 {
-                    spriteBatch.DrawString(this.spriteFont, this.Text, paddedPosition, (this._foregroundColor * (float)Opacity));
+                    SpriteBatch.DrawString(this.SpriteFont, this.Text, paddedPosition, (this._foregroundColor * (float)Opacity));
                 }
-                spriteBatch.End();
+                SpriteBatch.End();
             }
         }
 
@@ -264,7 +264,7 @@ namespace XAMLite
         protected void CreateTextBlockContainer()
         {
             if (this.Width != 0 && this.Height != 0)
-                panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+                Panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
         }
 
         /// <summary>
@@ -274,11 +274,11 @@ namespace XAMLite
         private void CalculateWidthAndHeight(string text)
         {
             if (!widthSet || TextWrapping == TextWrapping.NoWrap)
-                this.Width = (int)this.spriteFont.MeasureString(text).X + (int)Padding.Left + (int)Padding.Right;
+                this.Width = (int)this.SpriteFont.MeasureString(text).X + (int)Padding.Left + (int)Padding.Right;
 
             if (!heightSet || TextWrapping == TextWrapping.NoWrap)
-                this.Height = (int)this.spriteFont.MeasureString(text).Y + (int)Padding.Top + (int)Padding.Bottom;
-            marginChanged = true;
+                this.Height = (int)this.SpriteFont.MeasureString(text).Y + (int)Padding.Top + (int)Padding.Bottom;
+            MarginChanged = true;
         }
 
         // used to break the string into seperate lines of text

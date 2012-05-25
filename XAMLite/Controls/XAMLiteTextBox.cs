@@ -51,9 +51,9 @@ namespace XAMLite
             }
             set
             {
-                if (this.spriteFont != null)
+                if (this.SpriteFont != null)
                 {
-                    this.spriteFont.Spacing = Spacing;
+                    this.SpriteFont.Spacing = Spacing;
                     RecalculateWidthAndHeight(value);
                 }
                 base.Text = value;
@@ -278,10 +278,10 @@ namespace XAMLite
             this.textBoxTexture = Game.Content.Load<Texture2D>(this.SourceName);
             this.Width = textBoxTexture.Width;
             this.Height = textBoxTexture.Height;
-            this.panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
-            this.textPosition = new Vector2(panel.X + (int)this.Padding.Left, panel.Y + (int)this.Padding.Top);
-            this.cursorPosition = new Vector2(panel.X + (int)this.Padding.Left, panel.Y + (int)this.Padding.Top);
-            this.cursorStartPosition = new Vector2(panel.X + (int)this.Padding.Left, panel.Y + (int)this.Padding.Top);
+            this.Panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+            this.textPosition = new Vector2(Panel.X + (int)this.Padding.Left, Panel.Y + (int)this.Padding.Top);
+            this.cursorPosition = new Vector2(Panel.X + (int)this.Padding.Left, Panel.Y + (int)this.Padding.Top);
+            this.cursorStartPosition = new Vector2(Panel.X + (int)this.Padding.Left, Panel.Y + (int)this.Padding.Top);
         }
 
         public override void Update(GameTime gameTime)
@@ -290,29 +290,29 @@ namespace XAMLite
             {
                 fontFamilyChanged = false;
                 UpdateFontFamily(_fontFamily);
-                this.spriteFont.Spacing = Spacing;
+                this.SpriteFont.Spacing = Spacing;
             }
 
             // initial text box click where the default text is replaced with just a cursor.
-            if (mouseDown && panel.Contains(msRect) && initialTyping)
+            if (mouseDown && Panel.Contains(MsRect) && initialTyping)
             {
-                _selected = true;
+                Selected = true;
                 initialTyping = false;
                 this.Text = string.Empty;
                 cursorVisible = true;
                 cursorBlink = true;
             }
             // user has previously typed something, deselected, and then selected again. 
-            else if (mouseDown && panel.Contains(msRect) && !_selected)
+            else if (mouseDown && Panel.Contains(MsRect) && !Selected)
             {
-                _selected = true;
+                Selected = true;
                 cursorVisible = true;
                 cursorBlink = true;
             }
             // text box is deselected.
-            else if (mouseDown && !panel.Contains(msRect) && _selected)
+            else if (mouseDown && !Panel.Contains(MsRect) && Selected)
             {
-                _selected = false;
+                Selected = false;
                 cursorVisible = false;
                 cursorBlink = false;
             }
@@ -359,7 +359,7 @@ namespace XAMLite
                 }
             }
 
-            if (_selected)
+            if (Selected)
                 ProcessKeyboard();
             
             base.Update(gameTime);
@@ -375,12 +375,12 @@ namespace XAMLite
         {
             if (Visible == Visibility.Visible)
             {
-                this.spriteBatch.Begin();
-                this.spriteBatch.Draw(this.textBoxTexture, this.panel, Color.White);
-                this.spriteBatch.DrawString(this.spriteFont, this.Text, textPosition, _foregroundColor);
+                this.SpriteBatch.Begin();
+                this.SpriteBatch.Draw(this.textBoxTexture, this.Panel, Color.White);
+                this.SpriteBatch.DrawString(this.SpriteFont, this.Text, textPosition, _foregroundColor);
                 if(cursorBlink)
-                    this.spriteBatch.DrawString(this.spriteFont, this.cursor, cursorPosition, _foregroundColor);
-                this.spriteBatch.End();
+                    this.SpriteBatch.DrawString(this.SpriteFont, this.cursor, cursorPosition, _foregroundColor);
+                this.SpriteBatch.End();
             }
         }
 
@@ -405,7 +405,7 @@ namespace XAMLite
                     break;
                 }
             }
-            cursorPosition.X = cursorStartPosition.X + (int)this.spriteFont.MeasureString(this.Text).X + 2;
+            cursorPosition.X = cursorStartPosition.X + (int)this.SpriteFont.MeasureString(this.Text).X + 2;
         }
 
         private bool CheckKey(Keys key)
@@ -430,7 +430,7 @@ namespace XAMLite
             string newChar = "";
 
             if (this.Text.Length >= MaxLength && key != Keys.Back && key != Keys.Delete && 
-                key != Keys.Tab && key != Keys.Enter && (int)this.spriteFont.MeasureString(this.Text).X >= 
+                key != Keys.Tab && key != Keys.Enter && (int)this.SpriteFont.MeasureString(this.Text).X >= 
                 textBoxTexture.Width - 20)
                 return;
             if (standardKeyTyped)
@@ -509,7 +509,7 @@ namespace XAMLite
                         return;
                     case Keys.Enter:
                     case Keys.Tab:
-                        _selected = false;
+                        Selected = false;
                         cursorVisible = false;
                         cursorBlink = false;
                         break;

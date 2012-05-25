@@ -23,9 +23,9 @@ namespace XAMLite
             }
             set
             {
-                if (this.spriteFont != null)
+                if (this.SpriteFont != null)
                 {
-                    this.spriteFont.Spacing = Spacing;
+                    this.SpriteFont.Spacing = Spacing;
                     RecalculateWidthAndHeight(value);
                 }
                 base.Text = value;
@@ -47,9 +47,9 @@ namespace XAMLite
             set
             {
                 this.Text = value;
-                if (this.spriteFont != null)
+                if (this.SpriteFont != null)
                 {
-                    this.spriteFont.Spacing = Spacing;
+                    this.SpriteFont.Spacing = Spacing;
                     RecalculateWidthAndHeight(value);
                 }
                 base.Text = value;
@@ -63,7 +63,7 @@ namespace XAMLite
         public FontFamily FontFamily
         {
             get { return _fontFamily; }
-            set { _fontFamily = value; fontFamilyChanged = true; firstUpdate = true; }
+            set { _fontFamily = value; fontFamilyChanged = true; FirstUpdate = true; }
         }
 
         // character spacing
@@ -131,16 +131,16 @@ namespace XAMLite
         {
             base.Update(gameTime);
 
-            if (firstUpdate)
+            if (FirstUpdate)
             {
                 if (fontFamilyChanged)
                 {
                     fontFamilyChanged = false;
                     UpdateFontFamily(_fontFamily);
-                    this.spriteFont.Spacing = Spacing;
+                    this.SpriteFont.Spacing = Spacing;
                     RecalculateWidthAndHeight(this.Text);
                 }
-                firstUpdate = false;
+                FirstUpdate = false;
             }
 
         }
@@ -153,9 +153,9 @@ namespace XAMLite
         {
             if (Visible == System.Windows.Visibility.Visible)
             {
-                spriteBatch.Begin();
-                spriteBatch.DrawString(this.spriteFont, Text, Position, (this._foregroundColor * (float)Opacity));
-                spriteBatch.End();
+                SpriteBatch.Begin();
+                SpriteBatch.DrawString(this.SpriteFont, Text, Position, (this._foregroundColor * (float)Opacity));
+                SpriteBatch.End();
             }
         }
     }

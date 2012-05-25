@@ -113,7 +113,7 @@ namespace XAMLite
             _lateInitialize = true;
 
             // adding the head of the menu to the list of menus
-            _allMenuTitles.Add(Items[0].Header);
+            AllMenuTitles.Add(Items[0].Header);
 
             for (int i = 0; i < Items.Count; i++)
             {
@@ -121,9 +121,9 @@ namespace XAMLite
                 // Add the child component to the game with the modified parameters.
                 if (Items[i].Items.Count > 0)
                 {
-                    _allSubMenuTitles.Add(Items[i].Header);
-                    if (!_openSubMenuDictionary.ContainsKey(Items[i].Header))
-                        _openSubMenuDictionary.Add(Items[i].Header, false);
+                    AllSubMenuTitles.Add(Items[i].Header);
+                    if (!OpenSubMenuDictionary.ContainsKey(Items[i].Header))
+                        OpenSubMenuDictionary.Add(Items[i].Header, false);
                 }
             }
 
@@ -161,7 +161,7 @@ namespace XAMLite
                         Items[0].Visible = Visibility.Hidden;
                         _headerVisibilityOn = false;
                         _menuVisibilityCounted = false;
-                        _menuVisibilityCount = 0;
+                        MenuVisibilityCount = 0;
                     }
                 }
             }
@@ -172,7 +172,7 @@ namespace XAMLite
                     _headerVisibilityOn = true;
                     Items[0].Visible = Visibility.Visible;
                 }
-                if (!panel.Contains(msRect) && !_menuItemPanel.Contains(msRect))
+                if (!Panel.Contains(MsRect) && !_menuItemPanel.Contains(MsRect))
                 {
                     CloseMenu();
                 }
@@ -183,9 +183,9 @@ namespace XAMLite
                 if (!_fullMenuIsVisible && _menuVisibilityCounted)
                 {
                     _menuVisibilityCounted = false;
-                    if (_menuVisibilityCount != 0)
+                    if (MenuVisibilityCount != 0)
                     {
-                        _menuVisibilityCount--;
+                        MenuVisibilityCount--;
                     }
                 }
 
@@ -193,15 +193,15 @@ namespace XAMLite
                 {
 
                     _menuVisibilityCounted = true;
-                    _menuVisibilityCount++;
+                    MenuVisibilityCount++;
                 }
-                else if (_menuVisibilityCount == 0)
+                else if (MenuVisibilityCount == 0)
                 {
                     _menuVisibilityCounted = false;
-                    if (!_openSubMenuDictionary.ContainsValue(true))
+                    if (!OpenSubMenuDictionary.ContainsValue(true))
                     {
                         CloseMenu();
-                        _menuSelected = false;
+                        MenuSelected = false;
                     }
                 }
 
@@ -233,18 +233,18 @@ namespace XAMLite
         {
             if (Visible == Visibility.Visible && IsEnabled)
             {
-                spriteBatch.Begin();
+                SpriteBatch.Begin();
                 if (!_transparent)
                 {
-                    spriteBatch.Draw(pixel, panel, _backgroundColor * 0.55f);
+                    SpriteBatch.Draw(Pixel, Panel, _backgroundColor * 0.55f);
                 }
 
                 if (_fullMenuIsVisible)
                 {
-                    spriteBatch.Draw(pixel, _menuItemsDrawPanel, Color.Black);
+                    SpriteBatch.Draw(Pixel, _menuItemsDrawPanel, Color.Black);
                 }
 
-                spriteBatch.End();
+                SpriteBatch.End();
             }
         }
 
@@ -253,7 +253,7 @@ namespace XAMLite
         /// </summary>
         private void CloseMenu()
         {
-            if (!_openSubMenuDictionary.ContainsValue(true))
+            if (!OpenSubMenuDictionary.ContainsValue(true))
             {
                 for (int i = 1; i < Items.Count; i++)
                 {
@@ -289,7 +289,7 @@ namespace XAMLite
                 Items[i].Width += (int)Items[i].Padding.Left + (int)Items[i].Padding.Right + _checkMarkWidth;
 
                 // adding space for the arrow to denote that a submenu is available.
-                if (_allSubMenuTitles.Contains(Items[i].Header))
+                if (AllSubMenuTitles.Contains(Items[i].Header))
                 {
                     Items[i].Width += 20;
                 }
@@ -317,7 +317,7 @@ namespace XAMLite
                 height += Items[i].Height;
             }
 
-            panel = new Rectangle((int)Items[0].Position.X, (int)Items[0].Position.Y, Items[0].Width + (int)Items[0].Padding.Left + (int)Items[0].Padding.Right, Items[0].Height + (int)Items[0].Padding.Top + (int)Items[0].Padding.Bottom);
+            Panel = new Rectangle((int)Items[0].Position.X, (int)Items[0].Position.Y, Items[0].Width + (int)Items[0].Padding.Left + (int)Items[0].Padding.Right, Items[0].Height + (int)Items[0].Padding.Top + (int)Items[0].Padding.Bottom);
             _menuItemPanel = new Rectangle((int)this.Position.X, (int)this.Position.Y + Items[0].Height, _longestWidth, height - (Items[0].Height + (int)this.Margin.Top));
             _menuItemsDrawPanel = new Rectangle((int)this.Position.X, (int)Items[1].Position.Y - 1, _longestWidth, height - (int)Items[1].Position.Y + 2);
         }
@@ -329,7 +329,7 @@ namespace XAMLite
         /// <param name="e"></param>
         void XamLiteMenuMouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            if (_menuSelected)
+            if (MenuSelected)
             {
                 OpenMenu();
             }
@@ -345,7 +345,7 @@ namespace XAMLite
             if (Items[1] != null && Items[1].Visible == Visibility.Hidden)
             {
                 OpenMenu();
-                _menuSelected = true;
+                MenuSelected = true;
             }
             else
             {

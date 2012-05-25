@@ -33,7 +33,7 @@ namespace XAMLite
             set
             {
                 this.Text = value;
-                if (this.spriteFont != null)
+                if (this.SpriteFont != null)
                 {
                     RecalculateWidthAndHeight(value);
                 }
@@ -131,9 +131,9 @@ namespace XAMLite
 
             radio = new Rectangle((int)this.Position.X, (int)this.Position.Y, _radioSelected.Width, _radioSelected.Height);
             _textPos = new Vector2((this.Position.X + radio.Width + 10), this.Position.Y);
-            panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, _radioSelected.Width + this.Width + 10, _radioSelected.Height + this.Height);
+            Panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, _radioSelected.Width + this.Width + 10, _radioSelected.Height + this.Height);
 
-            _allRadioButtons.Add(this);
+            AllRadioButtons.Add(this);
         }
 
         /// <summary>
@@ -143,12 +143,12 @@ namespace XAMLite
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            if (marginChanged)
+            if (MarginChanged)
             {
-                marginChanged = false;
+                MarginChanged = false;
                 radio = new Rectangle((int)this.Position.X, (int)this.Position.Y, _radioSelected.Width, _radioSelected.Height);
                 _textPos = new Vector2((this.Position.X + radio.Width + 10), this.Position.Y);
-                panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, _radioSelected.Width + this.Width + 10, this.Height);
+                Panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, _radioSelected.Width + this.Width + 10, this.Height);
             }
 
             if (fontFamilyChanged)
@@ -157,21 +157,21 @@ namespace XAMLite
                 UpdateFontFamily(_fontFamily);
             }
 
-            if (mouseDown && !_selected && panel.Contains(msRect) && IsEnabled)
+            if (mouseDown && !Selected && Panel.Contains(MsRect) && IsEnabled)
             {
-                _selected = true;
-                for (int i = 0; i < _allRadioButtons.Count; i++)
+                Selected = true;
+                for (int i = 0; i < AllRadioButtons.Count; i++)
                 {
-                    if (_allRadioButtons[i].IsChecked && _allRadioButtons[i].GroupName == this.GroupName && _allRadioButtons[i].IsEnabled == true)
+                    if (AllRadioButtons[i].IsChecked && AllRadioButtons[i].GroupName == this.GroupName && AllRadioButtons[i].IsEnabled == true)
                     {
-                        _allRadioButtons[i].IsChecked = false;
+                        AllRadioButtons[i].IsChecked = false;
                     }
                 }
                 this.IsChecked = true;
             }
-            else if (_selected)
+            else if (Selected)
             {
-                _selected = false;
+                Selected = false;
             }
         }
 
@@ -184,28 +184,28 @@ namespace XAMLite
             //
             if (Visible == System.Windows.Visibility.Visible)
             {
-                this.spriteBatch.Begin();
+                this.SpriteBatch.Begin();
 
                 if (this.IsEnabled)
                 {
-                    this.spriteFont.Spacing = this.Spacing;
-                    spriteBatch.DrawString(this.spriteFont, Text, _textPos, (this._foregroundColor * (float)Opacity));
+                    this.SpriteFont.Spacing = this.Spacing;
+                    SpriteBatch.DrawString(this.SpriteFont, Text, _textPos, (this._foregroundColor * (float)Opacity));
 
                     if (this.IsChecked)
-                        this.spriteBatch.Draw(this._radioSelected, radio, (Color.White * (float)Opacity));
+                        this.SpriteBatch.Draw(this._radioSelected, radio, (Color.White * (float)Opacity));
                     else
-                        this.spriteBatch.Draw(this._radioUnselected, radio, (Color.White * (float)Opacity));
+                        this.SpriteBatch.Draw(this._radioUnselected, radio, (Color.White * (float)Opacity));
                 }
 
                 else
                 {
                     float opacity = (float)Opacity * 0.5f;
 
-                    spriteBatch.DrawString(this.spriteFont, Text, _textPos, (this._foregroundColor * opacity));
-                    this.spriteBatch.Draw(this._radioUnselected, radio, (Color.White * opacity));
+                    SpriteBatch.DrawString(this.SpriteFont, Text, _textPos, (this._foregroundColor * opacity));
+                    this.SpriteBatch.Draw(this._radioUnselected, radio, (Color.White * opacity));
                 }
 
-                this.spriteBatch.End();
+                this.SpriteBatch.End();
             }
         }
     }

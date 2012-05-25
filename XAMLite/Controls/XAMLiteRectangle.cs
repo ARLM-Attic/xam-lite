@@ -55,15 +55,15 @@ namespace XAMLite
             _fill = Color.Transparent;
             _stroke = Color.Transparent;
             StrokeThickness = 1;
-            pixel = new Texture2D(game.GraphicsDevice, 1, 1);
-            pixel.SetData<Color>(new Color[] { Color.White });
+            Pixel = new Texture2D(game.GraphicsDevice, 1, 1);
+            Pixel.SetData<Color>(new Color[] { Color.White });
             this.Width = 0;
             this.Height = 0;
         }
 
         ~XAMLiteRectangle()
         {
-            pixel.Dispose();
+            Pixel.Dispose();
         }
 
         /// <summary>
@@ -77,20 +77,20 @@ namespace XAMLite
 
                 ConfirmHeightAndWidth();
                 // Begin.
-                this.spriteBatch.Begin();
-                panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
-                this.spriteBatch.Draw(pixel, panel, (_fill * (float)Opacity));
-                panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, StrokeThickness);
-                this.spriteBatch.Draw(pixel, panel, (_stroke * (float)Opacity));
-                panel = new Rectangle((int)this.Position.X, ((int)this.Position.Y + this.Height - StrokeThickness), this.Width, StrokeThickness);
-                this.spriteBatch.Draw(pixel, panel, (_stroke * (float)Opacity));
-                panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, StrokeThickness, this.Height);
-                this.spriteBatch.Draw(pixel, panel, (_stroke * (float)Opacity));
-                panel = new Rectangle(((int)this.Position.X + this.Width - StrokeThickness), (int)this.Position.Y, StrokeThickness, this.Height);
-                this.spriteBatch.Draw(pixel, panel, (_stroke * (float)Opacity));
+                this.SpriteBatch.Begin();
+                Panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+                this.SpriteBatch.Draw(Pixel, Panel, (_fill * (float)Opacity));
+                Panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, StrokeThickness);
+                this.SpriteBatch.Draw(Pixel, Panel, (_stroke * (float)Opacity));
+                Panel = new Rectangle((int)this.Position.X, ((int)this.Position.Y + this.Height - StrokeThickness), this.Width, StrokeThickness);
+                this.SpriteBatch.Draw(Pixel, Panel, (_stroke * (float)Opacity));
+                Panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, StrokeThickness, this.Height);
+                this.SpriteBatch.Draw(Pixel, Panel, (_stroke * (float)Opacity));
+                Panel = new Rectangle(((int)this.Position.X + this.Width - StrokeThickness), (int)this.Position.Y, StrokeThickness, this.Height);
+                this.SpriteBatch.Draw(Pixel, Panel, (_stroke * (float)Opacity));
 
                 // End.
-                this.spriteBatch.End();
+                this.SpriteBatch.End();
             }
         }
 
@@ -101,10 +101,10 @@ namespace XAMLite
         private void ConfirmHeightAndWidth()
         {
             if(this.Width == 0)
-                this.Width = this.viewport.Width - (int)this.Margin.Left - (int)this.Margin.Right;
+                this.Width = this.Viewport.Width - (int)this.Margin.Left - (int)this.Margin.Right;
 
             if(this.Height == 0)
-                this.Height = this.viewport.Height - (int)this.Margin.Top - (int)this.Margin.Bottom;
+                this.Height = this.Viewport.Height - (int)this.Margin.Top - (int)this.Margin.Bottom;
         }
     }
 }

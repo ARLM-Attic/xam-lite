@@ -32,9 +32,9 @@ namespace XAMLite
             set
             {
                 this.Text = value;
-                if (this.spriteFont != null)
+                if (this.SpriteFont != null)
                 {
-                    this.spriteFont.Spacing = Spacing;
+                    this.SpriteFont.Spacing = Spacing;
                     RecalculateWidthAndHeight(value);
                 }
                 base.Text = value;
@@ -258,7 +258,7 @@ namespace XAMLite
             this.Spacing = 2;
             
             RecalculateWidthAndHeight(this.Header);
-            panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+            Panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
         }
 
         /// <summary>
@@ -300,23 +300,23 @@ namespace XAMLite
             {
                 _fontFamilyChanged = false;
                 UpdateFontFamily(_fontFamily);
-                this.spriteFont.Spacing = Spacing;
+                this.SpriteFont.Spacing = Spacing;
                 RecalculateWidthAndHeight(this.Header);
-                marginChanged = true;
+                MarginChanged = true;
             }
 
-            if (marginChanged)
+            if (MarginChanged)
             {
-                marginChanged = false;
+                MarginChanged = false;
                 Margin = new Thickness(this.Margin.Left, this.Margin.Top, this.Margin.Right, this.Margin.Bottom);
-                if (_allMenuTitles.Contains(this.Header))
+                if (AllMenuTitles.Contains(this.Header))
                 {
-                    panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, (int)this.spriteFont.MeasureString(Text).X + (int)Padding.Left + (int)Padding.Right, this.Height + (int)Padding.Top + (int)Padding.Bottom);
+                    Panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, (int)this.SpriteFont.MeasureString(Text).X + (int)Padding.Left + (int)Padding.Right, this.Height + (int)Padding.Top + (int)Padding.Bottom);
                     _textPos = new Vector2(this.Position.X + (int)this.Padding.Left, this.Position.Y + (int)this.Padding.Top);
                 }
                 else
                 {
-                    panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+                    Panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
                     _textPos = new Vector2(this.Position.X + (int)this.Padding.Left + _checkMarkWidth, this.Position.Y + (int)this.Padding.Top);
                 }
             }
@@ -329,9 +329,9 @@ namespace XAMLite
             if (!_headerHeightRecalculated)
             {
                 _headerHeightRecalculated = true;
-                if (_allMenuTitles.Contains(this.Header))
+                if (AllMenuTitles.Contains(this.Header))
                 {
-                    panel = new Rectangle((int)this.Margin.Left, (int)this.Margin.Top, this.Width + (int)Padding.Left + (int)this.Padding.Right, this.Height);
+                    Panel = new Rectangle((int)this.Margin.Left, (int)this.Margin.Top, this.Width + (int)Padding.Left + (int)this.Padding.Right, this.Height);
                 }
             }
 
@@ -350,10 +350,10 @@ namespace XAMLite
                     if (!_subMenuKeyAdded)
                     {
                         _subMenuKeyAdded = true;
-                        if (_openSubMenuDictionary.ContainsKey(this.Header))
+                        if (OpenSubMenuDictionary.ContainsKey(this.Header))
                         {
-                            _openSubMenuDictionary.Remove(this.Header);
-                            _openSubMenuDictionary.Add(this.Header, true);
+                            OpenSubMenuDictionary.Remove(this.Header);
+                            OpenSubMenuDictionary.Add(this.Header, true);
                         }
                     }
                 }
@@ -366,14 +366,14 @@ namespace XAMLite
                             Items[i].Visible = Visibility.Hidden;
                         }
                     }
-                    else if (Items.Count > 0 && !_subMenuPanel.Contains(msRect))
+                    else if (Items.Count > 0 && !_subMenuPanel.Contains(MsRect))
                     {
                         subMenuOpened = false;
                         _subMenuKeyAdded = false;
-                        if (_openSubMenuDictionary.ContainsKey(this.Header))
+                        if (OpenSubMenuDictionary.ContainsKey(this.Header))
                         {
-                            _openSubMenuDictionary.Remove(this.Header);
-                            _openSubMenuDictionary.Add(this.Header, false);
+                            OpenSubMenuDictionary.Remove(this.Header);
+                            OpenSubMenuDictionary.Add(this.Header, false);
                         }
                     }
                 }
@@ -381,12 +381,12 @@ namespace XAMLite
                 // closes sub-menu panel after a menu item has been selected.
                 if (ms.LeftButton == ButtonState.Pressed)
                 {
-                    if (_subMenuPanel.Contains(msRect))
+                    if (_subMenuPanel.Contains(MsRect))
                     {
                         subMenuOpened = false;
                         _subMenuKeyAdded = false;
-                        _openSubMenuDictionary.Remove(this.Header);
-                        _openSubMenuDictionary.Add(this.Header, false);
+                        OpenSubMenuDictionary.Remove(this.Header);
+                        OpenSubMenuDictionary.Add(this.Header, false);
                     }
                 }
             }
@@ -407,96 +407,96 @@ namespace XAMLite
                     SetWidthAndHeight();
                 }
 
-                spriteBatch.Begin();
+                SpriteBatch.Begin();
 
                 if (!_transparent)
                 {
-                    if (_allMenuTitles.Contains(this.Header))
+                    if (AllMenuTitles.Contains(this.Header))
                     {
                         if (mouseEnter)
                         {
-                            spriteBatch.Draw(pixel, panel, Color.LightGray * 0.25f);
+                            SpriteBatch.Draw(Pixel, Panel, Color.LightGray * 0.25f);
                         }
                         else
                         {
-                            spriteBatch.Draw(pixel, panel, this._backgroundColor);
+                            SpriteBatch.Draw(Pixel, Panel, this._backgroundColor);
                         }
                     }
-                    if (!_allMenuTitles.Contains(this.Header))
+                    if (!AllMenuTitles.Contains(this.Header))
                     {
                         float opacity = (float)Opacity * 0.45f;
 
                         // drawing the slightly transparent offset background.
-                        Rectangle ghostRect = new Rectangle(panel.X + 5, panel.Y + 5, panel.Width, panel.Height);
-                        spriteBatch.Draw(pixel, ghostRect, (Color.Black * opacity));
+                        Rectangle ghostRect = new Rectangle(Panel.X + 5, Panel.Y + 5, Panel.Width, Panel.Height);
+                        SpriteBatch.Draw(Pixel, ghostRect, (Color.Black * opacity));
 
                         // highlights the hovered menu item.
-                        if (mouseEnter || (_subMenuPanel.Contains(msRect) && this.Items[0].Visible == Visibility.Visible))
+                        if (mouseEnter || (_subMenuPanel.Contains(MsRect) && this.Items[0].Visible == Visibility.Visible))
                         {
-                            spriteBatch.Draw(pixel, panel, this._backgroundColor);
-                            spriteBatch.Draw(pixel, panel, Color.LightGray * 0.35f);
+                            SpriteBatch.Draw(Pixel, Panel, this._backgroundColor);
+                            SpriteBatch.Draw(Pixel, Panel, Color.LightGray * 0.35f);
 
                             // borders the top of the menu item
                             _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left,
-                                    (int)this.Position.Y, panel.Width, _strokeThickness);
-                            this.spriteBatch.Draw(pixel, _strokePanel, (_stroke * (float)Opacity));
+                                    (int)this.Position.Y, Panel.Width, _strokeThickness);
+                            this.SpriteBatch.Draw(Pixel, _strokePanel, (_stroke * (float)Opacity));
 
                             // borders the bottom of the menu item.
                             _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left,
-                                ((int)this.Position.Y + this.Height - _strokeThickness), panel.Width, _strokeThickness);
-                            this.spriteBatch.Draw(pixel, _strokePanel, (_stroke * (float)Opacity));
+                                ((int)this.Position.Y + this.Height - _strokeThickness), Panel.Width, _strokeThickness);
+                            this.SpriteBatch.Draw(Pixel, _strokePanel, (_stroke * (float)Opacity));
 
                             // borders the left side of the menu item.
                             _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left,
-                                (int)this.Position.Y, _strokeThickness, panel.Height);
-                            this.spriteBatch.Draw(pixel, _strokePanel, (_stroke * (float)Opacity));
+                                (int)this.Position.Y, _strokeThickness, Panel.Height);
+                            this.SpriteBatch.Draw(Pixel, _strokePanel, (_stroke * (float)Opacity));
 
                             // borders the right side of the menu item.
                             _strokePanel = new Rectangle(((int)this.Position.X - (int)this.Padding.Left +
-                                panel.Width - _strokeThickness), (int)this.Position.Y, _strokeThickness, panel.Height);
-                            this.spriteBatch.Draw(pixel, _strokePanel, (_stroke * (float)Opacity));
+                                Panel.Width - _strokeThickness), (int)this.Position.Y, _strokeThickness, Panel.Height);
+                            this.SpriteBatch.Draw(Pixel, _strokePanel, (_stroke * (float)Opacity));
                         }
                         else
                         {
-                            if (!_allMenuTitles.Contains(this.Header))
+                            if (!AllMenuTitles.Contains(this.Header))
                             {
-                                spriteBatch.Draw(pixel, panel, this._backgroundColor);
+                                SpriteBatch.Draw(Pixel, Panel, this._backgroundColor);
 
                                 // borders the left side of the menu item.
                                 _strokePanel = new Rectangle((int)this.Position.X - (int)this.Padding.Left,
-                                    (int)this.Position.Y, _strokeThickness, panel.Height);
-                                this.spriteBatch.Draw(pixel, _strokePanel, (_stroke * (float)Opacity));
+                                    (int)this.Position.Y, _strokeThickness, Panel.Height);
+                                this.SpriteBatch.Draw(Pixel, _strokePanel, (_stroke * (float)Opacity));
 
                                 // borders the right side of the menu item.
                                 _strokePanel = new Rectangle(((int)this.Position.X - (int)this.Padding.Left +
-                                    panel.Width - _strokeThickness), (int)this.Position.Y, _strokeThickness, panel.Height);
-                                this.spriteBatch.Draw(pixel, _strokePanel, (_stroke * (float)Opacity));
+                                    Panel.Width - _strokeThickness), (int)this.Position.Y, _strokeThickness, Panel.Height);
+                                this.SpriteBatch.Draw(Pixel, _strokePanel, (_stroke * (float)Opacity));
                             }
                         }
                     }
 
-                    if (_allSubMenuTitles.Contains(this.Header))
+                    if (AllSubMenuTitles.Contains(this.Header))
                     {
-                        arrowRect.X = this.panel.X + panel.Width - (arrow.Width + 5);
-                        arrowRect.Y = this.panel.Y + this.Height / 3;
-                        this.spriteBatch.Draw(arrow, arrowRect, (Color.White * (float)Opacity));
+                        ArrowRect.X = this.Panel.X + Panel.Width - (Arrow.Width + 5);
+                        ArrowRect.Y = this.Panel.Y + this.Height / 3;
+                        this.SpriteBatch.Draw(Arrow, ArrowRect, (Color.White * (float)Opacity));
                     }
                 }
 
                 if (subMenuOpened)
                 {
-                    spriteBatch.Draw(pixel, _subMenuPanel, Color.Black);
+                    SpriteBatch.Draw(Pixel, _subMenuPanel, Color.Black);
                 }
 
-                spriteBatch.DrawString(this.spriteFont, Text, _textPos, (this._foregroundColor * (float)Opacity));
+                SpriteBatch.DrawString(this.SpriteFont, Text, _textPos, (this._foregroundColor * (float)Opacity));
 
                 if (IsChecked)
                 {
-                    checkMarkRect = new Rectangle((int)this.Position.X + 5, (int)this.Position.Y, checkMark.Width, checkMark.Height);
-                    this.spriteBatch.Draw(checkMark, checkMarkRect, (Color.White * (float)Opacity));
+                    CheckMarkRect = new Rectangle((int)this.Position.X + 5, (int)this.Position.Y, CheckMark.Width, CheckMark.Height);
+                    this.SpriteBatch.Draw(CheckMark, CheckMarkRect, (Color.White * (float)Opacity));
                 }
 
-                spriteBatch.End();
+                SpriteBatch.End();
             }
         }
 
@@ -561,9 +561,9 @@ namespace XAMLite
 
             // causes the menu to close when a menu item is clicked, and it is not the head
             // of the menu.
-            if (!_allSubMenuTitles.Contains(this.Header) && !_allMenuTitles.Contains(this.Header))
+            if (!AllSubMenuTitles.Contains(this.Header) && !AllMenuTitles.Contains(this.Header))
             {
-                _menuVisibilityCount = 0;
+                MenuVisibilityCount = 0;
             }
 
             // HACK: When a tutorial is selected, all Menu Title Headers are erased, so currently 

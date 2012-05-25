@@ -62,10 +62,10 @@ namespace XAMLite
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            if (marginChanged)
+            if (MarginChanged)
             {
-                marginChanged = false;
-                panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
+                MarginChanged = false;
+                Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
             }
         }
 
@@ -77,11 +77,11 @@ namespace XAMLite
         {
             if (Visible == System.Windows.Visibility.Visible)
             {
-                spriteBatch.Begin();
+                SpriteBatch.Begin();
 
-                spriteBatch.Draw(mouseEnter ? rolloverTexture : texture, panel, (Color.White * (float)Opacity));
+                SpriteBatch.Draw(mouseEnter ? rolloverTexture : texture, Panel, (Color.White * (float)Opacity));
 
-                spriteBatch.End();
+                SpriteBatch.End();
             }
         }
 
@@ -108,7 +108,7 @@ namespace XAMLite
             this.rolloverTexture = Game.Content.Load<Texture2D>(this.RolloverSourceName);
 
             // Sets the size and location of the image.
-            panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+            Panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
         }
     }
 }
