@@ -1,25 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework;
-using System.Diagnostics;
-using System.Windows.Input;
-using System.Windows.Media.Imaging;
-
-namespace XAMLite
+﻿namespace XAMLite
 {
+    using System.Diagnostics;
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+
     /// <summary>
-    /// 
+    /// Emulates the code behind for a xaml image.
     /// </summary>
     public class XAMLiteImage : XAMLiteControl
     {
         /// <summary>
         /// The 2-D image.
         /// </summary>
-        protected Texture2D texture;
+        protected Texture2D Texture;
 
         /// <summary>
         /// This is the image file path, minus the file extension.
@@ -27,44 +20,36 @@ namespace XAMLite
         public string SourceName { get; set; }
 
         /// <summary>
-        /// 
+        /// Constructor.
         /// </summary>
         /// <param name="game"></param>
-        /// <param name="assetName"></param>
-        public XAMLiteImage ( Game game  )
-            : base( game )
+        public XAMLiteImage(Game game)
+            : base(game)
         {
-        }
-
-        /// <summary>
-        /// Initializes the control.
-        /// </summary>
-        public override void Initialize()
-        {
-            base.Initialize();
         }
 
         /// <summary>
         /// Loads the content.
         /// </summary>
-        protected override void LoadContent ()
+        protected override void LoadContent()
         {
             base.LoadContent();
 
-            Debug.Assert( ( SourceName != null), "Must set SourceName property. This is the image file path, minus the file extension." );
-            this.texture = Game.Content.Load<Texture2D>( SourceName );
+            Debug.Assert((SourceName != null), "Must set SourceName property. This is the image file path, minus the file extension.");
+            Texture = Game.Content.Load<Texture2D>(SourceName);
 
-            if (this.Width == 0)
+            if (Width == 0)
             {
-                this.Width = this.texture.Width;
+                Width = Texture.Width;
             }
-            if (this.Height == 0)
+
+            if (Height == 0)
             {
-                this.Height = this.texture.Height;
+                Height = Texture.Height;
             }
 
             // Sets the size and location of the image.
-            Panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+            Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
         }
 
         /// <summary>
@@ -77,25 +62,24 @@ namespace XAMLite
             if (MarginChanged)
             {
                 MarginChanged = false;
-                Panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+                Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
             }
-            
         }
 
         /// <summary>
         /// Draws the XAMLiteImage to the screen according to its size and opacity.
         /// </summary>
         /// <param name="gameTime"></param>
-        public override void Draw ( GameTime gameTime )
+        public override void Draw(GameTime gameTime)
         {
             //
             if (Visible == System.Windows.Visibility.Visible)
             {
-                this.SpriteBatch.Begin();
+                SpriteBatch.Begin();
 
-                this.SpriteBatch.Draw(this.texture, Panel, (Color.White * (float)Opacity));
+                SpriteBatch.Draw(Texture, Panel, (Color.White * (float)Opacity));
 
-                this.SpriteBatch.End();
+                SpriteBatch.End();
             }
         }
     }

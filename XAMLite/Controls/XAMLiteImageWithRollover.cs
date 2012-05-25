@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework;
-
-
-namespace XAMLite
+﻿namespace XAMLite
 {
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+
+    /// <summary>
+    /// Emulates a xaml image with rollover
+    /// </summary>
     public class XAMLiteImageWithRollover : XAMLiteImage
     {
-
         /// <summary>
         /// This is the image file path, minus the file extension for the Rollover image.
         /// </summary>
@@ -22,31 +18,29 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// Texture for when the mouse hovers on the control.
         /// </summary>
-        Texture2D rolloverTexture;
+        private Texture2D _rolloverTexture;
 
         /// <summary>
-        /// 
+        /// Constructor.
         /// </summary>
         /// <param name="game"></param>
-        /// <param name="assetName"></param>
-        public XAMLiteImageWithRollover ( Game game  )
-            : base( game )
+        public XAMLiteImageWithRollover(Game game)
+            : base(game)
         {
-
         }
 
         /// <summary>
-        /// 
+        /// Loads the content for the control.
         /// </summary>
         protected override void LoadContent()
         {
             base.LoadContent();
 
-            this.rolloverTexture = Game.Content.Load<Texture2D>(RolloverSourceName);
-            this.Width = this.texture.Width;
-            this.Height = this.texture.Height;
+            _rolloverTexture = Game.Content.Load<Texture2D>(RolloverSourceName);
+            Width = Texture.Width;
+            Height = Texture.Height;
         }
 
         public override void Update(GameTime gameTime)
@@ -55,7 +49,7 @@ namespace XAMLite
             if (MarginChanged)
             {
                 MarginChanged = false;
-                Panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+                Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
             }
         }
 
@@ -65,17 +59,16 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            if (Visible == System.Windows.Visibility.Visible)
+            if (Visible != System.Windows.Visibility.Visible)
             {
-                this.SpriteBatch.Begin();
-
-                if (MouseEntered)
-                    this.SpriteBatch.Draw(this.rolloverTexture, Panel, (Color.White * (float)Opacity));
-                else
-                    this.SpriteBatch.Draw(this.texture, Panel, (Color.White * (float)Opacity));
-
-                this.SpriteBatch.End();
+                return;
             }
+
+            SpriteBatch.Begin();
+
+            SpriteBatch.Draw(MouseEntered ? _rolloverTexture : Texture, Panel, (Color.White * (float)Opacity));
+
+            SpriteBatch.End();
         }
     }
 }

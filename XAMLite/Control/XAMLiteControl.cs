@@ -96,7 +96,6 @@
         /// </summary>
         public event KeyEventHandler KeyUp;
 
-
         /// <summary>
         /// Arial 10 pt font
         /// </summary>
@@ -255,7 +254,7 @@
         /// <summary>
         /// System.Windows.Visibility.  Maintains the visibility of a control.
         /// </summary>
-        new public Visibility Visible
+        public new Visibility Visible
         {
             get
             {
@@ -615,6 +614,16 @@
 
             Ms = Microsoft.Xna.Framework.Input.Mouse.GetState();
             MsRect = new Rectangle(Ms.X, Ms.Y, 1, 1);
+
+            if (Visible == Visibility.Hidden)
+            {
+                if (!MousePressed && Ms.LeftButton == ButtonState.Pressed && Panel.Contains(MsRect))
+                {
+                    MousePressed = true;
+                    MouseEntered = true;
+                }
+            }
+
             if (IsEnabled && Visible == Visibility.Visible)
             {
                 if (Panel.Contains(MsRect))
