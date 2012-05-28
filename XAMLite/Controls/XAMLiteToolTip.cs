@@ -1,14 +1,10 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Windows;
-using System.Windows.Media;
-using System.Windows.Input;
-using Microsoft.Xna.Framework.Input;
-using Color = Microsoft.Xna.Framework.Color;
-using System.Collections.Generic;
+﻿using System;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows;
+using System.Windows.Media;
+using Microsoft.Xna.Framework;
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {
@@ -18,6 +14,11 @@ namespace XAMLite
     /// </summary>
     public class XAMLiteToolTip : XAMLiteControl
     {
+        /// <summary>
+        /// Approximate height of the mouse pointer.
+        /// </summary>
+        private readonly int _pointerHeight;
+
         /// <summary>
         /// This is a helper class for XAMLiteToolTip and its purpose is to
         /// designate intervals relating to visibility.
@@ -46,14 +47,16 @@ namespace XAMLite
             {
                 return base.Text;
             }
+
             set
             {
-                if (this.SpriteFont != null)
+                if (SpriteFont != null)
                 {
-                    this.SpriteFont.Spacing = Spacing;
+                    SpriteFont.Spacing = Spacing;
                     //CalculateWidthAndHeight(value);
                     _textChanged = true;
                 }
+
                 base.Text = value;
             }
         }
@@ -67,18 +70,19 @@ namespace XAMLite
         {
             get
             {
-                return this.Text;
+                return Text;
             }
 
             set
             {
-                this.Text = value;
-                if (this.SpriteFont != null)
+                Text = value;
+                if (SpriteFont != null)
                 {
-                    this.SpriteFont.Spacing = Spacing;
+                    SpriteFont.Spacing = Spacing;
                     //CalculateWidthAndHeight(value);
                     _textChanged = true;
                 }
+
                 base.Text = value;
             }
         }
@@ -97,15 +101,23 @@ namespace XAMLite
         /// <summary>
         /// True when the font family has been changed.
         /// </summary>
-        private bool fontFamilyChanged;
+        private bool _fontFamilyChanged;
 
         /// <summary>
         /// Family the font belongs to.
         /// </summary>
         public FontFamily FontFamily
         {
-            get { return _fontFamily; }
-            set { _fontFamily = value; fontFamilyChanged = true; }
+            get
+            {
+                return _fontFamily;
+            }
+
+            set
+            {
+                _fontFamily = value;
+                _fontFamilyChanged = true;
+            }
         }
 
         /// <summary>
@@ -146,7 +158,19 @@ namespace XAMLite
         /// PlacementTarget. Not applicable when Placement = Absolute, Mouse, 
         /// MousePoint.
         /// </summary>
-        public Rect PlacementRectangle { get { return _placementRect; } set { _placementRect = value; _placementRectangleSet = true; } }
+        public Rect PlacementRectangle
+        {
+            get
+            {
+                return _placementRect;
+            }
+
+            set
+            {
+                _placementRect = value;
+                _placementRectangleSet = true;
+            }
+        }
 
         /// <summary>
         /// Determines whether the position of the ToolTIp will be affected by
@@ -164,7 +188,19 @@ namespace XAMLite
         /// the target becomes the screen.  Not applicable when Placement = 
         /// Absolute, Mouse, MousePoint.
         /// </summary>
-        public XAMLiteControl PlacementTarget { get { return _placementTarget; } set { _placementTarget = value; _placementTargetSet = true; } }
+        public XAMLiteControl PlacementTarget
+        {
+            get
+            {
+                return _placementTarget;
+            }
+
+            set
+            {
+                _placementTarget = value;
+                _placementTargetSet = true;
+            }
+        }
 
         /// <summary>
         /// Get or sets the horizontal distance between the target origin and 
@@ -191,7 +227,7 @@ namespace XAMLite
         /// <summary>
         /// Location of where the text should be drawn.
         /// </summary>
-        Vector2 paddedPosition;
+        private Vector2 _paddedPosition;
 
         /// <summary>
         /// Font color.
@@ -227,10 +263,7 @@ namespace XAMLite
                 var color = solidBrush.Color;
                 _backgroundColor = new Color(color.R, color.G, color.B, color.A);
 
-                if ((SolidColorBrush)value == Brushes.Transparent)
-                    _transparent = true;
-                else
-                    _transparent = false;
+                _transparent = value == Brushes.Transparent;
             }
         }
 
@@ -286,11 +319,6 @@ namespace XAMLite
         public static int TooltipCount;
 
         /// <summary>
-        /// Approximate height of the mouse pointer.
-        /// </summary>
-        private int _pointerHeight;
-
-        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="game"></param>
@@ -322,22 +350,14 @@ namespace XAMLite
         /// <summary>
         /// Loads the tool tip content.
         /// </summary>
-        /// <param name="device"></param>
-        /// <param name="content"></param>
-        /// <param name="fontName"></param>
         protected override void LoadContent()
         {
             base.LoadContent();
 
             // triggers whether Width and Height of textblock were set by user
-            if (this.Width == 0)
-                _widthSet = false;
-            else
-                _widthSet = true;
-            if (this.Height == 0)
-                _heightSet = false;
-            else
-                _heightSet = true;
+            _widthSet = Width != 0;
+
+            _heightSet = Height != 0;
 
             _drawPosition = new Rectangle();
         }
@@ -353,26 +373,27 @@ namespace XAMLite
             if (TextWrapping == TextWrapping.Wrap && !_textWrappingSet)
             {
                 _textWrappingSet = true;
-                this.Text = WordWrap(this.Text, Width);
+                Text = WordWrap(Text, Width);
             }
 
             if (!_widthHeightContainerSet)
             {
                 _widthHeightContainerSet = true;
-                CalculateWidthAndHeight(this.Name + this.Text);
+                CalculateWidthAndHeight(Name + Text);
             }
 
-            if (fontFamilyChanged)
+            if (_fontFamilyChanged)
             {
-                fontFamilyChanged = false;
+                _fontFamilyChanged = false;
                 UpdateFontFamily(_fontFamily);
                 SpriteFont.Spacing = Spacing;
-                CalculateWidthAndHeight(this.Text);
+                CalculateWidthAndHeight(Text);
             }
+
             if (MarginChanged)
             {
                 MarginChanged = false;
-                Panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+                Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
             }
 
             if (_textChanged)
@@ -380,8 +401,8 @@ namespace XAMLite
                 _textChanged = false;
                 if (TextWrapping == TextWrapping.Wrap)
                 {
-                    this.Text = WordWrap(this.Text, Width);
-                    CalculateWidthAndHeight(this.Name + this.Text);
+                    Text = WordWrap(Text, Width);
+                    CalculateWidthAndHeight(Name + Text);
                     CalculateDrawPosition();
                 }
             }
@@ -429,19 +450,19 @@ namespace XAMLite
                 // and the text will be displayed at an incorrect position for one frame.
                 if (_drawPosition.Height > 0)
                 {
-                    this.SpriteFont.Spacing = this.Spacing;
+                    SpriteFont.Spacing = Spacing;
 
                     if (!_transparent)
                     {
-                        SpriteBatch.Draw(Pixel, _drawPosition, (this._backgroundColor * (float)Opacity));
+                        SpriteBatch.Draw(Pixel, _drawPosition, (_backgroundColor * (float)Opacity));
                     }
 
-                    if (Name != null && Name != string.Empty)
+                    if (!string.IsNullOrEmpty(Name))
                     {
-                        SpriteBatch.DrawString(this.SpriteFont, this.Name, paddedPosition, Color.Yellow);
+                        SpriteBatch.DrawString(SpriteFont, Name, _paddedPosition, Color.Yellow);
                     }
 
-                    SpriteBatch.DrawString(this.SpriteFont, this.Text, paddedPosition, this._foregroundColor);
+                    SpriteBatch.DrawString(SpriteFont, Text, _paddedPosition, _foregroundColor);
                 }
 
                 SpriteBatch.End();
@@ -462,9 +483,7 @@ namespace XAMLite
                 // if no target is set, the screen becomes the control.
                 if (!_placementTargetSet)
                 {
-                    PlacementTarget = new XAMLiteLabel(this.Game);
-                    PlacementTarget.Width = Viewport.Width;
-                    PlacementTarget.Height = Viewport.Height;
+                    PlacementTarget = new XAMLiteLabel(Game) { Width = Viewport.Width, Height = Viewport.Height };
                 }
 
                 // Add the additional positional info for the PlacementTarget.
@@ -484,14 +503,15 @@ namespace XAMLite
                 case PlacementMode.Center:                
                     if (_placementRectangleSet)
                     {
-                        _drawPosition.X += (int)PlacementRectangle.X + (int)PlacementRectangle.Width / 2;
-                        _drawPosition.Y += (int)PlacementRectangle.Y + (int)PlacementRectangle.Height / 2;
+                        _drawPosition.X += (int)PlacementRectangle.X + ((int)PlacementRectangle.Width / 2);
+                        _drawPosition.Y += (int)PlacementRectangle.Y + ((int)PlacementRectangle.Height / 2);
                     }
                     else
                     {
-                        _drawPosition.X += (int)PlacementTarget.Width / 2;
-                        _drawPosition.Y += (int)PlacementTarget.Height / 2;
+                        _drawPosition.X += PlacementTarget.Width / 2;
+                        _drawPosition.Y += PlacementTarget.Height / 2;
                     }
+
                     _drawPosition.X -= Panel.Width / 2;
                     _drawPosition.Y -= Panel.Height / 2;
                     break;
@@ -503,15 +523,17 @@ namespace XAMLite
                         _drawPosition.X += (int)PlacementRectangle.X;
                         _drawPosition.Y += (int)PlacementRectangle.Y;
                     }
+
                     break;
                 // Top left of tool tip should touch top right of target.
                 case PlacementMode.Right:
-                    _drawPosition.X += (int)PlacementTarget.Width;
+                    _drawPosition.X += PlacementTarget.Width;
                     if (_placementRectangleSet)
                     {
-                        _drawPosition.X += -((int)PlacementTarget.Width - ((int)PlacementRectangle.X + (int)PlacementRectangle.Width));
+                        _drawPosition.X += -(PlacementTarget.Width - ((int)PlacementRectangle.X + (int)PlacementRectangle.Width));
                         _drawPosition.Y += (int)PlacementRectangle.Y;
                     }
+
                     break;
                 // Bottom left of tool tip should touch the top left of target.
                 case PlacementMode.Top:
@@ -521,15 +543,17 @@ namespace XAMLite
                         _drawPosition.X += (int)PlacementRectangle.X;
                         _drawPosition.Y += (int)PlacementRectangle.Y;
                     }
+
                     break;
                 // Top left of tool tip should touch the bottom left of target.
                 case PlacementMode.Bottom:
-                    _drawPosition.Y += (int)PlacementTarget.Height;
+                    _drawPosition.Y += PlacementTarget.Height;
                     if (_placementRectangleSet)
                     {
                         _drawPosition.X += (int)PlacementRectangle.X;
                         _drawPosition.Y += (int)PlacementRectangle.Y;
                     }
+
                     break;
                 // Top left of tool tip should touch the bottom left of the mouse pointer.
                 case PlacementMode.Mouse:
@@ -540,8 +564,6 @@ namespace XAMLite
                 case PlacementMode.MousePoint:
                     _drawPosition.X += MsRect.X;
                     _drawPosition.Y += MsRect.Y;
-                    break;
-                default:
                     break;
             }
 
@@ -557,7 +579,7 @@ namespace XAMLite
             _drawPosition.Height = Panel.Height;
 
             // set where the text will be drawn within the tool tip.
-            paddedPosition = new Vector2(_drawPosition.X + (int)Padding.Left, _drawPosition.Y + (int)Padding.Top);
+            _paddedPosition = new Vector2(_drawPosition.X + (int)Padding.Left, _drawPosition.Y + (int)Padding.Top);
 
             Panel.X = _drawPosition.X;
             Panel.Y = _drawPosition.Y;
@@ -598,6 +620,7 @@ namespace XAMLite
                     {
                         _drawPosition.X = Viewport.Width - Panel.Width;
                     }
+
                     if (_drawPosition.Y < 0)
                     {
                         _drawPosition.Y = 0;
@@ -606,8 +629,7 @@ namespace XAMLite
                     {
                         _drawPosition.Y = Viewport.Height - Panel.Height;
                     }
-                    break;
-                default:
+
                     break;
             }
         }
@@ -619,15 +641,20 @@ namespace XAMLite
         private void CalculateWidthAndHeight(string text)
         {
             if (!_widthSet || TextWrapping == TextWrapping.NoWrap)
-                this.Width = (int)this.SpriteFont.MeasureString(text).X + (int)Padding.Left + (int)Padding.Right;
+            {
+                Width = (int)SpriteFont.MeasureString(text).X + (int)Padding.Left + (int)Padding.Right;
+            }
 
             if (!_heightSet)
-                this.Height = (int)this.SpriteFont.MeasureString(text).Y + (int)Padding.Top + (int)Padding.Bottom;
+            {
+                Height = (int)SpriteFont.MeasureString(text).Y + (int)Padding.Top + (int)Padding.Bottom;
+            }
+
             MarginChanged = true;
         }
 
         // used to break the string into seperate lines of text
-        protected const string _newline = "\n";
+        protected const string Newline = "\n";
 
         /// <summary>
         /// Word wraps the given text to fit within the specified width.
@@ -641,7 +668,7 @@ namespace XAMLite
         {
             width -= (int)Padding.Left + (int)Padding.Right;
             // return if string length is less than width of textblock
-            if (width > (int)this.SpriteFont.MeasureString(text).X)
+            if (width > (int)SpriteFont.MeasureString(text).X)
             {
                 return text;
             }
@@ -649,16 +676,20 @@ namespace XAMLite
             // just for clarity
             string tempString = Regex.Replace(text, "\n", "");
 
-            float strLenPixels = (int)this.SpriteFont.MeasureString(tempString).X;
+            float strLenPixels = (int)SpriteFont.MeasureString(tempString).X;
             int numCharsinString = 0;
 
             // determining total number of characters in the string 
-            for (int i = 0; i < tempString.Length; i++)
+            for (var i = 0; i < tempString.Length; i++)
+            {
                 numCharsinString++;
+            }
 
             // Now removing any whitespaces that might be at the end of the original string
-            while ((numCharsinString - 1) >= 0 && Char.IsWhiteSpace(text[numCharsinString - 1]))
+            while ((numCharsinString - 1) >= 0 && char.IsWhiteSpace(text[numCharsinString - 1]))
+            {
                 numCharsinString--;
+            }
 
             // finding number of pixels per character in string length
             float pxPerChar = strLenPixels / numCharsinString;
@@ -672,26 +703,35 @@ namespace XAMLite
                 charsPerLine = (int)(width / pxPerChar);
             }
             else
+            {
                 charsPerLine = 1;
+            }
 
             _sb = new StringBuilder();
             int pos, next;
             for (pos = 0; pos < text.Length; pos = next)
             {
                 // Find end of line
-                int eol = text.IndexOf(_newline, pos);
+                var eol = text.IndexOf(Newline, pos, StringComparison.Ordinal);
                 if (eol == -1)
+                {
                     next = eol = text.Length;
+                }
                 else
-                    next = eol + _newline.Length;
+                {
+                    next = eol + Newline.Length;
+                }
 
                 if (eol > pos)
                 {
                     do
                     {
-                        int len = eol - pos;
+                        var len = eol - pos;
                         if (len > charsPerLine)
+                        {
                             len = BreakLine(text, pos, charsPerLine);
+                        }
+
                         _sb.Append(text, pos, len);
 
                         // update position
@@ -699,15 +739,22 @@ namespace XAMLite
 
                         // "if" statement prevents extra line being added at end of text for drawing the background block
                         if (pos != text.Length)
-                            _sb.Append(_newline);
+                        {
+                            _sb.Append(Newline);
+                        }
 
                         // Trim whitespace following break
-                        while (pos < eol && Char.IsWhiteSpace(text[pos]))
+                        while (pos < eol && char.IsWhiteSpace(text[pos]))
+                        {
                             pos++;
-
-                    } while (eol > pos);
+                        }
+                    }
+                    while (eol > pos);
                 }
-                else _sb.Append(_newline); // Empty line
+                else
+                {
+                    _sb.Append(Newline); // Empty line
+                }
             }
 
             return _sb.ToString();
@@ -723,14 +770,21 @@ namespace XAMLite
         private int BreakLine(string text, int pos, int max)
         {
             // Find last whitespace in line
-            int i = max - 1;
-            while (i >= 0 && !Char.IsWhiteSpace(text[pos + i]))
+            var i = max - 1;
+            while (i >= 0 && !char.IsWhiteSpace(text[pos + i]))
+            {
                 i--;
+            }
+
             if (i < 0)
+            {
                 return max; // No whitespace found; break at maximum length
+            }
             // Find start of whitespace
-            while (i >= 0 && Char.IsWhiteSpace(text[pos + i]))
+            while (i >= 0 && char.IsWhiteSpace(text[pos + i]))
+            {
                 i--;
+            }
             // Return length of text before whitespace
             return i + 1;
         }
