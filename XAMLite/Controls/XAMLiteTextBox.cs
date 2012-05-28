@@ -373,20 +373,24 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            if (Visible == Visibility.Visible)
+            if (Visible != Visibility.Visible)
             {
-                this.SpriteBatch.Begin();
-                this.SpriteBatch.Draw(this.textBoxTexture, this.Panel, Color.White);
-                this.SpriteBatch.DrawString(this.SpriteFont, this.Text, textPosition, _foregroundColor);
-                if(cursorBlink)
-                    this.SpriteBatch.DrawString(this.SpriteFont, this.cursor, cursorPosition, _foregroundColor);
-                this.SpriteBatch.End();
+                return;
             }
+
+            SpriteBatch.Begin();
+            SpriteBatch.Draw(textBoxTexture, Panel, Color.White);
+            SpriteBatch.DrawString(SpriteFont, Text, textPosition, _foregroundColor);
+            if (cursorBlink)
+            {
+                SpriteBatch.DrawString(SpriteFont, cursor, cursorPosition, _foregroundColor);
+            }
+            SpriteBatch.End();
         }
 
         private void ProcessKeyboard()
         {
-            foreach (Keys key in standardInputKeys)
+            foreach (var key in standardInputKeys)
             {
                 if (CheckKey(key))
                 {
@@ -396,7 +400,7 @@ namespace XAMLite
                 }
             }
 
-            foreach (Keys key in specialInputKeys)
+            foreach (var key in specialInputKeys)
             {
                 if (CheckKey(key))
                 {
@@ -405,7 +409,7 @@ namespace XAMLite
                     break;
                 }
             }
-            cursorPosition.X = cursorStartPosition.X + (int)this.SpriteFont.MeasureString(this.Text).X + 2;
+            cursorPosition.X = cursorStartPosition.X + (int)SpriteFont.MeasureString(Text).X + 2;
         }
 
         private bool CheckKey(Keys key)

@@ -558,6 +558,9 @@ namespace XAMLite
 
             // set where the text will be drawn within the tool tip.
             paddedPosition = new Vector2(_drawPosition.X + (int)Padding.Left, _drawPosition.Y + (int)Padding.Top);
+
+            Panel.X = _drawPosition.X;
+            Panel.Y = _drawPosition.Y;
         }
 
         /// <summary>
