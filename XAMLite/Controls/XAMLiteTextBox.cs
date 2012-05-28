@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
+using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.Windows.Media;
-using Microsoft.Xna.Framework.Content;
 
 using Color = Microsoft.Xna.Framework.Color;
 
@@ -15,19 +11,18 @@ namespace XAMLite
 {
     public class XAMLiteTextBox : XAMLiteControl
     {
-
         /// <summary>
         /// 
         /// </summary>
-        protected Texture2D textBoxTexture;
+        protected Texture2D TextBoxTexture;
 
-        protected Rectangle textBoxRectangle;
-        protected Vector2 textPosition;
-        protected Vector2 cursorPosition;
-        protected Vector2 cursorStartPosition;
+        protected Rectangle TextBoxRectangle;
+        protected Vector2 TextPosition;
+        protected Vector2 CursorPosition;
+        protected Vector2 CursorStartPosition;
 
-        protected Keys[] standardInputKeys;
-        protected Keys[] specialInputKeys;
+        protected Keys[] StandardInputKeys;
+        protected Keys[] SpecialInputKeys;
 
         /// <summary>
         /// This is the image file path, minus the file extension.
@@ -38,24 +33,26 @@ namespace XAMLite
             set;
         }
 
-        protected string cursor;
+        protected string Cursor;
 
         /// <summary>
         /// The character string within the text box.
         /// </summary>
-        public override string Text
+        public override sealed string Text
         {
             get
             {
                 return base.Text;
             }
+
             set
             {
-                if (this.SpriteFont != null)
+                if (SpriteFont != null)
                 {
-                    this.SpriteFont.Spacing = Spacing;
+                    SpriteFont.Spacing = Spacing;
                     RecalculateWidthAndHeight(value);
                 }
+
                 base.Text = value;
             }
         }
@@ -66,15 +63,23 @@ namespace XAMLite
         public TextAlignment TextAlignment { get; set; }
 
         private FontFamily _fontFamily;
-        private bool fontFamilyChanged; // used in the Update() method
+        private bool _fontFamilyChanged; // used in the Update() method
 
         /// <summary>
         /// Sets the font family for the text inside the text box.
         /// </summary>
         public FontFamily FontFamily
         {
-            get { return _fontFamily; }
-            set { _fontFamily = value; fontFamilyChanged = true; }
+            get
+            {
+                return _fontFamily;
+            }
+
+            set
+            {
+                _fontFamily = value;
+                _fontFamilyChanged = true;
+            }
         }
 
         /// <summary>
@@ -121,7 +126,7 @@ namespace XAMLite
             {
                 var solidBrush = (SolidColorBrush)value;
                 var color = solidBrush.Color;
-                _backgroundColor = new Color(color.R, color.G, color.B, color.A);
+                _backgroundColor = new Color(r: color.R, g: color.G, b: color.B, a: color.A);
 
                 //if ((SolidColorBrush)value == Brushes.Transparent)
                 //    transparent = true;
@@ -146,229 +151,167 @@ namespace XAMLite
         /// Determines whether the user selected the text box for typing.
         /// </summary>
         //private bool _selected;
-        private bool initialTyping;
-        private bool cursorVisible;
-        private bool cursorBlink;
-        private TimeSpan cursorBlinkTime;
+        private bool _initialTyping;
+        private bool _cursorVisible;
+        private bool _cursorBlink;
+        private TimeSpan _cursorBlinkTime;
 
-        private bool keyShift;
-        private TimeSpan keyShiftTimer;
-        private bool keyShiftTimerStarted;
-        private bool capsLockOn;
-        private bool backspaceheld;
-        private bool deleteNextChar;
-        private TimeSpan deleteTimer;
-        private int numDeletedKeys;
-        private bool standardKeyTyped;
+        private bool _keyShift;
+        private TimeSpan _keyShiftTimer;
+        private bool _keyShiftTimerStarted;
+        private bool _capsLockOn;
+        private bool _backspaceheld;
+        private bool _deleteNextChar;
+        private TimeSpan _deleteTimer;
+        private int _numDeletedKeys;
+        private bool _standardKeyTyped;
 
-        KeyboardState currentKeyboardState;
-        KeyboardState lastKeyboardState;
+        private KeyboardState _currentKeyboardState;
+        private KeyboardState _lastKeyboardState;
 
         public XAMLiteTextBox(Game game)
             : base(game)
         {
-            this.Text = string.Empty;
-            this._backgroundColor = Color.White;
-            this._foregroundColor = Color.Black;
-            this.Padding = new Thickness(0, 0, 0, 0);
-            this.SourceName = @"Images/textBox";
-            this.cursor = "|";
-            this.initialTyping = true;
-            this.cursorBlinkTime = TimeSpan.FromSeconds(0.5);
+            Text = string.Empty;
+            _backgroundColor = Color.White;
+            _foregroundColor = Color.Black;
+            Padding = new Thickness(0, 0, 0, 0);
+            SourceName = @"Images/textBox";
+            Cursor = "|";
+            _initialTyping = true;
+            _cursorBlinkTime = TimeSpan.FromSeconds(0.5);
 
-            deleteNextChar = true;
+            _deleteNextChar = true;
 
-            numDeletedKeys = 0;
+            _numDeletedKeys = 0;
 
-            specialInputKeys = new Keys[] {
-                Keys.D0,
-                Keys.D1,
-                Keys.D2,
-                Keys.D3,
-                Keys.D4,
-                Keys.D5,
-                Keys.D5,
-                Keys.D6,
-                Keys.D7,
-                Keys.D8,
-                Keys.D9,
-                Keys.OemQuotes,
-                Keys.OemTilde,
-                Keys.OemComma,
-                Keys.OemPeriod,
-                Keys.OemSemicolon,
-                Keys.OemBackslash,
-                Keys.OemCloseBrackets,
-                Keys.OemOpenBrackets,
-                Keys.OemPlus,
-                Keys.OemMinus,
-                Keys.OemQuestion,
-                Keys.OemPipe
-            };
+            SpecialInputKeys = new[]
+                {
+                    Keys.D0, Keys.D1, Keys.D2, Keys.D3, Keys.D4, Keys.D5, Keys.D5, Keys.D6, Keys.D7, Keys.D8, Keys.D9,
+                    Keys.OemQuotes, Keys.OemTilde, Keys.OemComma, Keys.OemPeriod, Keys.OemSemicolon, Keys.OemBackslash,
+                    Keys.OemCloseBrackets, Keys.OemOpenBrackets, Keys.OemPlus, Keys.OemMinus, Keys.OemQuestion,
+                    Keys.OemPipe
+                };
 
-            standardInputKeys = new Keys[] { 
-                Keys.A, 
-                Keys.B, 
-                Keys.C, 
-                Keys.D, 
-                Keys.E, 
-                Keys.F, 
-                Keys.G, 
-                Keys.H, 
-                Keys.I, 
-                Keys.J, 
-                Keys.K, 
-                Keys.L, 
-                Keys.M, 
-                Keys.N, 
-                Keys.O, 
-                Keys.P, 
-                Keys.Q, 
-                Keys.R, 
-                Keys.S, 
-                Keys.T, 
-                Keys.U, 
-                Keys.V, 
-                Keys.W, 
-                Keys.X, 
-                Keys.Y, 
-                Keys.Z,
-                Keys.Space,
-                Keys.Enter,
-                Keys.OemClear,
-                Keys.Decimal,
-                Keys.Tab,
-                Keys.Add,
-                Keys.Subtract,
-                Keys.Multiply,
-                Keys.Divide,
-                Keys.CapsLock,
-                //Keys.Home,
-                //Keys.End,
-                //Keys.Left,
-                //Keys.Right,
-                //Keys.Up,
-                //Keys.Down,
-                //Keys.PageUp,
-                //Keys.PageDown,
-                //Keys.Insert,
-                Keys.NumPad0,
-                Keys.NumPad1,
-                Keys.NumPad2,
-                Keys.NumPad3,
-                Keys.NumPad4,
-                Keys.NumPad5,
-                Keys.NumPad6,
-                Keys.NumPad7,
-                Keys.NumPad8,
-                Keys.NumPad9
-            };
+            StandardInputKeys = new[]
+                {
+                    Keys.A, Keys.B, Keys.C, Keys.D, Keys.E, Keys.F, Keys.G, Keys.H, Keys.I, Keys.J, Keys.K, Keys.L, Keys.M, 
+                    Keys.N, Keys.O, Keys.P, Keys.Q, Keys.R, Keys.S, Keys.T, Keys.U, Keys.V, Keys.W, Keys.X, Keys.Y,
+                    Keys.Z, Keys.Space, Keys.Enter, Keys.OemClear, Keys.Decimal, Keys.Tab, Keys.Add, Keys.Subtract,
+                    Keys.Multiply, Keys.Divide, Keys.CapsLock, //Keys.Home,
+                    //Keys.End,
+                    //Keys.Left,
+                    //Keys.Right,
+                    //Keys.Up,
+                    //Keys.Down,
+                    //Keys.PageUp,
+                    //Keys.PageDown,
+                    //Keys.Insert,
+                    Keys.NumPad0, Keys.NumPad1, Keys.NumPad2, Keys.NumPad3, Keys.NumPad4, Keys.NumPad5, Keys.NumPad6,
+                    Keys.NumPad7, Keys.NumPad8, Keys.NumPad9
+                };
         }
 
         /// <summary>
-        /// 
+        /// Loads the text box content.
         /// </summary>
-        /// <param name="device"></param>
-        /// <param name="content"></param>
-        /// <param name="fontName"></param>
         protected override void LoadContent()
         {
             base.LoadContent();
 
-            this.textBoxTexture = Game.Content.Load<Texture2D>(this.SourceName);
-            this.Width = textBoxTexture.Width;
-            this.Height = textBoxTexture.Height;
-            this.Panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
-            this.textPosition = new Vector2(Panel.X + (int)this.Padding.Left, Panel.Y + (int)this.Padding.Top);
-            this.cursorPosition = new Vector2(Panel.X + (int)this.Padding.Left, Panel.Y + (int)this.Padding.Top);
-            this.cursorStartPosition = new Vector2(Panel.X + (int)this.Padding.Left, Panel.Y + (int)this.Padding.Top);
+            TextBoxTexture = Game.Content.Load<Texture2D>(SourceName);
+            Width = TextBoxTexture.Width;
+            Height = TextBoxTexture.Height;
+            Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
+            TextPosition = new Vector2(Panel.X + (int)Padding.Left, Panel.Y + (int)Padding.Top);
+            CursorPosition = new Vector2(Panel.X + (int)Padding.Left, Panel.Y + (int)Padding.Top);
+            CursorStartPosition = new Vector2(Panel.X + (int)Padding.Left, Panel.Y + (int)Padding.Top);
         }
 
         public override void Update(GameTime gameTime)
         {
-            if (fontFamilyChanged)
+            if (_fontFamilyChanged)
             {
-                fontFamilyChanged = false;
+                _fontFamilyChanged = false;
                 UpdateFontFamily(_fontFamily);
-                this.SpriteFont.Spacing = Spacing;
+                SpriteFont.Spacing = Spacing;
             }
 
             // initial text box click where the default text is replaced with just a cursor.
-            if (MousePressed && Panel.Contains(MsRect) && initialTyping)
+            if (MousePressed && Panel.Contains(MsRect) && _initialTyping)
             {
                 Selected = true;
-                initialTyping = false;
-                this.Text = string.Empty;
-                cursorVisible = true;
-                cursorBlink = true;
+                _initialTyping = false;
+                Text = string.Empty;
+                _cursorVisible = true;
+                _cursorBlink = true;
             }
-            // user has previously typed something, deselected, and then selected again. 
             else if (MousePressed && Panel.Contains(MsRect) && !Selected)
             {
+                // user has previously typed something, deselected, and then selected again. 
                 Selected = true;
-                cursorVisible = true;
-                cursorBlink = true;
+                _cursorVisible = true;
+                _cursorBlink = true;
             }
-            // text box is deselected.
-            else if (MousePressed && !Panel.Contains(MsRect) && Selected)
+            else if (MousePressed && !Panel.Contains(MsRect) && Selected) 
             {
+                // text box is deselected.
                 Selected = false;
-                cursorVisible = false;
-                cursorBlink = false;
+                _cursorVisible = false;
+                _cursorBlink = false;
             }
 
             // handling the blinky cursor.
-            if (cursorVisible)
+            if (_cursorVisible)
             {
-                cursorBlinkTime -= gameTime.ElapsedGameTime;
-                if (cursorBlinkTime <= TimeSpan.Zero)
-                { 
-                    cursorBlinkTime = TimeSpan.FromSeconds(0.5);
-                    if (cursorBlink)
-                        cursorBlink = false;
-                    else
-                        cursorBlink = true;
+                _cursorBlinkTime -= gameTime.ElapsedGameTime;
+                if (_cursorBlinkTime <= TimeSpan.Zero)
+                {
+                    _cursorBlinkTime = TimeSpan.FromSeconds(0.5);
+                    _cursorBlink = !_cursorBlink;
                 }
             }
 
-            if (backspaceheld)
+            if (_backspaceheld)
             {
-                deleteTimer -= gameTime.ElapsedGameTime;
-                if (deleteTimer <= TimeSpan.Zero)
+                _deleteTimer -= gameTime.ElapsedGameTime;
+                if (_deleteTimer <= TimeSpan.Zero)
                 {
-                    deleteNextChar = true;
+                    _deleteNextChar = true;
                 }
             }
 
-            currentKeyboardState = Keyboard.GetState();
+            _currentKeyboardState = Keyboard.GetState();
 
-            if ((currentKeyboardState.IsKeyDown(Keys.RightShift) ||
-                currentKeyboardState.IsKeyDown(Keys.LeftShift)) && !keyShiftTimerStarted)
+            if ((_currentKeyboardState.IsKeyDown(Keys.RightShift) ||
+                _currentKeyboardState.IsKeyDown(Keys.LeftShift)) && !_keyShiftTimerStarted)
             {
-                keyShiftTimer = TimeSpan.FromSeconds(0.1);
-                keyShift = true;
+                _keyShiftTimer = TimeSpan.FromSeconds(0.1);
+                _keyShift = true;
             }
 
-            if (keyShift)
+            if (_keyShift)
             {
-                keyShiftTimer -= gameTime.ElapsedGameTime;
-                if (keyShiftTimer <= TimeSpan.Zero)
+                _keyShiftTimer -= gameTime.ElapsedGameTime;
+                if (_keyShiftTimer <= TimeSpan.Zero)
                 {
-                    keyShift = false;
-                    keyShiftTimerStarted = false;
+                    _keyShift = false;
+                    _keyShiftTimerStarted = false;
                 }
             }
 
             if (Selected)
+            {
                 ProcessKeyboard();
-            
+            }
+
             base.Update(gameTime);
 
-            lastKeyboardState = currentKeyboardState;
+            _lastKeyboardState = _currentKeyboardState;
         }
 
         /// <summary>
-        /// 
+        /// Draws the text box and text.
         /// </summary>
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
@@ -379,65 +322,82 @@ namespace XAMLite
             }
 
             SpriteBatch.Begin();
-            SpriteBatch.Draw(textBoxTexture, Panel, Color.White);
-            SpriteBatch.DrawString(SpriteFont, Text, textPosition, _foregroundColor);
-            if (cursorBlink)
+            SpriteBatch.Draw(TextBoxTexture, Panel, Color.White);
+            SpriteBatch.DrawString(SpriteFont, Text, TextPosition, _foregroundColor);
+            if (_cursorBlink)
             {
-                SpriteBatch.DrawString(SpriteFont, cursor, cursorPosition, _foregroundColor);
+                SpriteBatch.DrawString(SpriteFont, Cursor, CursorPosition, _foregroundColor);
             }
+
             SpriteBatch.End();
         }
 
+        /// <summary>
+        /// Processes key board input.
+        /// </summary>
         private void ProcessKeyboard()
         {
-            foreach (var key in standardInputKeys)
+            foreach (var key in StandardInputKeys)
             {
                 if (CheckKey(key))
                 {
-                    standardKeyTyped = true;
+                    _standardKeyTyped = true;
                     AddKeyToText(key);
                     break;
                 }
             }
 
-            foreach (var key in specialInputKeys)
+            foreach (var key in SpecialInputKeys)
             {
                 if (CheckKey(key))
                 {
-                    standardKeyTyped = false;
+                    _standardKeyTyped = false;
                     AddKeyToText(key);
                     break;
                 }
             }
-            cursorPosition.X = cursorStartPosition.X + (int)SpriteFont.MeasureString(Text).X + 2;
+
+            CursorPosition.X = CursorStartPosition.X + (int)SpriteFont.MeasureString(Text).X + 2;
         }
 
+        /// <summary>
+        /// Stats or stops key deletion.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         private bool CheckKey(Keys key)
         {
-            if ((currentKeyboardState.IsKeyDown(Keys.Back) ||
-                currentKeyboardState.IsKeyDown(Keys.Delete)) && deleteNextChar)
+            if ((_currentKeyboardState.IsKeyDown(Keys.Back) ||
+                _currentKeyboardState.IsKeyDown(Keys.Delete)) && _deleteNextChar)
             {
-                startDelete();
+                StartDelete();
             }
 
-            if (currentKeyboardState.IsKeyUp(Keys.Back) && 
-                currentKeyboardState.IsKeyUp(Keys.Delete))
+            if (_currentKeyboardState.IsKeyUp(Keys.Back) && 
+                _currentKeyboardState.IsKeyUp(Keys.Delete))
             {
-                stopDelete();
+                StopDelete();
             }
 
-            return lastKeyboardState.IsKeyDown(key) && currentKeyboardState.IsKeyUp(key);
+            return _lastKeyboardState.IsKeyDown(key) && _currentKeyboardState.IsKeyUp(key);
         }
 
+        /// <summary>
+        /// Adds characters to the string.
+        /// </summary>
+        /// <param name="key"></param>
         private void AddKeyToText(Keys key)
         {
-            string newChar = "";
+            var newChar = "";
 
-            if (this.Text.Length >= MaxLength && key != Keys.Back && key != Keys.Delete && 
-                key != Keys.Tab && key != Keys.Enter && (int)this.SpriteFont.MeasureString(this.Text).X >= 
-                textBoxTexture.Width - 20)
+            if (Text.Length >= MaxLength && key != Keys.Back && key != Keys.Delete &&
+                key != Keys.Tab && key != Keys.Enter && (int)SpriteFont.MeasureString(Text).X >=
+                TextBoxTexture.Width - 20)
+            {
                 return;
-            if (standardKeyTyped)
+            }
+
+            if (_standardKeyTyped)
             {
                 switch (key)
                 {
@@ -457,14 +417,7 @@ namespace XAMLite
                         newChar += "/";
                         break;
                     case Keys.CapsLock:
-                        if (!capsLockOn)
-                        {
-                            capsLockOn = true;
-                        }
-                        else
-                        {
-                            capsLockOn = false;
-                        }
+                        _capsLockOn = !_capsLockOn;
                         break;
                     case Keys.Decimal:
                         newChar += ".";
@@ -509,25 +462,30 @@ namespace XAMLite
                         newChar += "0";
                         break;
                     case Keys.OemClear:
-                        this.Text = "";
+                        Text = "";
                         return;
                     case Keys.Enter:
                     case Keys.Tab:
                         Selected = false;
-                        cursorVisible = false;
-                        cursorBlink = false;
+                        _cursorVisible = false;
+                        _cursorBlink = false;
                         break;
                     default:
-                        if (keyShift || capsLockOn)
+                        if (_keyShift || _capsLockOn)
+                        {
                             newChar += key;
+                        }
                         else
+                        {
                             newChar += key.ToString().ToLower();
+                        }
+
                         break;
                 }
             }
             else
             {
-                if (keyShift)
+                if (_keyShift)
                 {
                     switch (key)
                     {
@@ -596,8 +554,6 @@ namespace XAMLite
                             break;
                         case Keys.OemPipe:
                             newChar += "|";
-                            break;
-                        default:
                             break;
                     }
                 }
@@ -671,36 +627,50 @@ namespace XAMLite
                         case Keys.OemPipe:
                             newChar += "\\";
                             break;
-                        default:
-                            break;
                     }
                 }
             }
-            this.Text += newChar;
+            
+            Text += newChar;
             OnKeyDown();
         }
 
-        private void stopDelete()
+        /// <summary>
+        /// Resets delete.
+        /// </summary>
+        private void StopDelete()
         {
-            backspaceheld = false;
-            deleteNextChar = true;
-            numDeletedKeys = 0;
+            _backspaceheld = false;
+            _deleteNextChar = true;
+            _numDeletedKeys = 0;
             OnKeyDown();
         }
 
-        private void startDelete()
+        /// <summary>
+        /// Deletes text and increases speed the longer the delete key is held.
+        /// </summary>
+        private void StartDelete()
         {
-            deleteNextChar = false;
-            backspaceheld = true;
-            numDeletedKeys++;
-            if (this.Text.Length != 0)
-                this.Text = Text.Remove(Text.Length - 1);
-            if(numDeletedKeys <= 2)
-                deleteTimer = TimeSpan.FromSeconds(0.3);
-            else if(numDeletedKeys <= 4)
-                deleteTimer = TimeSpan.FromSeconds(0.2);
+            _deleteNextChar = false;
+            _backspaceheld = true;
+            _numDeletedKeys++;
+            if (Text.Length != 0)
+            {
+                Text = Text.Remove(Text.Length - 1);
+            }
+
+            if (_numDeletedKeys <= 2)
+            {
+                _deleteTimer = TimeSpan.FromSeconds(0.3);
+            }
+            else if (_numDeletedKeys <= 4)
+            {
+                _deleteTimer = TimeSpan.FromSeconds(0.2);
+            }
             else
-                deleteTimer = TimeSpan.FromSeconds(0.15);
+            {
+                _deleteTimer = TimeSpan.FromSeconds(0.15);
+            }
         }
     }
 }
