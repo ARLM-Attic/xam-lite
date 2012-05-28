@@ -409,11 +409,16 @@ namespace XAMLite
 
             if (IsOpen)
             {
-                _visibleDelayTimeSpan -= gameTime.ElapsedGameTime;
-                if (_visibleDelayTimeSpan <= TimeSpan.Zero)
+                if (_visibleDelayTimeSpan > TimeSpan.Zero)
                 {
+                    _visibleDelayTimeSpan -= gameTime.ElapsedGameTime;
+                }
+                else
+                {
+                    _visibleDelayTimeSpan = TimeSpan.Zero;
                     Visible = Visibility.Visible;
                 }
+                
             }
 
             if (Visible == Visibility.Visible && Placement != PlacementMode.Mouse && Placement != PlacementMode.MousePoint)
@@ -430,8 +435,10 @@ namespace XAMLite
 
             if (!IsOpen)
             {
+                Visible = Visibility.Hidden;
                 _placementRectangleSet = false;
                 _placementTargetSet = false;
+                _visibleDelayTimeSpan = TimeSpan.FromMilliseconds(ToolTipService.InitialShowDelay);
             }
         }
 
@@ -441,7 +448,7 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            if (Visible == Visibility.Visible && IsEnabled)
+            if (Visible == Visibility.Visible && IsOpen)
             {
                 SpriteBatch.Begin();
 
