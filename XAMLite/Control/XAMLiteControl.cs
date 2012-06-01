@@ -470,7 +470,7 @@
         /// <summary>
         /// Allows menus to automatically open on mouse over if any menu was previously selected.
         /// </summary>
-        protected static bool MenuSelected;
+        protected static bool MenuShouldAutoOpen;
 
         /// <summary>
         /// If zero, this will set _menuSelected to false, thus requiring a mouse down event to open a menu
@@ -615,14 +615,14 @@
             Ms = Microsoft.Xna.Framework.Input.Mouse.GetState();
             MsRect = new Rectangle(Ms.X, Ms.Y, 1, 1);
 
-            if (Visible == Visibility.Hidden)
+            /*if (Visible == Visibility.Hidden)
             {
                 if (!MousePressed && Ms.LeftButton == ButtonState.Pressed && Panel.Contains(MsRect))
                 {
                     MousePressed = true;
                     MouseEntered = true;
                 }
-            }
+            }*/
 
             if (IsEnabled && Visible == Visibility.Visible)
             {

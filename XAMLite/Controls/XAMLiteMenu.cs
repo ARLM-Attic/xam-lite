@@ -1,13 +1,18 @@
-﻿using System.Windows;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Media;
+using Microsoft.Xna.Framework;
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {
     public class XAMLiteMenu : XAMLiteControl
     {
+        /// <summary>
+        /// Width allowed for a check mark to the left of the text.
+        /// </summary>
+        private readonly int _checkMarkWidth;
+
         /// <summary>
         /// Holds a list of all menu items specific to this menu.
         /// </summary>
@@ -25,7 +30,7 @@ namespace XAMLite
         private Color _backgroundColor;
 
         /// <summary>
-        /// 
+        /// The background color of the menu.
         /// </summary>
         public Brush Background
         {
@@ -35,10 +40,7 @@ namespace XAMLite
                 var color = solidBrush.Color;
                 _backgroundColor = new Color(color.R, color.G, color.B, color.A);
 
-                if (value == Brushes.Transparent)
-                    _transparent = true;
-                else
-                    _transparent = false;
+                _transparent = value == Brushes.Transparent;
             }
         }
 
@@ -52,11 +54,12 @@ namespace XAMLite
         /// <summary>
         /// True when a menu is open.
         /// </summary>
-        private bool _fullMenuIsVisible;
+        private bool _fullMenuOpen;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private bool _menuVisibilityCounted;
-
-        BrushConverter bc;
 
         /// <summary>
         /// Used to determine whether the mouse is contained in an open menu.
@@ -69,32 +72,30 @@ namespace XAMLite
         private Rectangle _menuItemsDrawPanel;
 
         /// <summary>
-        /// Width allowed for a check mark to the left of the text.
+        /// 
         /// </summary>
-        private int _checkMarkWidth;
-
         private bool _menuItemVariablesFinalized;
 
+        /// <summary>
+        /// True when the menu header should become visible.
+        /// </summary>
         private bool _headerVisibilityOn;
 
         /// <summary>
-        /// True when the width and height of the menu items have been measured
-        /// once all the Fonts, etc., hav been set.
+        /// Constructor.
         /// </summary>
-        //private bool _menuItemsMeasured;
-
+        /// <param name="game"></param>
         public XAMLiteMenu(Game game)
             : base(game)
         {
             Items = new List<XAMLiteMenuItem>();
-            bc = new BrushConverter();
             _longestWidth = 0;
             _checkMarkWidth = 30;
             IsEnabled = false;
         }
 
         /// <summary>
-        /// 
+        /// Wires the events.
         /// </summary>
         public override void Initialize()
         {
@@ -115,21 +116,23 @@ namespace XAMLite
             // adding the head of the menu to the list of menus
             AllMenuTitles.Add(Items[0].Header);
 
-            for (int i = 0; i < Items.Count; i++)
+            foreach (XAMLiteMenuItem t in Items)
             {
-                Game.Components.Add(Items[i]);
+                Game.Components.Add(t);
                 // Add the child component to the game with the modified parameters.
-                if (Items[i].Items.Count > 0)
+                if (t.Items.Count > 0)
                 {
-                    AllSubMenuTitles.Add(Items[i].Header);
-                    if (!OpenSubMenuDictionary.ContainsKey(Items[i].Header))
-                        OpenSubMenuDictionary.Add(Items[i].Header, false);
+                    AllSubMenuTitles.Add(t.Header);
+                    if (!OpenSubMenuDictionary.ContainsKey(t.Header))
+                    {
+                        OpenSubMenuDictionary.Add(t.Header, false);
+                    }
                 }
             }
 
             Items[0].Width += (int)Items[0].Padding.Left + (int)Items[0].Padding.Right;
             Items[0].Height += (int)Items[0].Padding.Top + (int)Items[0].Padding.Bottom;
-            Items[0].Margin = new Thickness(this.Margin.Left, this.Margin.Top, this.Margin.Right, this.Margin.Bottom);
+            Items[0].Margin = new Thickness(Margin.Left, Margin.Top, Margin.Right, Margin.Bottom);
             
             CalculateGreatestWidth();
 
@@ -137,7 +140,6 @@ namespace XAMLite
 
             IsEnabled = true;
         }
-
 
         /// <summary>
         /// Updates the menu.
@@ -157,6 +159,8 @@ namespace XAMLite
                 {
                     if (_headerVisibilityOn)
                     {
+                        // If the menu was disabled while the applcation is running
+                        // this will hide the menu.
                         CloseMenu();
                         Items[0].Visible = Visibility.Hidden;
                         _headerVisibilityOn = false;
@@ -167,20 +171,26 @@ namespace XAMLite
             }
             else
             {
+                // If the menu header was previously hidden because it was 
+                // disabled.
                 if (!_headerVisibilityOn)
                 {
                     _headerVisibilityOn = true;
                     Items[0].Visible = Visibility.Visible;
                 }
+
+                // If neither the header nor an open menu contains the mouse
+                // close the menu.
                 if (!Panel.Contains(MsRect) && !_menuItemPanel.Contains(MsRect))
                 {
                     CloseMenu();
                 }
 
-                // updating the menu visibility count.  If zero, the user must make a mouse down event
-                // in order to reopen any menu.  If greater than zero, the menus will open with a mouse
-                // enter event.
-                if (!_fullMenuIsVisible && _menuVisibilityCounted)
+                // updating the menu visibility count.  If zero, the user must 
+                // make a mouse down event in order to reopen any menu.  If 
+                // greater than zero, the menus will open with a mouse enter 
+                // event.
+                if (!_fullMenuOpen && _menuVisibilityCounted)
                 {
                     _menuVisibilityCounted = false;
                     if (MenuVisibilityCount != 0)
@@ -188,10 +198,8 @@ namespace XAMLite
                         MenuVisibilityCount--;
                     }
                 }
-
-                else if (_fullMenuIsVisible && !_menuVisibilityCounted)
+                else if (_fullMenuOpen && !_menuVisibilityCounted)
                 {
-
                     _menuVisibilityCounted = true;
                     MenuVisibilityCount++;
                 }
@@ -201,11 +209,11 @@ namespace XAMLite
                     if (!OpenSubMenuDictionary.ContainsValue(true))
                     {
                         CloseMenu();
-                        MenuSelected = false;
+                        MenuShouldAutoOpen = false;
                     }
                 }
 
-                if (_fullMenuIsVisible || MouseEntered)
+                if (_fullMenuOpen || MouseEntered)
                 {
                     if (!_menuItemVariablesFinalized)
                     {
@@ -213,6 +221,7 @@ namespace XAMLite
                         CalculateGreatestWidth();
                         SetWidthAndHeight();
                     }
+
                     Background = Brushes.LightGray;
                 }
                 else
@@ -239,7 +248,7 @@ namespace XAMLite
                     SpriteBatch.Draw(Pixel, Panel, _backgroundColor * 0.55f);
                 }
 
-                if (_fullMenuIsVisible)
+                if (_fullMenuOpen)
                 {
                     SpriteBatch.Draw(Pixel, _menuItemsDrawPanel, Color.Black);
                 }
@@ -259,7 +268,8 @@ namespace XAMLite
                 {
                     Items[i].Visible = Visibility.Hidden;
                 }
-                _fullMenuIsVisible = false;
+
+                _fullMenuOpen = false;
             }
         }
 
@@ -272,7 +282,8 @@ namespace XAMLite
             {
                 Items[i].Visible = Visibility.Visible;
             }
-            _fullMenuIsVisible = true;
+
+            _fullMenuOpen = true;
         }
 
         /// <summary>
@@ -293,6 +304,7 @@ namespace XAMLite
                 {
                     Items[i].Width += 20;
                 }
+
                 if (_longestWidth <= Items[i].Width)
                 {
                     _longestWidth = Items[i].Width;
@@ -306,20 +318,19 @@ namespace XAMLite
         /// </summary>
         private void SetWidthAndHeight()
         {
-            int height = 0;
-            height = (int)this.Margin.Top + Items[0].Height + (int)Items[0].Padding.Top + (int)Items[0].Padding.Bottom;
+            int height = (int)Margin.Top + Items[0].Height + (int)Items[0].Padding.Top + (int)Items[0].Padding.Bottom;
             for (int i = 1; i < Items.Count; i++)
             {
                 Items[i].Width = _longestWidth;
                 Items[i].Height += (int)Items[i].Padding.Top + (int)Items[i].Padding.Bottom;
-                Items[i].Margin = new Thickness(this.Margin.Left, height, this.Margin.Right, this.Margin.Bottom);
+                Items[i].Margin = new Thickness(Margin.Left, height, Margin.Right, Margin.Bottom);
                 Items[i].IsEnabled = true;
                 height += Items[i].Height;
             }
 
             Panel = new Rectangle((int)Items[0].Position.X, (int)Items[0].Position.Y, Items[0].Width + (int)Items[0].Padding.Left + (int)Items[0].Padding.Right, Items[0].Height + (int)Items[0].Padding.Top + (int)Items[0].Padding.Bottom);
-            _menuItemPanel = new Rectangle((int)this.Position.X, (int)this.Position.Y + Items[0].Height, _longestWidth, height - (Items[0].Height + (int)this.Margin.Top));
-            _menuItemsDrawPanel = new Rectangle((int)this.Position.X, (int)Items[1].Position.Y - 1, _longestWidth, height - (int)Items[1].Position.Y + 2);
+            _menuItemPanel = new Rectangle((int)Position.X, (int)Position.Y + Items[0].Height, _longestWidth, height - (Items[0].Height + (int)Margin.Top));
+            _menuItemsDrawPanel = new Rectangle((int)Position.X, (int)Items[1].Position.Y - 1, _longestWidth, height - (int)Items[1].Position.Y + 2);
         }
 
         /// <summary>
@@ -327,9 +338,9 @@ namespace XAMLite
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void XamLiteMenuMouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        protected void XamLiteMenuMouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            if (MenuSelected)
+            if (MenuShouldAutoOpen)
             {
                 OpenMenu();
             }
@@ -340,12 +351,12 @@ namespace XAMLite
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void XamLiteMenuMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        protected void XamLiteMenuMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (Items[1] != null && Items[1].Visible == Visibility.Hidden)
             {
                 OpenMenu();
-                MenuSelected = true;
+                MenuShouldAutoOpen = true;
             }
             else
             {
