@@ -111,8 +111,6 @@ namespace XAMLite
         /// </summary>
         public void LateInitialize()
         {
-            _lateInitialize = true;
-
             // adding the head of the menu to the list of menus
             AllMenuTitles.Add(Items[0].Header);
 
@@ -139,6 +137,8 @@ namespace XAMLite
             SetWidthAndHeight();
 
             IsEnabled = true;
+
+            _lateInitialize = true;
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace XAMLite
                 {
                     if (_headerVisibilityOn)
                     {
-                        // If the menu was disabled while the applcation is running
+                        // If the menu was disabled while the application is running
                         // this will hide the menu.
                         CloseMenu();
                         Items[0].Visible = Visibility.Hidden;
@@ -213,14 +213,20 @@ namespace XAMLite
                     }
                 }
 
-                if (_fullMenuOpen || MouseEntered)
+                if (MouseEntered)
                 {
-                    if (!_menuItemVariablesFinalized)
+                    SetHeaderWidthAndHeight();
+                    Background = Brushes.LightGray;
+                }
+                else if (_fullMenuOpen)
+                {
+                    /*if (!_menuItemVariablesFinalized)
                     {
                         _menuItemVariablesFinalized = true;
+
                         CalculateGreatestWidth();
                         SetWidthAndHeight();
-                    }
+                    }*/
 
                     Background = Brushes.LightGray;
                 }
@@ -313,6 +319,14 @@ namespace XAMLite
         }
 
         /// <summary>
+        /// Sets the width and height of the header.
+        /// </summary>
+        private void SetHeaderWidthAndHeight()
+        {
+            Panel = new Rectangle((int)Items[0].Position.X, (int)Items[0].Position.Y, Items[0].Width + (int)Items[0].Padding.Left + (int)Items[0].Padding.Right, Items[0].Height + (int)Items[0].Padding.Top + (int)Items[0].Padding.Bottom);
+        }
+
+        /// <summary>
         /// When a font changes from the default, the width and height must be
         /// reset.
         /// </summary>
@@ -355,6 +369,13 @@ namespace XAMLite
         {
             if (Items[1] != null && Items[1].Visible == Visibility.Hidden)
             {
+                if (!_menuItemVariablesFinalized)
+                {
+                    _menuItemVariablesFinalized = true;
+                    CalculateGreatestWidth();
+                    SetWidthAndHeight();
+                }
+
                 OpenMenu();
                 MenuShouldAutoOpen = true;
             }
