@@ -173,7 +173,7 @@ namespace XAMLite
         {
             if (Visible == System.Windows.Visibility.Visible)
             {
-                this.SpriteBatch.Begin();
+                SpriteBatch.Begin();
 
                 if (this.IsEnabled)
                 {
@@ -181,9 +181,9 @@ namespace XAMLite
                     SpriteBatch.DrawString(this.SpriteFont, Text, _textPos, this._foregroundColor);
 
                     if (this.IsChecked)
-                        this.SpriteBatch.Draw(this._checkBoxChecked, _checkBox, (Color.White * (float)Opacity));
+                        SpriteBatch.Draw(this._checkBoxChecked, _checkBox, (Color.White * (float)Opacity));
                     else
-                        this.SpriteBatch.Draw(this._checkBoxUnchecked, _checkBox, (Color.White * (float)Opacity));
+                        SpriteBatch.Draw(this._checkBoxUnchecked, _checkBox, (Color.White * (float)Opacity));
                 }
 
                 else
@@ -194,10 +194,10 @@ namespace XAMLite
                         opacity = 0f;
                     }
                     SpriteBatch.DrawString(this.SpriteFont, Text, _textPos, (this._foregroundColor * opacity));
-                    this.SpriteBatch.Draw(this._checkBoxUnchecked, _checkBox, (Color.White * opacity));
+                    SpriteBatch.Draw(this._checkBoxUnchecked, _checkBox, (Color.White * opacity));
                 }
 
-                this.SpriteBatch.End();
+                SpriteBatch.End();
             }
         }
 

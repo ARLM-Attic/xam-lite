@@ -77,20 +77,20 @@ namespace XAMLite
 
                 ConfirmHeightAndWidth();
                 // Begin.
-                this.SpriteBatch.Begin();
+                SpriteBatch.Begin();
                 Panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
-                this.SpriteBatch.Draw(Pixel, Panel, (_fill * (float)Opacity));
+                SpriteBatch.Draw(Pixel, Panel, (_fill * (float)Opacity));
                 Panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, StrokeThickness);
-                this.SpriteBatch.Draw(Pixel, Panel, (_stroke * (float)Opacity));
+                SpriteBatch.Draw(Pixel, Panel, (_stroke * (float)Opacity));
                 Panel = new Rectangle((int)this.Position.X, ((int)this.Position.Y + this.Height - StrokeThickness), this.Width, StrokeThickness);
-                this.SpriteBatch.Draw(Pixel, Panel, (_stroke * (float)Opacity));
+                SpriteBatch.Draw(Pixel, Panel, (_stroke * (float)Opacity));
                 Panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, StrokeThickness, this.Height);
-                this.SpriteBatch.Draw(Pixel, Panel, (_stroke * (float)Opacity));
+                SpriteBatch.Draw(Pixel, Panel, (_stroke * (float)Opacity));
                 Panel = new Rectangle(((int)this.Position.X + this.Width - StrokeThickness), (int)this.Position.Y, StrokeThickness, this.Height);
-                this.SpriteBatch.Draw(Pixel, Panel, (_stroke * (float)Opacity));
+                SpriteBatch.Draw(Pixel, Panel, (_stroke * (float)Opacity));
 
                 // End.
-                this.SpriteBatch.End();
+                SpriteBatch.End();
             }
         }
 

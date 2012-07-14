@@ -99,117 +99,117 @@
         /// <summary>
         /// Arial 10 pt font
         /// </summary>
-        protected SpriteFont ArialSpriteFont { get; set; }
+        protected static SpriteFont ArialSpriteFont { get; private set; }
 
         /// <summary>
         /// Courier 10 pt font
         /// </summary>
-        protected SpriteFont Courier10SpriteFont { get; set; }
+        protected static SpriteFont Courier10SpriteFont { get; private set; }
 
         /// <summary>
         /// Courier 20pt font.
         /// </summary>
-        protected SpriteFont Courier20SpriteFont { get; set; }
+        protected static SpriteFont Courier20SpriteFont { get; private set; }
 
         /// <summary>
         /// Kootenay 9 pt font.
         /// </summary>
-        protected SpriteFont Kootenay9SpriteFont { get; set; }
+        //protected static SpriteFont Kootenay9SpriteFont { get; private set; }
 
         /// <summary>
         /// Kootenay 20 pt font.
         /// </summary>
-        protected SpriteFont Kootenay14SpriteFont { get; set; }
+        //protected static SpriteFont Kootenay14SpriteFont { get; private set; }
 
         /// <summary>
         /// Verdana 10 pt font.
         /// </summary>
-        protected SpriteFont Verdana10SpriteFont { get; set; }
+        protected static SpriteFont Verdana10SpriteFont { get; private set; }
 
         /// <summary>
         /// Verdana 10 pt Bold font.
         /// </summary>
-        protected SpriteFont Verdana10BoldSpriteFont { get; set; }
+        protected static SpriteFont Verdana10BoldSpriteFont { get; private set; }
 
         /// <summary>
         /// Verdana 11 pt font.
         /// </summary>
-        protected SpriteFont Verdana11SpriteFont { get; set; }
+        protected static SpriteFont Verdana11SpriteFont { get; private set; }
 
         /// <summary>
         /// Verdana 11 pt Bold font.
         /// </summary>
-        protected SpriteFont Verdana11BoldSpriteFont { get; set; }
+        protected static SpriteFont Verdana11BoldSpriteFont { get; private set; }
 
         /// <summary>
         /// Verdana 12 pt font.
         /// </summary>
-        protected SpriteFont Verdana12SpriteFont { get; set; }
+        protected static SpriteFont Verdana12SpriteFont { get; private set; }
 
         /// <summary>
         /// Verdana 12 pt Bold font.
         /// </summary>
-        protected SpriteFont Verdana12BoldSpriteFont { get; set; }
+        protected static SpriteFont Verdana12BoldSpriteFont { get; private set; }
 
         /// <summary>
         /// Verdana 13 pt font.
         /// </summary>
-        protected SpriteFont Verdana13SpriteFont { get; set; }
+        protected static SpriteFont Verdana13SpriteFont { get; private set; }
 
         /// <summary>
         /// Verdana 13 pt Bold font.
         /// </summary>
-        protected SpriteFont Verdana13BoldSpriteFont { get; set; }
+        protected static SpriteFont Verdana13BoldSpriteFont { get; private set; }
 
         /// <summary>
         /// Verdana 14 pt font.
         /// </summary>
-        protected SpriteFont Verdana14SpriteFont { get; set; }
+        protected static SpriteFont Verdana14SpriteFont { get; private set; }
 
         /// <summary>
         /// Verdana 14 pt Bold font.
         /// </summary>
-        protected SpriteFont Verdana14BoldSpriteFont { get; set; }
+        protected static SpriteFont Verdana14BoldSpriteFont { get; private set; }
 
         /// <summary>
         /// Verdana 15 pt font.
         /// </summary>
-        protected SpriteFont Verdana15SpriteFont { get; set; }
+        protected static SpriteFont Verdana15SpriteFont { get; private set; }
 
         /// <summary>
         /// Verdana 16 pt font.
         /// </summary>
-        protected SpriteFont Verdana16SpriteFont { get; set; }
+        protected static SpriteFont Verdana16SpriteFont { get; private set; }
 
         /// <summary>
         /// Verdana 16 pt Bold font.
         /// </summary>
-        protected SpriteFont Verdana16BoldSpriteFont { get; set; }
+        protected static SpriteFont Verdana16BoldSpriteFont { get; private set; }
 
         /// <summary>
         /// Verdana 20 pt font.
         /// </summary>
-        protected SpriteFont Verdana20SpriteFont { get; set; }
+        protected static SpriteFont Verdana20SpriteFont { get; private set; }
 
         /// <summary>
         /// Verdana 20 pt Bold font.
         /// </summary>
-        protected SpriteFont Verdana20BoldSpriteFont { get; set; }
+        protected static SpriteFont Verdana20BoldSpriteFont { get; private set; }
 
         /// <summary>
         /// Verdana 24 pt Bold font.
         /// </summary>
-        protected SpriteFont Verdana24BoldSpriteFont { get; set; }
+        protected static SpriteFont Verdana24BoldSpriteFont { get; private set; }
 
         /// <summary>
         /// Verdana 60 pt font.
         /// </summary>
-        protected SpriteFont Verdana60SpriteFont { get; set; }
+        protected static SpriteFont Verdana60SpriteFont { get; private set; }
 
         /// <summary>
         /// Verdana 60 pt Bold font.
         /// </summary>
-        protected SpriteFont Verdana60BoldSpriteFont { get; set; }
+        protected static SpriteFont Verdana60BoldSpriteFont { get; private set; }
 
         /// <summary>
         /// Mouse position.
@@ -229,7 +229,7 @@
         /// <summary>
         /// Fills the space of a control with a color.
         /// </summary>
-        protected Texture2D Pixel;
+        protected static Texture2D Pixel;
 
         /// <summary>
         /// Font texture.
@@ -430,17 +430,9 @@
         /// A single spritebatch this is shared across all instances of the XAMLiteControl class 
         /// (and derived classes).
         /// </summary>
-        private static SpriteBatch staticSpriteBatch;
+        protected static SpriteBatch SpriteBatch;
 
-        /// <summary>
-        /// The spritebatch for the control.
-        /// </summary>
-        protected SpriteBatch SpriteBatch { get; set; }
 
-        /// <summary>
-        /// The graphic device.
-        /// </summary>
-        private GraphicsDevice _device;
 
         /// <summary>
         /// The screen width and height.
@@ -487,7 +479,7 @@
         /// <summary>
         /// Texture placed next to menu items that have a sub menu.
         /// </summary>
-        protected Texture2D Arrow;
+        protected static Texture2D Arrow;
 
         /// <summary>
         /// The rectangle that contains the arrow texture.
@@ -497,12 +489,12 @@
         /// <summary>
         /// The check mark that may be placed in front of a menu item when it is selected.
         /// </summary>
-        protected Texture2D CheckMark;
+        protected static Texture2D CheckMark;
 
         /// <summary>
         /// The rectangle that contains the check mark.
         /// </summary>
-        protected Rectangle CheckMarkRect;
+        protected static Rectangle CheckMarkRect;
 
         // used for labels so that the fonts, spacing, etc., will change (especially at startup) 
         // prior to being drawn to screen to prevent a noticeable size change. 
@@ -539,8 +531,7 @@
         /// </summary>
         public override void Initialize()
         {
-            _device = Game.GraphicsDevice;
-            Viewport = _device.Viewport;
+            Viewport = Game.GraphicsDevice.Viewport;
 
             base.Initialize();
         }
@@ -552,47 +543,47 @@
         {
             // If the sprite batch that is shared across all XAMLite controls
             // hasn't yet been created, create it.
-            if (staticSpriteBatch == null)
+            // Also load all the sttic fonts and sprite tectures the first time we come in here
+            if (SpriteBatch == null)
             {
-                staticSpriteBatch = new SpriteBatch(Game.GraphicsDevice);
+                SpriteBatch = new SpriteBatch(Game.GraphicsDevice);
+
+                // for Background Color
+                Pixel = new Texture2D(GraphicsDevice, 1, 1);
+                Pixel.SetData(new[] { Color.White });
+
+                // for sub menu items
+                Arrow = Game.Content.Load<Texture2D>("Images/arrow");
+                ArrowRect = new Rectangle(0, 0, Arrow.Width, Arrow.Height);
+
+                // for menu check marks
+                CheckMark = Game.Content.Load<Texture2D>("Icons/MenuCheckMark");
+                CheckMarkRect = new Rectangle(0, 0, CheckMark.Width, CheckMark.Height);
+
+                ArialSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Arial");
+                Courier10SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Courier10");
+                Courier20SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Courier20");
+                Verdana10SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana10");
+                Verdana10BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana10Bold");
+                Verdana11SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana11");
+                Verdana11BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana11Bold");
+                Verdana12SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana12");
+                Verdana12BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana12Bold");
+                Verdana13SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana13");
+                Verdana13BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana13Bold");
+                Verdana14SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana14");
+                Verdana14BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana14Bold");
+                Verdana15SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana15");
+                Verdana16SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana16");
+                Verdana16BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana16Bold");
+                Verdana20SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana20");
+                Verdana20BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana20Bold");
+                Verdana24BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana24Bold");
+                Verdana60SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana60");
+                Verdana60BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana60Bold");
             }
 
-            // Grab a reference to our single shared spritebatch.
-            SpriteBatch = staticSpriteBatch;
-
-            // for Background Color
-            Pixel = new Texture2D(GraphicsDevice, 1, 1);
-            Pixel.SetData(new[] { Color.White });
-
-            // for sub menu items
-            Arrow = Game.Content.Load<Texture2D>("Images/arrow");
-            ArrowRect = new Rectangle(0, 0, Arrow.Width, Arrow.Height);
-
-            // for menu check marks
-            CheckMark = Game.Content.Load<Texture2D>("Icons/MenuCheckMark");
-            CheckMarkRect = new Rectangle(0, 0, CheckMark.Width, CheckMark.Height);
-
-            ArialSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Arial");
-            Courier10SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Courier10");
-            Courier20SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Courier20");
-            Verdana10SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana10");
-            Verdana10BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana10Bold");
-            Verdana11SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana11");
-            Verdana11BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana11Bold");
-            Verdana12SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana12");
-            Verdana12BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana12Bold");
-            Verdana13SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana13");
-            Verdana13BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana13Bold");
-            Verdana14SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana14");
-            Verdana14BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana14Bold");
-            Verdana15SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana15");
-            Verdana16SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana16");
-            Verdana16BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana16Bold");
-            Verdana20SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana20");
-            Verdana20BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana20Bold");
-            Verdana24BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana24Bold");
-            Verdana60SpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana60");
-            Verdana60BoldSpriteFont = Game.Content.Load<SpriteFont>("Fonts/Verdana60Bold");
+            //Default this controls font
             SpriteFont = Courier10SpriteFont;
         }
 

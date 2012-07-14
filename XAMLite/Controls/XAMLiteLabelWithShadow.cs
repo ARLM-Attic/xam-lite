@@ -32,17 +32,17 @@ namespace XAMLite
             if (Visible == System.Windows.Visibility.Visible)
             {
                 // Begin.
-                this.SpriteBatch.Begin();
+                SpriteBatch.Begin();
 
                 // Draw shadow text.
                 var shadowPos = Position + new Vector2(1, 1);
-                this.SpriteBatch.DrawString(this.SpriteFont, this.Text, shadowPos, (Color.Black * (float)Opacity));
+                SpriteBatch.DrawString(this.SpriteFont, this.Text, shadowPos, (Color.Black * (float)Opacity));
 
                 // Draw text.
-                this.SpriteBatch.DrawString(this.SpriteFont, this.Text, this.Position, (this._foregroundColor * (float)Opacity));
+                SpriteBatch.DrawString(this.SpriteFont, this.Text, this.Position, (this._foregroundColor * (float)Opacity));
 
                 // End.
-                this.SpriteBatch.End();
+                SpriteBatch.End();
             }
         }
 
