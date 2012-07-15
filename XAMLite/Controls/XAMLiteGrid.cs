@@ -85,6 +85,7 @@ namespace XAMLite
         /// 
         /// </summary>
         private bool _transparent;
+        private bool _isVisible;
 
         /// <summary>
         /// Constructor.
@@ -151,6 +152,22 @@ namespace XAMLite
             // makes sure that if Opacity of child was changed separate from grid after initialization, then
             // it should limit the increase to that of the grid's.
             CheckChildrenOpacity();
+
+            if (_childrenLoaded && !_isVisible)
+            {
+                _isVisible = true;
+
+                var index = 0;
+                foreach (var t in Children)
+                {
+                    if (_childVisibility[index])
+                    {
+                        t.Visible = Visibility.Visible;
+                    }
+
+                    index++;
+                }
+            }
         }
 
         /// <summary>
@@ -181,8 +198,16 @@ namespace XAMLite
             _childrenLoaded = true;
 
             _childVisibility = new bool[Children.Count];
-
             _childOpacity = new float[Children.Count];
+
+            RecordChildOpacity();
+            RecordChildVisibility();
+
+            // Add the child component to the game with the modified parameters.
+            foreach (var t in Children)
+            {
+                t.Visible = Visibility.Hidden;
+            }
 
             Panel = new Rectangle((int)Position.X - (int)_originalGridMargin.Left +
                     (int)Margin.Left + (int)_originalGridMargin.Right - (int)Margin.Right,
@@ -195,8 +220,6 @@ namespace XAMLite
             }
 
             ModifyChildren();
-            RecordChildOpacity();
-            RecordChildVisibility();
 
             // Add the child component to the game with the modified parameters.
             foreach (var t in Children)

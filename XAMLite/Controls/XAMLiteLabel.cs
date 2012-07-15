@@ -158,9 +158,9 @@ namespace XAMLite
                     UpdateFontFamily(_fontFamily);
                     SpriteFont.Spacing = Spacing;
                     RecalculateWidthAndHeight(Text);
-                }
 
-                FirstUpdate = false;
+                    FirstUpdate = false;
+                }
             }
         }
 
