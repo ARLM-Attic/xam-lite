@@ -284,6 +284,13 @@ namespace XAMLite
         /// </summary>
         private void OpenMenu()
         {
+            if (!_menuItemVariablesFinalized)
+            {
+                _menuItemVariablesFinalized = true;
+                CalculateGreatestWidth();
+                SetWidthAndHeight();
+            }
+
             for (int i = 1; i < Items.Count; i++)
             {
                 Items[i].Visible = Visibility.Visible;
@@ -369,13 +376,6 @@ namespace XAMLite
         {
             if (Items[1] != null && Items[1].Visible == Visibility.Hidden)
             {
-                if (!_menuItemVariablesFinalized)
-                {
-                    _menuItemVariablesFinalized = true;
-                    CalculateGreatestWidth();
-                    SetWidthAndHeight();
-                }
-
                 OpenMenu();
                 MenuShouldAutoOpen = true;
             }
