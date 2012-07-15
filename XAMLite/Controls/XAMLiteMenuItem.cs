@@ -558,13 +558,6 @@ namespace XAMLite
             {
                 MenuVisibilityCount = 0;
             }
-
-            // HACK: When a tutorial is selected, all Menu Title Headers are erased, so currently 
-            // they are being manually added again.
-            if (Header.Contains("Tutorial") || Header.Contains("Toggle Particle Counter"))
-            {
-                ResetMenuItems();
-            }
         }
     }
 }

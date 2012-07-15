@@ -49,8 +49,6 @@
         /// </summary>
         protected bool MousePressed;
 
-        //protected bool _mouseUp;
-
         /// <summary>
         /// True when a control has been entered.
         /// </summary>
@@ -110,16 +108,6 @@
         /// Courier 20pt font.
         /// </summary>
         protected static SpriteFont Courier20SpriteFont { get; private set; }
-
-        /// <summary>
-        /// Kootenay 9 pt font.
-        /// </summary>
-        //protected static SpriteFont Kootenay9SpriteFont { get; private set; }
-
-        /// <summary>
-        /// Kootenay 20 pt font.
-        /// </summary>
-        //protected static SpriteFont Kootenay14SpriteFont { get; private set; }
 
         /// <summary>
         /// Verdana 10 pt font.
@@ -292,16 +280,6 @@
 
             set
             {
-                /*if(value <= 1 && value >= 0 ) {
-                    if (value > 1)
-                    {
-                        value = 1;
-                    }
-                    else if (value < 0)
-                    {
-                        value = 0;
-                    }*/
-
                 _opacity = value;
                 OpacityChanged = true;
             }
@@ -421,18 +399,10 @@
         public bool IsEnabled { get; set; }
 
         /// <summary>
-        /// Gets or sets a brush that describes the foreground color. The default 
-        /// color is black.
-        /// </summary>
-        //public Brush Foreground { get; set; }
-
-        /// <summary>
         /// A single spritebatch this is shared across all instances of the XAMLiteControl class 
         /// (and derived classes).
         /// </summary>
         protected static SpriteBatch SpriteBatch;
-
-
 
         /// <summary>
         /// The screen width and height.
@@ -448,6 +418,8 @@
         /// Determines whether the control is selected.
         /// </summary>
         protected bool Selected;
+
+        protected static bool ListsCreated;
 
         /// <summary>
         /// List of menu titles.
@@ -520,10 +492,15 @@
             Visible = new Visibility();
             Visible = Visibility.Visible;
             IsEnabled = true;
-            AllRadioButtons = new List<XAMLiteRadioButton>();
-            AllMenuTitles = new List<string>();
-            AllSubMenuTitles = new List<string>();
-            OpenSubMenuDictionary = new Dictionary<string, bool>();
+
+            if (!ListsCreated)
+            {
+                ListsCreated = true;
+                AllRadioButtons = new List<XAMLiteRadioButton>();
+                AllMenuTitles = new List<string>();
+                AllSubMenuTitles = new List<string>();
+                OpenSubMenuDictionary = new Dictionary<string, bool>();
+            }
         }
 
         /// <summary>
@@ -814,25 +791,6 @@
                     Visible = Visibility.Visible;
                     break;
             }
-        }
-
-        /// <summary>
-        /// HACK: When a tutorial is selected, all Menu Title Headers are erased, so currently 
-        /// they are being manually added again.
-        /// </summary>
-        protected void ResetMenuItems()
-        {
-            AllMenuTitles.Add("Session");
-            //_allMenuTitles.Add("Ambient Level");
-            AllMenuTitles.Add("Tutorials");
-            //_allMenuTitles.Add("Time of Day");
-            //_allMenuTitles.Add("Truck");
-            AllMenuTitles.Add("Developer [F1]");
-
-            AllSubMenuTitles.Add("Adjust Dust Visibility");
-            AllSubMenuTitles.Add("Ambient Level");
-            AllSubMenuTitles.Add("Time of Day");
-            AllSubMenuTitles.Add("Truck");
         }
     }
 }
