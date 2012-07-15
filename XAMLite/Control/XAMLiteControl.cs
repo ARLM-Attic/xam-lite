@@ -419,6 +419,10 @@ namespace XAMLite
         /// </summary>
         protected bool Selected;
 
+        /// <summary>
+        /// True when all of the static lists that contain menu headers, sub
+        /// menu headers, radio buttons, etc. get instantiated.
+        /// </summary>
         protected static bool ListsCreated;
 
         /// <summary>

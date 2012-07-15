@@ -44,7 +44,10 @@ namespace XAMLite
         /// </summary>
         private FontFamily _fontFamily;
 
-        private bool _fontFamilyChanged; // used in the Update() method
+        /// <summary>
+        /// True when the font family has changed.
+        /// </summary>
+        private bool _fontFamilyChanged;
 
         /// <summary>
         /// The font family the text belongs to.
@@ -63,7 +66,9 @@ namespace XAMLite
             }
         }
 
-        // character spacing
+        /// <summary>
+        /// character spacing
+        /// </summary>
         public int Spacing { get; set; }
 
         /// <summary>

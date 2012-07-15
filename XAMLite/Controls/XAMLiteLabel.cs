@@ -1,11 +1,10 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using System.Windows;
 using System.Windows.Media;
+using Microsoft.Xna.Framework;
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,13 +20,15 @@ namespace XAMLite
             {
                 return base.Text;
             }
+
             set
             {
-                if (this.SpriteFont != null)
+                if (SpriteFont != null)
                 {
-                    this.SpriteFont.Spacing = Spacing;
+                    SpriteFont.Spacing = Spacing;
                     RecalculateWidthAndHeight(value);
                 }
+
                 base.Text = value;
             }
         }
@@ -41,41 +42,62 @@ namespace XAMLite
         {
             get
             {
-                return this.Text;
+                return Text;
             }
 
             set
             {
-                this.Text = value;
-                if (this.SpriteFont != null)
+                Text = value;
+                if (SpriteFont != null)
                 {
-                    this.SpriteFont.Spacing = Spacing;
+                    SpriteFont.Spacing = Spacing;
                     RecalculateWidthAndHeight(value);
                 }
+
                 base.Text = value;
             }
         }
 
-        // An idea for establishing a set of possible preloaded SpriteFonts??
+        /// <summary>
+        /// The font family the text belongs to.
+        /// </summary>
         private FontFamily _fontFamily;
-        private bool fontFamilyChanged; // used in the Update() method
 
+        /// <summary>
+        /// True when the font family has changed.
+        /// </summary>
+        private bool _fontFamilyChanged;
+
+        /// <summary>
+        /// The font family the text belongs to.
+        /// </summary>
         public FontFamily FontFamily
         {
-            get { return _fontFamily; }
-            set { _fontFamily = value; fontFamilyChanged = true; FirstUpdate = true; }
+            get
+            {
+                return _fontFamily;
+            }
+
+            set
+            {
+                _fontFamily = value; 
+                _fontFamilyChanged = true; 
+                FirstUpdate = true;
+            }
         }
 
-        // character spacing
+        /// <summary>
+        /// character spacing.
+        /// </summary>
         public int Spacing { get; set; }
 
         /// <summary>
-        /// 
+        /// Color of the text.
         /// </summary>
-        protected Color _foregroundColor;
+        protected Color ForegroundColor;
 
         /// <summary>
-        /// 
+        /// Color of the text.
         /// </summary>
         public Brush Foreground
         {
@@ -83,78 +105,75 @@ namespace XAMLite
             {
                 var solidBrush = (SolidColorBrush)value;
                 var color = solidBrush.Color;
-                _foregroundColor = new Color(color.R, color.G, color.B, color.A);
+                ForegroundColor = new Color(color.R, color.G, color.B, color.A);
             }
         }
 
-        //private bool _firstUpdate;
-
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="game"></param>
         public XAMLiteLabel(Game game)
             : base(game)
         {
-
-            //
-            this.Text = string.Empty;
-
-            //
-            this._foregroundColor = Color.White;
+            base.Text = string.Empty;
+            ForegroundColor = Color.White;
         }
 
         /// <summary>
-        /// 
+        /// Constructor that includes the text.
         /// </summary>
         /// <param name="game"></param>
+        /// <param name="text"> </param>
         public XAMLiteLabel(Game game, string text)
             : base(game)
         {
-            //
-            this.Text = text;
-            this.Spacing = 0;
-
-            //
-            this._foregroundColor = Color.White;
+            base.Text = text;
+            Spacing = 0;
+            ForegroundColor = Color.White;
         }
 
         /// <summary>
-        /// 
+        /// Loads the content of the label
         /// </summary>
-        /// <param name="device"></param>
-        /// <param name="content"></param>
-        /// <param name="fontName"></param>
         protected override void LoadContent()
         {
             base.LoadContent();
-            RecalculateWidthAndHeight(this.Text);
+            RecalculateWidthAndHeight(Text);
         }
 
+        /// <summary>
+        /// Updates the label.
+        /// </summary>
+        /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
             if (FirstUpdate)
             {
-                if (fontFamilyChanged)
+                if (_fontFamilyChanged)
                 {
-                    fontFamilyChanged = false;
+                    _fontFamilyChanged = false;
                     UpdateFontFamily(_fontFamily);
-                    this.SpriteFont.Spacing = Spacing;
-                    RecalculateWidthAndHeight(this.Text);
+                    SpriteFont.Spacing = Spacing;
+                    RecalculateWidthAndHeight(Text);
                 }
+
                 FirstUpdate = false;
             }
-
         }
 
         /// <summary>
-        /// 
+        /// Draws the label.
         /// </summary>
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            if (Visible == System.Windows.Visibility.Visible)
+            if (Visible == Visibility.Visible && !FirstUpdate)
             {
                 SpriteBatch.Begin();
-                SpriteBatch.DrawString(this.SpriteFont, Text, Position, (this._foregroundColor * (float)Opacity));
+                SpriteBatch.DrawString(SpriteFont, Text, Position, ForegroundColor * (float)Opacity);
                 SpriteBatch.End();
             }
         }
