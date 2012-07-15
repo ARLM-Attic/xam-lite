@@ -484,7 +484,7 @@
         /// <summary>
         /// The rectangle that contains the arrow texture.
         /// </summary>
-        protected Rectangle ArrowRect;
+        protected static Rectangle ArrowRect;
 
         /// <summary>
         /// The check mark that may be placed in front of a menu item when it is selected.
@@ -543,7 +543,7 @@
         {
             // If the sprite batch that is shared across all XAMLite controls
             // hasn't yet been created, create it.
-            // Also load all the sttic fonts and sprite tectures the first time we come in here
+            // Also load all the static fonts and sprite textures the first time we come in here.
             if (SpriteBatch == null)
             {
                 SpriteBatch = new SpriteBatch(Game.GraphicsDevice);

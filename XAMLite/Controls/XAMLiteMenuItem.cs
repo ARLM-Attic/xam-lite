@@ -40,14 +40,14 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// The font style used.
+        /// The font family the text belongs to.
         /// </summary>
         private FontFamily _fontFamily;
 
         private bool _fontFamilyChanged; // used in the Update() method
 
         /// <summary>
-        /// The font style used.
+        /// The font family the text belongs to.
         /// </summary>
         public FontFamily FontFamily
         {
@@ -110,6 +110,9 @@ namespace XAMLite
         /// </summary>
         public Thickness Padding;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private bool _transparent;
 
         /// <summary>
@@ -124,14 +127,19 @@ namespace XAMLite
         private Rectangle _strokePanel;
 
         /// <summary>
-        /// 
+        /// The rectangle that contains all of the submenu items of a 
+        /// particular menu item, if any.
         /// </summary>
         private Rectangle _subMenuPanel;
 
-        // If set, the menu item has the ability to be checked.
+        /// <summary>
+        /// When true, the menu item has the ability to be checked.
+        /// </summary>
         public bool IsCheckable;
 
-        // If IsCheckable is true, this will toggle a check mark when a menu item is selected.
+        /// <summary>
+        /// If IsCheckable is true, this will toggle a check mark when a menu item is selected.
+        /// </summary>
         public bool IsChecked;
 
         /// <summary>
@@ -185,7 +193,7 @@ namespace XAMLite
         /// <summary>
         /// True when all of the menu items have been set.
         /// </summary>
-        protected bool _lateInitialize;
+        private bool _lateInitialize;
 
         /// <summary>
         /// This holds the value of the greatest menu item width so
@@ -233,7 +241,7 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// Initializes the menu item.
         /// </summary>
         public override void Initialize()
         {
@@ -385,7 +393,7 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// Draws the Menu Item.
         /// </summary>
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)

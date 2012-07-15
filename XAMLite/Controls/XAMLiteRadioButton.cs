@@ -1,11 +1,6 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Color = Microsoft.Xna.Framework.Color;
 
@@ -13,9 +8,19 @@ namespace XAMLite
 {
     public class XAMLiteRadioButton : XAMLiteControl
     {
+        /// <summary>
+        /// True when the radio button is selected.
+        /// </summary>
         public bool IsChecked { get; set; }
 
-        private Rectangle radio;
+        /// <summary>
+        /// The rectangle in which the radio button is drawn.
+        /// </summary>
+        private Rectangle _radio;
+
+        /// <summary>
+        /// Position of the text in relation to the radio button.
+        /// </summary>
         private Vector2 _textPos;
 
         /// <summary>
@@ -27,63 +32,85 @@ namespace XAMLite
         {
             get
             {
-                return this.Text;
+                return Text;
             }
 
             set
             {
-                this.Text = value;
-                if (this.SpriteFont != null)
+                Text = value;
+                if (SpriteFont != null)
                 {
                     RecalculateWidthAndHeight(value);
                 }
+
                 base.Text = value;
             }
         }
 
-        // An idea for establishing a set of possible preloaded SpriteFonts??
+        /// <summary>
+        /// Family of fonts the text belongs to.
+        /// </summary>
         private FontFamily _fontFamily;
-        private bool fontFamilyChanged; // used in the Update() method
 
+        /// <summary>
+        /// true when the font family changes.
+        /// </summary>
+        private bool _fontFamilyChanged;
+
+        /// <summary>
+        /// Family of fonts the text belongs to.
+        /// </summary>
         public FontFamily FontFamily
         {
-            get { return _fontFamily; }
-            set { _fontFamily = value; fontFamilyChanged = true; }
+            get
+            {
+                return _fontFamily;
+            }
+
+            set
+            {
+                _fontFamily = value;
+                _fontFamilyChanged = true;
+            }
         }
 
-        // character spacing
+        /// <summary>
+        /// character spacing
+        /// </summary>
         public int Spacing { get; set; }
-        /// <summary>
-        /// This is the image file path, minus the file extension.
-        /// </summary>
-        public string RadioButtonSourceName
-        {
-            get;
-            set;
-        }
 
         /// <summary>
         /// This is the image file path, minus the file extension.
         /// </summary>
-        public string RadioButtonSelectedSourceName
-        {
-            get;
-            set;
-        }
+        public string RadioButtonSourceName { get; set; }
 
+        /// <summary>
+        /// This is the image file path, minus the file extension.
+        /// </summary>
+        public string RadioButtonSelectedSourceName { get; set; }
 
+        /// <summary>
+        /// The group in which a radio button belongs.
+        /// </summary>
         public string GroupName { get; set; }
 
+        /// <summary>
+        /// Contains the 2D texture for an unselected radio button.
+        /// </summary>
         private Texture2D _radioUnselected;
+
+        /// <summary>
+        /// Contains the 2D texture for an selected radio button.
+        /// </summary>
         private Texture2D _radioSelected;
 
         /// <summary>
-        /// 
+        /// The text color.
         /// </summary>
         private Color _foregroundColor;
 
         /// <summary>
-        /// 
+        /// The text color.
         /// </summary>
         public Brush Foreground
         {
@@ -95,49 +122,45 @@ namespace XAMLite
             }
         }
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="game"></param>
         public XAMLiteRadioButton(Game game)
             : base(game)
         {
-            this.Content = "";
-            this.IsChecked = false;
-            this.Text = string.Empty;
-            this._foregroundColor = Color.White;
+            Content = "";
+            IsChecked = false;
+            Text = string.Empty;
+            _foregroundColor = Color.White;
 
             RadioButtonSourceName = "Icons/RadioButton";
             RadioButtonSelectedSourceName = "Icons/RadioButtonSelected";
 
-            this.Spacing = 2;
+            Spacing = 2;
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        public override void Initialize()
-        {
-            base.Initialize();
-        }
-
-        /// <summary>
-        /// 
+        /// Loads the content.
         /// </summary>
         protected override void LoadContent()
         {
             base.LoadContent();
 
-            RecalculateWidthAndHeight(this.Text);
+            RecalculateWidthAndHeight(Text);
 
             _radioSelected = Game.Content.Load<Texture2D>(RadioButtonSelectedSourceName);
             _radioUnselected = Game.Content.Load<Texture2D>(RadioButtonSourceName);
 
-            radio = new Rectangle((int)this.Position.X, (int)this.Position.Y, _radioSelected.Width, _radioSelected.Height);
-            _textPos = new Vector2((this.Position.X + radio.Width + 10), this.Position.Y);
-            Panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, _radioSelected.Width + this.Width + 10, _radioSelected.Height + this.Height);
+            _radio = new Rectangle((int)Position.X, (int)Position.Y, _radioSelected.Width, _radioSelected.Height);
+            _textPos = new Vector2(Position.X + _radio.Width + 10, Position.Y);
+            Panel = new Rectangle((int)Position.X, (int)Position.Y, _radioSelected.Width + Width + 10, _radioSelected.Height + Height);
 
             AllRadioButtons.Add(this);
         }
 
         /// <summary>
-        /// 
+        /// Updates the radio button.
         /// </summary>
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
@@ -146,28 +169,29 @@ namespace XAMLite
             if (MarginChanged)
             {
                 MarginChanged = false;
-                radio = new Rectangle((int)this.Position.X, (int)this.Position.Y, _radioSelected.Width, _radioSelected.Height);
-                _textPos = new Vector2((this.Position.X + radio.Width + 10), this.Position.Y);
-                Panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, _radioSelected.Width + this.Width + 10, this.Height);
+                _radio = new Rectangle((int)Position.X, (int)Position.Y, _radioSelected.Width, _radioSelected.Height);
+                _textPos = new Vector2(Position.X + _radio.Width + 10, Position.Y);
+                Panel = new Rectangle((int)Position.X, (int)Position.Y, _radioSelected.Width + Width + 10, Height);
             }
 
-            if (fontFamilyChanged)
+            if (_fontFamilyChanged)
             {
-                fontFamilyChanged = false;
+                _fontFamilyChanged = false;
                 UpdateFontFamily(_fontFamily);
             }
 
             if (MousePressed && !Selected && Panel.Contains(MsRect) && IsEnabled)
             {
                 Selected = true;
-                for (int i = 0; i < AllRadioButtons.Count; i++)
+                foreach (var t in AllRadioButtons)
                 {
-                    if (AllRadioButtons[i].IsChecked && AllRadioButtons[i].GroupName == this.GroupName && AllRadioButtons[i].IsEnabled == true)
+                    if (t.IsChecked && t.GroupName == GroupName && t.IsEnabled)
                     {
-                        AllRadioButtons[i].IsChecked = false;
+                        t.IsChecked = false;
                     }
                 }
-                this.IsChecked = true;
+
+                IsChecked = true;
             }
             else if (Selected)
             {
@@ -176,37 +200,34 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// Draws the radio button.
         /// </summary>
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            //
-            if (Visible == System.Windows.Visibility.Visible)
+            if (Visible != Visibility.Visible)
             {
-                SpriteBatch.Begin();
-
-                if (this.IsEnabled)
-                {
-                    this.SpriteFont.Spacing = this.Spacing;
-                    SpriteBatch.DrawString(this.SpriteFont, Text, _textPos, (this._foregroundColor * (float)Opacity));
-
-                    if (this.IsChecked)
-                        SpriteBatch.Draw(this._radioSelected, radio, (Color.White * (float)Opacity));
-                    else
-                        SpriteBatch.Draw(this._radioUnselected, radio, (Color.White * (float)Opacity));
-                }
-
-                else
-                {
-                    float opacity = (float)Opacity * 0.5f;
-
-                    SpriteBatch.DrawString(this.SpriteFont, Text, _textPos, (this._foregroundColor * opacity));
-                    SpriteBatch.Draw(this._radioUnselected, radio, (Color.White * opacity));
-                }
-
-                SpriteBatch.End();
+                return;
             }
+
+            SpriteBatch.Begin();
+
+            if (IsEnabled)
+            {
+                SpriteFont.Spacing = Spacing;
+                SpriteBatch.DrawString(SpriteFont, Text, _textPos, _foregroundColor * (float)Opacity);
+
+                SpriteBatch.Draw(IsChecked ? _radioSelected : _radioUnselected, _radio, Color.White * (float)Opacity);
+            }
+            else
+            {
+                var opacity = (float)Opacity * 0.5f;
+
+                SpriteBatch.DrawString(SpriteFont, Text, _textPos, _foregroundColor * opacity);
+                SpriteBatch.Draw(_radioUnselected, _radio, Color.White * opacity);
+            }
+
+            SpriteBatch.End();
         }
     }
 }
