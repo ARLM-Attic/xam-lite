@@ -1,15 +1,15 @@
-﻿namespace XAMLite
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Windows;
-    using System.Windows.Input;
-    using System.Windows.Media;
-    using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Graphics;
-    using Microsoft.Xna.Framework.Input;
-    using Color = Microsoft.Xna.Framework.Color;
+﻿using System;
+using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Input;
+using System.Windows.Media;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Color = Microsoft.Xna.Framework.Color;
 
+namespace XAMLite
+{
     /// <summary>
     /// Describes the placement of where a Popup control such as a ToolTip 
     /// appears on the screen.

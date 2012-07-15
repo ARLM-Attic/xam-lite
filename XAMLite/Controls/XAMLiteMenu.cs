@@ -72,7 +72,8 @@ namespace XAMLite
         private Rectangle _menuItemsDrawPanel;
 
         /// <summary>
-        /// 
+        /// True when all of the margins, heights, widths, etc., have been
+        /// calculated for the menu items in a particular menu.
         /// </summary>
         private bool _menuItemVariablesFinalized;
 
@@ -284,6 +285,8 @@ namespace XAMLite
         /// </summary>
         private void OpenMenu()
         {
+            // if the menu has never been opened before, set its width and 
+            // height.
             if (!_menuItemVariablesFinalized)
             {
                 _menuItemVariablesFinalized = true;
