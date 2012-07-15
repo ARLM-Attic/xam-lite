@@ -171,7 +171,7 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// Draws the background for the grid, if it exists.
         /// </summary>
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
