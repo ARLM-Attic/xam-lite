@@ -7,6 +7,9 @@ using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {
+    using System;
+    using System.Windows.Input;
+
     public class XAMLiteMenuItem : XAMLiteControl
     {
         /// <summary>
@@ -252,7 +255,8 @@ namespace XAMLite
         {
             base.Initialize();
 
-            MouseDown += XAMLiteMenuItemMouseDown;
+            MouseDown += OnMouseDown;
+            ////MouseUp += OnMouseUp;
         }
 
         /// <summary>
@@ -549,7 +553,24 @@ namespace XAMLite
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected void XAMLiteMenuItemMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        protected void OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            MouseDownUpEvent();
+        }
+
+        /// <summary>
+        /// When a non-menu header has a mouse up event occur, it should also
+        /// act as if a mouse down event ocurred.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseButtonEventArgs"></param>
+        private void OnMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        {
+            MouseDownUpEvent();
+        }
+
+
+        private void MouseDownUpEvent()
         {
             // set bool to toggle check marks if IsCheckable on mouse down.
             if (IsCheckable)

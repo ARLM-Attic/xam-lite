@@ -37,12 +37,12 @@ namespace XAMLite
         /// <summary>
         /// The state of the mouse, whether pressed, released, etc.
         /// </summary>
-        protected MouseState Ms;
+        protected static MouseState Ms;
 
         /// <summary>
         /// The position of the mouse on the screen.
         /// </summary>
-        protected Microsoft.Xna.Framework.Point MouseLoc;
+        protected static Microsoft.Xna.Framework.Point MouseLoc;
 
         /// <summary>
         /// True when the mouse has been pressed while over a control.
@@ -423,7 +423,7 @@ namespace XAMLite
         /// True when all of the static lists that contain menu headers, sub
         /// menu headers, radio buttons, etc. get instantiated.
         /// </summary>
-        protected static bool ListsCreated;
+        protected static bool StaticVariablesCreated;
 
         /// <summary>
         /// List of menu titles.
@@ -483,6 +483,18 @@ namespace XAMLite
         protected bool CloseAllMenus;
 
         /// <summary>
+        /// True when the mouse click position has been recorded.  Reset to
+        /// false once the left mouse button is released.
+        /// </summary>
+        private static bool mousePressPositionRecorded;
+
+        /// <summary>
+        /// Whenever a mouse click occurs, its position is recorded.  It is
+        /// then used to determine if mouse dragging occurred.
+        /// </summary>
+        private static Vector2 mousePressPosition;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="game"></param>
@@ -497,13 +509,15 @@ namespace XAMLite
             Visible = Visibility.Visible;
             IsEnabled = true;
 
-            if (!ListsCreated)
+            if (!StaticVariablesCreated)
             {
-                ListsCreated = true;
+                StaticVariablesCreated = true;
                 AllRadioButtons = new List<XAMLiteRadioButton>();
                 AllMenuTitles = new List<string>();
                 AllSubMenuTitles = new List<string>();
                 OpenSubMenuDictionary = new Dictionary<string, bool>();
+
+                mousePressPosition = new Vector2();
             }
         }
 
@@ -566,6 +580,8 @@ namespace XAMLite
 
             //Default this controls font
             SpriteFont = Courier10SpriteFont;
+
+            MsRect = new Rectangle(0, 0, 1, 1);
         }
 
         /// <summary>
@@ -585,7 +601,17 @@ namespace XAMLite
             base.Update(gameTime);
 
             Ms = Microsoft.Xna.Framework.Input.Mouse.GetState();
-            MsRect = new Rectangle(Ms.X, Ms.Y, 1, 1);
+            MsRect.X = Ms.X;
+            MsRect.Y = Ms.Y;
+
+            // record the mouse down vector2
+            if (!MousePressed && Ms.LeftButton == ButtonState.Pressed && !mousePressPositionRecorded)
+            {
+                mousePressPositionRecorded = true;
+
+                mousePressPosition.X = MsRect.X;
+                mousePressPosition.Y = MsRect.Y;
+            }
 
             if (IsEnabled && Visible == Visibility.Visible)
             {
@@ -608,13 +634,35 @@ namespace XAMLite
 
                 if (!MousePressed && Ms.LeftButton == ButtonState.Pressed && MouseEntered)
                 {
-                    MousePressed = true;
-                    OnMouseDown();
+                    /*if (!(this is XAMLiteRadioButton))
+                    {
+                        MousePressed = true;
+                    }*/
+
+                    if (Math.Abs(mousePressPosition.X - Ms.X) < 0.01 && Math.Abs(mousePressPosition.Y - Ms.Y) < 0.01)
+                    {
+                        MousePressed = true;
+                        OnMouseDown();
+                    }   
                 }
                 else if (MousePressed && Ms.LeftButton == ButtonState.Released && MouseEntered)
                 {
                     MousePressed = false;
-                    OnMouseUp();
+
+                    /*if (this is XAMLiteMenuItem)
+                    {
+                        OnMouseDown();
+                    }
+                    else
+                    {*/
+                        OnMouseUp();
+                    ////}
+                }
+
+                if (Ms.LeftButton == ButtonState.Released && mousePressPositionRecorded)
+                {
+                    ////MousePressed = false;
+                    mousePressPositionRecorded = false;
                 }
             }
         }

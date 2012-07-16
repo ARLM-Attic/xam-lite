@@ -96,7 +96,7 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// Wires the events.
+        /// Wires to the events.
         /// </summary>
         public override void Initialize()
         {
@@ -115,7 +115,7 @@ namespace XAMLite
             // adding the head of the menu to the list of menus
             AllMenuTitles.Add(Items[0].Header);
 
-            foreach (XAMLiteMenuItem t in Items)
+            foreach (var t in Items)
             {
                 Game.Components.Add(t);
                 // Add the child component to the game with the modified parameters.
@@ -221,14 +221,6 @@ namespace XAMLite
                 }
                 else if (_fullMenuOpen)
                 {
-                    /*if (!_menuItemVariablesFinalized)
-                    {
-                        _menuItemVariablesFinalized = true;
-
-                        CalculateGreatestWidth();
-                        SetWidthAndHeight();
-                    }*/
-
                     Background = Brushes.LightGray;
                 }
                 else
@@ -271,7 +263,7 @@ namespace XAMLite
         {
             if (!OpenSubMenuDictionary.ContainsValue(true))
             {
-                for (int i = 1; i < Items.Count; i++)
+                for (var i = 1; i < Items.Count; i++)
                 {
                     Items[i].Visible = Visibility.Hidden;
                 }
@@ -294,7 +286,7 @@ namespace XAMLite
                 SetWidthAndHeight();
             }
 
-            for (int i = 1; i < Items.Count; i++)
+            for (var i = 1; i < Items.Count; i++)
             {
                 Items[i].Visible = Visibility.Visible;
             }
@@ -311,7 +303,7 @@ namespace XAMLite
         {
             _longestWidth = 0;
 
-            for (int i = 1; i < Items.Count; i++)
+            for (var i = 1; i < Items.Count; i++)
             {
                 Items[i].Width += (int)Items[i].Padding.Left + (int)Items[i].Padding.Right + _checkMarkWidth;
 
@@ -342,8 +334,8 @@ namespace XAMLite
         /// </summary>
         private void SetWidthAndHeight()
         {
-            int height = (int)Margin.Top + Items[0].Height + (int)Items[0].Padding.Top + (int)Items[0].Padding.Bottom;
-            for (int i = 1; i < Items.Count; i++)
+            var height = (int)Margin.Top + Items[0].Height + (int)Items[0].Padding.Top + (int)Items[0].Padding.Bottom;
+            for (var i = 1; i < Items.Count; i++)
             {
                 Items[i].Width = _longestWidth;
                 Items[i].Height += (int)Items[i].Padding.Top + (int)Items[i].Padding.Bottom;
