@@ -404,13 +404,16 @@ namespace XAMLite
                 // closes sub-menu panel after a menu item has been selected.
                 if (Ms.LeftButton == ButtonState.Pressed)
                 {
-                    if (_subMenuPanel.Contains(MsRect))
+                    if (Math.Abs(MousePressPosition.X - Ms.X) < 0.01 && Math.Abs(MousePressPosition.Y - Ms.Y) < 0.01)
                     {
-                        SubMenuOpened = false;
-                        SubMenuKeyAdded = false;
-                        OpenSubMenuDictionary.Remove(Header);
-                        OpenSubMenuDictionary.Add(Header, false);
-                    }
+                        if (_subMenuPanel.Contains(MsRect))
+                        {
+                            SubMenuOpened = false;
+                            SubMenuKeyAdded = false;
+                            OpenSubMenuDictionary.Remove(Header);
+                            OpenSubMenuDictionary.Add(Header, false);
+                        }
+                    }                    
                 }
             }
         }

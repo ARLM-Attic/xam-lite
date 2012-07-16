@@ -486,13 +486,13 @@ namespace XAMLite
         /// True when the mouse click position has been recorded.  Reset to
         /// false once the left mouse button is released.
         /// </summary>
-        private static bool mousePressPositionRecorded;
+        protected static bool MousePressPositionRecorded;
 
         /// <summary>
         /// Whenever a mouse click occurs, its position is recorded.  It is
         /// then used to determine if mouse dragging occurred.
         /// </summary>
-        private static Vector2 mousePressPosition;
+        protected static Vector2 MousePressPosition;
 
         /// <summary>
         /// Constructor.
@@ -517,7 +517,7 @@ namespace XAMLite
                 AllSubMenuTitles = new List<string>();
                 OpenSubMenuDictionary = new Dictionary<string, bool>();
 
-                mousePressPosition = new Vector2();
+                MousePressPosition = new Vector2();
             }
         }
 
@@ -605,12 +605,12 @@ namespace XAMLite
             MsRect.Y = Ms.Y;
 
             // record the mouse down vector2
-            if (!MousePressed && Ms.LeftButton == ButtonState.Pressed && !mousePressPositionRecorded)
+            if (!MousePressed && Ms.LeftButton == ButtonState.Pressed && !MousePressPositionRecorded)
             {
-                mousePressPositionRecorded = true;
+                MousePressPositionRecorded = true;
 
-                mousePressPosition.X = MsRect.X;
-                mousePressPosition.Y = MsRect.Y;
+                MousePressPosition.X = MsRect.X;
+                MousePressPosition.Y = MsRect.Y;
             }
 
             if (IsEnabled && Visible == Visibility.Visible)
@@ -639,7 +639,7 @@ namespace XAMLite
                         MousePressed = true;
                     }*/
 
-                    if (Math.Abs(mousePressPosition.X - Ms.X) < 0.01 && Math.Abs(mousePressPosition.Y - Ms.Y) < 0.01)
+                    if (Math.Abs(MousePressPosition.X - Ms.X) < 0.01 && Math.Abs(MousePressPosition.Y - Ms.Y) < 0.01)
                     {
                         MousePressed = true;
                         OnMouseDown();
@@ -659,10 +659,10 @@ namespace XAMLite
                     ////}
                 }
 
-                if (Ms.LeftButton == ButtonState.Released && mousePressPositionRecorded)
+                if (Ms.LeftButton == ButtonState.Released && MousePressPositionRecorded)
                 {
                     ////MousePressed = false;
-                    mousePressPositionRecorded = false;
+                    MousePressPositionRecorded = false;
                 }
             }
         }
