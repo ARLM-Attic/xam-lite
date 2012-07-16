@@ -1,9 +1,9 @@
-﻿namespace XAMLite
-{
-    using System.Diagnostics;
-    using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Graphics;
+﻿using System.Diagnostics;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
+namespace XAMLite
+{
     /// <summary>
     /// Emulates the code behind for a xaml image.
     /// </summary>
@@ -77,7 +77,7 @@
             {
                 SpriteBatch.Begin();
 
-                SpriteBatch.Draw(Texture, Panel, (Color.White * (float)Opacity));
+                SpriteBatch.Draw(Texture, Panel, Color.White * (float)Opacity);
 
                 SpriteBatch.End();
             }

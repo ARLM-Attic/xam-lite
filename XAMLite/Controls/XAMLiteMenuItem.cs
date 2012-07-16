@@ -132,7 +132,17 @@ namespace XAMLite
         /// The rectangles used to draw the fine edges along the meu items
         /// that are colored by the stroke color.
         /// </summary>
-        private Rectangle _strokePanel;
+        ////private Rectangle _strokePanel;
+
+        private Rectangle _strokePanelTop;
+
+        private Rectangle _strokePanelBottom;
+
+        private Rectangle _strokePanelLeft;
+
+        private Rectangle _strokePanelRight;
+
+        private Rectangle _ghostRect;
 
         /// <summary>
         /// The rectangle that contains all of the submenu items of a 
@@ -229,6 +239,8 @@ namespace XAMLite
         /// True when all of the menu item variable settings have been made.
         /// </summary>
         private bool _menuItemVariablesFinalized;
+        private bool _ghostRectMeasured;
+        private bool _checkMarkRectMeasured;
 
         /// <summary>
         /// Constructor.
@@ -240,7 +252,6 @@ namespace XAMLite
             ForegroundColor = Color.White;
             _stroke = Color.Black;
             StrokeThickness = 1;
-            _strokePanel = new Rectangle();
             _subMenuPanel = new Rectangle();
             Items = new List<XAMLiteMenuItem>();
             LongestWidth = 0;
@@ -437,8 +448,12 @@ namespace XAMLite
                         var opacity = (float)Opacity * 0.45f;
 
                         // drawing the slightly transparent offset background.
-                        var ghostRect = new Rectangle(Panel.X + 5, Panel.Y + 5, Panel.Width, Panel.Height);
-                        SpriteBatch.Draw(Pixel, ghostRect, Color.Black * opacity);
+                        if (!_ghostRectMeasured)
+                        {
+                            MeasureGhostRect();
+                        }
+                        
+                        SpriteBatch.Draw(Pixel, _ghostRect, Color.Black * opacity);
 
                         // highlights the hovered menu item.
                         if (MouseEntered || (_subMenuPanel.Contains(MsRect) && Items[0].Visible == Visibility.Visible))
@@ -447,24 +462,16 @@ namespace XAMLite
                             SpriteBatch.Draw(Pixel, Panel, Color.LightGray * 0.35f);
 
                             // borders the top of the menu item
-                            _strokePanel = new Rectangle((int)Position.X - (int)Padding.Left,
-                                    (int)Position.Y, Panel.Width, StrokeThickness);
-                            SpriteBatch.Draw(Pixel, _strokePanel, _stroke * (float)Opacity);
+                            SpriteBatch.Draw(Pixel, _strokePanelTop, _stroke * (float)Opacity);
 
                             // borders the bottom of the menu item.
-                            _strokePanel = new Rectangle((int)Position.X - (int)Padding.Left,
-                                (int)Position.Y + Height - StrokeThickness, Panel.Width, StrokeThickness);
-                            SpriteBatch.Draw(Pixel, _strokePanel, _stroke * (float)Opacity);
+                            SpriteBatch.Draw(Pixel, _strokePanelBottom, _stroke * (float)Opacity);
 
                             // borders the left side of the menu item.
-                            _strokePanel = new Rectangle((int)Position.X - (int)Padding.Left,
-                                (int)Position.Y, StrokeThickness, Panel.Height);
-                            SpriteBatch.Draw(Pixel, _strokePanel, _stroke * (float)Opacity);
+                            SpriteBatch.Draw(Pixel, _strokePanelLeft, _stroke * (float)Opacity);
 
                             // borders the right side of the menu item.
-                            _strokePanel = new Rectangle((int)Position.X - (int)Padding.Left +
-                                Panel.Width - StrokeThickness, (int)Position.Y, StrokeThickness, Panel.Height);
-                            SpriteBatch.Draw(Pixel, _strokePanel, _stroke * (float)Opacity);
+                            SpriteBatch.Draw(Pixel, _strokePanelRight, _stroke * (float)Opacity);
                         }
                         else
                         {
@@ -472,15 +479,9 @@ namespace XAMLite
                             {
                                 SpriteBatch.Draw(Pixel, Panel, _backgroundColor);
 
-                                // borders the left side of the menu item.
-                                _strokePanel = new Rectangle((int)Position.X - (int)Padding.Left,
-                                    (int)Position.Y, StrokeThickness, Panel.Height);
-                                SpriteBatch.Draw(Pixel, _strokePanel, _stroke * (float)Opacity);
+                                SpriteBatch.Draw(Pixel, _strokePanelLeft, _stroke * (float)Opacity);
 
-                                // borders the right side of the menu item.
-                                _strokePanel = new Rectangle((int)Position.X - (int)Padding.Left +
-                                    Panel.Width - StrokeThickness, (int)Position.Y, StrokeThickness, Panel.Height);
-                                SpriteBatch.Draw(Pixel, _strokePanel, _stroke * (float)Opacity);
+                                SpriteBatch.Draw(Pixel, _strokePanelRight, _stroke * (float)Opacity);
                             }
                         }
                     }
@@ -502,7 +503,11 @@ namespace XAMLite
 
                 if (IsChecked)
                 {
-                    CheckMarkRect = new Rectangle((int)Position.X + 5, (int)Position.Y, CheckMark.Width, CheckMark.Height);
+                    if (!_checkMarkRectMeasured)
+                    {
+                        MeasureCheckMark();
+                    }
+
                     SpriteBatch.Draw(CheckMark, CheckMarkRect, Color.White * (float)Opacity);
                 }
 
@@ -531,6 +536,26 @@ namespace XAMLite
         }
 
         /// <summary>
+        /// Measures the rectangle to contain the check mark.
+        /// </summary>
+        private void MeasureCheckMark()
+        {
+            _checkMarkRectMeasured = true;
+
+            CheckMarkRect = new Rectangle((int)Position.X + 5, (int)Position.Y, CheckMark.Width, CheckMark.Height);
+        }
+
+        /// <summary>
+        /// Measures the ghost rectangle that traces all of the menu items.
+        /// </summary>
+        private void MeasureGhostRect()
+        {
+            _ghostRectMeasured = true;
+
+            _ghostRect = new Rectangle(Panel.X + 5, Panel.Y + 5, Panel.Width, Panel.Height);
+        }
+
+        /// <summary>
         /// When a font changes from the default, the width and height must be
         /// reset.
         /// </summary>
@@ -546,6 +571,18 @@ namespace XAMLite
             }
 
             _subMenuPanel = new Rectangle((int)Position.X + Width, (int)Position.Y - 1, LongestWidth, height - (int)Margin.Top + 2);
+
+            _strokePanelTop = new Rectangle((int)Position.X - (int)Padding.Left,
+                                    (int)Position.Y, Panel.Width, StrokeThickness);
+
+            _strokePanelBottom = new Rectangle((int)Position.X - (int)Padding.Left,
+                                (int)Position.Y + Height - StrokeThickness, Panel.Width, StrokeThickness);
+
+            _strokePanelLeft = new Rectangle((int)Position.X - (int)Padding.Left,
+                                (int)Position.Y, StrokeThickness, Panel.Height);
+
+            _strokePanelRight = new Rectangle((int)Position.X - (int)Padding.Left +
+                                Panel.Width - StrokeThickness, (int)Position.Y, StrokeThickness, Panel.Height);
         }
 
         /// <summary>
@@ -568,7 +605,6 @@ namespace XAMLite
         {
             MouseDownUpEvent();
         }
-
 
         private void MouseDownUpEvent()
         {

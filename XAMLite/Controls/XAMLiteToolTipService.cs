@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace XAMLite
+﻿namespace XAMLite
 {
     /// <summary>
     /// This is a helper class for XAMLiteToolTip and its purpose is to

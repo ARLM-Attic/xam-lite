@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using System.Windows;
+using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Windows.Media;
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
@@ -28,35 +25,61 @@ namespace XAMLite
             set { base.Text = value; }
         }
 
-        StringBuilder sb;
+        /// <summary>
+        /// 
+        /// </summary>
+        private StringBuilder _sb;
 
         /// <summary>
         /// Specifies whether text wraps when it reaches the edge of the containing box.
         /// </summary>
         public TextWrapping TextWrapping { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public TextAlignment TextAlignment { get; set; }
 
-        // public FontStyle FontStyle { get; set; } // possibly more spriteFonts preloaded??
-
-        // An idea for establishing a set of possible preloaded SpriteFonts??
+        /// <summary>
+        /// 
+        /// </summary>
         private FontFamily _fontFamily;
-        private bool fontFamilyChanged; // used in the Update() method
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        private bool _fontFamilyChanged; // used in the Update() method
 
         public FontFamily FontFamily
         {
-            get { return _fontFamily; }
-            set { _fontFamily = value; fontFamilyChanged = true; }
+            get
+            {
+                return _fontFamily;
+            }
+
+            set
+            {
+                _fontFamily = value;
+                _fontFamilyChanged = true;
+            }
         }
 
-        // character spacing for the font
+        /// <summary>
+        /// character spacing for the font
+        /// </summary>
         public int Spacing { get; set; }
 
         // public FontWeight FontWeight { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public Thickness Padding { get; set; }
 
-        Vector2 paddedPosition;
+        /// <summary>
+        /// 
+        /// </summary>
+        private Vector2 _paddedPosition;
 
         /// <summary>
         /// 
@@ -92,22 +115,21 @@ namespace XAMLite
                 var color = solidBrush.Color;
                 _backgroundColor = new Color(color.R, color.G, color.B, color.A);
 
-                if ((SolidColorBrush)value == Brushes.Transparent)
-                    transparent = true;
-                else
-                    transparent = false;
+                _transparent = value == Brushes.Transparent;
             }
         }
 
-        private bool transparent;
+        private bool _transparent;
 
-        private bool widthSet;
-        private bool heightSet;
+        private bool _widthSet;
 
-        private bool textWrappingSet;
-        private bool widthHeightContainerSet;
+        private bool _heightSet;
 
-        private bool rotated;
+        private bool _textWrappingSet;
+
+        private bool _widthHeightContainerSet;
+
+        private bool _rotated;
 
         //private bool _applyTransform;
 
@@ -141,64 +163,55 @@ namespace XAMLite
             TextWrapping = TextWrapping.Wrap;
             _foregroundColor = Color.Black;
             _backgroundColor = Color.Transparent;
-            this.SpriteFont = Courier10SpriteFont;
-            this.Padding = new Thickness(0, 0, 0, 0);
-            this.Spacing = 2;
+            SpriteFont = Courier10SpriteFont;
+            Padding = new Thickness(0, 0, 0, 0);
+            Spacing = 2;
         }
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="game"></param>
+        /// <param name="run"> </param>
         public XAMLiteTextBlock(Game game, Run run)
             : base(game)
         {
-            this.Text = run.textBlock;
+            Text = run.TextBlock;
             TextAlignment = TextAlignment.Left;
             TextWrapping = TextWrapping.Wrap;
-            this._foregroundColor = Color.Black;
-            this._backgroundColor = Color.Transparent;
-            this.Padding = new Thickness(0, 0, 0, 0);
-            //this.Visible = Visibility.Hidden;
+            _foregroundColor = Color.Black;
+            _backgroundColor = Color.Transparent;
+            Padding = new Thickness(0, 0, 0, 0);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="device"></param>
-        /// <param name="content"></param>
-        /// <param name="fontName"></param>
         protected override void LoadContent()
         {
             base.LoadContent();
 
             // triggers whether Width and Height of textblock were set by user
-            if (this.Width == 0)
-                widthSet = false;
-            else
-                widthSet = true;
-            if (this.Height == 0)
-                heightSet = false;
-            else
-                heightSet = true;
-
+            _widthSet = Width != 0;
+            _heightSet = Height != 0;
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
-            if (fontFamilyChanged)
+            if (_fontFamilyChanged)
             {
-                fontFamilyChanged = false;
+                _fontFamilyChanged = false;
                 UpdateFontFamily(_fontFamily);
-                this.SpriteFont.Spacing = Spacing;
-                RecalculateWidthAndHeight(this.Text);
+                SpriteFont.Spacing = Spacing;
+                RecalculateWidthAndHeight(Text);
             }
+
             if (MarginChanged)
             {
                 MarginChanged = false;
-                Panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+                Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
             }
         }
 
@@ -210,52 +223,55 @@ namespace XAMLite
         {
             if (Visible == Visibility.Visible)
             {
-                if (TextWrapping == TextWrapping.Wrap && !textWrappingSet)
+                if (TextWrapping == TextWrapping.Wrap && !_textWrappingSet)
                 {
-                    textWrappingSet = true;
-                    this.Text = WordWrap(this.Text, (int)this.SpriteFont.MeasureString(this.Text).X);
+                    _textWrappingSet = true;
+                    Text = WordWrap(Text, (int)SpriteFont.MeasureString(Text).X);
                 }
 
-                if (!widthHeightContainerSet)
+                if (!_widthHeightContainerSet)
                 {
-                    widthHeightContainerSet = true;
-                    CalculateWidthAndHeight(this.Text);
+                    _widthHeightContainerSet = true;
+                    CalculateWidthAndHeight(Text);
                 }
 
                 if (Rotate90)
                 {
-                    if (!rotated)
+                    if (!_rotated)
                     {
-                        rotated = true;
-                        int tempHeight = this.Height;
-                        this.Height = this.Width;
-                        this.Width = tempHeight;
+                        _rotated = true;
+                        var tempHeight = Height;
+                        Height = Width;
+                        Width = tempHeight;
                         Padding = new Thickness(Padding.Top, Padding.Left, Padding.Bottom, Padding.Right);
                         CreateTextBlockContainer();
                     }
-                    paddedPosition = new Vector2(Panel.X + Panel.Width - (int)Padding.Left, Panel.Y + (int)Padding.Top);
+
+                    _paddedPosition = new Vector2(Panel.X + Panel.Width - (int)Padding.Left, Panel.Y + (int)Padding.Top);
                 }
                 else
-                    paddedPosition = new Vector2(Panel.X + (int)Padding.Left, Panel.Y + (int)Padding.Top);
-
-
+                {
+                    _paddedPosition = new Vector2(Panel.X + (int)Padding.Left, Panel.Y + (int)Padding.Top);
+                }
 
                 SpriteBatch.Begin();
 
-                this.SpriteFont.Spacing = this.Spacing;
-                if (!transparent)
+                SpriteFont.Spacing = Spacing;
+
+                if (!_transparent)
                 {
-                    SpriteBatch.Draw(Pixel, Panel, (this._backgroundColor * (float)Opacity));
+                    SpriteBatch.Draw(Pixel, Panel, _backgroundColor * (float)Opacity);
                 }
 
                 if (Rotate90)
                 {
-                    SpriteBatch.DrawString(this.SpriteFont, this.Text, paddedPosition, (this._foregroundColor * (float)Opacity), -MathHelper.PiOver2, SpriteFont.MeasureString(this.Text), 1, SpriteEffects.None, 0);
+                    SpriteBatch.DrawString(SpriteFont, Text, _paddedPosition, _foregroundColor * (float)Opacity, -MathHelper.PiOver2, SpriteFont.MeasureString(Text), 1, SpriteEffects.None, 0);
                 }
                 else
                 {
-                    SpriteBatch.DrawString(this.SpriteFont, this.Text, paddedPosition, (this._foregroundColor * (float)Opacity));
+                    SpriteBatch.DrawString(SpriteFont, Text, _paddedPosition, _foregroundColor * (float)Opacity);
                 }
+
                 SpriteBatch.End();
             }
         }
@@ -263,8 +279,10 @@ namespace XAMLite
         // Determines the size of the textblock based on Width, Height.
         protected void CreateTextBlockContainer()
         {
-            if (this.Width != 0 && this.Height != 0)
-                Panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+            if (Width != 0 && Height != 0)
+            {
+                Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
+            }
         }
 
         /// <summary>
@@ -273,16 +291,21 @@ namespace XAMLite
         /// <param name="text"></param>
         private void CalculateWidthAndHeight(string text)
         {
-            if (!widthSet || TextWrapping == TextWrapping.NoWrap)
-                this.Width = (int)this.SpriteFont.MeasureString(text).X + (int)Padding.Left + (int)Padding.Right;
+            if (!_widthSet || TextWrapping == TextWrapping.NoWrap)
+            {
+                Width = (int)SpriteFont.MeasureString(text).X + (int)Padding.Left + (int)Padding.Right;
+            }
 
-            if (!heightSet || TextWrapping == TextWrapping.NoWrap)
-                this.Height = (int)this.SpriteFont.MeasureString(text).Y + (int)Padding.Top + (int)Padding.Bottom;
+            if (!_heightSet || TextWrapping == TextWrapping.NoWrap)
+            {
+                Height = (int)SpriteFont.MeasureString(text).Y + (int)Padding.Top + (int)Padding.Bottom;
+            }
+
             MarginChanged = true;
         }
 
         // used to break the string into seperate lines of text
-        protected const string _newline = "\r\n";
+        protected const string Newline = "\r\n";
 
         /// <summary>
         /// Word wraps the given text to fit within the specified width.
@@ -295,20 +318,26 @@ namespace XAMLite
         public string WordWrap(string text, int width)
         {
             // return if string length is less than width of textblock
-            if (this.Width > width)
+            if (Width > width)
+            {
                 return text;
+            }
 
             // just for clarity
             float strLenPixels = width;
-            int numCharsinString = 0;
+            var numCharsinString = 0;
 
             // determining total number of characters in the string 
-            for (int i = 0; i < text.Length; i++)
+            for (var i = 0; i < text.Length; i++)
+            {
                 numCharsinString++;
+            }
 
             // Now removing any whitespaces that might be at the end of the string
-            while ((numCharsinString - 1) >= 0 && Char.IsWhiteSpace(text[numCharsinString - 1]))
+            while ((numCharsinString - 1) >= 0 && char.IsWhiteSpace(text[numCharsinString - 1]))
+            {
                 numCharsinString--;
+            }
 
             // finding number of pixels per character in string length
             float pxPerChar = strLenPixels / numCharsinString;
@@ -316,66 +345,92 @@ namespace XAMLite
             // determining max number of characters per line to fit textblock
             int charsPerLine;
 
-            int paddingAdjust = (int)Padding.Left + (int)Padding.Right;
-            if (paddingAdjust < this.Width)
-                charsPerLine = (int)(this.Width / pxPerChar);
-            else
-                charsPerLine = 1;
+            var paddingAdjust = (int)Padding.Left + (int)Padding.Right;
 
-            sb = new StringBuilder();
+            if (paddingAdjust < Width)
+            {
+                charsPerLine = (int)(Width / pxPerChar);
+            }
+            else
+            {
+                charsPerLine = 1;
+            }
+
+            _sb = new StringBuilder();
             int pos, next;
             for (pos = 0; pos < text.Length; pos = next)
             {
                 // Find end of line
-                int eol = text.IndexOf(_newline, pos);
+                var eol = text.IndexOf(Newline, pos, System.StringComparison.Ordinal);
                 if (eol == -1)
+                {
                     next = eol = text.Length;
+                }
                 else
-                    next = eol + _newline.Length;
+                {
+                    next = eol + Newline.Length;
+                }
 
                 if (eol > pos)
                 {
                     do
                     {
-                        int len = eol - pos;
+                        var len = eol - pos;
                         if (len > charsPerLine)
+                        {
                             len = BreakLine(text, pos, charsPerLine);
-                        sb.Append(text, pos, len);
+                        }
+
+                        _sb.Append(text, pos, len);
 
                         // update position
                         pos += len;
 
                         // "if" statement prevents extra line being added at end of text for drawing the background block
                         if (pos != text.Length)
-                            sb.Append(_newline);
+                        {
+                            _sb.Append(Newline);
+                        }
 
                         // Trim whitespace following break
-                        while (pos < eol && Char.IsWhiteSpace(text[pos]))
+                        while (pos < eol && char.IsWhiteSpace(text[pos]))
+                        {
                             pos++;
-
-                    } while (eol > pos);
+                        }
+                    }
+                    while (eol > pos);
                 }
-                else sb.Append(_newline); // Empty line
+                else
+                {
+                    _sb.Append(Newline);
+                }
             }
 
-            return sb.ToString();
+            return _sb.ToString();
         }
 
         public int BreakLine(string text, int pos, int max)
         {
             // Find last whitespace in line
-            int i = max - 1;
-            while (i >= 0 && !Char.IsWhiteSpace(text[pos + i]))
+            var i = max - 1;
+            while (i >= 0 && !char.IsWhiteSpace(text[pos + i]))
+            {
                 i--;
+            }
+
             if (i < 0)
+            {
                 return max; // No whitespace found; break at maximum length
+            }
             // Find start of whitespace
-            while (i >= 0 && Char.IsWhiteSpace(text[pos + i]))
+            while (i >= 0 && char.IsWhiteSpace(text[pos + i]))
+            {
                 i--;
+            }
+
             // Return length of text before whitespace
             return i + 1;
         }
-
     }
 
     // for mocking the WPF constructor
@@ -383,11 +438,11 @@ namespace XAMLite
     // this value gets placed into the "string Run" of XAMLiteTextBlock.cs
     public class Run
     {
-        public string textBlock { get; set; }
+        public string TextBlock { get; set; }
 
         public Run(string textBlock)
         {
-            this.textBlock = textBlock;
+            TextBlock = textBlock;
         }
     }
 }

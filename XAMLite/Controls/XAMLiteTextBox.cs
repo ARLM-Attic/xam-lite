@@ -33,6 +33,9 @@ namespace XAMLite
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected string Cursor;
 
         /// <summary>
@@ -62,7 +65,14 @@ namespace XAMLite
         /// </summary>
         public TextAlignment TextAlignment { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private FontFamily _fontFamily;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private bool _fontFamilyChanged; // used in the Update() method
 
         /// <summary>
@@ -126,16 +136,9 @@ namespace XAMLite
             {
                 var solidBrush = (SolidColorBrush)value;
                 var color = solidBrush.Color;
-                _backgroundColor = new Color(r: color.R, g: color.G, b: color.B, a: color.A);
-
-                //if ((SolidColorBrush)value == Brushes.Transparent)
-                //    transparent = true;
-                //else
-                //    transparent = false;
+                _backgroundColor = new Color(color.R, color.G, color.B, color.A);
             }
         }
-
-        //private bool transparent;
 
         /// <summary>
         /// Determines whether the default text within the text box can be changed.
@@ -228,6 +231,10 @@ namespace XAMLite
             CursorStartPosition = new Vector2(Panel.X + (int)Padding.Left, Panel.Y + (int)Padding.Top);
         }
 
+        /// <summary>
+        /// Updates the text box.
+        /// </summary>
+        /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
             if (_fontFamilyChanged)

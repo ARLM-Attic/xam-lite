@@ -1,19 +1,9 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="XAMLiteButton.cs" company="ForgeFX">
-//   
-// </copyright>
-// <summary>
-//   Defines the XAMLiteButton type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+﻿using System.Diagnostics;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace XAMLite
 {
-    using System.Diagnostics;
-
-    using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Graphics;
-
     /// <summary>
     /// Button class with rollover texture.
     /// </summary>
@@ -22,7 +12,7 @@ namespace XAMLite
         /// <summary>
         /// The 2-D image.
         /// </summary>
-        protected Texture2D texture;
+        protected Texture2D Texture;
 
         /// <summary>
         /// This is the image file path, minus the file extension.
@@ -41,11 +31,10 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        Texture2D rolloverTexture;
+        private Texture2D _rolloverTexture;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XAMLiteButton"/> class. 
-
         /// </summary>
         /// <param name="game">
         /// Reference to the Game
@@ -79,7 +68,7 @@ namespace XAMLite
             {
                 SpriteBatch.Begin();
 
-                SpriteBatch.Draw(MouseEntered ? rolloverTexture : texture, Panel, (Color.White * (float)Opacity));
+                SpriteBatch.Draw(MouseEntered ? _rolloverTexture : Texture, Panel, Color.White * (float)Opacity);
 
                 SpriteBatch.End();
             }
@@ -93,22 +82,22 @@ namespace XAMLite
             base.LoadContent();
 
             Debug.Assert((SourceName != null), "Must set SourceName property. This is the image file path, minus the file extension.");
-            this.texture = Game.Content.Load<Texture2D>(SourceName);
+            Texture = Game.Content.Load<Texture2D>(SourceName);
 
-            if (this.Width == 0)
+            if (Width == 0)
             {
-                this.Width = this.texture.Width;
-            }
-            if (this.Height == 0)
-            {
-                this.Height = this.texture.Height;
+                Width = Texture.Width;
             }
 
+            if (Height == 0)
+            {
+                Height = Texture.Height;
+            }
 
-            this.rolloverTexture = Game.Content.Load<Texture2D>(this.RolloverSourceName);
+            _rolloverTexture = Game.Content.Load<Texture2D>(RolloverSourceName);
 
             // Sets the size and location of the image.
-            Panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
+            Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
         }
     }
 }
