@@ -79,7 +79,6 @@ namespace XAMLite
                 if (SpriteFont != null)
                 {
                     SpriteFont.Spacing = Spacing;
-                    //CalculateWidthAndHeight(value);
                     _textChanged = true;
                 }
 
@@ -461,7 +460,7 @@ namespace XAMLite
 
                     if (!_transparent)
                     {
-                        SpriteBatch.Draw(Pixel, _drawPosition, (_backgroundColor * (float)Opacity));
+                        SpriteBatch.Draw(Pixel, _drawPosition, _backgroundColor * (float)Opacity);
                     }
 
                     if (!string.IsNullOrEmpty(Name))

@@ -239,8 +239,11 @@ namespace XAMLite
         /// True when all of the menu item variable settings have been made.
         /// </summary>
         private bool _menuItemVariablesFinalized;
+
+        /// <summary>
+        /// True when the drop shadow around the menu item has been set.
+        /// </summary>
         private bool _ghostRectMeasured;
-        private bool _checkMarkRectMeasured;
 
         /// <summary>
         /// Constructor.
@@ -503,10 +506,7 @@ namespace XAMLite
 
                 if (IsChecked)
                 {
-                    if (!_checkMarkRectMeasured)
-                    {
-                        MeasureCheckMark();
-                    }
+                    MeasureCheckMark();
 
                     SpriteBatch.Draw(CheckMark, CheckMarkRect, Color.White * (float)Opacity);
                 }
@@ -540,9 +540,8 @@ namespace XAMLite
         /// </summary>
         private void MeasureCheckMark()
         {
-            _checkMarkRectMeasured = true;
-
-            CheckMarkRect = new Rectangle((int)Position.X + 5, (int)Position.Y, CheckMark.Width, CheckMark.Height);
+            CheckMarkRect.X = (int)Position.X + 5;
+            CheckMarkRect.Y = (int)Position.Y;
         }
 
         /// <summary>

@@ -8,6 +8,11 @@ namespace XAMLite
     public class XAMLiteLabelWithShadow : XAMLiteLabel
     {
         /// <summary>
+        /// Position of the drop shadow beneath the text.
+        /// </summary>
+        private readonly Vector2 _shadowPosition;
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="game"></param>
@@ -15,10 +20,11 @@ namespace XAMLite
         public XAMLiteLabelWithShadow(Game game, string initialText)
             : base(game, initialText)
         {
+            _shadowPosition = new Vector2(1, 1);
         }
 
         /// <summary>
-        /// 
+        /// Draws the Label with drop shadow.
         /// </summary>
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
@@ -27,10 +33,9 @@ namespace XAMLite
             {
                 // Begin.
                 SpriteBatch.Begin();
-
+                
                 // Draw shadow text.
-                var shadowPos = Position + new Vector2(1, 1);
-                SpriteBatch.DrawString(SpriteFont, Text, shadowPos, Color.Black * (float)Opacity);
+                SpriteBatch.DrawString(SpriteFont, Text, Position + _shadowPosition, Color.Black * (float)Opacity);
 
                 // Draw text.
                 SpriteBatch.DrawString(SpriteFont, Text, Position, ForegroundColor * (float)Opacity);
