@@ -634,11 +634,6 @@ namespace XAMLite
 
                 if (!MousePressed && Ms.LeftButton == ButtonState.Pressed && MouseEntered)
                 {
-                    /*if (!(this is XAMLiteRadioButton))
-                    {
-                        MousePressed = true;
-                    }*/
-
                     if (Math.Abs(MousePressPosition.X - Ms.X) < 0.01 && Math.Abs(MousePressPosition.Y - Ms.Y) < 0.01)
                     {
                         MousePressed = true;
@@ -649,19 +644,11 @@ namespace XAMLite
                 {
                     MousePressed = false;
 
-                    /*if (this is XAMLiteMenuItem)
-                    {
-                        OnMouseDown();
-                    }
-                    else
-                    {*/
-                        OnMouseUp();
-                    ////}
+                    OnMouseUp();
                 }
 
                 if (Ms.LeftButton == ButtonState.Released && MousePressPositionRecorded)
                 {
-                    ////MousePressed = false;
                     MousePressPositionRecorded = false;
                 }
             }

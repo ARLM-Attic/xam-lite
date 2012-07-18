@@ -269,8 +269,13 @@ namespace XAMLite
         {
             base.Initialize();
 
+            MouseUp += OnMouseUp;
             MouseDown += OnMouseDown;
-            ////MouseUp += OnMouseUp;
+        }
+
+        protected void OnMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        {
+            MouseDownUpEvent();
         }
 
         /// <summary>
@@ -593,17 +598,6 @@ namespace XAMLite
         /// <param name="sender"></param>
         /// <param name="e"></param>
         protected void OnMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            MouseDownUpEvent();
-        }
-
-        /// <summary>
-        /// When a non-menu header has a mouse up event occur, it should also
-        /// act as if a mouse down event ocurred.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="mouseButtonEventArgs"></param>
-        private void OnMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
             MouseDownUpEvent();
         }
