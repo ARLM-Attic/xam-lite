@@ -269,7 +269,7 @@ namespace XAMLite
         {
             base.Initialize();
 
-            MouseUp += OnMouseUp;
+            ////MouseUp += OnMouseUp;
             MouseDown += OnMouseDown;
         }
 
