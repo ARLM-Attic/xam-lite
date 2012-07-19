@@ -1,6 +1,5 @@
 ﻿using System.Windows.Media;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
@@ -58,15 +57,8 @@ namespace XAMLite
             _fill = Color.Transparent;
             _stroke = Color.Transparent;
             StrokeThickness = 1;
-            Pixel = new Texture2D(game.GraphicsDevice, 1, 1);
-            Pixel.SetData(new[] { Color.White });
             Width = 0;
             Height = 0;
-        }
-
-        ~XAMLiteRectangle()
-        {
-            Pixel.Dispose();
         }
 
         /// <summary>
