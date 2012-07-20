@@ -29,7 +29,7 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            if (Visible == System.Windows.Visibility.Visible)
+            if (Visible == System.Windows.Visibility.Visible && !FirstUpdate && !FontFamilyChanged)
             {
                 // Begin.
                 SpriteBatch.Begin();

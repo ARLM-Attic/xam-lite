@@ -66,7 +66,7 @@ namespace XAMLite
         /// <summary>
         /// True when the font family has changed.
         /// </summary>
-        private bool _fontFamilyChanged;
+        protected bool FontFamilyChanged;
 
         /// <summary>
         /// The font family the text belongs to.
@@ -81,7 +81,7 @@ namespace XAMLite
             set
             {
                 _fontFamily = value; 
-                _fontFamilyChanged = true; 
+                FontFamilyChanged = true; 
                 FirstUpdate = true;
             }
         }
@@ -148,20 +148,31 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            base.Update(gameTime);
+            if (FontFamilyChanged)
+            {
+                UpdateFontMeasurements();
+            }
 
             if (FirstUpdate)
             {
-                if (_fontFamilyChanged)
-                {
-                    _fontFamilyChanged = false;
-                    UpdateFontFamily(_fontFamily);
-                    SpriteFont.Spacing = Spacing;
-                    RecalculateWidthAndHeight(Text);
+                UpdateFontMeasurements();
 
-                    FirstUpdate = false;
-                }
+                FirstUpdate = false;
             }
+
+            base.Update(gameTime);
+        }
+
+        /// <summary>
+        /// Updates the spacing, font family, and retakes the string 
+        /// measurements
+        /// </summary>
+        private void UpdateFontMeasurements()
+        {
+            UpdateFontFamily(_fontFamily);
+            SpriteFont.Spacing = Spacing;
+            RecalculateWidthAndHeight(Text);
+            FontFamilyChanged = false;
         }
 
         /// <summary>
@@ -170,7 +181,7 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            if (Visible == Visibility.Visible && !FirstUpdate)
+            if (Visible == Visibility.Visible && !FirstUpdate && !FontFamilyChanged)
             {
                 SpriteBatch.Begin();
                 SpriteBatch.DrawString(SpriteFont, Text, Position, ForegroundColor * (float)Opacity);
