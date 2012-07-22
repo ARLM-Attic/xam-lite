@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
 using Microsoft.Xna.Framework;
@@ -6,8 +7,6 @@ using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {
-    using System;
-
     public class XAMLiteGrid : XAMLiteControl
     {
         /// <summary>
@@ -21,32 +20,36 @@ namespace XAMLite
         private bool _childrenLoaded;
 
         /// <summary>
-        /// 
+        /// The original margin of the grid as specified by the alignment, 
+        /// prior to being adjusted with user defined margins.
         /// </summary>
         private Thickness _originalGridMargin;
 
         /// <summary>
-        /// 
+        /// The original margin of the child as specified by the alignment, 
+        /// prior to being adjusted with user defined margins.
         /// </summary>
         private Thickness[] _originalChildMargin;
 
         /// <summary>
-        /// 
+        /// True when the horizontal alignment should be centered.
         /// </summary>
         private bool[] _isHorCentered;
 
         /// <summary>
-        /// 
+        /// True when the vertical alignment should be centered.
         /// </summary>
         private bool[] _isVerCentered;
 
         /// <summary>
-        /// 
+        /// True when the horizontal alignment should be stretched to the 
+        /// grid's width.
         /// </summary>
         private bool[] _isHorStretched;
 
         /// <summary>
-        /// 
+        /// True when the vertical alignment should be stretched to the 
+        /// grid's height.
         /// </summary>
         private bool[] _isVerStretched;
 
@@ -62,12 +65,12 @@ namespace XAMLite
         private float[] _childOpacity;
 
         /// <summary>
-        /// 
+        /// Background color of the Grid.
         /// </summary>
         private Color _backgroundColor;
 
         /// <summary>
-        /// 
+        /// Background color of the Grid.
         /// </summary>
         public Brush Background
         {
@@ -82,9 +85,13 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// true when the background color of the grid is transparent.
         /// </summary>
         private bool _transparent;
+
+        /// <summary>
+        /// True when a child of the grid becomes visible after being loaded.
+        /// </summary>
         private bool _isVisible;
 
         /// <summary>

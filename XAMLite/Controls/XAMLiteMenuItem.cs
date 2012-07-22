@@ -119,7 +119,7 @@ namespace XAMLite
         public Thickness Padding;
 
         /// <summary>
-        /// 
+        /// True when the background color of the menu item is transparent.
         /// </summary>
         private bool _transparent;
 
@@ -129,20 +129,38 @@ namespace XAMLite
         private Color _stroke;
 
         /// <summary>
-        /// The rectangles used to draw the fine edges along the meu items
-        /// that are colored by the stroke color.
+        /// The rectangle used to draw the fine edge along the top of the menu 
+        /// item that is colored by the stroke color.
         /// </summary>
-        ////private Rectangle _strokePanel;
-
         private Rectangle _strokePanelTop;
 
+        /// <summary>
+        /// The rectangle used to draw the fine edge along the bottom of the 
+        /// menu item that is colored by the stroke color.
+        /// </summary>
         private Rectangle _strokePanelBottom;
 
+        /// <summary>
+        /// The rectangle used to draw the fine edge along the left of the menu 
+        /// item that is colored by the stroke color.
+        /// </summary>
         private Rectangle _strokePanelLeft;
 
+        /// <summary>
+        /// The rectangle used to draw the fine edge along the right of the 
+        /// menu item that is colored by the stroke color.
+        /// </summary>
         private Rectangle _strokePanelRight;
 
-        private Rectangle _ghostRect;
+        /// <summary>
+        /// The container for the drop shadow around the menu item.
+        /// </summary>
+        private Rectangle _dropShadowRect;
+
+        /// <summary>
+        /// True when the drop shadow around the menu item has been set.
+        /// </summary>
+        private bool _dropShadowRectMeasured;
 
         /// <summary>
         /// The rectangle that contains all of the submenu items of a 
@@ -239,11 +257,6 @@ namespace XAMLite
         /// True when all of the menu item variable settings have been made.
         /// </summary>
         private bool _menuItemVariablesFinalized;
-
-        /// <summary>
-        /// True when the drop shadow around the menu item has been set.
-        /// </summary>
-        private bool _ghostRectMeasured;
 
         /// <summary>
         /// Constructor.
@@ -458,13 +471,13 @@ namespace XAMLite
                     {
                         var opacity = (float)Opacity * 0.45f;
 
-                        // drawing the slightly transparent offset background.
-                        if (!_ghostRectMeasured)
+                        // drawing the drop shadow.
+                        if (!_dropShadowRectMeasured)
                         {
                             MeasureGhostRect();
                         }
                         
-                        SpriteBatch.Draw(Pixel, _ghostRect, Color.Black * opacity);
+                        SpriteBatch.Draw(Pixel, _dropShadowRect, Color.Black * opacity);
 
                         // highlights the hovered menu item.
                         if (MouseEntered || (_subMenuPanel.Contains(MsRect) && Items[0].Visible == Visibility.Visible))
@@ -557,9 +570,9 @@ namespace XAMLite
         /// </summary>
         private void MeasureGhostRect()
         {
-            _ghostRectMeasured = true;
+            _dropShadowRectMeasured = true;
 
-            _ghostRect = new Rectangle(Panel.X + 5, Panel.Y + 5, Panel.Width, Panel.Height);
+            _dropShadowRect = new Rectangle(Panel.X + 5, Panel.Y + 5, Panel.Width, Panel.Height);
         }
 
         /// <summary>

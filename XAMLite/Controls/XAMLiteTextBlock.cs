@@ -26,7 +26,8 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// Used to build a string for the text block with formatting such as
+        /// characters per line.
         /// </summary>
         private StringBuilder _sb;
 
@@ -36,20 +37,23 @@ namespace XAMLite
         public TextWrapping TextWrapping { get; set; }
 
         /// <summary>
-        /// 
+        /// Specifies the alignment of the text.
         /// </summary>
         public TextAlignment TextAlignment { get; set; }
 
         /// <summary>
-        /// 
+        /// The font family the text belongs to.
         /// </summary>
         private FontFamily _fontFamily;
         
         /// <summary>
-        /// 
+        /// True when the font family has changed.
         /// </summary>
-        private bool _fontFamilyChanged; // used in the Update() method
+        private bool _fontFamilyChanged;
 
+        /// <summary>
+        /// The font family the text belongs to.
+        /// </summary>
         public FontFamily FontFamily
         {
             get
@@ -69,25 +73,25 @@ namespace XAMLite
         /// </summary>
         public int Spacing { get; set; }
 
-        // public FontWeight FontWeight { get; set; }
-
         /// <summary>
-        /// 
+        /// Amount of space between the text and the edge of the background 
+        /// that contains it.
         /// </summary>
         public Thickness Padding { get; set; }
 
         /// <summary>
-        /// 
+        /// Position at which the text should be drawn within the boundaries
+        /// of the text block.
         /// </summary>
         private Vector2 _paddedPosition;
 
         /// <summary>
-        /// 
+        /// The color of the text.
         /// </summary>
         private Color _foregroundColor;
 
         /// <summary>
-        /// 
+        /// The color of the text.
         /// </summary>
         public Brush Foreground
         {
@@ -100,12 +104,12 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// The background color of the text block that is behind the text.
         /// </summary>
         private Color _backgroundColor;
 
         /// <summary>
-        /// 
+        /// The background color of the text block that is behind the text.
         /// </summary>
         public Brush Background
         {
@@ -119,19 +123,35 @@ namespace XAMLite
             }
         }
 
+        /// <summary>
+        /// True when the background color is transparent.
+        /// </summary>
         private bool _transparent;
 
+        /// <summary>
+        /// True when the width has been set.
+        /// </summary>
         private bool _widthSet;
 
+        /// <summary>
+        /// True when the height has been set.
+        /// </summary>
         private bool _heightSet;
 
+        /// <summary>
+        /// True when the text has been word wrapped.
+        /// </summary>
         private bool _textWrappingSet;
 
+        /// <summary>
+        /// True when the width and height have been set.
+        /// </summary>
         private bool _widthHeightContainerSet;
 
+        /// <summary>
+        /// True when the text block has been rotated +/- 90 degrees.
+        /// </summary>
         private bool _rotated;
-
-        //private bool _applyTransform;
 
         /* A POTENTIAL WISH LIST FOR TEXTBLOCK
          *  TextBlock textBlock = new TextBlock(new Run("A bit of text content..."));
