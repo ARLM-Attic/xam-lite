@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Windows;
-using System.Windows.Media;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows;
+using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -53,8 +53,16 @@ namespace XAMLite
         /// </summary>
         public FontFamily FontFamily
         {
-            get { return _fontFamily; }
-            set { _fontFamily = value; fontFamilyChanged = true; }
+            get 
+            { 
+                return _fontFamily; 
+            }
+
+            set 
+            { 
+                _fontFamily = value; 
+                fontFamilyChanged = true; 
+            }
         }
 
         // character spacing
