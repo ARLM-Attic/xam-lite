@@ -442,7 +442,7 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            if (Visible == Visibility.Visible && IsEnabled)
+            if (Visible == Visibility.Visible)
             {
                 if (Items.Count > 0 && !_menuItemVariablesFinalized)
                 {
@@ -523,7 +523,14 @@ namespace XAMLite
                     SpriteBatch.Draw(Pixel, _subMenuPanel, Color.Black);
                 }
 
-                SpriteBatch.DrawString(SpriteFont, Text, _textPos, ForegroundColor * (float)Opacity);
+                if (IsEnabled)
+                {
+                    SpriteBatch.DrawString(SpriteFont, Text, _textPos, ForegroundColor * (float)Opacity);
+                }
+                else
+                {
+                    SpriteBatch.DrawString(SpriteFont, Text, _textPos, ForegroundColor * 0.3f);
+                }
 
                 if (IsChecked)
                 {
