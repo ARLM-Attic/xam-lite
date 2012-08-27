@@ -95,6 +95,7 @@
     <Compile Include="Controls\XAMLiteToolTipService.cs" />
     <Compile Include="Control\XAMLiteControl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="XAMLiteHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XAMLiteContent\XAMLiteContent.contentproj">
