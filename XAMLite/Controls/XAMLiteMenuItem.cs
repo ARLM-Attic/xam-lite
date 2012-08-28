@@ -513,7 +513,7 @@ namespace XAMLite
                     if (AllSubMenuTitles.Contains(Header))
                     {
                         ArrowRect.X = Panel.X + Panel.Width - (Arrow.Width + 5);
-                        ArrowRect.Y = Panel.Y + (Height / 3);
+                        ArrowRect.Y = (Panel.Y + (Height / 2)) - (ArrowRect.Height / 2);
                         SpriteBatch.Draw(Arrow, ArrowRect, Color.White * (float)Opacity);
                     }
                 }
