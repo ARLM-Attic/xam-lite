@@ -226,9 +226,7 @@ namespace XAMLite
             Width = TextBoxTexture.Width;
             Height = TextBoxTexture.Height;
             Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
-            TextPosition = new Vector2(Panel.X + (int)Padding.Left, Panel.Y + (int)Padding.Top);
-            CursorPosition = new Vector2(Panel.X + (int)Padding.Left, Panel.Y + (int)Padding.Top);
-            CursorStartPosition = new Vector2(Panel.X + (int)Padding.Left, Panel.Y + (int)Padding.Top);
+            CalculatePositions();
         }
 
         /// <summary>
@@ -242,6 +240,7 @@ namespace XAMLite
                 _fontFamilyChanged = false;
                 UpdateFontFamily(_fontFamily);
                 SpriteFont.Spacing = Spacing;
+                CalculatePositions();
             }
 
             // initial text box click where the default text is replaced with just a cursor.
@@ -315,6 +314,13 @@ namespace XAMLite
             base.Update(gameTime);
 
             _lastKeyboardState = _currentKeyboardState;
+        }
+
+        private void CalculatePositions()
+        {
+            TextPosition = new Vector2(Panel.X + (int)Padding.Left, (Panel.Y + (Height / 2)) - (SpriteFont.MeasureString(Text).Y / 2) + (int)Padding.Top);
+            CursorPosition = new Vector2(Panel.X + (int)Padding.Left, (Panel.Y + (Height / 2)) - (SpriteFont.MeasureString(Text).Y / 2) + (int)Padding.Top);
+            CursorStartPosition = new Vector2(Panel.X + (int)Padding.Left, (Panel.Y + (Height / 2)) - (SpriteFont.MeasureString(Text).Y / 2) + (int)Padding.Top);
         }
 
         /// <summary>

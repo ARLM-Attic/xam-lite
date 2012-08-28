@@ -53,7 +53,6 @@ namespace XAMLite
                 if (SpriteFont != null)
                 {
                     SpriteFont.Spacing = Spacing;
-                    //CalculateWidthAndHeight(value);
                     _textChanged = true;
                 }
 
