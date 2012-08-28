@@ -405,6 +405,10 @@ namespace XAMLite
                 }
             }
 
+            // This is providing enough time for the dynamic tool tip text
+            // to calculate its size prior to rendering.  Without, the text will
+            // flash outside of its tool tip container and then the container
+            // resizes.
             if (IsOpen)
             {
                 if (_visibleDelayTimeSpan > TimeSpan.Zero)
@@ -416,9 +420,10 @@ namespace XAMLite
                     _visibleDelayTimeSpan = TimeSpan.Zero;
                     Visible = Visibility.Visible;
                 }
-                
             }
 
+            // When the placement is not mouse-related, it runs a timer
+            // that determines when it should be hidden again.
             if (Visible == Visibility.Visible && Placement != PlacementMode.Mouse && Placement != PlacementMode.MousePoint)
             {
                 _visibleTimeSpan -= gameTime.ElapsedGameTime;
