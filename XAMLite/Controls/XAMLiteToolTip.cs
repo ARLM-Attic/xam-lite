@@ -225,7 +225,7 @@ namespace XAMLite
         /// <summary>
         /// Location of where the text should be drawn.
         /// </summary>
-        private Vector2 _paddedPosition;
+        private Vector2 _textPos;
 
         /// <summary>
         /// Font color.
@@ -464,10 +464,10 @@ namespace XAMLite
 
                     if (!string.IsNullOrEmpty(Name))
                     {
-                        SpriteBatch.DrawString(SpriteFont, Name, _paddedPosition, Color.Yellow);
+                        SpriteBatch.DrawString(SpriteFont, Name, _textPos, Color.Yellow);
                     }
 
-                    SpriteBatch.DrawString(SpriteFont, Text, _paddedPosition, _foregroundColor);
+                    SpriteBatch.DrawString(SpriteFont, Text, _textPos, _foregroundColor);
                 }
 
                 SpriteBatch.End();
@@ -584,7 +584,7 @@ namespace XAMLite
             _drawPosition.Height = Panel.Height;
 
             // set where the text will be drawn within the tool tip.
-            _paddedPosition = new Vector2(_drawPosition.X + (int)Padding.Left, _drawPosition.Y + (int)Padding.Top);
+            _textPos = new Vector2(_drawPosition.X + (int)Padding.Left, _drawPosition.Y + (int)Padding.Top);
 
             Panel.X = _drawPosition.X;
             Panel.Y = _drawPosition.Y;
