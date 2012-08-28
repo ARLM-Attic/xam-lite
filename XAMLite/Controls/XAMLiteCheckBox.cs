@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Color = Microsoft.Xna.Framework.Color;
 
@@ -30,23 +24,25 @@ namespace XAMLite
         {
             get
             {
-                return this.Text;
+                return Text;
             }
 
             set
             {
-                this.Text = value;
-                if (this.SpriteFont != null)
+                Text = value;
+                if (SpriteFont != null)
                 {
                     RecalculateWidthAndHeight(value);
                 }
+
                 base.Text = value;
             }
         }
 
         // An idea for establishing a set of possible preloaded SpriteFonts??
         private FontFamily _fontFamily;
-        private bool fontFamilyChanged; // used in the Update() method
+
+        private bool _fontFamilyChanged; // used in the Update() method
 
         /// <summary>
         /// 
@@ -61,12 +57,13 @@ namespace XAMLite
             set 
             { 
                 _fontFamily = value; 
-                fontFamilyChanged = true; 
+                _fontFamilyChanged = true; 
             }
         }
 
         // character spacing
         public int Spacing { get; set; }
+
         /// <summary>
         /// This is the image file path, minus the file extension.
         /// </summary>
@@ -113,15 +110,15 @@ namespace XAMLite
         public XAMLiteCheckBox(Game game)
             : base(game)
         {
-            this.Content = "";
-            this.IsChecked = false;
-            this.Text = string.Empty;
-            this._foregroundColor = Color.White;
+            Content = "";
+            IsChecked = false;
+            Text = string.Empty;
+            _foregroundColor = Color.White;
 
             CheckBoxSourceName = "Icons/RadioButton";
             CheckBoxSelectedSourceName = "Icons/RadioButtonSelected";
 
-            this.Spacing = 2;
+            Spacing = 2;
         }
 
         /// <summary>
@@ -131,7 +128,7 @@ namespace XAMLite
         {
             base.Initialize();
 
-            MouseDown += new System.Windows.Input.MouseButtonEventHandler(XAMLiteCheckBox_MouseDown);
+            MouseDown += XAMLiteCheckBoxMouseDown;
         }
 
         /// <summary>
@@ -141,14 +138,14 @@ namespace XAMLite
         {
             base.LoadContent();
 
-            RecalculateWidthAndHeight(this.Text);
+            RecalculateWidthAndHeight(Text);
 
             _checkBoxChecked = Game.Content.Load<Texture2D>(CheckBoxSelectedSourceName);
             _checkBoxUnchecked = Game.Content.Load<Texture2D>(CheckBoxSourceName);
 
-            _checkBox = new Rectangle((int)this.Position.X, (int)this.Position.Y, _checkBoxChecked.Width, _checkBoxChecked.Height);
-            _textPos = new Vector2((this.Position.X + _checkBox.Width + 10), this.Position.Y);
-            Panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, _checkBoxChecked.Width + this.Width + 10, _checkBoxChecked.Height + this.Height);
+            _checkBox = new Rectangle((int)Position.X, (int)Position.Y, _checkBoxChecked.Width, _checkBoxChecked.Height);
+            _textPos = new Vector2((Position.X + _checkBox.Width + 10), Position.Y - 2.55f);
+            Panel = new Rectangle((int)Position.X, (int)Position.Y, _checkBoxChecked.Width + Width + 10, _checkBoxChecked.Height + Height);
         }
 
         /// <summary>
@@ -161,14 +158,14 @@ namespace XAMLite
             if (MarginChanged)
             {
                 MarginChanged = false;
-                _checkBox = new Rectangle((int)this.Position.X, (int)this.Position.Y, _checkBoxChecked.Width, _checkBoxChecked.Height);
-                _textPos = new Vector2((this.Position.X + _checkBox.Width + 10), this.Position.Y);
-                Panel = new Rectangle((int)this.Position.X, (int)this.Position.Y, _checkBoxChecked.Width + this.Width + 10, this.Height);
+                _checkBox = new Rectangle((int)Position.X, (int)Position.Y, _checkBoxChecked.Width, _checkBoxChecked.Height);
+                _textPos = new Vector2((Position.X + _checkBox.Width + 10), Position.Y - 2.55f);
+                Panel = new Rectangle((int)Position.X, (int)Position.Y, _checkBoxChecked.Width + Width + 10, Height);
             }
 
-            if (fontFamilyChanged)
+            if (_fontFamilyChanged)
             {
-                fontFamilyChanged = false;
+                _fontFamilyChanged = false;
                 UpdateFontFamily(_fontFamily);
             }
         }
@@ -183,26 +180,26 @@ namespace XAMLite
             {
                 SpriteBatch.Begin();
 
-                if (this.IsEnabled)
+                if (IsEnabled)
                 {
-                    this.SpriteFont.Spacing = this.Spacing;
-                    SpriteBatch.DrawString(this.SpriteFont, Text, _textPos, this._foregroundColor);
+                    SpriteFont.Spacing = Spacing;
+                    SpriteBatch.DrawString(SpriteFont, Text, _textPos, _foregroundColor);
 
-                    if (this.IsChecked)
-                        SpriteBatch.Draw(this._checkBoxChecked, _checkBox, (Color.White * (float)Opacity));
-                    else
-                        SpriteBatch.Draw(this._checkBoxUnchecked, _checkBox, (Color.White * (float)Opacity));
+                    SpriteBatch.Draw(
+                        IsChecked ? _checkBoxChecked : _checkBoxUnchecked,
+                        _checkBox,
+                        (Color.White * (float)Opacity));
                 }
-
                 else
                 {
-                    float opacity = (float)Opacity - 0.5f;
+                    var opacity = (float)Opacity - 0.5f;
                     if (opacity < 0f)
                     {
                         opacity = 0f;
                     }
-                    SpriteBatch.DrawString(this.SpriteFont, Text, _textPos, (this._foregroundColor * opacity));
-                    SpriteBatch.Draw(this._checkBoxUnchecked, _checkBox, (Color.White * opacity));
+
+                    SpriteBatch.DrawString(SpriteFont, Text, _textPos, (_foregroundColor * opacity));
+                    SpriteBatch.Draw(_checkBoxUnchecked, _checkBox, (Color.White * opacity));
                 }
 
                 SpriteBatch.End();
@@ -214,18 +211,11 @@ namespace XAMLite
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void XAMLiteCheckBox_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void XAMLiteCheckBoxMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (IsEnabled)
             {
-                if (!this.IsChecked)
-                {
-                    this.IsChecked = true;
-                }
-                else
-                {
-                    this.IsChecked = false;
-                }
+                IsChecked = !IsChecked;
             }
         }
     }

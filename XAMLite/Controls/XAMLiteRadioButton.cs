@@ -153,7 +153,7 @@ namespace XAMLite
             _radioUnselected = Game.Content.Load<Texture2D>(RadioButtonSourceName);
 
             _radio = new Rectangle((int)Position.X, (int)Position.Y, _radioSelected.Width, _radioSelected.Height);
-            _textPos = new Vector2(Position.X + _radio.Width + 10, Position.Y);
+            _textPos = new Vector2(Position.X + _radio.Width + 10, Position.Y - 2.65f);
             Panel = new Rectangle((int)Position.X, (int)Position.Y, _radioSelected.Width + Width + 10, _radioSelected.Height + Height);
 
             AllRadioButtons.Add(this);
@@ -170,7 +170,7 @@ namespace XAMLite
             {
                 MarginChanged = false;
                 _radio = new Rectangle((int)Position.X, (int)Position.Y, _radioSelected.Width, _radioSelected.Height);
-                _textPos = new Vector2(Position.X + _radio.Width + 10, Position.Y);
+                _textPos = new Vector2(Position.X + _radio.Width + 10, Position.Y - 2.65f);
                 Panel = new Rectangle((int)Position.X, (int)Position.Y, _radioSelected.Width + Width + 10, Height);
             }
 
