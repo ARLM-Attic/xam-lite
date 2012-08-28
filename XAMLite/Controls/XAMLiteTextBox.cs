@@ -340,17 +340,6 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// Calculates the position of the text
-        /// </summary>
-        private void CalculatePositions()
-        {
-            var position = new Vector2(Panel.X + (int)Padding.Left, (Panel.Y + (Height / 2)) - (SpriteFont.MeasureString(Text).Y / 2) + (int)Padding.Top);
-            TextPosition = position;
-            CursorPosition = position;
-            CursorStartPosition = position.X;
-        }
-
-        /// <summary>
         /// Draws the text box and text.
         /// </summary>
         /// <param name="gameTime"></param>
@@ -370,6 +359,17 @@ namespace XAMLite
             }
 
             SpriteBatch.End();
+        }
+
+        /// <summary>
+        /// Calculates the position of the text
+        /// </summary>
+        private void CalculatePositions()
+        {
+            var position = new Vector2(Panel.X + (int)Padding.Left, (Panel.Y + (Height / 2)) - (SpriteFont.MeasureString(Text).Y / 2) + (int)Padding.Top);
+            TextPosition = position;
+            CursorPosition = position;
+            CursorStartPosition = position.X;
         }
 
         /// <summary>

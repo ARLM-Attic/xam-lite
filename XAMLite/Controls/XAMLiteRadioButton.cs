@@ -133,7 +133,6 @@ namespace XAMLite
             IsChecked = false;
             Text = string.Empty;
             _foregroundColor = Color.White;
-
             RadioButtonSourceName = "Icons/RadioButton";
             RadioButtonSelectedSourceName = "Icons/RadioButtonSelected";
 
@@ -152,9 +151,7 @@ namespace XAMLite
             _radioSelected = Game.Content.Load<Texture2D>(RadioButtonSelectedSourceName);
             _radioUnselected = Game.Content.Load<Texture2D>(RadioButtonSourceName);
 
-            _radio = new Rectangle((int)Position.X, (int)Position.Y, _radioSelected.Width, _radioSelected.Height);
-            _textPos = new Vector2(Position.X + _radio.Width + 10, Position.Y - 2.65f);
-            Panel = new Rectangle((int)Position.X, (int)Position.Y, _radioSelected.Width + Width + 10, _radioSelected.Height + Height);
+            CalculatePositions();
 
             AllRadioButtons.Add(this);
         }
@@ -169,15 +166,14 @@ namespace XAMLite
             if (MarginChanged)
             {
                 MarginChanged = false;
-                _radio = new Rectangle((int)Position.X, (int)Position.Y, _radioSelected.Width, _radioSelected.Height);
-                _textPos = new Vector2(Position.X + _radio.Width + 10, Position.Y - 2.65f);
-                Panel = new Rectangle((int)Position.X, (int)Position.Y, _radioSelected.Width + Width + 10, Height);
+                CalculatePositions();
             }
 
             if (_fontFamilyChanged)
             {
                 _fontFamilyChanged = false;
                 UpdateFontFamily(_fontFamily);
+                CalculatePositions();
             }
 
             if (MousePressed && !Selected && Panel.Contains(MsRect) && IsEnabled)
@@ -228,6 +224,16 @@ namespace XAMLite
             }
 
             SpriteBatch.End();
+        }
+
+        /// <summary>
+        /// Calculates the position of the text
+        /// </summary>
+        private void CalculatePositions()
+        {
+            _radio = new Rectangle((int)Position.X, (int)Position.Y, _radioSelected.Width, _radioSelected.Height);
+            _textPos = new Vector2(Position.X + _radio.Width + 10, (_radio.Y + ((float)_radio.Height / 2)) - (SpriteFont.MeasureString(Text).Y / 2));
+            Panel = new Rectangle((int)Position.X, (int)Position.Y, _radioSelected.Width + Width + 10, Height);
         }
     }
 }
