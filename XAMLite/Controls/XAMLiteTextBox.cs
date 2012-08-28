@@ -12,16 +12,39 @@ namespace XAMLite
     public class XAMLiteTextBox : XAMLiteControl
     {
         /// <summary>
-        /// 
+        /// The image that makes up the text box.
         /// </summary>
         protected Texture2D TextBoxTexture;
 
+        /// <summary>
+        /// The rectangle that is filled by the texture.
+        /// </summary>
         protected Rectangle TextBoxRectangle;
-        protected Vector2 TextPosition;
-        protected Vector2 CursorPosition;
-        protected Vector2 CursorStartPosition;
 
+        /// <summary>
+        /// The position that text is drawn.
+        /// </summary>
+        protected Vector2 TextPosition;
+
+        /// <summary>
+        /// The current position of the cursor.
+        /// </summary>
+        protected Vector2 CursorPosition;
+
+        /// <summary>
+        /// Starting position, on the X-Axis of where the cursor should
+        /// begin from.
+        /// </summary>
+        protected float CursorStartPosition;
+
+        /// <summary>
+        /// Standard upper/lowercase letters and numbers.
+        /// </summary>
         protected Keys[] StandardInputKeys;
+
+        /// <summary>
+        /// Special characters such as semicolons, brackets, etc.
+        /// </summary>
         protected Keys[] SpecialInputKeys;
 
         /// <summary>
@@ -34,7 +57,7 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// The character '|' that makes the blinking cursor.
         /// </summary>
         protected string Cursor;
 
@@ -316,11 +339,15 @@ namespace XAMLite
             _lastKeyboardState = _currentKeyboardState;
         }
 
+        /// <summary>
+        /// Calculates the position of the text
+        /// </summary>
         private void CalculatePositions()
         {
-            TextPosition = new Vector2(Panel.X + (int)Padding.Left, (Panel.Y + (Height / 2)) - (SpriteFont.MeasureString(Text).Y / 2) + (int)Padding.Top);
-            CursorPosition = new Vector2(Panel.X + (int)Padding.Left, (Panel.Y + (Height / 2)) - (SpriteFont.MeasureString(Text).Y / 2) + (int)Padding.Top);
-            CursorStartPosition = new Vector2(Panel.X + (int)Padding.Left, (Panel.Y + (Height / 2)) - (SpriteFont.MeasureString(Text).Y / 2) + (int)Padding.Top);
+            var position = new Vector2(Panel.X + (int)Padding.Left, (Panel.Y + (Height / 2)) - (SpriteFont.MeasureString(Text).Y / 2) + (int)Padding.Top);
+            TextPosition = position;
+            CursorPosition = position;
+            CursorStartPosition = position.X;
         }
 
         /// <summary>
@@ -370,7 +397,7 @@ namespace XAMLite
                 }
             }
 
-            CursorPosition.X = CursorStartPosition.X + (int)SpriteFont.MeasureString(Text).X + 2;
+            CursorPosition.X = CursorStartPosition + (int)SpriteFont.MeasureString(Text).X + 2;
         }
 
         /// <summary>
