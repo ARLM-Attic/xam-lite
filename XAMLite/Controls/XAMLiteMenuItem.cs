@@ -317,6 +317,17 @@ namespace XAMLite
                     Game.Components.Add(t);
                 }
 
+                // space for the arrow to draw.
+                Width += 20;
+
+                // Add the header to the list of submenus so that its parent
+                // menus will not close.
+                AllSubMenuTitles.Add(Header);
+                if (!OpenSubMenuDictionary.ContainsKey(Header))
+                {
+                    OpenSubMenuDictionary.Add(Header, false);
+                }
+
                 CalculateGreatestWidth();
 
                 SetWidthAndHeight();
@@ -409,6 +420,16 @@ namespace XAMLite
                     }
                     else if (Items.Count > 0 && !_subMenuPanel.Contains(MsRect))
                     {
+                        // Check whether the submenu has a submenu.  If so,
+                        // don't close the menu.
+                        foreach (var xamLiteMenuItem in Items)
+                        {
+                            if (xamLiteMenuItem.Items.Count > 0 && xamLiteMenuItem.Items[0].Visible == Visibility.Visible)
+                            {
+                                return;
+                            }
+                        }
+
                         SubMenuOpened = false;
                         SubMenuKeyAdded = false;
                         if (OpenSubMenuDictionary.ContainsKey(Header))
