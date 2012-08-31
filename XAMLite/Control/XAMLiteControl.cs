@@ -37,7 +37,7 @@ namespace XAMLite
         /// <summary>
         /// Set this to false to prevent all XAMLite objects from drawing.
         /// </summary>
-        private bool _isDrawingAllowed = true;
+        public static bool IsDrawingAllowed = true;
 
         /// <summary>
         /// The state of the mouse, whether pressed, released, etc.
@@ -657,7 +657,7 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            if (_isDrawingAllowed)
+            if (IsDrawingAllowed)
             {
                 base.Draw(gameTime);
             }
