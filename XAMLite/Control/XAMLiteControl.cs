@@ -35,6 +35,11 @@ namespace XAMLite
     public class XAMLiteControl : DrawableGameComponent
     {
         /// <summary>
+        /// Set this to false to prevent all XAMLite objects from drawing.
+        /// </summary>
+        private bool _isDrawingAllowed = true;
+
+        /// <summary>
         /// The state of the mouse, whether pressed, released, etc.
         /// </summary>
         protected static MouseState Ms;
@@ -643,6 +648,22 @@ namespace XAMLite
                 {
                     MousePressPositionRecorded = false;
                 }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Draw(GameTime gameTime)
+        {
+            if (_isDrawingAllowed)
+            {
+                base.Draw(gameTime);
+            }
+            else
+            {
+                Visible = Visibility.Hidden;
             }
         }
 

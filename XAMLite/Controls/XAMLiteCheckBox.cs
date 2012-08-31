@@ -176,6 +176,8 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
+            base.Draw(gameTime);
+
             if (Visible == System.Windows.Visibility.Visible)
             {
                 SpriteBatch.Begin();
