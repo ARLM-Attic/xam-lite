@@ -21,5 +21,17 @@ namespace XAMLite
                 control.Dispose();
             }
         }
+
+        /// <summary>
+        /// Calls dispose on a list of active XAMLiteMenuItems.
+        /// </summary>
+        /// <param name="items"> </param>
+        public static void SafeDisposeMenuItems(List<XAMLiteMenuItem> items)
+        {
+            foreach (var xamLiteMenuItem in items)
+            {
+                xamLiteMenuItem.Dispose();
+            }
+        }
     }
 }
