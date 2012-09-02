@@ -14,7 +14,7 @@ namespace XAMLite
         /// Calls dispose, but does a null check first.
         /// </summary>
         /// <param name="control"></param>
-        public static void SafeDispose (XAMLiteControl control)
+        public static void SafeDispose(XAMLiteControl control)
         {
             if (control != null)
             {
