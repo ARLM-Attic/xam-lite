@@ -30,10 +30,7 @@ namespace XAMLite
         {
             foreach (var menuItem in menuItems)
             {
-                if (menuItem != null)
-                {
-                    menuItem.Dispose();
-                }
+                SafeDispose(menuItem);
             }
         }
     }
