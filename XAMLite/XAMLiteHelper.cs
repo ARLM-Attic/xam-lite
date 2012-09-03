@@ -23,14 +23,17 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// Calls dispose on a list of active XAMLiteMenuItems.
+        /// Calls dispose on a list of XAMLiteMenuItems, but does a null check on each first.
         /// </summary>
         /// <param name="items"> </param>
-        public static void SafeDisposeMenuItems(List<XAMLiteMenuItem> items)
+        public static void SafeDisposeMenuItems(List<XAMLiteMenuItem> menuItems)
         {
-            foreach (var xamLiteMenuItem in items)
+            foreach (var menuItem in menuItems)
             {
-                xamLiteMenuItem.Dispose();
+                if (menuItem != null)
+                {
+                    menuItem.Dispose();
+                }
             }
         }
     }
