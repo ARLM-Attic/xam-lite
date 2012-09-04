@@ -85,7 +85,7 @@ namespace XAMLite
         /// <summary>
         /// True when the header width and height has been set.
         /// </summary>
-        private bool _headerSizesSet;
+        private bool headerSizesSet;
 
         /// <summary>
         /// Constructor.
@@ -219,18 +219,28 @@ namespace XAMLite
                     }
                 }
 
+                // let this continue to size itself until first mouse over.
+                // This prevents problems that occur when the user starts
+                // an application with their mouse already over the position 
+                // of a menu.
+                if (!headerSizesSet)
+                {
+                    SetHeaderWidthAndHeight();
+                }
+
                 if (MouseEntered)
                 {
-                    if (!_headerSizesSet)
-                    {
-                        SetHeaderWidthAndHeight();
-                    }
-                    
                     Background = Brushes.LightGray;
                 }
                 else if (_fullMenuOpen)
                 {
                     Background = Brushes.LightGray;
+
+                    // this stops the sizing from perpetually updating.
+                    if (!headerSizesSet)
+                    {
+                        headerSizesSet = true;
+                    }
                 }
                 else
                 {
@@ -336,7 +346,7 @@ namespace XAMLite
         /// </summary>
         private void SetHeaderWidthAndHeight()
         {
-            _headerSizesSet = true;
+            //_headerSizesSet = true;
             Panel = new Rectangle((int)Items[0].Position.X, (int)Items[0].Position.Y, Items[0].Width + (int)Items[0].Padding.Left + (int)Items[0].Padding.Right, Items[0].Height + (int)Items[0].Padding.Top + (int)Items[0].Padding.Bottom);
         }
 
