@@ -12,7 +12,7 @@ namespace XAMLite
         /// <summary>
         /// The 2-D image.
         /// </summary>
-        protected Texture2D Texture;
+        public Texture2D Texture;
 
         /// <summary>
         /// This is the image file path, minus the file extension.
@@ -31,7 +31,7 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        private Texture2D _rolloverTexture;
+        public Texture2D RolloverTexture;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XAMLiteButton"/> class. 
@@ -70,7 +70,7 @@ namespace XAMLite
             {
                 SpriteBatch.Begin();
 
-                SpriteBatch.Draw(MouseEntered ? _rolloverTexture : Texture, Panel, Color.White * (float)Opacity);
+                SpriteBatch.Draw(MouseEntered ? RolloverTexture : Texture, Panel, Color.White * (float)Opacity);
 
                 SpriteBatch.End();
             }
@@ -96,7 +96,7 @@ namespace XAMLite
                 Height = Texture.Height;
             }
 
-            _rolloverTexture = Game.Content.Load<Texture2D>(RolloverSourceName);
+            RolloverTexture = Game.Content.Load<Texture2D>(RolloverSourceName);
 
             // Sets the size and location of the image.
             Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);

@@ -12,7 +12,7 @@ namespace XAMLite
         /// <summary>
         /// The 2-D image.
         /// </summary>
-        protected Texture2D Texture;
+        public Texture2D Texture;
 
         /// <summary>
         /// This is the image file path, minus the file extension.
