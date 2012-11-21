@@ -234,7 +234,7 @@ namespace XAMLite
         private void CalculatePositions()
         {
             _radio = new Rectangle((int)Position.X, (int)Position.Y, _radioSelected.Width, _radioSelected.Height);
-            _textPos = new Vector2(Position.X + _radio.Width + 10, (_radio.Y + ((float)_radio.Height / 2)) - (SpriteFont.MeasureString(Text).Y / 2));
+            _textPos = new Vector2(Position.X + _radio.Width + 10, (Position.Y + ((float)_radio.Height / 2)) - (SpriteFont.MeasureString(Text).Y / 2));
             Panel = new Rectangle((int)Position.X, (int)Position.Y, _radioSelected.Width + Width + 10, Height);
         }
     }
