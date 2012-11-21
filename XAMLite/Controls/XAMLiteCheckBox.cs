@@ -159,7 +159,7 @@ namespace XAMLite
             {
                 MarginChanged = false;
                 _checkBox = new Rectangle((int)Position.X, (int)Position.Y, _checkBoxChecked.Width, _checkBoxChecked.Height);
-                _textPos = new Vector2((Position.X + _checkBox.Width + 10), Position.Y - 2.55f);
+                _textPos = new Vector2((Position.X + _checkBox.Width + 10), Position.Y + ((float)_checkBoxChecked.Height / 2) - (SpriteFont.MeasureString(Text).Y / 2));
                 Panel = new Rectangle((int)Position.X, (int)Position.Y, _checkBoxChecked.Width + Width + 10, Height);
             }
 
