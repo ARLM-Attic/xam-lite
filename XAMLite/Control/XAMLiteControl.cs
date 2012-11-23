@@ -635,13 +635,16 @@ namespace XAMLite
                     {
                         MousePressed = true;
                         OnMouseDown();
-                    }   
+                    }
                 }
-                else if (MousePressed && Ms.LeftButton == ButtonState.Released && MouseEntered)
+                else if (MousePressed && Ms.LeftButton == ButtonState.Released)
                 {
                     MousePressed = false;
 
-                    OnMouseUp();
+                    if (MouseEntered)
+                    {
+                        OnMouseUp();
+                    }
                 }
 
                 if (Ms.LeftButton == ButtonState.Released && MousePressPositionRecorded)
