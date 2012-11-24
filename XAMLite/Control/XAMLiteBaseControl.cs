@@ -286,6 +286,17 @@ namespace XAMLite
         protected static Vector2 MousePressPosition;
 
         /// <summary>
+        /// True when all of the static lists that contain menu headers, sub
+        /// menu headers, radio buttons, etc. get instantiated.
+        /// </summary>
+        protected static bool StaticVariablesCreated;
+
+        /// <summary>
+        /// List of every radio button in the UI.
+        /// </summary>
+        protected static List<XAMLiteRadioButton> AllRadioButtons;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="game"></param>
@@ -299,6 +310,14 @@ namespace XAMLite
             Visible = new Visibility();
             Visible = Visibility.Visible;
             IsEnabled = true;
+
+            if (!StaticVariablesCreated)
+            {
+                MousePressPosition = new Vector2();
+                AllRadioButtons = new List<XAMLiteRadioButton>();
+                
+                StaticVariablesCreated = true;
+            }
         }
 
         /// <summary>
