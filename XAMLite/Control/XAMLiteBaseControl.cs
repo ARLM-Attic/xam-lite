@@ -343,7 +343,7 @@ namespace XAMLite
                 SpriteBatch = new SpriteBatch(Game.GraphicsDevice);
 
                 // for Background Color
-                Pixel = new Texture2D(GraphicsDevice, 1, 1);
+                Pixel = new Texture2D(Game.GraphicsDevice, 1, 1);
                 Pixel.SetData(new[] { Color.White });
             }
         }
