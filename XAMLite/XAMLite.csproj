@@ -93,7 +93,11 @@
     <Compile Include="Controls\XAMLiteTextBox.cs" />
     <Compile Include="Controls\XAMLiteToolTip.cs" />
     <Compile Include="Controls\XAMLiteToolTipService.cs" />
+    <Compile Include="Control\XAMLiteBaseContent.cs" />
+    <Compile Include="Control\XAMLiteBaseControl.cs" />
+    <Compile Include="Control\XAMLiteBaseText.cs" />
     <Compile Include="Control\XAMLiteControl.cs" />
+    <Compile Include="Control\XAMLiteBaseContentControl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XAMLiteHelper.cs" />
   </ItemGroup>
