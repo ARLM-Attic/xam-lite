@@ -7,7 +7,7 @@ using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {
-    public class XAMLiteGrid : XAMLiteControl
+    public class XAMLiteGrid : XAMLiteBaseControl
     {
         /// <summary>
         /// Maintains a list of all controls contained within the grid.
