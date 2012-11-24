@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
+using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {
@@ -14,6 +16,11 @@ namespace XAMLite
         /// clicked.
         /// </summary>
         private Texture2D _texture;
+
+        /// <summary>
+        /// Text or a single object.
+        /// </summary>
+        public object Content { get; set; }
 
         /// <summary>
         /// This is the image file path, minus the file extension for the basic
@@ -36,6 +43,34 @@ namespace XAMLite
         }
 
         /// <summary>
+        /// The font family the text belongs to.
+        /// </summary>
+        private FontFamily _fontFamily;
+
+        /// <summary>
+        /// True when the font family has changed.
+        /// </summary>
+        protected bool FontFamilyChanged;
+
+        /// <summary>
+        /// The font family the text belongs to.
+        /// </summary>
+        public FontFamily FontFamily
+        {
+            get
+            {
+                return _fontFamily;
+            }
+
+            set
+            {
+                _fontFamily = value;
+                FontFamilyChanged = true;
+                FirstUpdate = true;
+            }
+        }
+
+        /// <summary>
         /// The clicked 2-D image for the button.
         /// </summary>
         private Texture2D _clickTexture;
@@ -46,6 +81,29 @@ namespace XAMLite
         public string ClickSourceName { get; set; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        private Color _foregroundColor;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Brush Foreground
+        {
+            set
+            {
+                var solidBrush = (SolidColorBrush)value;
+                var color = solidBrush.Color;
+                _foregroundColor = new Color(color.R, color.G, color.B, color.A);
+            }
+        }
+
+        /// <summary>
+        /// character spacing.
+        /// </summary>
+        public int Spacing { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="XAMLiteButton"/> class. 
         /// </summary>
         /// <param name="game">
@@ -54,6 +112,7 @@ namespace XAMLite
         public XAMLiteButton(Game game)
             : base(game)
         {
+            Spacing = 0;
         }
 
         /// <summary>
@@ -102,7 +161,35 @@ namespace XAMLite
                 MarginChanged = false;
                 Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
             }
+
+            if (FontFamilyChanged)
+            {
+                UpdateFontMeasurements();
+            }
         }
+
+        /// <summary>
+        /// Updates the spacing, font family, and retakes the string 
+        /// measurements
+        /// </summary>
+        private void UpdateFontMeasurements()
+        {
+            UpdateFontFamily(_fontFamily);
+            SpriteFont.Spacing = Spacing;
+            RecalculateWidthAndHeight(Content);
+            FontFamilyChanged = false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="content"></param>
+        protected void RecalculateWidthAndHeight(object content)
+        {
+            Width = (int)SpriteFont.MeasureString(content.ToString()).X;
+            var height = (int)SpriteFont.MeasureString(content.ToString()).Y;
+            Height = height > _texture.Height ? height : _texture.Height;
+        } 
 
         /// <summary>
         /// Draws the Button.
@@ -136,6 +223,11 @@ namespace XAMLite
                         _texture,
                         Panel,
                         Color.White * (float)Opacity);
+                }
+
+                if (Content != null)
+                {
+                    SpriteBatch.DrawString(SpriteFont, Content.ToString(), new Vector2(Panel.X, Panel.Y), _foregroundColor * (float)Opacity);
                 }
 
                 SpriteBatch.End();
