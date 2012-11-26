@@ -1,7 +1,7 @@
-﻿using System.Windows.Media;
+﻿using System.Diagnostics;
+using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Diagnostics;
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite

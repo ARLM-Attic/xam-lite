@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace XAMLite
 {
-    using System.Windows.Media;
+    using System.Windows;
 
     /// <summary>
     /// TODO: Update summary.
@@ -20,107 +21,160 @@ namespace XAMLite
         protected SpriteFont SpriteFont;
 
         /// <summary>
-        /// Arial 10 pt font
+        /// The font family the text belongs to.
+        /// </summary>
+        protected FontFamily _fontFamily;
+
+        /// <summary>
+        /// The font family the text belongs to.
+        /// </summary>
+        public FontFamily FontFamily
+        {
+            get
+            {
+                return _fontFamily;
+            }
+
+            set
+            {
+                _fontFamily = value;
+                FontFamilyChanged = true;
+                //FirstUpdate = true;
+            }
+        }
+
+        //private Vector2 _contentPosition;
+
+        protected Vector2 ContentPosition
+        {
+            get
+            {
+                return new Vector2((float)(Margin.Left + Padding.Left), (float)(Margin.Top + Padding.Top));
+            } 
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Thickness Padding { get; set; }
+
+        /// <summary>
+        /// True when the font family has changed.
+        /// </summary>
+        protected bool FontFamilyChanged;
+
+        /// <summary>
+        /// The color of the content, whether text or some other object.
+        /// </summary>
+        public Brush Foreground { protected get; set; }
+
+        /// <summary>
+        /// Character spacing.
+        /// </summary>
+        public int Spacing { get; set; }
+
+        /// <summary>
+        /// Arial 10 point font
         /// </summary>
         protected static SpriteFont ArialSpriteFont { get; private set; }
 
         /// <summary>
-        /// Courier 10 pt font
+        /// Courier 10 point font
         /// </summary>
         protected static SpriteFont Courier10SpriteFont { get; private set; }
 
         /// <summary>
-        /// Courier 20pt font.
+        /// Courier 20 point font.
         /// </summary>
         protected static SpriteFont Courier20SpriteFont { get; private set; }
 
         /// <summary>
-        /// Verdana 10 pt font.
+        /// Verdana 10 point font.
         /// </summary>
         protected static SpriteFont Verdana10SpriteFont { get; private set; }
 
         /// <summary>
-        /// Verdana 10 pt Bold font.
+        /// Verdana 10 point Bold font.
         /// </summary>
         protected static SpriteFont Verdana10BoldSpriteFont { get; private set; }
 
         /// <summary>
-        /// Verdana 11 pt font.
+        /// Verdana 11 point font.
         /// </summary>
         protected static SpriteFont Verdana11SpriteFont { get; private set; }
 
         /// <summary>
-        /// Verdana 11 pt Bold font.
+        /// Verdana 11 point Bold font.
         /// </summary>
         protected static SpriteFont Verdana11BoldSpriteFont { get; private set; }
 
         /// <summary>
-        /// Verdana 12 pt font.
+        /// Verdana 12 point font.
         /// </summary>
         protected static SpriteFont Verdana12SpriteFont { get; private set; }
 
         /// <summary>
-        /// Verdana 12 pt Bold font.
+        /// Verdana 12 point Bold font.
         /// </summary>
         protected static SpriteFont Verdana12BoldSpriteFont { get; private set; }
 
         /// <summary>
-        /// Verdana 13 pt font.
+        /// Verdana 13 point font.
         /// </summary>
         protected static SpriteFont Verdana13SpriteFont { get; private set; }
 
         /// <summary>
-        /// Verdana 13 pt Bold font.
+        /// Verdana 13 point Bold font.
         /// </summary>
         protected static SpriteFont Verdana13BoldSpriteFont { get; private set; }
 
         /// <summary>
-        /// Verdana 14 pt font.
+        /// Verdana 14 point font.
         /// </summary>
         protected static SpriteFont Verdana14SpriteFont { get; private set; }
 
         /// <summary>
-        /// Verdana 14 pt Bold font.
+        /// Verdana 14 point Bold font.
         /// </summary>
         protected static SpriteFont Verdana14BoldSpriteFont { get; private set; }
 
         /// <summary>
-        /// Verdana 15 pt font.
+        /// Verdana 15 point font.
         /// </summary>
         protected static SpriteFont Verdana15SpriteFont { get; private set; }
 
         /// <summary>
-        /// Verdana 16 pt font.
+        /// Verdana 16 point font.
         /// </summary>
         protected static SpriteFont Verdana16SpriteFont { get; private set; }
 
         /// <summary>
-        /// Verdana 16 pt Bold font.
+        /// Verdana 16 point Bold font.
         /// </summary>
         protected static SpriteFont Verdana16BoldSpriteFont { get; private set; }
 
         /// <summary>
-        /// Verdana 20 pt font.
+        /// Verdana 20 point font.
         /// </summary>
         protected static SpriteFont Verdana20SpriteFont { get; private set; }
 
         /// <summary>
-        /// Verdana 20 pt Bold font.
+        /// Verdana 20 point Bold font.
         /// </summary>
         protected static SpriteFont Verdana20BoldSpriteFont { get; private set; }
 
         /// <summary>
-        /// Verdana 24 pt Bold font.
+        /// Verdana 24 point Bold font.
         /// </summary>
         protected static SpriteFont Verdana24BoldSpriteFont { get; private set; }
 
         /// <summary>
-        /// Verdana 60 pt font.
+        /// Verdana 60 point font.
         /// </summary>
         protected static SpriteFont Verdana60SpriteFont { get; private set; }
 
         /// <summary>
-        /// Verdana 60 pt Bold font.
+        /// Verdana 60 point Bold font.
         /// </summary>
         protected static SpriteFont Verdana60BoldSpriteFont { get; private set; }
 
@@ -130,7 +184,11 @@ namespace XAMLite
         /// <param name="game"></param>
         public XAMLiteBaseContentControl(Game game)
             : base(game)
-        {    
+        {
+            //_contentPosition = new Vector2();
+            Foreground = Brushes.White;
+            Padding = new Thickness();
+            Spacing = 0;
         }
 
         /// <summary>
@@ -164,6 +222,31 @@ namespace XAMLite
 
             //Default this controls font
             SpriteFont = Courier10SpriteFont;
+        }
+
+        /// <summary>
+        /// Updates the Button.
+        /// </summary>
+        /// <param name="gameTime">Reference to the GameTime.</param>
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            if (FontFamilyChanged)
+            {
+                UpdateFontMeasurements();
+            }
+        }
+
+        /// <summary>
+        /// Updates the spacing, font family, and retakes the string 
+        /// measurements
+        /// </summary>
+        protected virtual void UpdateFontMeasurements()
+        {
+            UpdateFontFamily(_fontFamily);
+            SpriteFont.Spacing = Spacing;
+            FontFamilyChanged = false;
         }
 
         /// <summary>
@@ -243,8 +326,10 @@ namespace XAMLite
         /// <summary>
         /// Recalculate the width and height of the control.
         /// </summary>
-        protected virtual void RecalculateWidthAndHeight()
+        protected virtual void RecalculateWidthAndHeight(object content)
         {
+            Width = (int)SpriteFont.MeasureString(content.ToString()).X;
+            Height = (int)SpriteFont.MeasureString(content.ToString()).Y;
         }
     }
 }

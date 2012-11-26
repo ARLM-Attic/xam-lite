@@ -79,11 +79,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controls\XAMLiteButton.cs" />
+    <Compile Include="Controls\XAMLiteButtonNew.cs" />
     <Compile Include="Controls\XAMLiteCheckBox.cs" />
+    <Compile Include="Controls\XAMLiteCheckBoxNew.cs" />
     <Compile Include="Controls\XAMLiteGrid.cs" />
+    <Compile Include="Controls\XAMLiteGridNew.cs" />
     <Compile Include="Controls\XAMLiteImage.cs" />
+    <Compile Include="Controls\XAMLiteImageNew.cs" />
     <Compile Include="Controls\XAMLiteImageWithRollover.cs" />
     <Compile Include="Controls\XAMLiteLabel.cs" />
+    <Compile Include="Controls\XAMLiteLabelNew.cs" />
     <Compile Include="Controls\XAMLiteLabelWithShadow.cs" />
     <Compile Include="Controls\XAMLiteMenu.cs" />
     <Compile Include="Controls\XAMLiteMenuItem.cs" />

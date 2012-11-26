@@ -7,12 +7,12 @@ using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {
-    public class XAMLiteGrid : XAMLiteControl
+    public class XAMLiteGridNew : XAMLiteBaseControl
     {
         /// <summary>
         /// Maintains a list of all controls contained within the grid.
         /// </summary>
-        public List<XAMLiteControl> Children { get; set; }
+        public List<XAMLiteBaseControl> Children { get; set; }
 
         /// <summary>
         /// Used to determine whether the child has been loaded into the grid.
@@ -85,6 +85,32 @@ namespace XAMLite
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        //public override Thickness Margin
+        //{
+        //    get
+        //    {
+        //        return base.Margin;
+        //    }
+
+        //    set
+        //    {
+        //        base.Margin = value;
+
+        //        //Panel = new Rectangle((int)Position.X - (int)_originalGridMargin.Left + (int)Margin.Left + (int)_originalGridMargin.Right - (int)Margin.Right,
+        //        //    (int)Position.Y - (int)_originalGridMargin.Top + (int)Margin.Top + (int)_originalGridMargin.Bottom - (int)Margin.Bottom,
+        //        //    Width,
+        //        //    Height);
+
+        //        if (_childrenLoaded)
+        //        {
+        //            //ModifyChildren();
+        //        }
+        //    }
+        //}
+
+        /// <summary>
         /// true when the background color of the grid is transparent.
         /// </summary>
         private bool _transparent;
@@ -98,10 +124,10 @@ namespace XAMLite
         /// Constructor.
         /// </summary>
         /// <param name="game"></param>
-        public XAMLiteGrid(Game game)
+        public XAMLiteGridNew(Game game)
             : base(game)
         {
-            Children = new List<XAMLiteControl>();
+            Children = new List<XAMLiteBaseControl>();
         }
 
         /// <summary>
@@ -130,16 +156,6 @@ namespace XAMLite
             if (!_childrenLoaded)
             {
                 LoadChildren(gameTime);
-            }
-
-            if (MarginChanged)
-            {
-                MarginChanged = false;
-                Panel = new Rectangle((int)Position.X - (int)_originalGridMargin.Left + (int)Margin.Left + (int)_originalGridMargin.Right - (int)Margin.Right,
-                    (int)Position.Y - (int)_originalGridMargin.Top + (int)Margin.Top + (int)_originalGridMargin.Bottom - (int)Margin.Bottom,
-                    Width,
-                    Height);
-                ModifyChildren();
             }
 
             // Update Visibility of Children
@@ -218,23 +234,23 @@ namespace XAMLite
                 t.Visible = Visibility.Hidden;
             }
 
-            Panel = new Rectangle((int)Position.X - (int)_originalGridMargin.Left +
-                    (int)Margin.Left + (int)_originalGridMargin.Right - (int)Margin.Right,
-                    (int)Position.Y - (int)_originalGridMargin.Top + (int)Margin.Top + (int)_originalGridMargin.Bottom - (int)Margin.Bottom, Width, Height);
+            //Panel = new Rectangle((int)Position.X - (int)_originalGridMargin.Left +
+            //        (int)Margin.Left + (int)_originalGridMargin.Right - (int)Margin.Right,
+            //        (int)Position.Y - (int)_originalGridMargin.Top + (int)Margin.Top + (int)_originalGridMargin.Bottom - (int)Margin.Bottom, Width, Height);
 
-            for (var i = 0; i < Children.Count; i++)
-            {
-                _originalChildMargin[i] = new Thickness(Children[i].Margin.Left, Children[i].Margin.Top,
-                    Children[i].Margin.Right, Children[i].Margin.Bottom);
-            }
+            //for (var i = 0; i < Children.Count; i++)
+            //{
+            //    _originalChildMargin[i] = new Thickness(Children[i].Margin.Left, Children[i].Margin.Top,
+            //        Children[i].Margin.Right, Children[i].Margin.Bottom);
+            //}
 
-            ModifyChildren();
+            //ModifyChildren();
 
             // Add the child component to the game with the modified parameters.
             foreach (var t in Children)
             {
                 Game.Components.Add(t);
-                t.Update(gameTime);
+                //t.Update(gameTime);
             }
         }
 
@@ -347,7 +363,7 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// Stores the visibilty of the child.
+        /// Stores the visibility of the child.
         /// </summary>
         private void RecordChildVisibility()
         {
@@ -365,7 +381,7 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// This toggles the visibilty of the child to Hidden when the grid becomes hidden.  However, if
+        /// This toggles the visibility of the child to Hidden when the grid becomes hidden.  However, if
         /// the grid becomes visible again, the child visibilities are reset to what they were prior.
         /// </summary>
         private void UpdateChildVisibility()

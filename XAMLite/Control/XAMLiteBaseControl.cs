@@ -122,13 +122,12 @@ namespace XAMLite
         /// <summary>
         /// The margin of the control.
         /// </summary>
-        /// 
         private Thickness _margin;
 
         /// <summary>
         /// The margins on all sides of the control.
         /// </summary>
-        public Thickness Margin
+        public virtual Thickness Margin
         {
             get
             {
@@ -138,38 +137,30 @@ namespace XAMLite
             set
             {
                 _margin = value;
-
-                MarginChanged = true;
             }
         }
 
         /// <summary>
-        /// Prevents each control from perpetually updating each item in its Update method until necessary.
-        /// </summary>
-        protected bool MarginChanged;
-
-        /// <summary>
-        /// The position of the control on the screen.
-        /// TODO: Ultimately, this must be removed.  It doesn't exist in WPF
-        /// </summary>
-        public Vector2 Position
+         /// The position of the control on the screen.
+         /// </summary>
+        protected Vector2 Position
         {
             get
             {
                 // X
-                var x = 0;
+                var x = 0f;
                 switch (HorizontalAlignment)
                 {
                     case HorizontalAlignment.Center:
-                        x = (Viewport.Width - Width) / 2;
+                        x = ((float)(Viewport.Width - Width) / 2) + (float)Margin.Left - (float)Margin.Right;
                         break;
 
                     case HorizontalAlignment.Left:
-                        x = (int)Margin.Left;
+                        x = (float)Margin.Left;
                         break;
 
                     case HorizontalAlignment.Right:
-                        x = Viewport.Width - (int)Margin.Right - Width;
+                        x = Viewport.Width - (float)Margin.Right - Width;
                         break;
 
                     case HorizontalAlignment.Stretch:
@@ -178,15 +169,15 @@ namespace XAMLite
                 }
 
                 // Y
-                var y = 0;
+                var y = 0f;
                 switch (VerticalAlignment)
                 {
                     case VerticalAlignment.Bottom:
-                        y = Viewport.Height - Height - (int)Margin.Bottom;
+                        y = Viewport.Height - Height - (float)Margin.Bottom;
                         break;
 
                     case VerticalAlignment.Center:
-                        y = (Viewport.Height / 2) - (Height / 2);
+                        y = ((float)(Viewport.Height - Height) / 2) + (float)Margin.Top - (float)Margin.Bottom;
                         break;
 
                     case VerticalAlignment.Stretch:
@@ -305,11 +296,12 @@ namespace XAMLite
         {
             HorizontalAlignment = HorizontalAlignment.Left;
             VerticalAlignment = VerticalAlignment.Top;
-            Margin = new Thickness(0, 0, 0, 0);
             Opacity = 1.0;
             Visible = new Visibility();
             Visible = Visibility.Visible;
             IsEnabled = true;
+            _margin = new Thickness(0, 0, 0, 0);
+            Viewport = Game.GraphicsDevice.Viewport;
 
             if (!StaticVariablesCreated)
             {
@@ -318,16 +310,6 @@ namespace XAMLite
                 
                 StaticVariablesCreated = true;
             }
-        }
-
-        /// <summary>
-        /// Initializes the graphics device and viewport.
-        /// </summary>
-        public override void Initialize()
-        {
-            Viewport = Game.GraphicsDevice.Viewport;
-
-            base.Initialize();
         }
 
         /// <summary>
@@ -346,6 +328,9 @@ namespace XAMLite
                 Pixel = new Texture2D(Game.GraphicsDevice, 1, 1);
                 Pixel.SetData(new[] { Color.White });
             }
+
+            // Sets the size and location of the image.
+            Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
         }
 
         /// <summary>
