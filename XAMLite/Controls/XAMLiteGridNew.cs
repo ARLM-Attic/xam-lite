@@ -20,40 +20,6 @@ namespace XAMLite
         private bool _childrenLoaded;
 
         /// <summary>
-        /// The original margin of the grid as specified by the alignment, 
-        /// prior to being adjusted with user defined margins.
-        /// </summary>
-        private Thickness _originalGridMargin;
-
-        /// <summary>
-        /// The original margin of the child as specified by the alignment, 
-        /// prior to being adjusted with user defined margins.
-        /// </summary>
-        private Thickness[] _originalChildMargin;
-
-        /// <summary>
-        /// True when the horizontal alignment should be centered.
-        /// </summary>
-        private bool[] _isHorCentered;
-
-        /// <summary>
-        /// True when the vertical alignment should be centered.
-        /// </summary>
-        private bool[] _isVerCentered;
-
-        /// <summary>
-        /// True when the horizontal alignment should be stretched to the 
-        /// grid's width.
-        /// </summary>
-        private bool[] _isHorStretched;
-
-        /// <summary>
-        /// True when the vertical alignment should be stretched to the 
-        /// grid's height.
-        /// </summary>
-        private bool[] _isVerStretched;
-
-        /// <summary>
         /// Holds a record of the child's natural visibility prior to being affected by the grid.
         /// </summary>
         private bool[] _childVisibility;
@@ -85,32 +51,6 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        //public override Thickness Margin
-        //{
-        //    get
-        //    {
-        //        return base.Margin;
-        //    }
-
-        //    set
-        //    {
-        //        base.Margin = value;
-
-        //        //Panel = new Rectangle((int)Position.X - (int)_originalGridMargin.Left + (int)Margin.Left + (int)_originalGridMargin.Right - (int)Margin.Right,
-        //        //    (int)Position.Y - (int)_originalGridMargin.Top + (int)Margin.Top + (int)_originalGridMargin.Bottom - (int)Margin.Bottom,
-        //        //    Width,
-        //        //    Height);
-
-        //        if (_childrenLoaded)
-        //        {
-        //            //ModifyChildren();
-        //        }
-        //    }
-        //}
-
-        /// <summary>
         /// true when the background color of the grid is transparent.
         /// </summary>
         private bool _transparent;
@@ -128,21 +68,6 @@ namespace XAMLite
             : base(game)
         {
             Children = new List<XAMLiteBaseControl>();
-        }
-
-        /// <summary>
-        /// Loads the content of the grid.
-        /// </summary>
-        protected override void LoadContent()
-        {
-            base.LoadContent();
-
-            _originalGridMargin = Margin;
-            _originalChildMargin = new Thickness[Children.Count];
-            _isHorCentered = new bool[Children.Count];
-            _isVerCentered = new bool[Children.Count];
-            _isHorStretched = new bool[Children.Count];
-            _isVerStretched = new bool[Children.Count];
         }
 
         /// <summary>
@@ -234,131 +159,10 @@ namespace XAMLite
                 t.Visible = Visibility.Hidden;
             }
 
-            //Panel = new Rectangle((int)Position.X - (int)_originalGridMargin.Left +
-            //        (int)Margin.Left + (int)_originalGridMargin.Right - (int)Margin.Right,
-            //        (int)Position.Y - (int)_originalGridMargin.Top + (int)Margin.Top + (int)_originalGridMargin.Bottom - (int)Margin.Bottom, Width, Height);
-
-            //for (var i = 0; i < Children.Count; i++)
-            //{
-            //    _originalChildMargin[i] = new Thickness(Children[i].Margin.Left, Children[i].Margin.Top,
-            //        Children[i].Margin.Right, Children[i].Margin.Bottom);
-            //}
-
-            //ModifyChildren();
-
             // Add the child component to the game with the modified parameters.
             foreach (var t in Children)
             {
                 Game.Components.Add(t);
-                //t.Update(gameTime);
-            }
-        }
-
-        /// <summary>
-        /// Modifies the child's margin properties to adhere to the grid
-        /// </summary>
-        private void ModifyChildren()
-        {
-            double left = 0;
-            double top = 0;
-            double right = 0;
-            double bottom = 0;
-
-            for (int i = 0; i < Children.Count; i++)
-            {
-                if (Children[i].Width > Width)
-                {
-                    Children[i].Width = Width;
-                }
-
-                if (Children[i].Height > Height)
-                {
-                    Children[i].Height = Height;
-                }
-
-                switch (Children[i].HorizontalAlignment)
-                {
-                    // Child component is on the left
-                    case HorizontalAlignment.Left:
-                        // a cheat to override the nature of our centering process
-                        if (!_isHorCentered[i])
-                        {
-                            left = Panel.X + _originalChildMargin[i].Left;
-                        }
-                        else if (_isHorStretched[i])
-                        {
-                            left = Width;
-                        }
-                        else
-                        {
-                            left = Panel.X + Width / 2 - Children[i].Width / 2 + _originalChildMargin[i].Left - _originalChildMargin[i].Right;
-                        }
-
-                        break;
-
-                    // Child component is on the right
-                    case HorizontalAlignment.Right:
-                        right = Viewport.Width - (Panel.X + Width) + _originalChildMargin[i].Right;
-                        break;
-
-                    // Child component is centered
-                    case HorizontalAlignment.Center:
-                        _isHorCentered[i] = true;
-                        // a cheat to override the nature of our centering process
-                        Children[i].HorizontalAlignment = HorizontalAlignment.Left;
-                        left = Panel.X + (Width / 2) - (Children[i].Width / 2) + _originalChildMargin[i].Left - _originalChildMargin[i].Right;
-                        break;
-
-                    case HorizontalAlignment.Stretch:
-                        _isHorStretched[i] = true;
-                        // a cheat to override the nature of our centering process
-                        Children[i].HorizontalAlignment = HorizontalAlignment.Left;
-                        Children[i].Width = Width - (int)_originalChildMargin[i].Left - (int)_originalChildMargin[i].Right;
-                        left = Panel.X + _originalChildMargin[i].Left;
-                        right = Viewport.Width - (Panel.X + Width) + _originalChildMargin[i].Right;
-                        break;
-                }
-
-                switch (Children[i].VerticalAlignment)
-                {
-                    case VerticalAlignment.Bottom:
-                        bottom = Viewport.Height - (Panel.Y + Height) + _originalChildMargin[i].Bottom;
-                        break;
-
-                    case VerticalAlignment.Center:
-                        _isVerCentered[i] = true;
-                        Children[i].VerticalAlignment = VerticalAlignment.Top;
-                        top = Panel.Y + (Height / 2) - (Children[i].Height / 2) + _originalChildMargin[i].Top - _originalChildMargin[i].Bottom;
-                        break;
-
-                    case VerticalAlignment.Stretch:
-                        _isVerStretched[i] = true;
-                        // a cheat to override the nature of our centering process
-                        Children[i].VerticalAlignment = VerticalAlignment.Top;
-                        Children[i].Height = Height - (int)_originalChildMargin[i].Top - (int)_originalChildMargin[i].Bottom;
-                        top = Panel.Y + _originalChildMargin[i].Top;
-                        bottom = Viewport.Height - (Panel.Y + Height) + _originalChildMargin[i].Bottom;
-                        break;
-
-                    case VerticalAlignment.Top:
-                        if (!_isVerCentered[i])
-                        {
-                            top = Panel.Y + _originalChildMargin[i].Top;
-                        }
-                        else if (_isVerStretched[i])
-                        {
-                            top = Children[i].Height;
-                        }
-                        else
-                        {
-                            top = Panel.Y + Height / 2 - Children[i].Height / 2 + _originalChildMargin[i].Top - _originalChildMargin[i].Bottom;
-                        }
-
-                        break;
-                }
-
-                // Reset Margin
-                Children[i].Margin = new Thickness(left, top, right, bottom);
             }
         }
 

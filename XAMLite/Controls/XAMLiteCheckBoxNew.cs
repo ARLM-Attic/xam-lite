@@ -71,29 +71,6 @@ namespace XAMLite
         /// <summary>
         /// True once the assets for the XAMLiteControl have been positioned.
         /// </summary>
-        //private bool _isPositioned;
-
-        public override Thickness Margin
-        {
-            get
-            {
-                return base.Margin;
-            }
-
-            set
-            {
-                base.Margin = value;
-
-                //if (_checkedTexture != null)
-                //{
-                //    _checkBox = new Rectangle(
-                //        (int)Position.X, (int)Position.Y, _checkedTexture.Width, _checkedTexture.Height);
-                //    label.Margin = new Thickness(Margin.Left + _checkBox.Width, Margin.Top, Margin.Right, Margin.Bottom);
-                //    Panel = new Rectangle((int)Position.X, (int)Position.Y, _checkedTexture.Width + Width + 10, Height);
-                //}
-            }
-        }
-
         private bool _isPositioned;
 
         /// <summary>
@@ -143,8 +120,6 @@ namespace XAMLite
             {
                 _checkedHoverTexture = Game.Content.Load<Texture2D>(HoverCheckedSourceName);
             }
-
-            //_checkBox = new Rectangle((int)Position.X, (int)Position.Y, _checkedTexture.Width, _checkedTexture.Height);
 
             label = new XAMLiteLabelNew(Game)
                 {
