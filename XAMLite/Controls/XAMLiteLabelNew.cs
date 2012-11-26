@@ -3,7 +3,8 @@
 namespace XAMLite
 {
     /// <summary>
-    /// 
+    /// Note: Currently under development.  Continue to use normal
+    /// XAMLiteLabel class until this class replaces it.
     /// </summary>
     /// <see cref="http://msdn.microsoft.com/en-us/library/ms611056.aspx"/>
     public class XAMLiteLabelNew : XAMLiteBaseContent

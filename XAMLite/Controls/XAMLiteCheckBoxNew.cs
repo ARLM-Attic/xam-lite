@@ -6,6 +6,10 @@ using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {
+    /// <summary>
+    /// Note: Currently under development.  Continue to use normal
+    /// XAMLiteCheckBox class until this class replaces it.
+    /// </summary>
     public class XAMLiteCheckBoxNew : XAMLiteBaseContent
     {
         /// <summary>

@@ -7,6 +7,9 @@ namespace XAMLite
 {
     /// <summary>
     /// Button class with rollover and mouse down textures.
+    /// 
+    /// Note: Currently under development.  Continue to use normal
+    /// XAMLiteButton class until this class replaces it.
     /// </summary>
     public class XAMLiteButtonNew : XAMLiteBaseContent
     {

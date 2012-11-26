@@ -6,6 +6,9 @@ namespace XAMLite
 {
     /// <summary>
     /// Emulates the code behind for a xaml image.
+    /// 
+    /// Note: Currently under development.  Continue to use normal
+    /// XAMLiteImage class until this class replaces it.
     /// </summary>
     public class XAMLiteImageNew : XAMLiteBaseControl
     {
