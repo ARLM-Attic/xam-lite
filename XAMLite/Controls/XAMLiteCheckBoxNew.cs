@@ -2,10 +2,12 @@
 using System.Windows;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {
+    using System.Windows.Media;
+    using Color = Microsoft.Xna.Framework.Color;
+
     /// <summary>
     /// Note: Currently under development.  Continue to use normal
     /// XAMLiteCheckBox class until this class replaces it.
@@ -107,8 +109,6 @@ namespace XAMLite
         /// </summary>
         protected override void LoadContent()
         {
-            base.LoadContent();
-
             Debug.Assert((SourceName != null), "Must set CheckBoxSourceName property. This is the image file path, minus the file extension.");
             _texture = Game.Content.Load<Texture2D>(SourceName);
 
@@ -131,13 +131,15 @@ namespace XAMLite
                     Foreground = Foreground,
                     HorizontalAlignment = HorizontalAlignment,
                     VerticalAlignment = VerticalAlignment,
-                    Margin = new Thickness(Position.X + Width, Position.Y, Margin.Right, Margin.Bottom),
+                    AttachedToOtherControl = true,
                     Padding = new Thickness(5, 0, 0, 0),
                     FontFamily = FontFamily,
                     Spacing = Spacing
                 };
 
             Game.Components.Add(label);
+
+            base.LoadContent();
         }
 
         /// <summary>
@@ -208,7 +210,8 @@ namespace XAMLite
                 Width = _checkedTexture.Width + 5 + (int)SpriteFont.MeasureString(label.Content.ToString()).X;
                 _checkBox = new Rectangle(
                     (int)Position.X, (int)Position.Y, _checkedTexture.Width, _checkedTexture.Height);
-                label.Margin = new Thickness(Position.X + _checkBox.Width, Position.Y, Margin.Right, Margin.Bottom);
+                label.Margin = new Thickness(Position.X + _checkBox.Width, Position.Y + ((float)_checkedTexture.Height / 2) - (SpriteFont.MeasureString(Content.ToString()).Y / 2), Margin.Right, Margin.Bottom);
+                //label.Margin = new Thickness(Position.X + _checkBox.Width, Position.Y, Margin.Right, Margin.Bottom);
                 Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
             }
         }

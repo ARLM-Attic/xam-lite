@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace XAMLite
 {
+    using System.Drawing;
     using System.Windows;
+    using Brush = System.Windows.Media.Brush;
+    using Brushes = System.Windows.Media.Brushes;
+    using FontFamily = System.Windows.Media.FontFamily;
+    using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
     /// <summary>
     /// TODO: Update summary.
@@ -42,8 +46,6 @@ namespace XAMLite
                 //FirstUpdate = true;
             }
         }
-
-        //private Vector2 _contentPosition;
 
         protected Vector2 ContentPosition
         {
@@ -328,8 +330,16 @@ namespace XAMLite
         /// </summary>
         protected virtual void RecalculateWidthAndHeight(object content)
         {
-            Width = (int)SpriteFont.MeasureString(content.ToString()).X;
-            Height = (int)SpriteFont.MeasureString(content.ToString()).Y;
+            if (content != null)
+            {
+                Width = (int)SpriteFont.MeasureString(content.ToString()).X + (int)Padding.Left + (int)Padding.Right;
+                //double h = SpriteFont.MeasureString(content.ToString()).Y + Padding.Top + Padding.Bottom;
+                //System.Console.WriteLine("Double: " + h);
+                Height = (int)SpriteFont.MeasureString(content.ToString()).Y  + (int)Padding.Top + (int)Padding.Bottom;
+                System.Console.WriteLine("Height: " + Height);
+                Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
+                System.Console.WriteLine("Panel: " + Panel);
+            }
         }
     }
 }

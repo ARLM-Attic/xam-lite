@@ -40,12 +40,21 @@ namespace XAMLite
         /// </summary>
         private Texture2D _clickTexture;
 
+        private Texture2D _edgeTextureNormal;
+
+        private Texture2D _edgeTextureOver;
+
+        private Texture2D _edgeTextureDown;
+
         /// <summary>
         /// This is the image file path, minus the file extension for the Clicked Button image.
         /// </summary>
         public string ClickSourceName { get; set; }
 
-        //private int count = 0;
+        /// <summary>
+        /// True when default textures are being used.
+        /// </summary>
+        private bool _isDefaultTextures;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XAMLite.XAMLiteButton"/> class. 
@@ -63,30 +72,59 @@ namespace XAMLite
         /// </summary>
         protected override void LoadContent()
         {
-            Debug.Assert((SourceName != null), "Must set SourceName property. This is the image file path, minus the file extension.");
-            _texture = Game.Content.Load<Texture2D>(SourceName);
-
-            if (Width == 0)
+            if (SourceName == null)
             {
-                Width = _texture.Width;
+                LoadDefaultTextures();
             }
+            //else
+            //{
+                _texture = Game.Content.Load<Texture2D>(SourceName);
 
-            if (Height == 0)
-            {
-                Height = _texture.Height;
-            }
+                if (Width == 0)
+                {
+                    Width = _texture.Width;
+                }
 
-            if (RolloverSourceName != null)
-            {
-                _rolloverTexture = Game.Content.Load<Texture2D>(RolloverSourceName);
-            }
+                if (Height == 0)
+                {
+                    Height = _texture.Height;
+                }
 
-            if (ClickSourceName != null)
-            {
-                _clickTexture = Game.Content.Load<Texture2D>(ClickSourceName);
-            }
+                if (RolloverSourceName != null)
+                {
+                    _rolloverTexture = Game.Content.Load<Texture2D>(RolloverSourceName);
+                }
+
+                if (ClickSourceName != null)
+                {
+                    _clickTexture = Game.Content.Load<Texture2D>(ClickSourceName);
+                }
+            //}
 
             base.LoadContent();
+        }
+
+        /// <summary>
+        /// Loads default textures when the basic texture has not been set.
+        /// </summary>
+        private void LoadDefaultTextures()
+        {
+            _isDefaultTextures = true;
+
+            _edgeTextureNormal = Game.Content.Load<Texture2D>("Images/ButtonEdgeNormal");
+            _edgeTextureOver = Game.Content.Load<Texture2D>("Images/ButtonEdgeOver");
+            _edgeTextureDown = Game.Content.Load<Texture2D>("Images/ButtonEdgeDown");
+
+            SourceName = "Images/ButtonCenterNormal";
+            RolloverSourceName = "Images/ButtonCenterOver";
+            ClickSourceName = "Images/ButtonCenterDown";
+
+            if (Content != null)
+            {
+                RecalculateWidthAndHeight(Content);
+
+                Width += (int)Padding.Left + (int)Padding.Right + _edgeTextureNormal.Width;
+            }
         }
 
         /// <summary>
@@ -97,8 +135,11 @@ namespace XAMLite
         {
             base.RecalculateWidthAndHeight(content);
 
-            var height = (int)SpriteFont.MeasureString(content.ToString()).Y;
-            Height = height > _texture.Height ? height : _texture.Height;
+            if (content != null)
+            {
+                var height = (int)SpriteFont.MeasureString(content.ToString()).Y;
+                Height = height > _texture.Height ? height : _texture.Height;
+            }
         }
 
         /// <summary>
@@ -131,6 +172,11 @@ namespace XAMLite
                         _texture,
                         Panel,
                         Color.White * (float)Opacity);
+                }
+
+                if (_isDefaultTextures)
+                {
+                    
                 }
 
                 SpriteBatch.End();

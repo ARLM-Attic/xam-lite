@@ -12,6 +12,9 @@ using Point = Microsoft.Xna.Framework.Point;
 
 namespace XAMLite
 {
+    using System.Windows.Media;
+    using Color = Microsoft.Xna.Framework.Color;
+
     /// <summary>
     /// The base class for all XAMLite objects.
     /// </summary>
@@ -120,6 +123,33 @@ namespace XAMLite
         protected bool OpacityChanged;
 
         /// <summary>
+        /// Background color of the Grid.
+        /// </summary>
+        private Color _backgroundColor;
+
+        /// <summary>
+        /// Background color of the Grid.
+        /// </summary>
+        public Brush Background
+        {
+            set
+            {
+                var solidBrush = (SolidColorBrush)value;
+                var color = solidBrush.Color;
+                _backgroundColor = new Color(color.R, color.G, color.B, color.A);
+
+                _transparent = value == Brushes.Transparent;
+
+                System.Console.WriteLine("Setting background: " + _backgroundColor.ToString() + " Width: " + Width + " " + _transparent);
+            }
+        }
+
+        /// <summary>
+        /// true when the background color is transparent.
+        /// </summary>
+        private bool _transparent;
+
+        /// <summary>
         /// The margin of the control.
         /// </summary>
         private Thickness _margin;
@@ -189,7 +219,6 @@ namespace XAMLite
                         break;
                 }
 
-                //
                 return new Vector2(x, y);
             }
         }
@@ -331,6 +360,8 @@ namespace XAMLite
 
             // Sets the size and location of the image.
             Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
+
+            base.LoadContent();
         }
 
         /// <summary>
@@ -342,6 +373,40 @@ namespace XAMLite
             base.Update(gameTime);
 
             HandleInput(gameTime);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Draw(GameTime gameTime)
+        {
+            base.Draw(gameTime);
+
+            if (Visible == Visibility.Visible)
+            {
+                SpriteBatch.Begin();
+
+                if (!_transparent)
+                {
+                    if (this is XAMLiteLabelNew)
+                    {
+                        SpriteBatch.Draw(
+                            Pixel,
+                            new Rectangle(Panel.X, Panel.Y, Panel.Width, Panel.Height - (int)(Height * 0.3)),
+                            _backgroundColor * (float)Opacity);
+                    }
+                    else
+                    {
+                        SpriteBatch.Draw(
+                            Pixel,
+                            Panel,
+                            _backgroundColor * (float)Opacity);
+                    }
+                }
+
+                SpriteBatch.End();
+            }
         }
 
         /// <summary>

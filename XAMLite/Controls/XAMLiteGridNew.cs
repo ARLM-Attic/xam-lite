@@ -35,34 +35,43 @@ namespace XAMLite
         private float[] _childOpacity;
 
         /// <summary>
-        /// Background color of the Grid.
-        /// </summary>
-        private Color _backgroundColor;
-
-        /// <summary>
-        /// Background color of the Grid.
-        /// </summary>
-        public Brush Background
-        {
-            set
-            {
-                var solidBrush = (SolidColorBrush)value;
-                var color = solidBrush.Color;
-                _backgroundColor = new Color(color.R, color.G, color.B, color.A);
-
-                _transparent = value == Brushes.Transparent;
-            }
-        }
-
-        /// <summary>
-        /// true when the background color of the grid is transparent.
-        /// </summary>
-        private bool _transparent;
-
-        /// <summary>
         /// True when a child of the grid becomes visible after being loaded.
         /// </summary>
         private bool _isVisible;
+
+        ///// <summary>
+        ///// The original margin of the grid as specified by the alignment, 
+        ///// prior to being adjusted with user defined margins.
+        ///// </summary>
+        //private Thickness _originalGridMargin;
+
+        ///// <summary>
+        ///// The original margin of the child as specified by the alignment, 
+        ///// prior to being adjusted with user defined margins.
+        ///// </summary>
+        //private Thickness[] _originalChildMargin;
+
+        ///// <summary>
+        ///// True when the horizontal alignment should be centered.
+        ///// </summary>
+        //private bool[] _isHorCentered;
+
+        ///// <summary>
+        ///// True when the vertical alignment should be centered.
+        ///// </summary>
+        //private bool[] _isVerCentered;
+
+        ///// <summary>
+        ///// True when the horizontal alignment should be stretched to the 
+        ///// grid's width.
+        ///// </summary>
+        //private bool[] _isHorStretched;
+
+        ///// <summary>
+        ///// True when the vertical alignment should be stretched to the 
+        ///// grid's height.
+        ///// </summary>
+        //private bool[] _isVerStretched;
 
         /// <summary>
         /// Constructor.
@@ -84,7 +93,7 @@ namespace XAMLite
 
             if (!_childrenLoaded)
             {
-                LoadChildren(gameTime);
+                LoadChildren();
             }
 
             // Update Visibility of Children
@@ -123,31 +132,9 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// Draws the background for the grid, if it exists.
-        /// </summary>
-        /// <param name="gameTime"></param>
-        public override void Draw(GameTime gameTime)
-        {
-            base.Draw(gameTime);
-
-            if (Visible == Visibility.Visible)
-            {
-                SpriteBatch.Begin();
-
-                if (!_transparent)
-                {
-                    SpriteBatch.Draw(Pixel, Panel, _backgroundColor * (float)Opacity);
-                }
-
-                SpriteBatch.End();
-            }
-        }
-
-        /// <summary>
         /// Loads the children once the grid has been set up.
         /// </summary>
-        /// <param name="gameTime"> </param>
-        private void LoadChildren(GameTime gameTime)
+        private void LoadChildren()
         {
             _childrenLoaded = true;
 

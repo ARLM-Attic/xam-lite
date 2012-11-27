@@ -36,8 +36,6 @@ namespace XAMLite
         /// </summary>
         protected override void LoadContent()
         {
-            base.LoadContent();
-
             Debug.Assert((SourceName != null), "Must set SourceName property. This is the image file path, minus the file extension.");
             _texture = Game.Content.Load<Texture2D>(SourceName);
 
@@ -50,6 +48,8 @@ namespace XAMLite
             {
                 Height = _texture.Height;
             }
+
+            base.LoadContent();
         }
 
         /// <summary>
