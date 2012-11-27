@@ -37,5 +37,16 @@ namespace XAMLite
         {
             Content = content;
         }
+
+        public override void Draw(GameTime gameTime)
+        {
+            base.Draw(gameTime);
+
+            // for debugging purposes.
+            SpriteBatch.Begin();
+            //SpriteBatch.Draw(Pixel, new Rectangle((int)Position.X, (int)Position.Y, 1, 1), Color.Red);
+            //SpriteBatch.Draw(Pixel, new Rectangle((int)Position.X, (int)Position.Y + Height, 1, 1), Color.Red);
+            SpriteBatch.End();
+        }
     }
 }

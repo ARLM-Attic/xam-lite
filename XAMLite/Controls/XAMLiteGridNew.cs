@@ -73,6 +73,31 @@ namespace XAMLite
         ///// </summary>
         //private bool[] _isVerStretched;
 
+        private Vector2 _topLeftCorner
+        {
+            get { return Position; }
+        }
+
+        private Vector2 _topRightCorner
+        {
+            get { return new Vector2(Position.X + Width, Position.Y); }
+        }
+
+        private Vector2 _bottomLeftCorner
+        {
+            get { return new Vector2(Position.X, Position.Y + Height); }
+        }
+
+        private Vector2 _bottomRightCorner
+        {
+            get { return new Vector2(Position.X + Width, Position.Y + Height); }
+        }
+
+        private Vector2 _center
+        {
+            get { return new Vector2(Position.X + (float)Width / 2, Position.Y + (float)Height / 2); }
+        }
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -132,6 +157,24 @@ namespace XAMLite
         }
 
         /// <summary>
+        ///  Used only for debugging purposes.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Draw(GameTime gameTime)
+        {
+            base.Draw(gameTime);
+
+            SpriteBatch.Begin();
+            // For debugging: Draw a dot in the corners and center of the grid.
+            //SpriteBatch.Draw(Pixel, new Rectangle((int)_topLeftCorner.X, (int)_topLeftCorner.Y, 1, 1), Color.Aquamarine);
+            //SpriteBatch.Draw(Pixel, new Rectangle((int)_bottomLeftCorner.X, (int)_bottomLeftCorner.Y, 1, 1), Color.Aquamarine);
+            //SpriteBatch.Draw(Pixel, new Rectangle((int)_topRightCorner.X, (int)_topRightCorner.Y, 1, 1), Color.Aquamarine);
+            //SpriteBatch.Draw(Pixel, new Rectangle((int)_bottomRightCorner.X, (int)_bottomRightCorner.Y, 1, 1), Color.Aquamarine);
+            //SpriteBatch.Draw(Pixel, new Rectangle((int)_center.X, (int)_center.Y, 1, 1), Color.Aquamarine);
+            SpriteBatch.End();
+        }
+
+        /// <summary>
         /// Loads the children once the grid has been set up.
         /// </summary>
         private void LoadChildren()
@@ -145,15 +188,79 @@ namespace XAMLite
             RecordChildVisibility();
 
             // Add the child component to the game with the modified parameters.
-            foreach (var t in Children)
+            foreach (var child in Children)
             {
-                t.Visible = Visibility.Hidden;
+                child.Visible = Visibility.Hidden;
+                child.AttachedToGrid = true;
             }
 
+            double left = 0;
+            double top = 0;
+            double right = 0;
+            double bottom = 0;
+
             // Add the child component to the game with the modified parameters.
-            foreach (var t in Children)
+            foreach (var child in Children)
             {
-                Game.Components.Add(t);
+                // if the child is larger than the grid, resize the object
+                // to the grid dimensions.
+                if (child.Width > Width)
+                {
+                    child.Width = Width;
+                }
+
+                if (child.Height > Height)
+                {
+                    child.Height = Height;
+                }
+
+                var th = child.Margin;
+
+                var difference = th.Left - th.Right;
+                switch (child.HorizontalAlignment)
+                {
+                    case HorizontalAlignment.Center:
+                        var viewPortCenter = Viewport.X + (Viewport.Width / 2);
+                        var centerDifference = viewPortCenter - _center.X;
+                        left = -centerDifference + difference;
+                        break;
+                    case HorizontalAlignment.Left:
+                        left = _topLeftCorner.X + th.Left;
+                        break;
+                    case HorizontalAlignment.Right:
+                        right = Viewport.Width - _topRightCorner.X + th.Right;
+                        break;
+                    case HorizontalAlignment.Stretch:
+                        child.HorizontalAlignment = HorizontalAlignment.Left;
+                        child.Width = (Width - (int)difference) > 0 ? Width - (int)difference : 0;
+                        left = _topLeftCorner.X + th.Left;
+                        break;
+                }
+
+                difference = th.Top - th.Bottom;
+                switch (child.VerticalAlignment)
+                {
+                    case VerticalAlignment.Center:
+                        var viewPortCenter = Viewport.Y + (Viewport.Height / 2);
+                        var centerDifference = viewPortCenter - _center.Y;
+                        top = -centerDifference + difference;
+                        break;
+                    case VerticalAlignment.Top:
+                        top = _topLeftCorner.Y + th.Top;
+                        break;
+                    case VerticalAlignment.Bottom:
+                        bottom = Viewport.Height - _bottomLeftCorner.Y + th.Bottom;
+                        break;
+                    case VerticalAlignment.Stretch:
+                        child.VerticalAlignment = VerticalAlignment.Top;
+                        child.Height = (Height - (int)difference) > 0 ? Height - (int)difference : 0;
+                        top = _topLeftCorner.Y + th.Top;
+                        break;
+                }
+
+                Game.Components.Add(child);
+                child.Margin = new Thickness(left, top, right, bottom);
+                Console.WriteLine(child.Margin);
             }
         }
 

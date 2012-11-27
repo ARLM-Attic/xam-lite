@@ -10,12 +10,6 @@ namespace XAMLite
     public class XAMLiteBaseContent : XAMLiteBaseContentControl
     {
         /// <summary>
-        /// True when the control is a part of another control.  For example, 
-        /// a XAMLiteLabel associated with the XAMLiteCheckBox class.
-        /// </summary>
-        protected internal bool AttachedToOtherControl;
-
-        /// <summary>
         /// Object contained in the control, which might include
         /// string, date/time, etc.
         /// </summary>
@@ -54,7 +48,7 @@ namespace XAMLite
             if (Content != null)
             {
                 SpriteBatch.Begin();
-                if (this is XAMLiteLabelNew && !AttachedToOtherControl)
+                if (this is XAMLiteLabelNew && !AttachedToGrid)
                 {
                     SpriteBatch.DrawString(
                         SpriteFont,

@@ -4,17 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Color = Microsoft.Xna.Framework.Color;
 using Mouse = Microsoft.Xna.Framework.Input.Mouse;
 using Point = Microsoft.Xna.Framework.Point;
 
 namespace XAMLite
 {
-    using System.Windows.Media;
-    using Color = Microsoft.Xna.Framework.Color;
-
     /// <summary>
     /// The base class for all XAMLite objects.
     /// </summary>
@@ -150,6 +149,12 @@ namespace XAMLite
         private bool _transparent;
 
         /// <summary>
+        /// True when the control is a part of another control.  For example, 
+        /// a XAMLiteLabel associated with the XAMLiteCheckBox class.
+        /// </summary>
+        protected internal bool AttachedToGrid;
+        
+        /// <summary>
         /// The margin of the control.
         /// </summary>
         private Thickness _margin;
@@ -167,6 +172,8 @@ namespace XAMLite
             set
             {
                 _margin = value;
+
+                Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
             }
         }
 
@@ -348,7 +355,6 @@ namespace XAMLite
         {
             // If the sprite batch that is shared across all XAMLite controls
             // hasn't yet been created, create it.
-            // Also load all the static fonts and sprite textures the first time we come in here.
             if (SpriteBatch == null)
             {
                 SpriteBatch = new SpriteBatch(Game.GraphicsDevice);

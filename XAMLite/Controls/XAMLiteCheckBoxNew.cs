@@ -1,12 +1,14 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Windows;
+using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {
-    using System.Windows.Media;
-    using Color = Microsoft.Xna.Framework.Color;
+    using System.Windows.Input;
 
     /// <summary>
     /// Note: Currently under development.  Continue to use normal
@@ -14,15 +16,28 @@ namespace XAMLite
     /// </summary>
     public class XAMLiteCheckBoxNew : XAMLiteBaseContent
     {
+        private bool _isChecked;
+
         /// <summary>
         /// True when the checkbox is checked.
         /// </summary>
-        public bool IsChecked { get; set; }
+        public bool IsChecked
+        {
+            get
+            {
+                return _isChecked;
+            } 
 
-        /// <summary>
-        /// Container for the checkbox texture asset.
-        /// </summary>
-        private Rectangle _checkBox;
+            set
+            {
+                if (IsEnabled)
+                {
+                    _isChecked = value;
+
+                    ToggleTextures();
+                }
+            }
+        }
 
         /// <summary>
         /// Texture asset for the checkbox when it is unchecked.
@@ -36,21 +51,10 @@ namespace XAMLite
         public string SourceName { get; set; }
 
         /// <summary>
-        /// Texture asset for the checkbox when it is hovered over but 
-        /// unchecked.
-        /// </summary>
-        private Texture2D _hoverTexture;
-
-        /// <summary>
         /// This is the image file path, minus the file extension for when the
         /// checkbox is hovered over but is unchecked.
         /// </summary>
         public string HoverSourceName { get; set; }
-
-        /// <summary>
-        /// Texture asset for a checked checkbox.
-        /// </summary>
-        private Texture2D _checkedTexture;
 
         /// <summary>
         /// This is the image file path, minus the file extension for when the 
@@ -59,25 +63,40 @@ namespace XAMLite
         public string CheckedSourceName { get; set; }
 
         /// <summary>
-        /// Texture asset for a hovered and checked checkbox.
-        /// </summary>
-        private Texture2D _checkedHoverTexture;
-
-        /// <summary>
         /// This is the image file path, minus the file extension for when the
         /// checkbox is hovered over and checked.
         /// </summary>
         public string HoverCheckedSourceName { get; set; }
 
         /// <summary>
-        /// The content portion of the CheckBox.
+        /// Contains all of the components of the check box.
         /// </summary>
-        private XAMLiteLabelNew label;
+        private XAMLiteGridNew _grid;
 
         /// <summary>
-        /// True once the assets for the XAMLiteControl have been positioned.
+        /// The unchecked button.
         /// </summary>
-        private bool _isPositioned;
+        private XAMLiteImageNew _uncheckedButton;
+
+        /// <summary>
+        /// The unchecked hover button.
+        /// </summary>
+        private XAMLiteImageNew _uncheckedHoverButton;
+
+        /// <summary>
+        /// The checked button.
+        /// </summary>
+        private XAMLiteImageNew _checkedButton;
+
+        /// <summary>
+        /// The checked hover button.
+        /// </summary>
+        private XAMLiteImageNew _checkedHoverButton;
+
+        /// <summary>
+        /// The content portion of the CheckBox.
+        /// </summary>
+        private XAMLiteLabelNew _label;
 
         /// <summary>
         /// 
@@ -86,8 +105,6 @@ namespace XAMLite
         public XAMLiteCheckBoxNew(Game game)
             : base(game)
         {
-            IsChecked = false;
-
             SourceName = "Icons/RadioButton";
             CheckedSourceName = "Icons/RadioButtonSelected";
 
@@ -101,7 +118,9 @@ namespace XAMLite
         {
             base.Initialize();
 
-            MouseDown += XAMLiteCheckBoxMouseDown;
+            MouseDown += OnMouseDown;
+            MouseEnter += OnMouseEnter;
+            MouseLeave += OnMouseLeave;
         }
 
         /// <summary>
@@ -109,110 +128,161 @@ namespace XAMLite
         /// </summary>
         protected override void LoadContent()
         {
+            base.LoadContent();
+            
             Debug.Assert((SourceName != null), "Must set CheckBoxSourceName property. This is the image file path, minus the file extension.");
             _texture = Game.Content.Load<Texture2D>(SourceName);
 
+            Width = _texture.Width + (int)SpriteFont.MeasureString(Content.ToString()).X;
+            Height = _texture.Height;
+
             Debug.Assert((CheckedSourceName != null), "Must set CheckBoxSelectedSourceName property. This is the image file path, minus the file extension.");
-            _checkedTexture = Game.Content.Load<Texture2D>(CheckedSourceName);
+            
+            _grid = new XAMLiteGridNew(Game)
+            {
+                HorizontalAlignment = HorizontalAlignment,
+                VerticalAlignment = VerticalAlignment,
+                Width = Width,
+                Height = Height
+            };    
+            Game.Components.Add(_grid);
+            
+            _uncheckedButton = new XAMLiteImageNew(Game)
+            {
+                SourceName = SourceName,
+                Margin = Margin,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Center,
+                Visible = !IsChecked ? Visibility.Visible : Visibility.Hidden
+            };
+            _grid.Children.Add(_uncheckedButton);
 
             if (HoverSourceName != null)
             {
-                _hoverTexture = Game.Content.Load<Texture2D>(HoverSourceName);
+                _uncheckedHoverButton = new XAMLiteImageNew(Game)
+                    {
+                        SourceName = HoverSourceName,
+                        Margin = Margin,
+                        HorizontalAlignment = HorizontalAlignment.Left,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        Visible = Visibility.Hidden
+                    };
+                _grid.Children.Add(_uncheckedHoverButton);
             }
+
+            _checkedButton = new XAMLiteImageNew(Game)
+            {
+                SourceName = CheckedSourceName,
+                Margin = Margin,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Center,
+                Visible = IsChecked ? Visibility.Visible : Visibility.Hidden
+            };    
+            _grid.Children.Add(_checkedButton);
 
             if (HoverCheckedSourceName != null)
             {
-                _checkedHoverTexture = Game.Content.Load<Texture2D>(HoverCheckedSourceName);
+                _checkedHoverButton = new XAMLiteImageNew(Game)
+                    {
+                        SourceName = HoverCheckedSourceName,
+                        Margin = Margin,
+                        HorizontalAlignment = HorizontalAlignment.Left,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        Visible = Visibility.Hidden
+                    };
+                _grid.Children.Add(_checkedHoverButton);
             }
 
-            label = new XAMLiteLabelNew(Game)
-                {
-                    Content = Content,
-                    Foreground = Foreground,
-                    HorizontalAlignment = HorizontalAlignment,
-                    VerticalAlignment = VerticalAlignment,
-                    AttachedToOtherControl = true,
-                    Padding = new Thickness(5, 0, 0, 0),
-                    FontFamily = FontFamily,
-                    Spacing = Spacing
-                };
+            _label = new XAMLiteLabelNew(Game)
+            {
+                Content = Content,
+                Foreground = Foreground,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Center,
+                AttachedToGrid = true,
+                Padding = new Thickness(5, 0, 0, 0),
+                FontFamily = FontFamily,
+                Spacing = Spacing,
+                Margin = new Thickness(Margin.Left + _texture.Width, Margin.Top, Margin.Right, Margin.Bottom)
+            };
 
-            Game.Components.Add(label);
+            // remove the content once the label is set so that the 
+            // content does not draw twice.
+            Content = null;
 
-            base.LoadContent();
+            _grid.Children.Add(_label);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="gameTime"></param>
-        public override void Update(GameTime gameTime)
+        /// <param name="sender"></param>
+        /// <param name="mouseEventArgs"></param>
+        private void OnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
         {
-            base.Update(gameTime);
-
-            if (!_isPositioned)
+            if (HoverSourceName == null || HoverCheckedSourceName == null)
             {
-                SetPosition();
-                _isPositioned = true;
+                return;
             }
-        }
 
-        /// <summary>
-        /// In this case there is no call to the base class to Draw(), 
-        /// otherwise the Content gets drawn twice.
-        /// </summary>
-        /// <param name="gameTime"></param>
-        public override void Draw(GameTime gameTime)
-        {
-            if (Visible == Visibility.Visible)
+            if (IsEnabled)
             {
-                SpriteBatch.Begin();
-
-                if (IsEnabled)
+                if (IsChecked)
                 {
-                    if (_checkedHoverTexture != null && _hoverTexture != null)
-                    {
-                        SpriteBatch.Draw(MouseEntered ? IsChecked ? _checkedHoverTexture : _hoverTexture :
-                        IsChecked ? _checkedTexture : _texture,
-                        _checkBox,
-                        (Color.White * (float)Opacity));
-                    }
-                    else
-                    {
-                        SpriteBatch.Draw(
-                        IsChecked ? _checkedTexture : _texture,
-                        _checkBox,
-                        (Color.White * (float)Opacity));
-                    }
+                    _checkedHoverButton.Visible = Visibility.Visible;
+                    _checkedButton.Visible = Visibility.Hidden;
                 }
                 else
                 {
-                    var opacity = (float)Opacity - 0.5f;
-                    if (opacity < 0f)
-                    {
-                        opacity = 0f;
-                    }
-
-                    SpriteBatch.Draw(_texture, _checkBox, (Color.White * opacity));
+                    _uncheckedHoverButton.Visible = Visibility.Visible;
+                    _uncheckedButton.Visible = Visibility.Hidden;
                 }
-
-                SpriteBatch.End();
             }
         }
 
         /// <summary>
-        /// Sets the position of the control along with all of its assets.
+        /// 
         /// </summary>
-        protected void SetPosition()
+        /// <param name="sender"></param>
+        /// <param name="mouseEventArgs"></param>
+        private void OnMouseLeave(object sender, MouseEventArgs mouseEventArgs)
         {
-            if (_checkedTexture != null)
+            if (HoverSourceName == null || HoverCheckedSourceName == null)
             {
-                Width = _checkedTexture.Width + 5 + (int)SpriteFont.MeasureString(label.Content.ToString()).X;
-                _checkBox = new Rectangle(
-                    (int)Position.X, (int)Position.Y, _checkedTexture.Width, _checkedTexture.Height);
-                label.Margin = new Thickness(Position.X + _checkBox.Width, Position.Y + ((float)_checkedTexture.Height / 2) - (SpriteFont.MeasureString(Content.ToString()).Y / 2), Margin.Right, Margin.Bottom);
-                //label.Margin = new Thickness(Position.X + _checkBox.Width, Position.Y, Margin.Right, Margin.Bottom);
-                Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
+                return;
+            }
+
+            if (IsEnabled)
+            {
+                if (IsChecked)
+                {
+                    _checkedHoverButton.Visible = Visibility.Hidden;
+                    _checkedButton.Visible = Visibility.Visible;
+                }
+                else
+                {
+                    _uncheckedHoverButton.Visible = Visibility.Hidden;
+                    _uncheckedButton.Visible = Visibility.Visible;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void ToggleTextures()
+        {
+            if (IsChecked)
+            {
+                _checkedHoverButton.Visible = Visibility.Visible;
+                _uncheckedButton.Visible = Visibility.Hidden;
+                _uncheckedHoverButton.Visible = Visibility.Hidden;
+            }
+            else
+            {
+                _uncheckedHoverButton.Visible = Visibility.Visible;
+                _checkedButton.Visible = Visibility.Hidden;
+                _checkedHoverButton.Visible = Visibility.Hidden;
             }
         }
 
@@ -221,7 +291,7 @@ namespace XAMLite
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void XAMLiteCheckBoxMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (IsEnabled)
             {
@@ -238,9 +308,9 @@ namespace XAMLite
         {
             base.Dispose(disposing);
 
-            if (label != null)
+            foreach (var child in _grid.Children)
             {
-                label.Dispose();
+                child.Dispose();
             }
         }
     }

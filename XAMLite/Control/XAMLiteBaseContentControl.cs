@@ -51,7 +51,7 @@ namespace XAMLite
         {
             get
             {
-                return new Vector2((float)(Margin.Left + Padding.Left), (float)(Margin.Top + Padding.Top));
+                return new Vector2((float)(Position.X + Padding.Left), (float)(Position.Y + Padding.Top));
             } 
         }
 
@@ -336,9 +336,7 @@ namespace XAMLite
                 //double h = SpriteFont.MeasureString(content.ToString()).Y + Padding.Top + Padding.Bottom;
                 //System.Console.WriteLine("Double: " + h);
                 Height = (int)SpriteFont.MeasureString(content.ToString()).Y  + (int)Padding.Top + (int)Padding.Bottom;
-                System.Console.WriteLine("Height: " + Height);
                 Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
-                System.Console.WriteLine("Panel: " + Panel);
             }
         }
     }
