@@ -62,9 +62,9 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        protected override void UpdateFontMeasurements()
+        protected override void UpdateFontMetrics()
         {
-            base.UpdateFontMeasurements();
+            base.UpdateFontMetrics();
 
             RecalculateWidthAndHeight(Text);
         }

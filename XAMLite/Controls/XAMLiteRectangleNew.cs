@@ -1,10 +1,12 @@
-﻿using System.Windows.Media;
+﻿using System;
+using System.Windows;
+using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {
-    public class XAMLiteRectangle : XAMLiteControl
+    public class XAMLiteRectangleNew : XAMLiteBaseControl
     {
         /// <summary>
         /// 
@@ -12,7 +14,7 @@ namespace XAMLite
         private Color _fill;
 
         /// <summary>
-        /// 
+        /// The background or inner brush color of the rectangle, without a border.
         /// </summary>
         public Brush Fill
         {
@@ -30,7 +32,7 @@ namespace XAMLite
         private Color _stroke;
 
         /// <summary>
-        /// The border color of the Rectangle.
+        /// The border brush color of the Rectangle.
         /// </summary>
         public Brush Stroke
         {
@@ -45,20 +47,38 @@ namespace XAMLite
         /// <summary>
         /// The border width of the rectangle.
         /// </summary>
-        public int StrokeThickness { get; set; }
+        public double StrokeThickness { get; set; }
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="game"></param>
-        public XAMLiteRectangle(Game game)
+        public XAMLiteRectangleNew(Game game)
             : base(game)
         {
             _fill = Color.Transparent;
             _stroke = Color.Transparent;
-            StrokeThickness = 1;
+            StrokeThickness = 0;
             Width = 0;
             Height = 0;
+        }
+
+        /// <summary>
+        /// Loads the content of the control.
+        /// </summary>
+        protected override void LoadContent()
+        {
+            base.LoadContent();
+
+            if (Width == 0)
+            {
+                Width = Viewport.Width - (int)Margin.Left - (int)Margin.Right;
+            }
+
+            if (Height == 0)
+            {
+                Height = Viewport.Height - (int)Margin.Top - (int)Margin.Bottom;
+            }
         }
 
         /// <summary>
@@ -69,40 +89,20 @@ namespace XAMLite
         {
             base.Draw(gameTime);
 
-            if (Visible == System.Windows.Visibility.Visible)
+            if (Visible == Visibility.Visible)
             {
-                ConfirmHeightAndWidth();
-                // Begin.
                 SpriteBatch.Begin();
                 Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
                 SpriteBatch.Draw(Pixel, Panel, _fill * (float)Opacity);
-                Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, StrokeThickness);
+                Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, (int)Math.Round(StrokeThickness));
                 SpriteBatch.Draw(Pixel, Panel, _stroke * (float)Opacity);
-                Panel = new Rectangle((int)Position.X, (int)Position.Y + Height - StrokeThickness, Width, StrokeThickness);
+                Panel = new Rectangle((int)Position.X, (int)Position.Y + Height - (int)Math.Round(StrokeThickness), Width, (int)Math.Round(StrokeThickness));
                 SpriteBatch.Draw(Pixel, Panel, _stroke * (float)Opacity);
-                Panel = new Rectangle((int)Position.X, (int)Position.Y, StrokeThickness, Height);
+                Panel = new Rectangle((int)Position.X, (int)Position.Y, (int)StrokeThickness, Height);
                 SpriteBatch.Draw(Pixel, Panel, _stroke * (float)Opacity);
-                Panel = new Rectangle((int)Position.X + Width - StrokeThickness, (int)Position.Y, StrokeThickness, Height);
+                Panel = new Rectangle((int)Position.X + Width - (int)Math.Round(StrokeThickness), (int)Position.Y, (int)Math.Round(StrokeThickness), Height);
                 SpriteBatch.Draw(Pixel, Panel, _stroke * (float)Opacity);
-
-                // End.
                 SpriteBatch.End();
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private void ConfirmHeightAndWidth()
-        {
-            if (Width == 0)
-            {
-                Width = Viewport.Width - (int)Margin.Left - (int)Margin.Right;
-            }
-
-            if (Height == 0)
-            {
-                Height = Viewport.Height - (int)Margin.Top - (int)Margin.Bottom;
             }
         }
     }

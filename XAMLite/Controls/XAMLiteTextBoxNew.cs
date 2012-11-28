@@ -11,9 +11,19 @@ namespace XAMLite
     public class XAMLiteTextBoxNew : XAMLiteBaseText
     {
         /// <summary>
+        /// The border color.
+        /// </summary>
+        public Brush BorderBrush { get; set; }
+
+        /// <summary>
+        /// The border thickness.
+        /// </summary>
+        public Thickness BorderThickness { get; set; }
+
+        /// <summary>
         /// The image that makes up the text box.
         /// </summary>
-        protected Texture2D TextBoxTexture;
+        //protected Texture2D TextBoxTexture;
 
         /// <summary>
         /// The rectangle that is filled by the texture.
@@ -49,11 +59,11 @@ namespace XAMLite
         /// <summary>
         /// This is the image file path, minus the file extension.
         /// </summary>
-        public string SourceName
-        {
-            get;
-            set;
-        }
+        //public string SourceName
+        //{
+        //    get;
+        //    set;
+        //}
 
         /// <summary>
         /// The character '|' that makes the blinking cursor.
@@ -99,10 +109,11 @@ namespace XAMLite
             : base(game)
         {
             Spacing = 2;
-            Text = string.Empty;
+            Width = 0;
+            Height = 0;
             _foregroundColor = Color.Black;
             Padding = new Thickness(0, 0, 0, 0);
-            SourceName = @"Images/textBox";
+            //SourceName = @"Images/textBox";
             Cursor = "|";
             _initialTyping = true;
             _cursorBlinkTime = TimeSpan.FromSeconds(0.5);
@@ -145,11 +156,27 @@ namespace XAMLite
         {
             base.LoadContent();
 
-            TextBoxTexture = Game.Content.Load<Texture2D>(SourceName);
-            Width = TextBoxTexture.Width;
-            Height = TextBoxTexture.Height;
+            //var grid = new XAMLiteGridNew(Game)
+            //{
+            //    HorizontalAlignment = HorizontalAlignment,
+            //    VerticalAlignment = VerticalAlignment,
+            //    Width = Width,
+            //    Height = Height,
+            //    Margin = Margin
+            //};
+            //Game.Components.Add(grid);
+            
+            //var textbox = new XAMLiteRectangleNew(Game)
+            //    {
+            //        Fill = Background,
+            //        Stroke = BorderBrush ?? Brushes.Transparent,
+            //        Width = Width,
+            //        Height = Height
+            //    };
+            //grid.Children.Add(textbox);
+            
             Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
-            CalculatePositions();
+            //CalculatePositions();
         }
 
         /// <summary>
@@ -158,14 +185,6 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            //if (_fontFamilyChanged)
-            //{
-            //    _fontFamilyChanged = false;
-            //    UpdateFontFamily(_fontFamily);
-            //    SpriteFont.Spacing = Spacing;
-            //    CalculatePositions();
-            //}
-
             // initial text box click where the default text is replaced with just a cursor.
             if (MousePressed && Panel.Contains(MsRect) && _initialTyping)
             {
@@ -253,8 +272,7 @@ namespace XAMLite
             }
 
             SpriteBatch.Begin();
-            SpriteBatch.Draw(TextBoxTexture, Panel, Color.White);
-            SpriteBatch.DrawString(SpriteFont, Text, TextPosition, _foregroundColor);
+            //SpriteBatch.DrawString(SpriteFont, Text, TextPosition, _foregroundColor);
             if (_cursorBlink)
             {
                 SpriteBatch.DrawString(SpriteFont, Cursor, CursorPosition, _foregroundColor);
@@ -268,10 +286,10 @@ namespace XAMLite
         /// </summary>
         private void CalculatePositions()
         {
-            var position = new Vector2(Panel.X + (int)Padding.Left, (Panel.Y + (Height / 2)) - (SpriteFont.MeasureString(Text).Y / 2) + (int)Padding.Top);
-            TextPosition = position;
-            CursorPosition = position;
-            CursorStartPosition = position.X;
+            //var position = new Vector2(Panel.X + (int)Padding.Left, (Panel.Y + (Height / 2)) - (SpriteFont.MeasureString(Text).Y / 2) + (int)Padding.Top);
+            //TextPosition = position;
+            //CursorPosition = position;
+            //CursorStartPosition = position.X;
         }
 
         /// <summary>
@@ -332,12 +350,12 @@ namespace XAMLite
         {
             var newChar = "";
 
-            if (Text.Length >= MaxLength && key != Keys.Back && key != Keys.Delete &&
-                key != Keys.Tab && key != Keys.Enter && (int)SpriteFont.MeasureString(Text).X >=
-                TextBoxTexture.Width - 20)
-            {
-                return;
-            }
+            //if (Text.Length >= MaxLength && key != Keys.Back && key != Keys.Delete &&
+            //    key != Keys.Tab && key != Keys.Enter && (int)SpriteFont.MeasureString(Text).X >=
+            //    TextBoxTexture.Width - 20)
+            //{
+            //    return;
+            //}
 
             if (_standardKeyTyped)
             {

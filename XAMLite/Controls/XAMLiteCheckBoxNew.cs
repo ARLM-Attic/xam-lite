@@ -133,9 +133,8 @@ namespace XAMLite
             Debug.Assert((SourceName != null), "Must set CheckBoxSourceName property. This is the image file path, minus the file extension.");
             _texture = Game.Content.Load<Texture2D>(SourceName);
 
-            Width = _texture.Width + (int)SpriteFont.MeasureString(Content.ToString()).X;
-            Height = _texture.Height;
-
+            UpdateFontMetrics();
+            
             Debug.Assert((CheckedSourceName != null), "Must set CheckBoxSelectedSourceName property. This is the image file path, minus the file extension.");
             
             _grid = new XAMLiteGridNew(Game)
@@ -143,14 +142,14 @@ namespace XAMLite
                 HorizontalAlignment = HorizontalAlignment,
                 VerticalAlignment = VerticalAlignment,
                 Width = Width,
-                Height = Height
+                Height = Height,
+                Margin = Margin
             };    
             Game.Components.Add(_grid);
             
             _uncheckedButton = new XAMLiteImageNew(Game)
             {
                 SourceName = SourceName,
-                Margin = Margin,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Center,
                 Visible = !IsChecked ? Visibility.Visible : Visibility.Hidden
@@ -162,7 +161,6 @@ namespace XAMLite
                 _uncheckedHoverButton = new XAMLiteImageNew(Game)
                     {
                         SourceName = HoverSourceName,
-                        Margin = Margin,
                         HorizontalAlignment = HorizontalAlignment.Left,
                         VerticalAlignment = VerticalAlignment.Center,
                         Visible = Visibility.Hidden
@@ -173,7 +171,6 @@ namespace XAMLite
             _checkedButton = new XAMLiteImageNew(Game)
             {
                 SourceName = CheckedSourceName,
-                Margin = Margin,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Center,
                 Visible = IsChecked ? Visibility.Visible : Visibility.Hidden
@@ -185,7 +182,6 @@ namespace XAMLite
                 _checkedHoverButton = new XAMLiteImageNew(Game)
                     {
                         SourceName = HoverCheckedSourceName,
-                        Margin = Margin,
                         HorizontalAlignment = HorizontalAlignment.Left,
                         VerticalAlignment = VerticalAlignment.Center,
                         Visible = Visibility.Hidden
@@ -203,14 +199,24 @@ namespace XAMLite
                 Padding = new Thickness(5, 0, 0, 0),
                 FontFamily = FontFamily,
                 Spacing = Spacing,
-                Margin = new Thickness(Margin.Left + _texture.Width, Margin.Top, Margin.Right, Margin.Bottom)
+                Margin = new Thickness(_texture.Width, 0, 0, 0)
             };
-
-            // remove the content once the label is set so that the 
-            // content does not draw twice.
-            Content = null;
-
+            
             _grid.Children.Add(_label);
+        }
+
+        /// <summary>
+        /// Recalculates the width and height of the control.  If the width or height
+        /// as set by the user is greater than those of the assets within the control,
+        /// the user defined settings will be maintained.
+        /// </summary>
+        /// <param name="content"></param>
+        protected override void RecalculateWidthAndHeight(object content)
+        {
+            var w = _texture.Width + (int)Padding.Left + (int)Padding.Right + (int)SpriteFont.MeasureString(Content.ToString()).X;
+            Width = Width > w ? Width : w;
+            var h = (int)SpriteFont.MeasureString(Content.ToString()).Y + (int)Padding.Top + (int)Padding.Bottom;
+            Height = Height > h && Height > _texture.Height ? Height : _texture.Height > h ? _texture.Height : h;
         }
 
         /// <summary>

@@ -95,6 +95,7 @@
     <Compile Include="Controls\XAMLiteMenuItem.cs" />
     <Compile Include="Controls\XAMLiteRadioButton.cs" />
     <Compile Include="Controls\XAMLiteRectangle.cs" />
+    <Compile Include="Controls\XAMLiteRectangleNew.cs" />
     <Compile Include="Controls\XAMLiteTextBlock.cs" />
     <Compile Include="Controls\XAMLiteTextBox.cs" />
     <Compile Include="Controls\XAMLiteTextBoxNew.cs" />

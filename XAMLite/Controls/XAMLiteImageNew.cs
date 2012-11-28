@@ -51,7 +51,6 @@ namespace XAMLite
             }
 
             base.LoadContent();
-            Console.WriteLine(Margin);
         }
 
         /// <summary>

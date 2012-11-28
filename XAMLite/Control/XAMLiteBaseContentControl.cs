@@ -42,7 +42,10 @@ namespace XAMLite
             }
         }
 
-        protected Vector2 ContentPosition
+        /// <summary>
+        /// Position of the content within the existing XAMLite control.
+        /// </summary>
+        protected virtual Vector2 ContentPosition
         {
             get
             {
@@ -195,7 +198,6 @@ namespace XAMLite
         public XAMLiteBaseContentControl(Game game)
             : base(game)
         {
-            //_contentPosition = new Vector2();
             Foreground = Brushes.White;
             Padding = new Thickness();
             Spacing = 0;
@@ -244,7 +246,7 @@ namespace XAMLite
 
             if (FontFamilyChanged)
             {
-                UpdateFontMeasurements();
+                UpdateFontMetrics();
             }
         }
 
@@ -252,7 +254,7 @@ namespace XAMLite
         /// Updates the spacing, font family, and retakes the string 
         /// measurements
         /// </summary>
-        protected virtual void UpdateFontMeasurements()
+        protected virtual void UpdateFontMetrics()
         {
             UpdateFontFamily(_fontFamily);
             SpriteFont.Spacing = Spacing;
@@ -334,16 +336,18 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// Recalculate the width and height of the control.
+        /// Recalculate the width and height of the control.  If the user 
+        /// defined width or height is greater than the measurement of the 
+        /// string the user defined settings will be maintained.
         /// </summary>
         protected virtual void RecalculateWidthAndHeight(object content)
         {
             if (content != null)
             {
-                Width = (int)SpriteFont.MeasureString(content.ToString()).X + (int)Padding.Left + (int)Padding.Right;
-                //double h = SpriteFont.MeasureString(content.ToString()).Y + Padding.Top + Padding.Bottom;
-                //System.Console.WriteLine("Double: " + h);
-                Height = (int)SpriteFont.MeasureString(content.ToString()).Y  + (int)Padding.Top + (int)Padding.Bottom;
+                var w = (int)SpriteFont.MeasureString(content.ToString()).X + (int)Padding.Left + (int)Padding.Right;
+                Width = Width > w ? Width : w;
+                var h = (int)SpriteFont.MeasureString(content.ToString()).Y + (int)Padding.Top + (int)Padding.Bottom;
+                Height = Height > h ? Height : h;
                 Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
             }
         }

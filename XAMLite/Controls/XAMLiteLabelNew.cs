@@ -30,23 +30,45 @@ namespace XAMLite
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Draw(GameTime gameTime)
+        {
+            base.Draw(gameTime);
+
+            if (Content != null)
+            {
+                SpriteBatch.Begin();
+
+                if (!AttachedToGrid)
+                {
+                    SpriteBatch.DrawString(
+                        SpriteFont,
+                        Content.ToString(),
+                        new Vector2(ContentPosition.X, ContentPosition.Y - (float)(Height * 0.14)),
+                        ForegroundColor * (float)Opacity);
+                }
+                else
+                {
+                    SpriteBatch.DrawString(
+                        SpriteFont,
+                        Content.ToString(),
+                        ContentPosition,
+                        ForegroundColor * (float)Opacity);
+                }
+
+                SpriteBatch.End();
+            }
+        }
+
+        /// <summary>
         /// Sets the content of the control.
         /// </summary>
         /// <param name="content"></param>
         private void SetContent(object content)
         {
             Content = content;
-        }
-
-        public override void Draw(GameTime gameTime)
-        {
-            base.Draw(gameTime);
-
-            // for debugging purposes.
-            SpriteBatch.Begin();
-            //SpriteBatch.Draw(Pixel, new Rectangle((int)Position.X, (int)Position.Y, 1, 1), Color.Red);
-            //SpriteBatch.Draw(Pixel, new Rectangle((int)Position.X, (int)Position.Y + Height, 1, 1), Color.Red);
-            SpriteBatch.End();
         }
     }
 }

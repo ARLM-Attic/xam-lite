@@ -127,19 +127,28 @@ namespace XAMLite
         private Color _backgroundColor;
 
         /// <summary>
+        /// 
+        /// </summary>
+        private Brush _background;
+
+        /// <summary>
         /// Background color of the Grid.
         /// </summary>
         public Brush Background
         {
+            get
+            {
+                return _background;
+            }
+
             set
             {
+                _background = value;
                 var solidBrush = (SolidColorBrush)value;
                 var color = solidBrush.Color;
                 _backgroundColor = new Color(color.R, color.G, color.B, color.A);
 
                 _transparent = value == Brushes.Transparent;
-
-                System.Console.WriteLine("Setting background: " + _backgroundColor.ToString() + " Width: " + Width + " " + _transparent);
             }
         }
 
@@ -234,6 +243,46 @@ namespace XAMLite
         /// The screen width and height.
         /// </summary>
         protected Viewport Viewport;
+
+        /// <summary>
+        /// Returns the top left Vector2 of the control.
+        /// </summary>
+        protected Vector2 TopLeftCorner
+        {
+            get { return Position; }
+        }
+
+        /// <summary>
+        /// Returns the top right Vector2 of the control.
+        /// </summary>
+        protected Vector2 TopRightCorner
+        {
+            get { return new Vector2(Position.X + Width, Position.Y); }
+        }
+
+        /// <summary>
+        /// Returns the bottom left Vector2 of the control.
+        /// </summary>
+        protected Vector2 BottomLeftCorner
+        {
+            get { return new Vector2(Position.X, Position.Y + Height); }
+        }
+
+        /// <summary>
+        /// Returns the bottom right Vector2 of the control.
+        /// </summary>
+        protected Vector2 BottomRightCorner
+        {
+            get { return new Vector2(Position.X + Width, Position.Y + Height); }
+        }
+
+        /// <summary>
+        /// Returns the center Vector2 of the control.
+        /// </summary>
+        protected Vector2 Center
+        {
+            get { return new Vector2(Position.X + ((float)Width / 2), Position.Y + ((float)Height / 2)); }
+        }
 
         /// <summary>
         /// The state of the mouse, whether pressed, released, etc.
@@ -395,14 +444,14 @@ namespace XAMLite
 
                 if (!_transparent)
                 {
-                    if (this is XAMLiteLabelNew)
-                    {
-                        SpriteBatch.Draw(
-                            Pixel,
-                            new Rectangle(Panel.X, Panel.Y, Panel.Width, Panel.Height - (int)(Height * 0.3)),
-                            _backgroundColor * (float)Opacity);
-                    }
-                    else
+                    //if (this is XAMLiteLabelNew)
+                    //{
+                    //    SpriteBatch.Draw(
+                    //        Pixel,
+                    //        new Rectangle(Panel.X, Panel.Y, Panel.Width, Panel.Height - (int)(Height * 0.3)),
+                    //        _backgroundColor * (float)Opacity);
+                    //}
+                    //else
                     {
                         SpriteBatch.Draw(
                             Pixel,

@@ -39,65 +39,6 @@ namespace XAMLite
         /// </summary>
         private bool _isVisible;
 
-        ///// <summary>
-        ///// The original margin of the grid as specified by the alignment, 
-        ///// prior to being adjusted with user defined margins.
-        ///// </summary>
-        //private Thickness _originalGridMargin;
-
-        ///// <summary>
-        ///// The original margin of the child as specified by the alignment, 
-        ///// prior to being adjusted with user defined margins.
-        ///// </summary>
-        //private Thickness[] _originalChildMargin;
-
-        ///// <summary>
-        ///// True when the horizontal alignment should be centered.
-        ///// </summary>
-        //private bool[] _isHorCentered;
-
-        ///// <summary>
-        ///// True when the vertical alignment should be centered.
-        ///// </summary>
-        //private bool[] _isVerCentered;
-
-        ///// <summary>
-        ///// True when the horizontal alignment should be stretched to the 
-        ///// grid's width.
-        ///// </summary>
-        //private bool[] _isHorStretched;
-
-        ///// <summary>
-        ///// True when the vertical alignment should be stretched to the 
-        ///// grid's height.
-        ///// </summary>
-        //private bool[] _isVerStretched;
-
-        private Vector2 _topLeftCorner
-        {
-            get { return Position; }
-        }
-
-        private Vector2 _topRightCorner
-        {
-            get { return new Vector2(Position.X + Width, Position.Y); }
-        }
-
-        private Vector2 _bottomLeftCorner
-        {
-            get { return new Vector2(Position.X, Position.Y + Height); }
-        }
-
-        private Vector2 _bottomRightCorner
-        {
-            get { return new Vector2(Position.X + Width, Position.Y + Height); }
-        }
-
-        private Vector2 _center
-        {
-            get { return new Vector2(Position.X + (float)Width / 2, Position.Y + (float)Height / 2); }
-        }
-
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -166,11 +107,11 @@ namespace XAMLite
 
             SpriteBatch.Begin();
             // For debugging: Draw a dot in the corners and center of the grid.
-            //SpriteBatch.Draw(Pixel, new Rectangle((int)_topLeftCorner.X, (int)_topLeftCorner.Y, 1, 1), Color.Aquamarine);
-            //SpriteBatch.Draw(Pixel, new Rectangle((int)_bottomLeftCorner.X, (int)_bottomLeftCorner.Y, 1, 1), Color.Aquamarine);
-            //SpriteBatch.Draw(Pixel, new Rectangle((int)_topRightCorner.X, (int)_topRightCorner.Y, 1, 1), Color.Aquamarine);
-            //SpriteBatch.Draw(Pixel, new Rectangle((int)_bottomRightCorner.X, (int)_bottomRightCorner.Y, 1, 1), Color.Aquamarine);
-            //SpriteBatch.Draw(Pixel, new Rectangle((int)_center.X, (int)_center.Y, 1, 1), Color.Aquamarine);
+            //SpriteBatch.Draw(Pixel, new Rectangle((int)TopLeftCorner.X, (int)TopLeftCorner.Y, 1, 1), Color.Aquamarine);
+            //SpriteBatch.Draw(Pixel, new Rectangle((int)BottomLeftCorner.X, (int)BottomLeftCorner.Y, 1, 1), Color.Aquamarine);
+            //SpriteBatch.Draw(Pixel, new Rectangle((int)TopRightCorner.X, (int)TopRightCorner.Y, 1, 1), Color.Aquamarine);
+            //SpriteBatch.Draw(Pixel, new Rectangle((int)BottomRightCorner.X, (int)BottomRightCorner.Y, 1, 1), Color.Aquamarine);
+            //SpriteBatch.Draw(Pixel, new Rectangle((int)Center.X, (int)Center.Y, 1, 1), Color.Aquamarine);
             SpriteBatch.End();
         }
 
@@ -221,19 +162,19 @@ namespace XAMLite
                 {
                     case HorizontalAlignment.Center:
                         var viewPortCenter = Viewport.X + (Viewport.Width / 2);
-                        var centerDifference = viewPortCenter - _center.X;
+                        var centerDifference = viewPortCenter - Center.X;
                         left = -centerDifference + difference;
                         break;
                     case HorizontalAlignment.Left:
-                        left = _topLeftCorner.X + th.Left;
+                        left = TopLeftCorner.X + th.Left;
                         break;
                     case HorizontalAlignment.Right:
-                        right = Viewport.Width - _topRightCorner.X + th.Right;
+                        right = Viewport.Width - TopRightCorner.X + th.Right;
                         break;
                     case HorizontalAlignment.Stretch:
                         child.HorizontalAlignment = HorizontalAlignment.Left;
                         child.Width = (Width - (int)difference) > 0 ? Width - (int)difference : 0;
-                        left = _topLeftCorner.X + th.Left;
+                        left = TopLeftCorner.X + th.Left;
                         break;
                 }
 
@@ -242,25 +183,24 @@ namespace XAMLite
                 {
                     case VerticalAlignment.Center:
                         var viewPortCenter = Viewport.Y + (Viewport.Height / 2);
-                        var centerDifference = viewPortCenter - _center.Y;
+                        var centerDifference = viewPortCenter - Center.Y;
                         top = -centerDifference + difference;
                         break;
                     case VerticalAlignment.Top:
-                        top = _topLeftCorner.Y + th.Top;
+                        top = TopLeftCorner.Y + th.Top;
                         break;
                     case VerticalAlignment.Bottom:
-                        bottom = Viewport.Height - _bottomLeftCorner.Y + th.Bottom;
+                        bottom = Viewport.Height - BottomLeftCorner.Y + th.Bottom;
                         break;
                     case VerticalAlignment.Stretch:
                         child.VerticalAlignment = VerticalAlignment.Top;
                         child.Height = (Height - (int)difference) > 0 ? Height - (int)difference : 0;
-                        top = _topLeftCorner.Y + th.Top;
+                        top = TopLeftCorner.Y + th.Top;
                         break;
                 }
 
                 Game.Components.Add(child);
                 child.Margin = new Thickness(left, top, right, bottom);
-                Console.WriteLine(child.Margin);
             }
         }
 

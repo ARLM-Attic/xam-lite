@@ -25,44 +25,12 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="gameTime"></param>
-        public override void Draw(GameTime gameTime)
-        {
-            base.Draw(gameTime);
-
-            if (Content != null)
-            {
-                SpriteBatch.Begin();
-                if (this is XAMLiteLabelNew && !AttachedToGrid)
-                {
-                    SpriteBatch.DrawString(
-                        SpriteFont,
-                        Content.ToString(),
-                        new Vector2(ContentPosition.X, ContentPosition.Y - (float)(Height * 0.14)),
-                        ForegroundColor * (float)Opacity);
-                }
-                else
-                {
-                    SpriteBatch.DrawString(
-                        SpriteFont,
-                        Content.ToString(),
-                        ContentPosition,
-                        ForegroundColor * (float)Opacity);
-                }
-
-                SpriteBatch.End();
-            }
-        }
-
-        /// <summary>
         /// Updates the FontFamily, Spacing, and recalculates the new
         /// Width and Height.
         /// </summary>
-        protected override void UpdateFontMeasurements()
+        protected override void UpdateFontMetrics()
         {
-            base.UpdateFontMeasurements();
+            base.UpdateFontMetrics();
 
             RecalculateWidthAndHeight(Content);
         }
