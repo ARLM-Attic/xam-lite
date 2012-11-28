@@ -97,6 +97,7 @@
     <Compile Include="Controls\XAMLiteRectangle.cs" />
     <Compile Include="Controls\XAMLiteTextBlock.cs" />
     <Compile Include="Controls\XAMLiteTextBox.cs" />
+    <Compile Include="Controls\XAMLiteTextBoxNew.cs" />
     <Compile Include="Controls\XAMLiteToolTip.cs" />
     <Compile Include="Controls\XAMLiteToolTipService.cs" />
     <Compile Include="Control\XAMLiteBaseContent.cs" />

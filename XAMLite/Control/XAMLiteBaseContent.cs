@@ -16,19 +16,6 @@ namespace XAMLite
         public virtual object Content { get; set; }
 
         /// <summary>
-        /// The content color.
-        /// </summary>
-        private Color ForegroundColor
-        {
-            get
-            {
-                var solidBrush = (SolidColorBrush)Foreground;
-                var color = solidBrush.Color;
-                return new Color(color.R, color.G, color.B, color.A);
-            }
-        }
-
-        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="game"></param>

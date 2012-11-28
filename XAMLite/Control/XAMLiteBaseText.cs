@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using Color = Microsoft.Xna.Framework.Color;
@@ -19,17 +20,19 @@ namespace XAMLite
         public virtual string Text { get; set; }
 
         /// <summary>
-        /// The text color.
+        /// Sets the alignment of the text.
         /// </summary>
-        private Color ForegroundColor
-        {
-            get
-            {
-                var solidBrush = (SolidColorBrush)Foreground;
-                var color = solidBrush.Color;
-                return new Color(color.R, color.G, color.B, color.A);
-            }
-        }
+        public TextAlignment TextAlignment { get; set; }
+
+        /// <summary>
+        /// Determines whether the default text within the text box can be changed.
+        /// </summary>
+        public bool IsReadOnly;
+
+        /// <summary>
+        /// Sets the max number of characters allowed in the text box
+        /// </summary>
+        public int MaxLength;
 
         /// <summary>
         /// 
@@ -50,7 +53,9 @@ namespace XAMLite
 
             if (Text != null)
             {
+                SpriteBatch.Begin();
                 SpriteBatch.DrawString(SpriteFont, Text, new Vector2(Panel.X, Panel.Y), ForegroundColor * (float)Opacity);
+                SpriteBatch.End();
             }
         }
 

@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Windows;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Brush = System.Windows.Media.Brush;
+using Brushes = System.Windows.Media.Brushes;
+using FontFamily = System.Windows.Media.FontFamily;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
+using System.Windows.Media;
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {
-    using System.Drawing;
-    using System.Windows;
-    using Brush = System.Windows.Media.Brush;
-    using Brushes = System.Windows.Media.Brushes;
-    using FontFamily = System.Windows.Media.FontFamily;
-    using Rectangle = Microsoft.Xna.Framework.Rectangle;
-
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
@@ -43,7 +39,6 @@ namespace XAMLite
             {
                 _fontFamily = value;
                 FontFamilyChanged = true;
-                //FirstUpdate = true;
             }
         }
 
@@ -64,6 +59,19 @@ namespace XAMLite
         /// True when the font family has changed.
         /// </summary>
         protected bool FontFamilyChanged;
+
+        /// <summary>
+        /// The content color.
+        /// </summary>
+        protected Color ForegroundColor
+        {
+            get
+            {
+                var solidBrush = (SolidColorBrush)Foreground;
+                var color = solidBrush.Color;
+                return new Color(color.R, color.G, color.B, color.A);
+            }
+        }
 
         /// <summary>
         /// The color of the content, whether text or some other object.
