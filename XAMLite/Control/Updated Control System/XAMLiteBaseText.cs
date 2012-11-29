@@ -54,13 +54,14 @@ namespace XAMLite
             if (Text != null)
             {
                 SpriteBatch.Begin();
-                SpriteBatch.DrawString(SpriteFont, Text, new Vector2(Panel.X, Panel.Y), ForegroundColor * (float)Opacity);
+                //SpriteBatch.DrawString(SpriteFont, Text, new Vector2(Panel.X, Panel.Y), ForegroundColor * (float)Opacity);
                 SpriteBatch.End();
             }
         }
 
         /// <summary>
-        /// 
+        /// Updates the FontFamily, Spacing, and recalculates the new
+        /// Width and Height.
         /// </summary>
         protected override void UpdateFontMetrics()
         {

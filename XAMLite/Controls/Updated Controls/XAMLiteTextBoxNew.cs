@@ -57,15 +57,6 @@ namespace XAMLite
         protected Keys[] SpecialInputKeys;
 
         /// <summary>
-        /// This is the image file path, minus the file extension.
-        /// </summary>
-        //public string SourceName
-        //{
-        //    get;
-        //    set;
-        //}
-
-        /// <summary>
         /// The character '|' that makes the blinking cursor.
         /// </summary>
         protected string Cursor;
@@ -73,7 +64,7 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        private Color _foregroundColor;
+        //private Color _foregroundColor;
 
         private bool _initialTyping;
         
@@ -108,12 +99,13 @@ namespace XAMLite
         public XAMLiteTextBoxNew(Game game)
             : base(game)
         {
+            TextAlignment = TextAlignment.Left;
+            FontFamily = new FontFamily("Arial");
             Spacing = 2;
             Width = 0;
             Height = 0;
-            _foregroundColor = Color.Black;
+            Foreground = Brushes.Black;
             Padding = new Thickness(0, 0, 0, 0);
-            //SourceName = @"Images/textBox";
             Cursor = "|";
             _initialTyping = true;
             _cursorBlinkTime = TimeSpan.FromSeconds(0.5);
@@ -156,16 +148,27 @@ namespace XAMLite
         {
             base.LoadContent();
 
-            //var grid = new XAMLiteGridNew(Game)
-            //{
-            //    HorizontalAlignment = HorizontalAlignment,
-            //    VerticalAlignment = VerticalAlignment,
-            //    Width = Width,
-            //    Height = Height,
-            //    Margin = Margin
-            //};
-            //Game.Components.Add(grid);
-            
+            var grid = new XAMLiteGridNew(Game)
+            {
+                HorizontalAlignment = HorizontalAlignment,
+                VerticalAlignment = VerticalAlignment,
+                Width = Width,
+                Height = Height,
+                Margin = Margin
+            };
+            Game.Components.Add(grid);
+
+            var text = new XAMLiteLabelNew(Game)
+                {
+                    Content = Text,
+                    HorizontalAlignment = TextAlignment == TextAlignment.Left || TextAlignment == TextAlignment.Justify ? HorizontalAlignment.Left : TextAlignment == TextAlignment.Center ? HorizontalAlignment.Center : HorizontalAlignment.Right,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    FontFamily = FontFamily,
+                    Spacing = Spacing,
+                    Foreground = Foreground
+                };
+            grid.Children.Add(text);
+
             //var textbox = new XAMLiteRectangleNew(Game)
             //    {
             //        Fill = Background,
@@ -174,9 +177,8 @@ namespace XAMLite
             //        Height = Height
             //    };
             //grid.Children.Add(textbox);
-            
-            Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
-            //CalculatePositions();
+
+            //Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
         }
 
         /// <summary>
@@ -275,7 +277,7 @@ namespace XAMLite
             //SpriteBatch.DrawString(SpriteFont, Text, TextPosition, _foregroundColor);
             if (_cursorBlink)
             {
-                SpriteBatch.DrawString(SpriteFont, Cursor, CursorPosition, _foregroundColor);
+                SpriteBatch.DrawString(SpriteFont, Cursor, CursorPosition, ForegroundColor);
             }
 
             SpriteBatch.End();

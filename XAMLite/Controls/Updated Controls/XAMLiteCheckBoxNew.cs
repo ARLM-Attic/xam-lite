@@ -107,7 +107,7 @@ namespace XAMLite
         {
             SourceName = "Icons/RadioButton";
             CheckedSourceName = "Icons/RadioButtonSelected";
-
+            FontFamily = new FontFamily("Arial");
             Spacing = 2;
         }
 
