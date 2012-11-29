@@ -4,7 +4,6 @@ using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {
@@ -19,11 +18,6 @@ namespace XAMLite
         /// The border thickness.
         /// </summary>
         public Thickness BorderThickness { get; set; }
-
-        /// <summary>
-        /// The image that makes up the text box.
-        /// </summary>
-        //protected Texture2D TextBoxTexture;
 
         /// <summary>
         /// The rectangle that is filled by the texture.
@@ -61,11 +55,6 @@ namespace XAMLite
         /// </summary>
         protected string Cursor;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        //private Color _foregroundColor;
-
         private bool _initialTyping;
         
         private bool _cursorVisible;
@@ -96,6 +85,10 @@ namespace XAMLite
         
         private KeyboardState _lastKeyboardState;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="game"></param>
         public XAMLiteTextBoxNew(Game game)
             : base(game)
         {
@@ -105,7 +98,7 @@ namespace XAMLite
             Width = 120;
             Height = 23;
             Foreground = Brushes.Black;
-            Padding = new Thickness(0, 0, 0, 0);
+            Padding = new Thickness(5, 0, 0, 0);
             Cursor = "|";
             _initialTyping = true;
             _cursorBlinkTime = TimeSpan.FromSeconds(0.5);
@@ -165,7 +158,8 @@ namespace XAMLite
                     VerticalAlignment = VerticalAlignment.Center,
                     FontFamily = FontFamily,
                     Spacing = Spacing,
-                    Foreground = Foreground
+                    Foreground = Foreground,
+                    Padding = new Thickness(Padding.Left, Padding.Top, 0, 0)
                 };
             grid.Children.Add(text);
 

@@ -109,6 +109,7 @@ namespace XAMLite
             CheckedSourceName = "Icons/RadioButtonSelected";
             FontFamily = new FontFamily("Arial");
             Spacing = 2;
+            Padding = new Thickness(5, 0, 0, 0);
         }
 
         /// <summary>
@@ -196,7 +197,7 @@ namespace XAMLite
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Center,
                 AttachedToGrid = true,
-                Padding = new Thickness(5, 0, 0, 0),
+                Padding = new Thickness(Padding.Left, Padding.Top, 0, 0),
                 FontFamily = FontFamily,
                 Spacing = Spacing,
                 Margin = new Thickness(_texture.Width, 0, 0, 0)
