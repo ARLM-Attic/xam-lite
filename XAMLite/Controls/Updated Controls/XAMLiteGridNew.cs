@@ -105,14 +105,48 @@ namespace XAMLite
         {
             base.Draw(gameTime);
 
-            SpriteBatch.Begin();
-            // For debugging: Draw a dot in the corners and center of the grid.
+            //SpriteBatch.Begin();
+            //// For debugging: Draw a dot in the corners and center of the grid.
+            //// top left
             //SpriteBatch.Draw(Pixel, new Rectangle((int)TopLeftCorner.X, (int)TopLeftCorner.Y, 1, 1), Color.Aquamarine);
+
+            //// bottom left
             //SpriteBatch.Draw(Pixel, new Rectangle((int)BottomLeftCorner.X, (int)BottomLeftCorner.Y, 1, 1), Color.Aquamarine);
+
+            //// top right 
             //SpriteBatch.Draw(Pixel, new Rectangle((int)TopRightCorner.X, (int)TopRightCorner.Y, 1, 1), Color.Aquamarine);
+
+            //// bottom right
             //SpriteBatch.Draw(Pixel, new Rectangle((int)BottomRightCorner.X, (int)BottomRightCorner.Y, 1, 1), Color.Aquamarine);
+
+            //// center
             //SpriteBatch.Draw(Pixel, new Rectangle((int)Center.X, (int)Center.Y, 1, 1), Color.Aquamarine);
-            SpriteBatch.End();
+
+            //// center left
+            //SpriteBatch.Draw(Pixel, new Rectangle((int)TopLeftCorner.X + ((int)(Center.X - TopLeftCorner.X) / 2), (int)Center.Y, 1, 1), Color.Aquamarine);
+
+            //// center right
+            //SpriteBatch.Draw(Pixel, new Rectangle((int)Center.X + ((int)(Center.X - TopLeftCorner.X) / 2), (int)Center.Y, 1, 1), Color.Aquamarine);
+
+            //// center top
+            //SpriteBatch.Draw(Pixel, new Rectangle((int)Center.X, (int)TopLeftCorner.Y + ((int)(Center.Y - TopLeftCorner.Y) / 2), 1, 1), Color.Aquamarine);
+
+            //// center bottom
+            //SpriteBatch.Draw(Pixel, new Rectangle((int)Center.X, (int)Center.Y + ((int)(Center.Y - TopLeftCorner.Y) / 2), 1, 1), Color.Aquamarine);
+
+            //// bottom center
+            //SpriteBatch.Draw(Pixel, new Rectangle((int)Center.X, (int)BottomRightCorner.Y, 1, 1), Color.Aquamarine);
+
+            //// top center
+            //SpriteBatch.Draw(Pixel, new Rectangle((int)Center.X, (int)TopLeftCorner.Y, 1, 1), Color.Aquamarine);
+
+            //// left center
+            //SpriteBatch.Draw(Pixel, new Rectangle((int)TopLeftCorner.X, (int)Center.Y, 1, 1), Color.Aquamarine);
+
+            //// right center
+            //SpriteBatch.Draw(Pixel, new Rectangle((int)TopRightCorner.X, (int)Center.Y, 1, 1), Color.Aquamarine);
+
+            //SpriteBatch.End();
         }
 
         /// <summary>
@@ -120,29 +154,34 @@ namespace XAMLite
         /// </summary>
         private void LoadChildren()
         {
-            _childrenLoaded = true;
-
-            _childVisibility = new bool[Children.Count];
-            _childOpacity = new float[Children.Count];
-
-            RecordChildOpacity();
-            RecordChildVisibility();
+            SaveChildOpacity();
+            SaveAndSetChildVisibility();
 
             // Add the child component to the game with the modified parameters.
             foreach (var child in Children)
             {
-                child.Visible = Visibility.Hidden;
                 child.AttachedToGrid = true;
+                Game.Components.Add(child);
             }
 
-            double left = 0;
-            double top = 0;
-            double right = 0;
-            double bottom = 0;
+            ModifyChildWidthAndMarginsToGrid();
 
+            _childrenLoaded = true;
+        }
+
+        /// <summary>
+        /// Adjust the children margins according to the grid location.
+        /// </summary>
+        private void ModifyChildWidthAndMarginsToGrid()
+        {
             // Add the child component to the game with the modified parameters.
             foreach (var child in Children)
             {
+                double left = 0;
+                double top = 0;
+                double right = 0;
+                double bottom = 0;
+
                 // if the child is larger than the grid, resize the object
                 // to the grid dimensions.
                 if (child.Width > Width)
@@ -199,26 +238,26 @@ namespace XAMLite
                         break;
                 }
 
-                Game.Components.Add(child);
                 child.Margin = new Thickness(left, top, right, bottom);
             }
         }
 
         /// <summary>
-        /// Stores the visibility of the child.
+        /// Stores the original visibility of the child and initially sets its
+        /// visibility to hidden until the grid is fully set up.
         /// </summary>
-        private void RecordChildVisibility()
+        private void SaveAndSetChildVisibility()
         {
+            _childVisibility = new bool[Children.Count];
+
             for (var i = 0; i < Children.Count; i++)
             {
-                if (Children[i].Visible == Visibility.Visible)
-                {
-                    _childVisibility[i] = true;
-                }
-                else
-                {
-                    _childVisibility[i] = false;
-                }
+                _childVisibility[i] = Children[i].Visible == Visibility.Visible;
+            }
+
+            foreach (var child in Children)
+            {
+                child.Visible = Visibility.Hidden;
             }
         }
 
@@ -231,12 +270,12 @@ namespace XAMLite
             if (Visible == Visibility.Hidden)
             {
                 // before making the child hidden, record its lateset visibility state.
-                RecordChildVisibility();
+                SaveAndSetChildVisibility();
 
                 // change the child visibility to hidden, like the grid.
-                foreach (var t in Children)
+                foreach (var child in Children)
                 {
-                    t.Visible = Visibility.Hidden;
+                    child.Visible = Visibility.Hidden;
                 }
             }
             else
@@ -254,8 +293,10 @@ namespace XAMLite
         /// Records the current opacity of the child so that it can be used to modify its
         /// opacity according to the grid's opacity.
         /// </summary>
-        private void RecordChildOpacity()
+        private void SaveChildOpacity()
         {
+            _childOpacity = new float[Children.Count];
+
             for (var i = 0; i < Children.Count; i++)
             {
                 _childOpacity[i] = (float)Children[i].Opacity;
