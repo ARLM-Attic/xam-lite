@@ -102,8 +102,8 @@ namespace XAMLite
             TextAlignment = TextAlignment.Left;
             FontFamily = new FontFamily("Arial");
             Spacing = 2;
-            Width = 0;
-            Height = 0;
+            Width = 120;
+            Height = 23;
             Foreground = Brushes.Black;
             Padding = new Thickness(0, 0, 0, 0);
             Cursor = "|";
