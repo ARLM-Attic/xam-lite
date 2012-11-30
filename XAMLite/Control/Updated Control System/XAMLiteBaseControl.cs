@@ -20,67 +20,27 @@ namespace XAMLite
     public class XAMLiteBaseControl : DrawableGameComponent
     {
         /// <summary>
-        /// Any interactive control becomes inactive when this is false.
-        /// </summary>
-        public bool IsEnabled { get; set; }
-
-        /// <summary>
-        /// A single sprite batch this is shared across all instances of the XAMLiteControl class 
-        /// (and derived classes).
-        /// </summary>
-        protected static SpriteBatch SpriteBatch;
-
-        /// <summary>
-        /// Rectangle containing the control for collision and drawing
-        /// </summary>
-        protected Rectangle Panel;
-
-        /// <summary>
-        /// Fills the space of a control with a color.
-        /// </summary>
-        protected static Texture2D Pixel;
-
-        /// <summary>
         /// The name of the control.
         /// </summary>
         public virtual string Name { get; set; }
 
         /// <summary>
-        /// True when the control is Visible.
+        /// Allows the developer to set a parent of a particular XAMLite class.
+        /// In XAMLite, mainly used to build complex components that use a grid
+        /// when this grid may be inside another grid.
         /// </summary>
-        private Visibility _visible;
+        public XAMLiteBaseControl Parent { get; set; }
 
         /// <summary>
-        /// System.Windows.Visibility.  Maintains the visibility of a control.
+        /// Any interactive control becomes inactive when this is false.
         /// </summary>
-        public new Visibility Visible
-        {
-            get
-            {
-                return _visible;
-            }
-
-            set
-            {
-                _visible = value;
-                VisibilityChanged = true;
-            }
-        }
+        public bool IsEnabled { get; set; }
 
         /// <summary>
-        /// Notifies an individual control that the Visibility should be updated.
+        /// True when the control is a part of another control.  For example, 
+        /// a XAMLiteLabel associated with the XAMLiteCheckBox class.
         /// </summary>
-        protected bool VisibilityChanged;
-
-        /// <summary>
-        /// The horizontal alignment of the control.
-        /// </summary>
-        public HorizontalAlignment HorizontalAlignment { get; set; }
-
-        /// <summary>
-        /// The vertical alignment of the control.
-        /// </summary>
-        public VerticalAlignment VerticalAlignment { get; set; }
+        protected internal bool IsAttachedToGrid;
 
         /// <summary>
         /// Width of the control.
@@ -92,77 +52,6 @@ namespace XAMLite
         /// </summary>
         public int Height { get; set; }
 
-        /// <summary>
-        /// Maintains the public double Opacity.
-        /// </summary>
-        private double _opacity;
-
-        /// <summary>
-        /// Gets or sets the opacity factor applied to the entire System.Windows.UIElement
-        /// when it is rendered in the user interface (UI). Default opacity is 1.0. 
-        /// Expected values are between 0.0 and 1.0.
-        /// </summary>
-        public double Opacity
-        {
-            get
-            {
-                return _opacity;
-            }
-
-            set
-            {
-                _opacity = value;
-                OpacityChanged = true;
-            }
-        }
-
-        /// <summary>
-        /// Notifies an individual control that the Opacity should be updated.
-        /// </summary>
-        protected bool OpacityChanged;
-
-        /// <summary>
-        /// Background color of the Grid.
-        /// </summary>
-        private Color _backgroundColor;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private Brush _background;
-
-        /// <summary>
-        /// Background color of the Grid.
-        /// </summary>
-        public Brush Background
-        {
-            get
-            {
-                return _background;
-            }
-
-            set
-            {
-                _background = value;
-                var solidBrush = (SolidColorBrush)value;
-                var color = solidBrush.Color;
-                _backgroundColor = new Color(color.R, color.G, color.B, color.A);
-
-                _transparent = value == Brushes.Transparent;
-            }
-        }
-
-        /// <summary>
-        /// true when the background color is transparent.
-        /// </summary>
-        private bool _transparent;
-
-        /// <summary>
-        /// True when the control is a part of another control.  For example, 
-        /// a XAMLiteLabel associated with the XAMLiteCheckBox class.
-        /// </summary>
-        protected internal bool AttachedToGrid;
-        
         /// <summary>
         /// The margin of the control.
         /// </summary>
@@ -187,62 +76,102 @@ namespace XAMLite
         }
 
         /// <summary>
-         /// The position of the control on the screen.
-         /// </summary>
-        protected Vector2 Position
-        {
-            get
-            {
-                // X
-                var x = 0f;
-                switch (HorizontalAlignment)
-                {
-                    case HorizontalAlignment.Center:
-                        x = ((float)(Viewport.Width - Width) / 2) + (float)Margin.Left - (float)Margin.Right;
-                        break;
-
-                    case HorizontalAlignment.Left:
-                        x = (float)Margin.Left;
-                        break;
-
-                    case HorizontalAlignment.Right:
-                        x = Viewport.Width - (float)Margin.Right - Width;
-                        break;
-
-                    case HorizontalAlignment.Stretch:
-                        Width = Viewport.Width;
-                        break;
-                }
-
-                // Y
-                var y = 0f;
-                switch (VerticalAlignment)
-                {
-                    case VerticalAlignment.Bottom:
-                        y = Viewport.Height - Height - (float)Margin.Bottom;
-                        break;
-
-                    case VerticalAlignment.Center:
-                        y = ((float)(Viewport.Height - Height) / 2) + (float)Margin.Top - (float)Margin.Bottom;
-                        break;
-
-                    case VerticalAlignment.Stretch:
-                        Height = Viewport.Height;
-                        break;
-
-                    case VerticalAlignment.Top:
-                        y = (int)Margin.Top;
-                        break;
-                }
-
-                return new Vector2(x, y);
-            }
-        }
-
+        /// If the control IsAttachedToGrid, then the position of the control 
+        /// must be mapped according to the grid that contains it rather than 
+        /// the Viewport.
+        /// </summary>
+        protected internal Rectangle Window;
+ 
         /// <summary>
         /// The screen width and height.
         /// </summary>
         protected Viewport Viewport;
+
+        /// <summary>
+        /// The horizontal alignment of the control.
+        /// </summary>
+        public HorizontalAlignment HorizontalAlignment { get; set; }
+
+        /// <summary>
+        /// The vertical alignment of the control.
+        /// </summary>
+        public VerticalAlignment VerticalAlignment { get; set; }
+
+        /// <summary>
+        /// The position of the control on the screen.
+        /// </summary>
+        protected Vector2 Position
+        {
+            get
+            {
+                return GetPosition();
+            }
+        }
+
+        /// <summary>
+        /// Returns the position of the control.
+        /// </summary>
+        /// <returns></returns>
+        private Vector2 GetPosition()
+        {
+            var panel = new Rectangle();
+
+            if (IsAttachedToGrid)
+            {
+                panel = Window;
+            }
+            else
+            {
+                panel.X = Viewport.X;
+                panel.Y = Viewport.Y;
+                panel.Width = Viewport.Width;
+                panel.Height = Viewport.Height;
+            }
+
+            // X
+            var x = 0f;
+            switch (HorizontalAlignment)
+            {
+                case HorizontalAlignment.Center:
+                    x = panel.X + ((float)(panel.Width - Width) / 2) + (float)Margin.Left - (float)Margin.Right;
+                    break;
+
+                case HorizontalAlignment.Left:
+                    x = panel.X + (float)Margin.Left;
+                    break;
+
+                case HorizontalAlignment.Right:
+                    x = panel.X + panel.Width - (float)Margin.Right - Width;
+                    break;
+
+                case HorizontalAlignment.Stretch:
+                    Width = panel.Width;
+                    break;
+            }
+
+            // Y
+            var y = 0f;
+            switch (VerticalAlignment)
+            {
+                case VerticalAlignment.Bottom:
+                    y = panel.Y + panel.Height - Height - (float)Margin.Bottom;
+                    break;
+
+                case VerticalAlignment.Center:
+                    y = panel.Y + ((float)(panel.Height - Height) / 2) + (float)Margin.Top - (float)Margin.Bottom;
+                    break;
+
+                case VerticalAlignment.Stretch:
+                    Height = panel.Y + panel.Height;
+                    break;
+
+                case VerticalAlignment.Top:
+                    y = panel.Y + (int)Margin.Top;
+                    break;
+            }
+
+            return new Vector2(x, y);
+        }
 
         /// <summary>
         /// Returns the top left Vector2 of the control.
@@ -283,6 +212,114 @@ namespace XAMLite
         {
             get { return new Vector2(Position.X + ((float)Width / 2), Position.Y + ((float)Height / 2)); }
         }
+
+        /// <summary>
+        /// True when the control is Visible.
+        /// </summary>
+        private Visibility _visible;
+
+        /// <summary>
+        /// System.Windows.Visibility.  Maintains the visibility of a control.
+        /// </summary>
+        public new Visibility Visible
+        {
+            get
+            {
+                return _visible;
+            }
+
+            set
+            {
+                _visible = value;
+                VisibilityChanged = true;
+            }
+        }
+
+        /// <summary>
+        /// Notifies an individual control that the Visibility should be updated.
+        /// </summary>
+        protected bool VisibilityChanged;
+
+        /// <summary>
+        /// Maintains the public double Opacity.
+        /// </summary>
+        private double _opacity;
+
+        /// <summary>
+        /// Gets or sets the opacity factor applied to the entire System.Windows.UIElement
+        /// when it is rendered in the user interface (UI). Default opacity is 1.0. 
+        /// Expected values are between 0.0 and 1.0.
+        /// </summary>
+        public double Opacity
+        {
+            get
+            {
+                return _opacity;
+            }
+
+            set
+            {
+                _opacity = value;
+                OpacityChanged = true;
+            }
+        }
+
+        /// <summary>
+        /// Notifies an individual control that the Opacity should be updated.
+        /// </summary>
+        protected bool OpacityChanged;
+
+        /// <summary>
+        /// A single sprite batch this is shared across all instances of the XAMLiteControl class 
+        /// (and derived classes).
+        /// </summary>
+        protected static SpriteBatch SpriteBatch;
+
+        /// <summary>
+        /// Rectangle containing the control for collision and drawing
+        /// </summary>
+        protected Rectangle Panel;
+
+        /// <summary>
+        /// Fills the space of a control with a color.
+        /// </summary>
+        protected static Texture2D Pixel;
+
+        /// <summary>
+        /// Background color of the Grid.
+        /// </summary>
+        private Color _backgroundColor;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private Brush _background;
+
+        /// <summary>
+        /// Background color of the Grid.
+        /// </summary>
+        public Brush Background
+        {
+            get
+            {
+                return _background;
+            }
+
+            set
+            {
+                _background = value;
+                var solidBrush = (SolidColorBrush)value;
+                var color = solidBrush.Color;
+                _backgroundColor = new Color(color.R, color.G, color.B, color.A);
+
+                _transparent = value == Brushes.Transparent;
+            }
+        }
+
+        /// <summary>
+        /// true when the background color is transparent.
+        /// </summary>
+        private bool _transparent;
 
         /// <summary>
         /// The state of the mouse, whether pressed, released, etc.
@@ -373,6 +410,11 @@ namespace XAMLite
         protected static List<XAMLiteRadioButton> AllRadioButtons;
 
         /// <summary>
+        /// 
+        /// </summary>
+        protected internal bool PositionChanged;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="game"></param>
@@ -415,8 +457,6 @@ namespace XAMLite
 
             // Sets the size and location of the image.
             Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
-
-            base.LoadContent();
         }
 
         /// <summary>
@@ -428,6 +468,12 @@ namespace XAMLite
             base.Update(gameTime);
 
             HandleInput(gameTime);
+
+            if (PositionChanged)
+            {
+                Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
+                PositionChanged = false;
+            }
         }
 
         /// <summary>

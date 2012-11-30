@@ -25,6 +25,16 @@ namespace XAMLite
         public TextAlignment TextAlignment { get; set; }
 
         /// <summary>
+        /// The border color.
+        /// </summary>
+        public Brush BorderBrush { get; set; }
+
+        /// <summary>
+        /// The border thickness.
+        /// </summary>
+        public Thickness BorderThickness { get; set; }
+
+        /// <summary>
         /// Determines whether the default text within the text box can be changed.
         /// </summary>
         public bool IsReadOnly;
@@ -41,22 +51,6 @@ namespace XAMLite
         public XAMLiteBaseText(Game game) 
             : base(game)
         {
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="gameTime"></param>
-        public override void Draw(GameTime gameTime)
-        {
-            base.Draw(gameTime);
-
-            if (Text != null)
-            {
-                SpriteBatch.Begin();
-                //SpriteBatch.DrawString(SpriteFont, Text, new Vector2(Panel.X, Panel.Y), ForegroundColor * (float)Opacity);
-                SpriteBatch.End();
-            }
         }
 
         /// <summary>

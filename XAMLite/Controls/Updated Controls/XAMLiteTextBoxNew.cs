@@ -10,24 +10,9 @@ namespace XAMLite
     public class XAMLiteTextBoxNew : XAMLiteBaseText
     {
         /// <summary>
-        /// The border color.
+        /// Grid that contains all of the TextBox assets.
         /// </summary>
-        public Brush BorderBrush { get; set; }
-
-        /// <summary>
-        /// The border thickness.
-        /// </summary>
-        public Thickness BorderThickness { get; set; }
-
-        /// <summary>
-        /// The rectangle that is filled by the texture.
-        /// </summary>
-        protected Rectangle TextBoxRectangle;
-
-        /// <summary>
-        /// The position that text is drawn.
-        /// </summary>
-        protected Vector2 TextPosition;
+        private XAMLiteGridNew _grid;
 
         /// <summary>
         /// The current position of the cursor.
@@ -102,6 +87,7 @@ namespace XAMLite
             Cursor = "|";
             _initialTyping = true;
             _cursorBlinkTime = TimeSpan.FromSeconds(0.5);
+            BorderBrush = null;
 
             _deleteNextChar = true;
 
@@ -141,15 +127,27 @@ namespace XAMLite
         {
             base.LoadContent();
 
-            var grid = new XAMLiteGridNew(Game)
+            // Update font metrics here to get an accurate string measurement.
+            UpdateFontMetrics();
+
+            var stringWidth = SpriteFont.MeasureString(Text).X + Padding.Left;
+            if (stringWidth > Width)
             {
+                Width = (int)Math.Round(stringWidth);
+            }
+
+            _grid = new XAMLiteGridNew(Game)
+            {
+                IsAttachedToGrid = true,
                 HorizontalAlignment = HorizontalAlignment,
                 VerticalAlignment = VerticalAlignment,
                 Width = Width,
                 Height = Height,
                 Margin = Margin
             };
-            Game.Components.Add(grid);
+            Game.Components.Add(_grid);
+           // Console.WriteLine("Grid Panel: " + _grid.Panel);
+            Console.WriteLine("TextBox width/height: " + _grid.Width + "/" + _grid.Height + " Grid Margin: " + _grid.Margin);
 
             var text = new XAMLiteLabelNew(Game)
                 {
@@ -159,20 +157,94 @@ namespace XAMLite
                     FontFamily = FontFamily,
                     Spacing = Spacing,
                     Foreground = Foreground,
-                    Padding = new Thickness(Padding.Left, Padding.Top, 0, 0)
+                    Padding = new Thickness(BorderThickness.Left > 1 ? Padding.Left + BorderThickness.Left : Padding.Left, 
+                    BorderThickness.Top > 1 ? Padding.Top + BorderThickness.Top : Padding.Top, 0, 0),
                 };
-            grid.Children.Add(text);
+            _grid.Children.Add(text);
 
-            //var textbox = new XAMLiteRectangleNew(Game)
-            //    {
-            //        Fill = Background,
-            //        Stroke = BorderBrush ?? Brushes.Transparent,
-            //        Width = Width,
-            //        Height = Height
-            //    };
-            //grid.Children.Add(textbox);
+            if (BorderBrush == null)
+            {
+                SetBorders();
+            }
 
-            //Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
+            // Create the borders of the control, if they are set.
+            if (BorderThickness.Left > 0)
+            {
+                if (BorderThickness.Left == BorderThickness.Right &&
+                   BorderThickness.Right == BorderThickness.Top &&
+                    BorderThickness.Top == BorderThickness.Bottom)
+                {
+                    var border = new XAMLiteRectangleNew(Game)
+                        {
+                            Stroke = BorderBrush,
+                            StrokeThickness = BorderThickness.Left
+                        };
+                    _grid.Children.Add(border);
+                }
+                else
+                {
+                    SetBorders();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sets the border colors of the textbox.
+        /// </summary>
+        private void SetBorders()
+        {
+            var nullbrush = false;
+
+            // Set this to a defined default value.
+            if (BorderBrush == null)
+            {
+                nullbrush = true;
+                BorderThickness = new Thickness(1);
+            }
+
+            var leftBorder = new XAMLiteRectangleNew(Game)
+            {
+                Fill = nullbrush ? Brushes.Black : BorderBrush,
+                Opacity = nullbrush ? 0.25f : Opacity,
+                Width = (int)BorderThickness.Left,
+                Height = Height,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top
+            };
+            _grid.Children.Add(leftBorder);
+
+            var rightBorder = new XAMLiteRectangleNew(Game)
+            {
+                Fill = nullbrush ? Brushes.Black : BorderBrush,
+                Opacity = nullbrush ? 0.25f : Opacity,
+                Width = (int)BorderThickness.Right,
+                Height = Height,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Center,
+            };
+            _grid.Children.Add(rightBorder);
+
+            var topBorder = new XAMLiteRectangleNew(Game)
+            {
+                Fill = nullbrush ? Brushes.Black : BorderBrush,
+                Opacity = nullbrush ? 0.5f : Opacity,
+                Width = Width - 2,
+                Height = (int)BorderThickness.Top,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Top,
+            };
+            _grid.Children.Add(topBorder);
+
+            var bottomBorder = new XAMLiteRectangleNew(Game)
+            {
+                Fill = nullbrush ? Brushes.Black : BorderBrush,
+                Opacity = nullbrush ? 0.25f : Opacity,
+                Width = Width - 2,
+                Height = (int)BorderThickness.Bottom,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Bottom,
+            };
+            _grid.Children.Add(bottomBorder);
         }
 
         /// <summary>

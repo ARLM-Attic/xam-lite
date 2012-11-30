@@ -38,9 +38,12 @@ namespace XAMLite
         {
             set
             {
-                var solidBrush = (SolidColorBrush)value;
-                var color = solidBrush.Color;
-                _stroke = new Color(color.R, color.G, color.B, color.A);
+                if (value != null)
+                {
+                    var solidBrush = (SolidColorBrush)value;
+                    var color = solidBrush.Color;
+                    _stroke = new Color(color.R, color.G, color.B, color.A);
+                }
             }
         }
 

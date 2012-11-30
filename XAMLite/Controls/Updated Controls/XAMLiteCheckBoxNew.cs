@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -8,8 +9,6 @@ using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {
-    using System.Windows.Input;
-
     /// <summary>
     /// Note: Currently under development.  Continue to use normal
     /// XAMLiteCheckBox class until this class replaces it.
@@ -196,7 +195,6 @@ namespace XAMLite
                 Foreground = Foreground,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Center,
-                AttachedToGrid = true,
                 Padding = new Thickness(Padding.Left, Padding.Top, 0, 0),
                 FontFamily = FontFamily,
                 Spacing = Spacing,

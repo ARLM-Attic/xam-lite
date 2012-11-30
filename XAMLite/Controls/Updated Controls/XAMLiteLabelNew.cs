@@ -41,7 +41,7 @@ namespace XAMLite
             {
                 SpriteBatch.Begin();
 
-                if (!AttachedToGrid)
+                if (!IsAttachedToGrid)
                 {
                     SpriteBatch.DrawString(
                         SpriteFont,

@@ -72,36 +72,34 @@ namespace XAMLite
         /// </summary>
         protected override void LoadContent()
         {
+            base.LoadContent();
+
             if (SourceName == null)
             {
                 LoadDefaultTextures();
             }
-            //else
-            //{
-                _texture = Game.Content.Load<Texture2D>(SourceName);
 
-                if (Width == 0)
-                {
-                    Width = _texture.Width;
-                }
+            _texture = Game.Content.Load<Texture2D>(SourceName);
 
-                if (Height == 0)
-                {
-                    Height = _texture.Height;
-                }
+            if (Width == 0)
+            {
+                Width = _texture.Width;
+            }
 
-                if (RolloverSourceName != null)
-                {
-                    _rolloverTexture = Game.Content.Load<Texture2D>(RolloverSourceName);
-                }
+            if (Height == 0)
+            {
+                Height = _texture.Height;
+            }
 
-                if (ClickSourceName != null)
-                {
-                    _clickTexture = Game.Content.Load<Texture2D>(ClickSourceName);
-                }
-            //}
+            if (RolloverSourceName != null)
+            {
+                _rolloverTexture = Game.Content.Load<Texture2D>(RolloverSourceName);
+            }
 
-            base.LoadContent();
+            if (ClickSourceName != null)
+            {
+                _clickTexture = Game.Content.Load<Texture2D>(ClickSourceName);
+            }
         }
 
         /// <summary>

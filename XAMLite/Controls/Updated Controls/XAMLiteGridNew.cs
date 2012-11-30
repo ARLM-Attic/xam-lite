@@ -160,28 +160,23 @@ namespace XAMLite
             // Add the child component to the game with the modified parameters.
             foreach (var child in Children)
             {
-                child.AttachedToGrid = true;
+                child.IsAttachedToGrid = true;
                 Game.Components.Add(child);
             }
 
-            ModifyChildWidthAndMarginsToGrid();
+            ModifyChildPositionAndWidth();
 
             _childrenLoaded = true;
         }
 
         /// <summary>
-        /// Adjust the children margins according to the grid location.
+        /// Adjust the children position and width according to the grid location.
         /// </summary>
-        private void ModifyChildWidthAndMarginsToGrid()
+        private void ModifyChildPositionAndWidth()
         {
             // Add the child component to the game with the modified parameters.
             foreach (var child in Children)
             {
-                double left = 0;
-                double top = 0;
-                double right = 0;
-                double bottom = 0;
-
                 // if the child is larger than the grid, resize the object
                 // to the grid dimensions.
                 if (child.Width > Width)
@@ -194,51 +189,19 @@ namespace XAMLite
                     child.Height = Height;
                 }
 
-                var th = child.Margin;
+                child.Window = Panel;
+                //if (child is XAMLiteCheckBoxNew)
+                //{
+                //    Console.Write("Checkbox inside ");
+                //}
 
-                var difference = th.Left - th.Right;
-                switch (child.HorizontalAlignment)
-                {
-                    case HorizontalAlignment.Center:
-                        var viewPortCenter = Viewport.X + (Viewport.Width / 2);
-                        var centerDifference = viewPortCenter - Center.X;
-                        left = -centerDifference + difference;
-                        break;
-                    case HorizontalAlignment.Left:
-                        left = TopLeftCorner.X + th.Left;
-                        break;
-                    case HorizontalAlignment.Right:
-                        right = Viewport.Width - TopRightCorner.X + th.Right;
-                        break;
-                    case HorizontalAlignment.Stretch:
-                        child.HorizontalAlignment = HorizontalAlignment.Left;
-                        child.Width = (Width - (int)difference) > 0 ? Width - (int)difference : 0;
-                        left = TopLeftCorner.X + th.Left;
-                        break;
-                }
+                //if (child is XAMLiteGridNew)
+                //{
+                //    Console.Write("Grid inside ");
+                //}
 
-                difference = th.Top - th.Bottom;
-                switch (child.VerticalAlignment)
-                {
-                    case VerticalAlignment.Center:
-                        var viewPortCenter = Viewport.Y + (Viewport.Height / 2);
-                        var centerDifference = viewPortCenter - Center.Y;
-                        top = -centerDifference + difference;
-                        break;
-                    case VerticalAlignment.Top:
-                        top = TopLeftCorner.Y + th.Top;
-                        break;
-                    case VerticalAlignment.Bottom:
-                        bottom = Viewport.Height - BottomLeftCorner.Y + th.Bottom;
-                        break;
-                    case VerticalAlignment.Stretch:
-                        child.VerticalAlignment = VerticalAlignment.Top;
-                        child.Height = (Height - (int)difference) > 0 ? Height - (int)difference : 0;
-                        top = TopLeftCorner.Y + th.Top;
-                        break;
-                }
-
-                child.Margin = new Thickness(left, top, right, bottom);
+                //Console.WriteLine("Grid's panel: " + Panel);
+                child.PositionChanged = true;
             }
         }
 

@@ -1,12 +1,12 @@
 ﻿using System.Windows;
+using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Brush = System.Windows.Media.Brush;
 using Brushes = System.Windows.Media.Brushes;
+using Color = Microsoft.Xna.Framework.Color;
 using FontFamily = System.Windows.Media.FontFamily;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
-using System.Windows.Media;
-using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {
