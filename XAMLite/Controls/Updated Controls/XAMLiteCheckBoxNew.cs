@@ -136,17 +136,20 @@ namespace XAMLite
             UpdateFontMetrics();
             
             Debug.Assert((CheckedSourceName != null), "Must set CheckBoxSelectedSourceName property. This is the image file path, minus the file extension.");
-            
+
             _grid = new XAMLiteGridNew(Game)
             {
+                IsAttachedToGrid = Parent != null && Parent.Width != Viewport.Width,
+                Window = Parent != null && Parent.Width != Viewport.Width ? Parent.Window : Panel,
                 HorizontalAlignment = HorizontalAlignment,
                 VerticalAlignment = VerticalAlignment,
                 Width = Width,
                 Height = Height,
                 Margin = Margin
-            };    
+            };
+
             Game.Components.Add(_grid);
-            
+
             _uncheckedButton = new XAMLiteImageNew(Game)
             {
                 SourceName = SourceName,

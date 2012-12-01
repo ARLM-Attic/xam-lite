@@ -157,10 +157,13 @@ namespace XAMLite
             SaveChildOpacity();
             SaveAndSetChildVisibility();
 
+            Window = Panel;
+
             // Add the child component to the game with the modified parameters.
             foreach (var child in Children)
             {
                 child.IsAttachedToGrid = true;
+                child.Parent = this;
                 Game.Components.Add(child);
             }
 
@@ -190,17 +193,6 @@ namespace XAMLite
                 }
 
                 child.Window = Panel;
-                //if (child is XAMLiteCheckBoxNew)
-                //{
-                //    Console.Write("Checkbox inside ");
-                //}
-
-                //if (child is XAMLiteGridNew)
-                //{
-                //    Console.Write("Grid inside ");
-                //}
-
-                //Console.WriteLine("Grid's panel: " + Panel);
                 child.PositionChanged = true;
             }
         }

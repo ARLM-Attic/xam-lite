@@ -138,16 +138,16 @@ namespace XAMLite
 
             _grid = new XAMLiteGridNew(Game)
             {
-                IsAttachedToGrid = true,
+                IsAttachedToGrid = Parent != null && Parent.Width != Viewport.Width,
+                Window = Parent != null && Parent.Width != Viewport.Width ? Parent.Window : Panel,
                 HorizontalAlignment = HorizontalAlignment,
                 VerticalAlignment = VerticalAlignment,
                 Width = Width,
                 Height = Height,
                 Margin = Margin
             };
+
             Game.Components.Add(_grid);
-           // Console.WriteLine("Grid Panel: " + _grid.Panel);
-            Console.WriteLine("TextBox width/height: " + _grid.Width + "/" + _grid.Height + " Grid Margin: " + _grid.Margin);
 
             var text = new XAMLiteLabelNew(Game)
                 {
