@@ -109,23 +109,11 @@ namespace XAMLite
                 _isVisible = true;
 
                 var index = 0;
-                foreach (var t in Children)
+                foreach (var child in Children)
                 {
                     if (_childVisibility[index])
                     {
-                        t.Visible = Visibility.Visible;
-                    }
-
-                    if (t.Parent != null && t.Parent.Parent != null)
-                    {
-                        if (t.Parent.Parent is XAMLiteTextBoxNew)
-                        {
-                            if (t is XAMLiteLabelNew)
-                            {
-                                var l = (XAMLiteLabelNew)t;
-                                Console.WriteLine(l.Content + ": " + t.Visible);
-                            }
-                        }
+                        child.Visible = Visibility.Visible;
                     }
 
                     index++;

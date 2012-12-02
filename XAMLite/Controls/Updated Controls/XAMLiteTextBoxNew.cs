@@ -106,7 +106,7 @@ namespace XAMLite
             Foreground = Brushes.Black;
             Padding = new Thickness(5, 0, 0, 0);
             TextBoxCursor = "|";
-            _initialText = "";
+            _initialText = string.Empty;
             _cursorBlinkTime = TimeSpan.FromSeconds(0.5);
             BorderBrush = null;
 
