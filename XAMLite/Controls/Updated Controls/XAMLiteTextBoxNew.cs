@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Keyboard = Microsoft.Xna.Framework.Input.Keyboard;
 
 namespace XAMLite
 {
@@ -13,6 +14,27 @@ namespace XAMLite
         /// Grid that contains all of the TextBox assets.
         /// </summary>
         private XAMLiteGridNew _grid;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private XAMLiteLabelNew _text;
+
+        /// <summary>
+        /// Default text as designated by the developer.
+        /// </summary>
+        private string _initialText;
+
+        /// <summary>
+        /// Initial Padding as defined by the developer.  Included with
+        /// measuring where the cursor is placed.
+        /// </summary>
+        private double _initialPadding;
+
+        /// <summary>
+        /// The label containing the cursor.
+        /// </summary>
+        private XAMLiteLabelNew _cursor;
 
         /// <summary>
         /// The current position of the cursor.
@@ -39,8 +61,6 @@ namespace XAMLite
         /// The character '|' that makes the blinking cursor.
         /// </summary>
         protected string TextBoxCursor;
-
-        private bool _initialTyping;
         
         private bool _cursorVisible;
         
@@ -71,7 +91,7 @@ namespace XAMLite
         private KeyboardState _lastKeyboardState;
 
         /// <summary>
-        /// 
+        /// Constructor.
         /// </summary>
         /// <param name="game"></param>
         public XAMLiteTextBoxNew(Game game)
@@ -79,13 +99,14 @@ namespace XAMLite
         {
             TextAlignment = TextAlignment.Left;
             FontFamily = new FontFamily("Arial");
+            Focusable = true;
             Spacing = 2;
             Width = 120;
             Height = 23;
             Foreground = Brushes.Black;
             Padding = new Thickness(5, 0, 0, 0);
             TextBoxCursor = "|";
-            _initialTyping = true;
+            _initialText = "";
             _cursorBlinkTime = TimeSpan.FromSeconds(0.5);
             BorderBrush = null;
 
@@ -107,14 +128,7 @@ namespace XAMLite
                     Keys.N, Keys.O, Keys.P, Keys.Q, Keys.R, Keys.S, Keys.T, Keys.U, Keys.V, Keys.W, Keys.X, Keys.Y,
                     Keys.Z, Keys.Space, Keys.Enter, Keys.OemClear, Keys.Decimal, Keys.Tab, Keys.Add, Keys.Subtract,
                     Keys.Multiply, Keys.Divide, Keys.CapsLock, //Keys.Home,
-                    //Keys.End,
-                    //Keys.Left,
-                    //Keys.Right,
-                    //Keys.Up,
-                    //Keys.Down,
-                    //Keys.PageUp,
-                    //Keys.PageDown,
-                    //Keys.Insert,
+                    //Keys.End, Keys.Left, Keys.Right, Keys.Up, Keys.Down, Keys.PageUp, Keys.PageDown, Keys.Insert,
                     Keys.NumPad0, Keys.NumPad1, Keys.NumPad2, Keys.NumPad3, Keys.NumPad4, Keys.NumPad5, Keys.NumPad6,
                     Keys.NumPad7, Keys.NumPad8, Keys.NumPad9
                 };
@@ -127,6 +141,9 @@ namespace XAMLite
         {
             base.LoadContent();
 
+            _initialText = Text;
+            _initialPadding = Padding.Left;
+
             _grid = new XAMLiteGridNew(Game)
             {
                 Parent = this,
@@ -134,7 +151,7 @@ namespace XAMLite
                 VerticalAlignment = VerticalAlignment,
                 Width = Width,
                 Height = Height,
-                Margin = Margin
+                Margin = Margin,
             };
             Game.Components.Add(_grid);
 
@@ -148,7 +165,7 @@ namespace XAMLite
             };
             _grid.Children.Add(fill);
 
-            var text = new XAMLiteLabelNew(Game)
+            _text = new XAMLiteLabelNew(Game)
                 {
                     Content = Text,
                     HorizontalAlignment = TextAlignment == TextAlignment.Left || TextAlignment == TextAlignment.Justify ? HorizontalAlignment.Left : TextAlignment == TextAlignment.Center ? HorizontalAlignment.Center : HorizontalAlignment.Right,
@@ -157,9 +174,22 @@ namespace XAMLite
                     Spacing = Spacing,
                     Foreground = Foreground,
                     Padding = new Thickness(BorderThickness.Left > 1 ? Padding.Left + BorderThickness.Left : Padding.Left, 
-                    BorderThickness.Top > 1 ? Padding.Top + BorderThickness.Top : Padding.Top, 0, 0),
+                        BorderThickness.Top > 1 ? Padding.Top + BorderThickness.Top : Padding.Top, 0, 0),
                 };
-            _grid.Children.Add(text);
+            _grid.Children.Add(_text);
+
+            _cursor = new XAMLiteLabelNew(Game)
+                {
+                    Content = TextBoxCursor,
+                    HorizontalAlignment = _text.HorizontalAlignment,
+                    VerticalAlignment = _text.VerticalAlignment,
+                    FontFamily = FontFamily,
+                    Spacing = Spacing,
+                    Foreground = Foreground,
+                    Padding = _text.Padding,
+                    Visible = Visibility.Hidden
+                };
+            _grid.Children.Add(_cursor);
 
             if (BorderBrush == null)
             {
@@ -185,6 +215,8 @@ namespace XAMLite
                     SetBorders();
                 }
             }
+
+            MouseUp += OnMouseUp;
 
             Background = Brushes.Transparent;
         }
@@ -254,28 +286,22 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            // initial text box click where the default text is replaced with just a cursor.
-            if (MousePressed && Panel.Contains(MsRect) && _initialTyping)
-            {
-                //Selected = true;
-                _initialTyping = false;
-                Text = string.Empty;
-                _cursorVisible = true;
-                _cursorBlink = true;
-            }
-            else if (MousePressed && Panel.Contains(MsRect)) // && !Selected)
-            {
-                // user has previously typed something, deselected, and then selected again. 
-                //Selected = true;
-                _cursorVisible = true;
-                _cursorBlink = true;
-            }
-            else if (MousePressed && !Panel.Contains(MsRect)) // && Selected)
+            // if deselected after the control had focus, remove the focus
+            if (Ms.LeftButton == ButtonState.Pressed && !MousePressed && IsFocused)
             {
                 // text box is deselected.
-                //Selected = false;
+                IsFocused = false;
+            }
+
+            if (!IsFocused)
+            {
+                _cursor.Visible = Visibility.Hidden;
                 _cursorVisible = false;
                 _cursorBlink = false;
+                if (_text.Content.ToString() == string.Empty)
+                {
+                    _text.Content = _initialText;
+                }
             }
 
             // handling the blinky cursor.
@@ -289,6 +315,23 @@ namespace XAMLite
                 }
             }
 
+            _cursor.Visible = _cursorBlink ? Visibility.Visible : Visibility.Hidden;
+
+            ProcessInput(gameTime);
+            
+            UpdateTextAndCursor();
+
+            base.Update(gameTime);
+
+            _lastKeyboardState = _currentKeyboardState;
+        }
+
+        /// <summary>
+        /// Processes keystrokes.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        private void ProcessInput(GameTime gameTime)
+        {
             if (_backspaceheld)
             {
                 _deleteTimer -= gameTime.ElapsedGameTime;
@@ -317,48 +360,37 @@ namespace XAMLite
                 }
             }
 
-            //if (Selected)
+            if (IsFocused)
             {
                 ProcessKeyboard();
             }
-
-            base.Update(gameTime);
-
-            _lastKeyboardState = _currentKeyboardState;
         }
 
         /// <summary>
-        /// Draws the text box and text.
+        /// Updates the text for the label that is visually
+        /// displayed.
         /// </summary>
-        /// <param name="gameTime"></param>
-        public override void Draw(GameTime gameTime)
+        private void UpdateTextAndCursor()
         {
-            base.Draw(gameTime);
-
-            if (Visible != Visibility.Visible)
-            {
-                return;
-            }
-
-            SpriteBatch.Begin();
-            //SpriteBatch.DrawString(SpriteFont, Text, TextPosition, _foregroundColor);
-            if (_cursorBlink)
-            {
-                SpriteBatch.DrawString(SpriteFont, TextBoxCursor, CursorPosition, ForegroundColor);
-            }
-
-            SpriteBatch.End();
+            Text = _text.Content.ToString();
+            _cursor.Padding = new Thickness(_initialPadding + SpriteFont.MeasureString(Text).X + Spacing, Padding.Top, 0, 0);
         }
 
         /// <summary>
-        /// Calculates the position of the text
+        /// Handles when the textbox is selected.
         /// </summary>
-        private void CalculatePositions()
+        /// <param name="sender"></param>
+        /// <param name="mouseButtonEventArgs"></param>
+        private void OnMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
-            //var position = new Vector2(Panel.X + (int)Padding.Left, (Panel.Y + (Height / 2)) - (SpriteFont.MeasureString(Text).Y / 2) + (int)Padding.Top);
-            //TextPosition = position;
-            //CursorPosition = position;
-            //CursorStartPosition = position.X;
+            IsFocused = true;
+
+            if ((string)_text.Content == _initialText)
+            {
+                _text.Content = string.Empty;
+            }
+
+            _cursorVisible = true;
         }
 
         /// <summary>
@@ -419,12 +451,12 @@ namespace XAMLite
         {
             var newChar = "";
 
-            //if (Text.Length >= MaxLength && key != Keys.Back && key != Keys.Delete &&
-            //    key != Keys.Tab && key != Keys.Enter && (int)SpriteFont.MeasureString(Text).X >=
-            //    TextBoxTexture.Width - 20)
-            //{
-            //    return;
-            //}
+            if (_text.Content.ToString().Length >= MaxLength && key != Keys.Back && key != Keys.Delete &&
+                key != Keys.Tab && key != Keys.Enter && (int)SpriteFont.MeasureString(_text.Content.ToString()).X >=
+                Width - _text.Padding.Left - BorderThickness.Right - BorderThickness.Left - 6)
+            {
+                return;
+            }
 
             if (_standardKeyTyped)
             {
@@ -495,9 +527,7 @@ namespace XAMLite
                         return;
                     case Keys.Enter:
                     case Keys.Tab:
-                        //Selected = false;
-                        _cursorVisible = false;
-                        _cursorBlink = false;
+                        IsFocused = false;
                         break;
                     default:
                         if (_keyShift || _capsLockOn)
@@ -660,7 +690,7 @@ namespace XAMLite
                 }
             }
 
-            Text += newChar;
+            _text.Content += newChar;
             OnKeyDown();
         }
 
@@ -683,9 +713,9 @@ namespace XAMLite
             _deleteNextChar = false;
             _backspaceheld = true;
             _numDeletedKeys++;
-            if (Text.Length != 0)
+            if (_text.Content.ToString().Length != 0)
             {
-                Text = Text.Remove(Text.Length - 1);
+                _text.Content = _text.Content.ToString().Remove(Text.Length - 1);
             }
 
             if (_numDeletedKeys <= 2)

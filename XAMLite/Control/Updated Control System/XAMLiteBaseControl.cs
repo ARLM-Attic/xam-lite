@@ -37,10 +37,46 @@ namespace XAMLite
         public bool IsEnabled { get; set; }
 
         /// <summary>
+        /// Gets or sets a value that indicates whether the element can receive focus.
+        /// </summary>
+        public bool Focusable { get; set; }
+
+        /// <summary>
+        /// Determines whether this element has logical focus.
+        /// </summary>
+        private bool _isFocused;
+
+        /// <summary>
+        /// Gets or sets a value that determines whether this element has logical focus.
+        /// </summary>
+        public bool IsFocused
+        {
+            get
+            {
+                var focus = false;
+                
+                if (Focusable)
+                {
+                    focus = _isFocused;
+                }
+
+                return focus;
+            }
+
+            set
+            {
+                if (Focusable)
+                {
+                    _isFocused = value;
+                }
+            }
+        }
+
+        /// <summary>
         /// True when the control is a part of another control.  For example, 
         /// a XAMLiteLabel associated with the XAMLiteCheckBox class.
         /// </summary>
-        protected internal bool IsAttachedToGrid;
+        internal bool IsAttachedToGrid;
 
         /// <summary>
         /// Width of the control.
@@ -78,9 +114,9 @@ namespace XAMLite
         /// <summary>
         /// If the control IsAttachedToGrid, then the position of the control 
         /// must be mapped according to the grid that contains it rather than 
-        /// the Viewport.
+        /// the Viewport, thus the distinction between Panel and Window.
         /// </summary>
-        protected internal Rectangle Window;
+        internal Rectangle Window;
  
         /// <summary>
         /// The screen width and height.
@@ -278,7 +314,7 @@ namespace XAMLite
         /// <summary>
         /// Rectangle containing the control for collision and drawing
         /// </summary>
-        protected Rectangle Panel;
+        protected internal Rectangle Panel;
 
         /// <summary>
         /// Fills the space of a control with a color.

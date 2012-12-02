@@ -2,6 +2,8 @@
 
 namespace XAMLite
 {
+    using System.Windows;
+
     /// <summary>
     /// Note: Currently under development.  Continue to use normal
     /// XAMLiteLabel class until this class replaces it.
@@ -36,6 +38,11 @@ namespace XAMLite
         public override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
+
+            if (Visible == Visibility.Hidden)
+            {
+                return;
+            }
 
             if (Content != null)
             {

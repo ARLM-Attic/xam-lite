@@ -60,6 +60,17 @@ namespace XAMLite
             {
                 IsAttachedToGrid = (Parent.Parent.Width != Viewport.Width) || (Parent.Parent.Height != Viewport.Height);
             }
+
+            // set the internal Window to the Panel.
+            Window = Panel;
+
+            // If the grid is a part of a XAMLite component that is attached to 
+            // a grid then it, itself, is attached to this same grid and its 
+            // position should be set to the same as its parent's.
+            if (IsAttachedToGrid)
+            {
+                ModifyGridPosition();
+            }
         }
 
         /// <summary>
@@ -75,7 +86,7 @@ namespace XAMLite
                 LoadChildren();
             }
 
-            // Update Visibility of Children
+            // Update Visibility of Children according to the grid's visibility.
             if (VisibilityChanged)
             {
                 VisibilityChanged = false;
@@ -105,6 +116,18 @@ namespace XAMLite
                         t.Visible = Visibility.Visible;
                     }
 
+                    if (t.Parent != null && t.Parent.Parent != null)
+                    {
+                        if (t.Parent.Parent is XAMLiteTextBoxNew)
+                        {
+                            if (t is XAMLiteLabelNew)
+                            {
+                                var l = (XAMLiteLabelNew)t;
+                                Console.WriteLine(l.Content + ": " + t.Visible);
+                            }
+                        }
+                    }
+
                     index++;
                 }
             }
@@ -116,14 +139,8 @@ namespace XAMLite
         private void LoadChildren()
         {
             SaveChildOpacity();
-            SaveAndSetChildVisibility();
-
-            Window = Panel;
-
-            if (IsAttachedToGrid)
-            {
-                ModifyGridPosition();
-            }
+            SaveChildVisibility();
+            HideChildren();
 
             // Add the child component to the game with the modified parameters.
             foreach (var child in Children)
@@ -145,50 +162,48 @@ namespace XAMLite
         /// </summary>
         private void ModifyGridPosition()
         {
-            var pWindow = Parent.Window;
+            var parentWindow = Parent.Window;
 
-            var x = 0f;
-            var y = 0f;
-            var width = Panel.Width;
-            var height = Panel.Height;
+            var x = (float)parentWindow.X;
+            var y = (float)parentWindow.Y;
 
             switch (HorizontalAlignment)
             {
                 case HorizontalAlignment.Center:
-                    x = pWindow.X + ((float)(pWindow.Width - width) / 2) + (float)Margin.Left - (float)Margin.Right;
+                    x += ((float)(parentWindow.Width - Width) / 2) + (float)Margin.Left - (float)Margin.Right;
                     break;
 
                 case HorizontalAlignment.Left:
-                    x = Window.X + pWindow.X;
+                    x += Window.X;
                     break;
 
                 case HorizontalAlignment.Right:
-                    x = pWindow.X + pWindow.Width - width - (float)Margin.Right;
+                    x += parentWindow.Width - Width - (float)Margin.Right;
                     break;
 
                 case HorizontalAlignment.Stretch:
-                    x = Window.X + pWindow.X + (int)Margin.Left;
-                    Width = pWindow.Width - (int)(Margin.Left + Margin.Right);
+                    x = Window.X + (int)Margin.Left;
+                    Width = parentWindow.Width - (int)(Margin.Left + Margin.Right);
                     break;
             }
 
             switch (VerticalAlignment)
             {
                 case VerticalAlignment.Bottom:
-                    y = pWindow.Y + pWindow.Height - height - (float)Margin.Bottom;
+                    y += parentWindow.Height - Height - (float)Margin.Bottom;
                     break;
 
                 case VerticalAlignment.Center:
-                    y = pWindow.Y + ((float)(pWindow.Height - height) / 2) + (float)Margin.Top - (float)Margin.Bottom;
+                    y += ((float)(parentWindow.Height - Height) / 2) + (float)Margin.Top - (float)Margin.Bottom;
                     break;
 
                 case VerticalAlignment.Stretch:
-                    y = Window.Y + pWindow.Y + (int)Margin.Top;
-                    Height = pWindow.Height - (int)(Margin.Top + Margin.Bottom);
+                    y += Window.Y + (int)Margin.Top;
+                    Height = parentWindow.Height - (int)(Margin.Top + Margin.Bottom);
                     break;
 
                 case VerticalAlignment.Top:
-                    y = Window.Y + pWindow.Y;
+                    y += Window.Y;
                     break;
             }
 
@@ -223,7 +238,7 @@ namespace XAMLite
         /// Stores the original visibility of the child and initially sets its
         /// visibility to hidden until the grid is fully set up.
         /// </summary>
-        private void SaveAndSetChildVisibility()
+        private void SaveChildVisibility()
         {
             _childVisibility = new bool[Children.Count];
 
@@ -231,7 +246,13 @@ namespace XAMLite
             {
                 _childVisibility[i] = Children[i].Visible == Visibility.Visible;
             }
+        }
 
+        /// <summary>
+        /// At start, hides the children until the grid is fully set up.
+        /// </summary>
+        private void HideChildren()
+        {
             foreach (var child in Children)
             {
                 child.Visible = Visibility.Hidden;
@@ -247,7 +268,7 @@ namespace XAMLite
             if (Visible == Visibility.Hidden)
             {
                 // before making the child hidden, record its lateset visibility state.
-                SaveAndSetChildVisibility();
+                SaveChildVisibility();
 
                 // change the child visibility to hidden, like the grid.
                 foreach (var child in Children)

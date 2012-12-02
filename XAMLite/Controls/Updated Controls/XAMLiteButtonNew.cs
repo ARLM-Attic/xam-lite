@@ -126,7 +126,7 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// Recalculates the width and height of the control.
         /// </summary>
         /// <param name="content"></param>
         protected override void RecalculateWidthAndHeight(object content)
