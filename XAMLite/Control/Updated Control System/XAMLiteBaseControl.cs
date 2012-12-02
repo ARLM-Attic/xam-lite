@@ -563,6 +563,13 @@ namespace XAMLite
             MsRect.X = Ms.X;
             MsRect.Y = Ms.Y;
 
+            // if deselected after the control had focus, remove the focus
+            if (IsFocused && Ms.LeftButton == ButtonState.Pressed && !MousePressed)
+            {
+                // focus removed.
+                IsFocused = false;
+            }
+
             // record the mouse down vector2
             if (!MousePressed && Ms.LeftButton == ButtonState.Pressed && !MousePressPositionRecorded)
             {

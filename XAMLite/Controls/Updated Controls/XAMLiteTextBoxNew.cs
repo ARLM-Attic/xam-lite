@@ -286,13 +286,6 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            // if deselected after the control had focus, remove the focus
-            if (Ms.LeftButton == ButtonState.Pressed && !MousePressed && IsFocused)
-            {
-                // text box is deselected.
-                IsFocused = false;
-            }
-
             if (!IsFocused)
             {
                 _cursor.Visible = Visibility.Hidden;
