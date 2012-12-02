@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Media;
 using Microsoft.Xna.Framework;
-using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {
@@ -47,6 +45,21 @@ namespace XAMLite
             : base(game)
         {
             Children = new List<XAMLiteBaseControl>();
+        }
+
+        /// <summary>
+        /// Load the content of the Grid.
+        /// </summary>
+        protected override void LoadContent()
+        {
+            base.LoadContent();
+
+            // set internal variable, IsAttachedToGrid, when the grid is a component of a complex 
+            // XAMLite object that is embedded in another grid.
+            if (Parent != null && Parent.Parent != null)
+            {
+                IsAttachedToGrid = (Parent.Parent.Width != Viewport.Width) || (Parent.Parent.Height != Viewport.Height);
+            }
         }
 
         /// <summary>
@@ -98,58 +111,6 @@ namespace XAMLite
         }
 
         /// <summary>
-        ///  Used only for debugging purposes.
-        /// </summary>
-        /// <param name="gameTime"></param>
-        public override void Draw(GameTime gameTime)
-        {
-            base.Draw(gameTime);
-
-            //SpriteBatch.Begin();
-            //// For debugging: Draw a dot in the corners and center of the grid.
-            //// top left
-            //SpriteBatch.Draw(Pixel, new Rectangle((int)TopLeftCorner.X, (int)TopLeftCorner.Y, 1, 1), Color.Aquamarine);
-
-            //// bottom left
-            //SpriteBatch.Draw(Pixel, new Rectangle((int)BottomLeftCorner.X, (int)BottomLeftCorner.Y, 1, 1), Color.Aquamarine);
-
-            //// top right 
-            //SpriteBatch.Draw(Pixel, new Rectangle((int)TopRightCorner.X, (int)TopRightCorner.Y, 1, 1), Color.Aquamarine);
-
-            //// bottom right
-            //SpriteBatch.Draw(Pixel, new Rectangle((int)BottomRightCorner.X, (int)BottomRightCorner.Y, 1, 1), Color.Aquamarine);
-
-            //// center
-            //SpriteBatch.Draw(Pixel, new Rectangle((int)Center.X, (int)Center.Y, 1, 1), Color.Aquamarine);
-
-            //// center left
-            //SpriteBatch.Draw(Pixel, new Rectangle((int)TopLeftCorner.X + ((int)(Center.X - TopLeftCorner.X) / 2), (int)Center.Y, 1, 1), Color.Aquamarine);
-
-            //// center right
-            //SpriteBatch.Draw(Pixel, new Rectangle((int)Center.X + ((int)(Center.X - TopLeftCorner.X) / 2), (int)Center.Y, 1, 1), Color.Aquamarine);
-
-            //// center top
-            //SpriteBatch.Draw(Pixel, new Rectangle((int)Center.X, (int)TopLeftCorner.Y + ((int)(Center.Y - TopLeftCorner.Y) / 2), 1, 1), Color.Aquamarine);
-
-            //// center bottom
-            //SpriteBatch.Draw(Pixel, new Rectangle((int)Center.X, (int)Center.Y + ((int)(Center.Y - TopLeftCorner.Y) / 2), 1, 1), Color.Aquamarine);
-
-            //// bottom center
-            //SpriteBatch.Draw(Pixel, new Rectangle((int)Center.X, (int)BottomRightCorner.Y, 1, 1), Color.Aquamarine);
-
-            //// top center
-            //SpriteBatch.Draw(Pixel, new Rectangle((int)Center.X, (int)TopLeftCorner.Y, 1, 1), Color.Aquamarine);
-
-            //// left center
-            //SpriteBatch.Draw(Pixel, new Rectangle((int)TopLeftCorner.X, (int)Center.Y, 1, 1), Color.Aquamarine);
-
-            //// right center
-            //SpriteBatch.Draw(Pixel, new Rectangle((int)TopRightCorner.X, (int)Center.Y, 1, 1), Color.Aquamarine);
-
-            //SpriteBatch.End();
-        }
-
-        /// <summary>
         /// Loads the children once the grid has been set up.
         /// </summary>
         private void LoadChildren()
@@ -159,17 +120,79 @@ namespace XAMLite
 
             Window = Panel;
 
+            if (IsAttachedToGrid)
+            {
+                ModifyGridPosition();
+            }
+
             // Add the child component to the game with the modified parameters.
             foreach (var child in Children)
             {
                 child.IsAttachedToGrid = true;
                 child.Parent = this;
+                child.Window = Window;
                 Game.Components.Add(child);
             }
 
             ModifyChildPositionAndWidth();
 
             _childrenLoaded = true;
+        }
+
+        /// <summary>
+        /// Modifies a grid's position when it is a component of a complex 
+        // XAMLite object that is embedded in another grid.
+        /// </summary>
+        private void ModifyGridPosition()
+        {
+            var pWindow = Parent.Window;
+
+            var x = 0f;
+            var y = 0f;
+            var width = Panel.Width;
+            var height = Panel.Height;
+
+            switch (HorizontalAlignment)
+            {
+                case HorizontalAlignment.Center:
+                    x = pWindow.X + ((float)(pWindow.Width - width) / 2) + (float)Margin.Left - (float)Margin.Right;
+                    break;
+
+                case HorizontalAlignment.Left:
+                    x = Window.X + pWindow.X;
+                    break;
+
+                case HorizontalAlignment.Right:
+                    x = pWindow.X + pWindow.Width - width - (float)Margin.Right;
+                    break;
+
+                case HorizontalAlignment.Stretch:
+                    x = Window.X + pWindow.X + (int)Margin.Left;
+                    Width = pWindow.Width - (int)(Margin.Left + Margin.Right);
+                    break;
+            }
+
+            switch (VerticalAlignment)
+            {
+                case VerticalAlignment.Bottom:
+                    y = pWindow.Y + pWindow.Height - height - (float)Margin.Bottom;
+                    break;
+
+                case VerticalAlignment.Center:
+                    y = pWindow.Y + ((float)(pWindow.Height - height) / 2) + (float)Margin.Top - (float)Margin.Bottom;
+                    break;
+
+                case VerticalAlignment.Stretch:
+                    y = Window.Y + pWindow.Y + (int)Margin.Top;
+                    Height = pWindow.Height - (int)(Margin.Top + Margin.Bottom);
+                    break;
+
+                case VerticalAlignment.Top:
+                    y = Window.Y + pWindow.Y;
+                    break;
+            }
+
+            Window = new Rectangle((int)x, (int)y, Width, Height);
         }
 
         /// <summary>
@@ -192,7 +215,6 @@ namespace XAMLite
                     child.Height = Height;
                 }
 
-                child.Window = Panel;
                 child.PositionChanged = true;
             }
         }

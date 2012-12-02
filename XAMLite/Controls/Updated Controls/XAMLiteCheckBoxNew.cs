@@ -139,8 +139,7 @@ namespace XAMLite
 
             _grid = new XAMLiteGridNew(Game)
             {
-                IsAttachedToGrid = Parent != null && Parent.Width != Viewport.Width,
-                Window = Parent != null && Parent.Width != Viewport.Width ? Parent.Window : Panel,
+                Parent = this,
                 HorizontalAlignment = HorizontalAlignment,
                 VerticalAlignment = VerticalAlignment,
                 Width = Width,

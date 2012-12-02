@@ -54,6 +54,24 @@ namespace XAMLite
         }
 
         /// <summary>
+        /// Updates the font metrics and recalculates the width of the
+        /// text to ensure it fits within the XAMLiteControl.
+        /// </summary>
+        protected override void LoadContent()
+        {
+            base.LoadContent();
+
+            // Update font metrics here to get an accurate string measurement.
+            UpdateFontMetrics();
+
+            var stringWidth = SpriteFont.MeasureString(Text).X + Padding.Left;
+            if (stringWidth > Width)
+            {
+                Width = (int)Math.Round(stringWidth);
+            }
+        }
+
+        /// <summary>
         /// Updates the FontFamily, Spacing, and recalculates the new
         /// Width and Height.
         /// </summary>

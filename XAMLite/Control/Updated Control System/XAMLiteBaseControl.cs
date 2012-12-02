@@ -322,6 +322,12 @@ namespace XAMLite
         private bool _transparent;
 
         /// <summary>
+        /// The cursor that has the potential to change as it mouse over, 
+        /// clicks, etc. on a control.
+        /// </summary>
+        //public Cursor Cursor;
+
+        /// <summary>
         /// The state of the mouse, whether pressed, released, etc.
         /// </summary>
         protected static MouseState Ms;
@@ -444,6 +450,8 @@ namespace XAMLite
         /// </summary>
         protected override void LoadContent()
         {
+            base.LoadContent();
+
             // If the sprite batch that is shared across all XAMLite controls
             // hasn't yet been created, create it.
             if (SpriteBatch == null)

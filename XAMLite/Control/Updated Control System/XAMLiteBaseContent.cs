@@ -4,6 +4,8 @@ using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {
+    using System;
+
     /// <summary>
     /// TODO: Update summary.
     /// </summary>

@@ -38,7 +38,7 @@ namespace XAMLite
         /// <summary>
         /// The character '|' that makes the blinking cursor.
         /// </summary>
-        protected string Cursor;
+        protected string TextBoxCursor;
 
         private bool _initialTyping;
         
@@ -84,7 +84,7 @@ namespace XAMLite
             Height = 23;
             Foreground = Brushes.Black;
             Padding = new Thickness(5, 0, 0, 0);
-            Cursor = "|";
+            TextBoxCursor = "|";
             _initialTyping = true;
             _cursorBlinkTime = TimeSpan.FromSeconds(0.5);
             BorderBrush = null;
@@ -127,27 +127,26 @@ namespace XAMLite
         {
             base.LoadContent();
 
-            // Update font metrics here to get an accurate string measurement.
-            UpdateFontMetrics();
-
-            var stringWidth = SpriteFont.MeasureString(Text).X + Padding.Left;
-            if (stringWidth > Width)
-            {
-                Width = (int)Math.Round(stringWidth);
-            }
-
             _grid = new XAMLiteGridNew(Game)
             {
-                IsAttachedToGrid = Parent != null && Parent.Width != Viewport.Width,
-                Window = Parent != null && Parent.Width != Viewport.Width ? Parent.Window : Panel,
+                Parent = this,
                 HorizontalAlignment = HorizontalAlignment,
                 VerticalAlignment = VerticalAlignment,
                 Width = Width,
                 Height = Height,
                 Margin = Margin
             };
-
             Game.Components.Add(_grid);
+
+            var fill = new XAMLiteRectangleNew(Game)
+            {
+                Fill = Background,
+                Width = Width,
+                Height = Height,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+            };
+            _grid.Children.Add(fill);
 
             var text = new XAMLiteLabelNew(Game)
                 {
@@ -186,6 +185,8 @@ namespace XAMLite
                     SetBorders();
                 }
             }
+
+            Background = Brushes.Transparent;
         }
 
         /// <summary>
@@ -343,7 +344,7 @@ namespace XAMLite
             //SpriteBatch.DrawString(SpriteFont, Text, TextPosition, _foregroundColor);
             if (_cursorBlink)
             {
-                SpriteBatch.DrawString(SpriteFont, Cursor, CursorPosition, ForegroundColor);
+                SpriteBatch.DrawString(SpriteFont, TextBoxCursor, CursorPosition, ForegroundColor);
             }
 
             SpriteBatch.End();
