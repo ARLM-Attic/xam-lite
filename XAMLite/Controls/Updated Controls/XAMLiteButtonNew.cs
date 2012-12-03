@@ -1,10 +1,14 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Windows;
+using System.Windows.Input;
+using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Button class with rollover and mouse down textures.
     /// 
@@ -15,7 +19,8 @@ namespace XAMLite
     {
         /// <summary>
         /// The 2-D image for the button that is not hovered over nor being
-        /// clicked.
+        /// clicked. Used specifically for measuring the grid size before
+        /// being passed on to the XAMLiteImage class.
         /// </summary>
         private Texture2D _texture;
 
@@ -26,25 +31,9 @@ namespace XAMLite
         public string SourceName { get; set; }
 
         /// <summary>
-        /// The hover 2-D image for the button.
-        /// </summary>
-        private Texture2D _rolloverTexture;
-
-        /// <summary>
         /// This is the image file path, minus the file extension for the Rollover image.
         /// </summary>
         public string RolloverSourceName { get; set; }
-
-        /// <summary>
-        /// The clicked 2-D image for the button.
-        /// </summary>
-        private Texture2D _clickTexture;
-
-        private Texture2D _edgeTextureNormal;
-
-        private Texture2D _edgeTextureOver;
-
-        private Texture2D _edgeTextureDown;
 
         /// <summary>
         /// This is the image file path, minus the file extension for the Clicked Button image.
@@ -52,9 +41,52 @@ namespace XAMLite
         public string ClickSourceName { get; set; }
 
         /// <summary>
-        /// True when default textures are being used.
+        /// 
+        /// </summary>
+        private XAMLiteGridNew _grid;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private XAMLiteImageNew _mainButton;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private XAMLiteImageWithRolloverNew _mainButtonWithRollover;
+
+        private string _edgeSourceName;
+
+        private string _edgeRolloverSourceName;
+
+        private string _edgeClickedSourceName;
+
+        private Texture2D _edgeTexture;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private XAMLiteImageNew _clickedButton;
+
+        /// <summary>
+        /// True when Source Name directory paths were set by the developer.
         /// </summary>
         private bool _isDefaultTextures;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private List<XAMLiteImageNew> _defaultImages;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private List<XAMLiteImageNew> _defaultRolloverImages;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private List<XAMLiteImageNew> _defaultClickImages; 
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XAMLite.XAMLiteButton"/> class. 
@@ -65,6 +97,10 @@ namespace XAMLite
         public XAMLiteButtonNew(Game game)
             : base(game)
         {
+            FontFamily = new FontFamily("Arial");
+            Focusable = true;
+            Spacing = 2;
+            Foreground = Brushes.Black;
         }
 
         /// <summary>
@@ -76,11 +112,16 @@ namespace XAMLite
 
             if (SourceName == null)
             {
-                LoadDefaultTextures();
+                LoadDefaultTexturePaths();
             }
 
             _texture = Game.Content.Load<Texture2D>(SourceName);
 
+            if (Content != null)
+            {
+                UpdateFontMetrics();
+            }
+            
             if (Width == 0)
             {
                 Width = _texture.Width;
@@ -91,95 +132,347 @@ namespace XAMLite
                 Height = _texture.Height;
             }
 
-            if (RolloverSourceName != null)
+            // get a reference to the edge texture and get basic edge width
+            if (_isDefaultTextures)
             {
-                _rolloverTexture = Game.Content.Load<Texture2D>(RolloverSourceName);
+                _edgeTexture = Game.Content.Load<Texture2D>(_edgeSourceName);
+                Width += _edgeTexture.Width * 2;
             }
 
-            if (ClickSourceName != null)
+            // then load the grid.
+            _grid = new XAMLiteGridNew(Game)
+                {
+                    Parent = this,
+                    Width = Width,
+                    Height = Height,
+                    HorizontalAlignment = HorizontalAlignment,
+                    VerticalAlignment = VerticalAlignment,
+                    Margin = Margin
+                };
+            Game.Components.Add(_grid);
+
+            // load the default XAMLiteObjects if none set by the developer.
+            if (_isDefaultTextures)
             {
-                _clickTexture = Game.Content.Load<Texture2D>(ClickSourceName);
+                LoadDefaultContent();
+            }
+            else
+            {
+                if (RolloverSourceName != null)
+                {
+                    _mainButtonWithRollover = new XAMLiteImageWithRolloverNew(Game)
+                    {
+                        SourceName = SourceName,
+                        RolloverSourceName = RolloverSourceName,
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        Width = Width,
+                        Height = Height
+                    };
+                    _grid.Children.Add(_mainButtonWithRollover);
+                }
+                else
+                {
+                    _mainButton = new XAMLiteImageNew(Game)
+                    {
+                        SourceName = SourceName,
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        Width = Width,
+                        Height = Height
+                    };
+                    _grid.Children.Add(_mainButton);
+                }
+
+                if (ClickSourceName != null)
+                {
+                    _clickedButton = new XAMLiteImageNew(Game)
+                    {
+                        SourceName = ClickSourceName,
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        Width = Width,
+                        Height = Height,
+                        Visible = Visibility.Hidden
+                    };
+                    _grid.Children.Add(_clickedButton);
+                }
+            }
+            
+            if (Content != null)
+            {
+                var label = new XAMLiteLabelNew(Game)
+                    {
+                        Content = Content,
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        FontFamily = FontFamily,
+                        Spacing = Spacing,
+                        Foreground = Foreground,
+                        Padding = Padding
+                    };
+                _grid.Children.Add(label);
+            }
+
+            MouseDown += OnMouseDown;
+            MouseUp += OnMouseUp;
+            MouseEnter += OnMouseEnter;
+            MouseLeave += OnMouseLeave;
+        }
+
+        /// <summary>
+        /// Load default content for the button when none are provided.
+        /// </summary>
+        private void LoadDefaultContent()
+        {
+            _mainButton = new XAMLiteImageNew(Game)
+            {
+                SourceName = SourceName,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Width = Width - (_edgeTexture.Width * 2),
+                Height = Height
+            };
+            _defaultImages.Add(_mainButton);
+
+            var defaultRolloverButton = new XAMLiteImageNew(Game)
+            {
+                SourceName = RolloverSourceName,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Width = _isDefaultTextures ? Width - (_edgeTexture.Width * 2) : Width,
+                Height = Height,
+                Visible = Visibility.Hidden
+            };
+            _defaultRolloverImages.Add(defaultRolloverButton);
+
+            _clickedButton = new XAMLiteImageNew(Game)
+            {
+                SourceName = ClickSourceName,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Width = Width - (_edgeTexture.Width * 2),
+                Height = Height,
+                Visible = Visibility.Hidden
+            };
+            _defaultClickImages.Add(_clickedButton);
+
+            var leftEdge = new XAMLiteImageNew(Game)
+            {
+                SourceName = _edgeSourceName,
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                Height = Height,
+                Margin = new Thickness(0, 0, Width - _edgeTexture.Width, 0)
+            };
+            _defaultImages.Add(leftEdge);
+
+            var leftEdgeRollOver = new XAMLiteImageNew(Game)
+            {
+                SourceName = _edgeRolloverSourceName,
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                Height = Height,
+                Margin = new Thickness(0, 0, Width - _edgeTexture.Width, 0),
+                Visible = Visibility.Hidden
+            };
+            _defaultRolloverImages.Add(leftEdgeRollOver);
+
+            var leftEdgeDown = new XAMLiteImageNew(Game)
+            {
+                SourceName = _edgeClickedSourceName,
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                Height = Height,
+                Margin = new Thickness(0, 0, Width - _edgeTexture.Width, 0),
+                Visible = Visibility.Hidden
+            };
+            _defaultClickImages.Add(leftEdgeDown);
+
+            var rightEdge = new XAMLiteImageNew(Game)
+            {
+                SourceName = _edgeSourceName,
+                RenderTransform = new ScaleTransform(-1, 0, 0.5, 0.5),
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                Height = Height,
+                Margin = new Thickness(Width - _edgeTexture.Width, 0, 0, 0)
+            };
+            _defaultImages.Add(rightEdge);
+
+            var rightEdgeRollOver = new XAMLiteImageNew(Game)
+            {
+                SourceName = _edgeRolloverSourceName,
+                RenderTransform = new ScaleTransform(-1, 0, 0.5, 0.5),
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                Height = Height,
+                Margin = new Thickness(Width - _edgeTexture.Width, 0, 0, 0),
+                Visible = Visibility.Hidden
+            };
+            _defaultRolloverImages.Add(rightEdgeRollOver);
+
+            var rightEdgeDown = new XAMLiteImageNew(Game)
+            {
+                SourceName = _edgeClickedSourceName,
+                RenderTransform = new ScaleTransform(-1, 0, 0.5, 0.5),
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                Height = Height,
+                Margin = new Thickness(Width - _edgeTexture.Width, 0, 0, 0),
+                Visible = Visibility.Hidden
+            };
+            _defaultClickImages.Add(rightEdgeDown);
+
+            foreach (var image in _defaultImages)
+            {
+                _grid.Children.Add(image);
+            }
+
+            foreach (var image in _defaultRolloverImages)
+            {
+                _grid.Children.Add(image);
+            }
+
+            foreach (var image in _defaultClickImages)
+            {
+                _grid.Children.Add(image);
             }
         }
 
         /// <summary>
         /// Loads default textures when the basic texture has not been set.
         /// </summary>
-        private void LoadDefaultTextures()
+        private void LoadDefaultTexturePaths()
         {
             _isDefaultTextures = true;
 
-            _edgeTextureNormal = Game.Content.Load<Texture2D>("Images/ButtonEdgeNormal");
-            _edgeTextureOver = Game.Content.Load<Texture2D>("Images/ButtonEdgeOver");
-            _edgeTextureDown = Game.Content.Load<Texture2D>("Images/ButtonEdgeDown");
+            _defaultImages = new List<XAMLiteImageNew>();
+            _defaultRolloverImages = new List<XAMLiteImageNew>();
+            _defaultClickImages = new List<XAMLiteImageNew>();
 
             SourceName = "Images/ButtonCenterNormal";
             RolloverSourceName = "Images/ButtonCenterOver";
             ClickSourceName = "Images/ButtonCenterDown";
+            _edgeSourceName = "Images/ButtonEdgeNormal";
+            _edgeRolloverSourceName = "Images/ButtonEdgeOver";
+            _edgeClickedSourceName = "Images/ButtonEdgeDown";
+        }
 
-            if (Content != null)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseEventArgs"></param>
+        private void OnMouseLeave(object sender, MouseEventArgs mouseEventArgs)
+        {
+            if (_isDefaultTextures)
             {
-                RecalculateWidthAndHeight(Content);
+                foreach (var image in _defaultRolloverImages)
+                {
+                    image.Visible = Visibility.Hidden;
+                }
 
-                Width += (int)Padding.Left + (int)Padding.Right + _edgeTextureNormal.Width;
+                foreach (var image in _defaultClickImages)
+                {
+                    image.Visible = Visibility.Hidden;
+                }
+
+                foreach (var image in _defaultImages)
+                {
+                    image.Visible = Visibility.Visible;
+                }
+            }
+            else
+            {
+                _mainButtonWithRollover.Visible = Visibility.Visible;
+            }
+        }
+
+        private void OnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
+        {
+            if (_isDefaultTextures)
+            {
+                if (!MousePressed)
+                {
+                    foreach (var image in _defaultClickImages)
+                    {
+                        image.Visible = Visibility.Hidden;
+                    }
+                }
+
+                foreach (var image in _defaultImages)
+                {
+                    image.Visible = Visibility.Hidden;
+                }
+
+                foreach (var image in _defaultRolloverImages)
+                {
+                    image.Visible = Visibility.Visible;
+                }
             }
         }
 
         /// <summary>
-        /// Recalculates the width and height of the control.
+        /// Updates the visibility between the mouse down and mouse hover images.
         /// </summary>
-        /// <param name="content"></param>
-        protected override void RecalculateWidthAndHeight(object content)
+        /// <param name="sender"></param>
+        /// <param name="mouseButtonEventArgs"></param>
+        private void OnMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
-            base.RecalculateWidthAndHeight(content);
-
-            if (content != null)
+            if (RolloverSourceName != null && ClickSourceName != null)
             {
-                var height = (int)SpriteFont.MeasureString(content.ToString()).Y;
-                Height = height > _texture.Height ? height : _texture.Height;
-            }
-        }
-
-        /// <summary>
-        /// Draws the Button.
-        /// </summary>
-        /// <param name="gameTime">The GameTime reference.</param>
-        public override void Draw(GameTime gameTime)
-        {
-            if (Visible == System.Windows.Visibility.Visible)
-            {
-                SpriteBatch.Begin();
-
-                if (_clickTexture != null && _rolloverTexture != null)
-                {
-                    SpriteBatch.Draw(
-                        MousePressed ? _clickTexture : MouseEntered ? _rolloverTexture : _texture,
-                        Panel,
-                        Color.White * (float)Opacity);
-                }
-                else if (_rolloverTexture != null)
-                {
-                    SpriteBatch.Draw(
-                        MouseEntered ? _rolloverTexture : _texture,
-                        Panel,
-                        Color.White * (float)Opacity);
-                }
-                else
-                {
-                    SpriteBatch.Draw(
-                        _texture,
-                        Panel,
-                        Color.White * (float)Opacity);
-                }
+                _clickedButton.Visible = Visibility.Hidden;
 
                 if (_isDefaultTextures)
                 {
-                    
+                    foreach (var image in _defaultClickImages)
+                    {
+                        image.Visible = Visibility.Hidden;
+                    }
+
+                    foreach (var image in _defaultImages)
+                    {
+                        image.Visible = Visibility.Hidden;
+                    }
+                    foreach (var image in _defaultRolloverImages)
+                    {
+                        image.Visible = Visibility.Visible;
+                    }
                 }
+                else
+                {
+                    _mainButtonWithRollover.Visible = Visibility.Visible;
+                }
+            }
+        }
 
-                SpriteBatch.End();
+        /// <summary>
+        /// Updates the visibility between the mouse hover and mouse down images.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseButtonEventArgs"></param>
+        private void OnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        {
+            if (RolloverSourceName != null && ClickSourceName != null)
+            {
+                _clickedButton.Visible = Visibility.Visible;
 
-                base.Draw(gameTime);
+                if (_isDefaultTextures)
+                {
+                    foreach (var image in _defaultImages)
+                    {
+                        image.Visible = Visibility.Hidden;
+                    }
+
+                    foreach (var image in _defaultRolloverImages)
+                    {
+                        image.Visible = Visibility.Hidden;
+                    } 
+                    
+                    foreach (var image in _defaultClickImages)
+                    {
+                        image.Visible = Visibility.Visible;
+                    }
+                }
+                else
+                {
+                    _mainButtonWithRollover.Visible = Visibility.Hidden;
+                }
             }
         }
     }

@@ -181,7 +181,12 @@ namespace XAMLite
                     break;
 
                 case HorizontalAlignment.Stretch:
-                    Width = panel.Width;
+                    x = panel.X + (float)Margin.Left;
+
+                    if (!IsAttachedToGrid)
+                    {
+                        Width = panel.Width;
+                    }
                     break;
             }
 
@@ -198,7 +203,11 @@ namespace XAMLite
                     break;
 
                 case VerticalAlignment.Stretch:
-                    Height = panel.Y + panel.Height;
+                    y = panel.Y + (int)Margin.Top;
+                    if (!IsAttachedToGrid)
+                    {
+                        Height = panel.Y + panel.Height;
+                    }
                     break;
 
                 case VerticalAlignment.Top:

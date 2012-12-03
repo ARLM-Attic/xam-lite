@@ -89,6 +89,7 @@
     <Compile Include="Controls\Updated Controls\XAMLiteImageNew.cs" />
     <Compile Include="Controls\Old Controls\XAMLiteImageWithRollover.cs" />
     <Compile Include="Controls\Old Controls\XAMLiteLabel.cs" />
+    <Compile Include="Controls\Updated Controls\XAMLiteImageWithRolloverNew.cs" />
     <Compile Include="Controls\Updated Controls\XAMLiteLabelNew.cs" />
     <Compile Include="Controls\Old Controls\XAMLiteLabelWithShadow.cs" />
     <Compile Include="Controls\Old Controls\XAMLiteMenu.cs" />

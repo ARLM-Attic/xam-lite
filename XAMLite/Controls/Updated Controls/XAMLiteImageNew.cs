@@ -1,10 +1,13 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {
+    using System;
+
     /// <summary>
     /// Emulates the code behind for a xaml image.
     /// 
@@ -16,12 +19,17 @@ namespace XAMLite
         /// <summary>
         /// The 2-D image.
         /// </summary>
-        private Texture2D _texture;
+        protected internal Texture2D Texture;
 
         /// <summary>
         /// This is the image file path, minus the file extension.
         /// </summary>
         public string SourceName { get; set; }
+
+        /// <summary>
+        /// Applies a render transform to the button.
+        /// </summary>
+        public ScaleTransform RenderTransform;
 
         /// <summary>
         /// Constructor.
@@ -38,16 +46,16 @@ namespace XAMLite
         protected override void LoadContent()
         {
             Debug.Assert((SourceName != null), "Must set SourceName property. This is the image file path, minus the file extension.");
-            _texture = Game.Content.Load<Texture2D>(SourceName);
+            Texture = Game.Content.Load<Texture2D>(SourceName);
 
             if (Width == 0)
             {
-                Width = _texture.Width;
+                Width = Texture.Width;
             }
 
             if (Height == 0)
             {
-                Height = _texture.Height;
+                Height = Texture.Height;
             }
 
             base.LoadContent();
@@ -61,11 +69,19 @@ namespace XAMLite
         {
             base.Draw(gameTime);
 
+
             if (Visible == System.Windows.Visibility.Visible)
             {
                 SpriteBatch.Begin();
 
-                SpriteBatch.Draw(_texture, Panel, Color.White * (float)Opacity);
+                if (RenderTransform == null)
+                {
+                    SpriteBatch.Draw(Texture, Panel, Color.White * (float)Opacity);
+                }
+                else
+                {
+                    SpriteBatch.Draw(Texture, Panel, null, Color.White * (float)Opacity, 0f, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+                }
 
                 SpriteBatch.End();
             }

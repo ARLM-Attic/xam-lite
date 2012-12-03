@@ -18,7 +18,12 @@ namespace XAMLite
         private XAMLiteGridNew _grid;
 
         /// <summary>
-        /// 
+        /// Contains all of the XAMLiteRectangles that make up the border.
+        /// </summary>
+        private List<XAMLiteRectangleNew> _borderRectangles;
+
+        /// <summary>
+        /// The text contained in the text box.
         /// </summary>
         private XAMLiteLabelNew _text;
 
@@ -91,8 +96,6 @@ namespace XAMLite
         private KeyboardState _currentKeyboardState;
         
         private KeyboardState _lastKeyboardState;
-
-        private List<XAMLiteRectangleNew> _borderRectangles;
 
         /// <summary>
         /// Constructor.
