@@ -8,6 +8,8 @@ using Keyboard = Microsoft.Xna.Framework.Input.Keyboard;
 
 namespace XAMLite
 {
+    using System.Collections.Generic;
+
     public class XAMLiteTextBoxNew : XAMLiteBaseText
     {
         /// <summary>
@@ -90,6 +92,8 @@ namespace XAMLite
         
         private KeyboardState _lastKeyboardState;
 
+        private List<XAMLiteRectangleNew> _borderRectangles;
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -109,6 +113,7 @@ namespace XAMLite
             _initialText = string.Empty;
             _cursorBlinkTime = TimeSpan.FromSeconds(0.5);
             BorderBrush = null;
+            _borderRectangles = new List<XAMLiteRectangleNew>();
 
             _deleteNextChar = true;
 
@@ -208,15 +213,21 @@ namespace XAMLite
                             Stroke = BorderBrush,
                             StrokeThickness = BorderThickness.Left
                         };
-                    _grid.Children.Add(border);
+                    _borderRectangles.Add(border);
                 }
                 else
                 {
                     SetBorders();
                 }
+
+                foreach (var borderRectangle in _borderRectangles)
+                {
+                    _grid.Children.Add(borderRectangle);
+                }
             }
 
             MouseUp += OnMouseUp;
+            MouseLeave += OnMouseLeave;
 
             Background = Brushes.Transparent;
         }
@@ -244,7 +255,7 @@ namespace XAMLite
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top
             };
-            _grid.Children.Add(leftBorder);
+            _borderRectangles.Add(leftBorder);
 
             var rightBorder = new XAMLiteRectangleNew(Game)
             {
@@ -255,7 +266,7 @@ namespace XAMLite
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Center,
             };
-            _grid.Children.Add(rightBorder);
+            _borderRectangles.Add(rightBorder);
 
             var topBorder = new XAMLiteRectangleNew(Game)
             {
@@ -266,7 +277,7 @@ namespace XAMLite
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Top,
             };
-            _grid.Children.Add(topBorder);
+            _borderRectangles.Add(topBorder);
 
             var bottomBorder = new XAMLiteRectangleNew(Game)
             {
@@ -277,7 +288,7 @@ namespace XAMLite
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Bottom,
             };
-            _grid.Children.Add(bottomBorder);
+            _borderRectangles.Add(bottomBorder);
         }
 
         /// <summary>
@@ -314,9 +325,37 @@ namespace XAMLite
             
             UpdateTextAndCursor();
 
+            UpdateBorders();
+
             base.Update(gameTime);
 
             _lastKeyboardState = _currentKeyboardState;
+        }
+
+        /// <summary>
+        /// Modifies the border brush when applicable.
+        /// </summary>
+        private void UpdateBorders()
+        {
+            // Changes the border brush when the control is hovered over.
+            if (MouseEntered && Focusable && !IsFocused)
+            {
+                foreach (var borderRectangle in _borderRectangles)
+                {
+                    borderRectangle.Stroke = Brushes.Blue;
+                }
+            }
+
+            // if a left mouse press occurs when not on the control, focus is 
+            // lost and the control border brush should return to its default
+            // state.
+            if (IsFocused && Ms.LeftButton == ButtonState.Pressed && !MousePressed)
+            {
+                if (_borderRectangles[0].Stroke != BorderBrush)
+                {
+                    ResetBorderBrush();
+                }
+            }
         }
 
         /// <summary>
@@ -384,6 +423,32 @@ namespace XAMLite
             }
 
             _cursorVisible = true;
+        }
+
+        /// <summary>
+        /// Changes the border color back to its original border brush color
+        /// when the control !IsFocused.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseEventArgs"></param>
+        private void OnMouseLeave(object sender, MouseEventArgs mouseEventArgs)
+        {
+            if (!IsFocused)
+            {
+                ResetBorderBrush();
+            }
+        }
+
+        /// <summary>
+        /// Resets the Border Brush for the textbox after the control either 
+        /// loses focus, or on a MouseLeave when there was never focus.
+        /// </summary>
+        private void ResetBorderBrush()
+        {
+            foreach (var borderRectangle in _borderRectangles)
+            {
+                borderRectangle.Stroke = BorderBrush;
+            }
         }
 
         /// <summary>
@@ -521,6 +586,7 @@ namespace XAMLite
                     case Keys.Enter:
                     case Keys.Tab:
                         IsFocused = false;
+                        ResetBorderBrush();
                         break;
                     default:
                         if (_keyShift || _capsLockOn)

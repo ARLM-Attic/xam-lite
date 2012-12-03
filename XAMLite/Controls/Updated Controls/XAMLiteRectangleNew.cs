@@ -27,22 +27,33 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// Used for XNA drawing.
         /// </summary>
-        private Color _stroke;
+        private Color _strokeColor;
+
+        /// <summary>
+        /// Used for returning the current Brush color.
+        /// </summary>
+        private Brush _strokeBrush;
 
         /// <summary>
         /// The border brush color of the Rectangle.
         /// </summary>
         public Brush Stroke
         {
+            get
+            {
+                return _strokeBrush;
+            }
+
             set
             {
                 if (value != null)
                 {
+                    _strokeBrush = value;
                     var solidBrush = (SolidColorBrush)value;
                     var color = solidBrush.Color;
-                    _stroke = new Color(color.R, color.G, color.B, color.A);
+                    _strokeColor = new Color(color.R, color.G, color.B, color.A);
                 }
             }
         }
@@ -60,7 +71,7 @@ namespace XAMLite
             : base(game)
         {
             _fill = Color.Transparent;
-            _stroke = Color.Transparent;
+            _strokeColor = Color.Transparent;
             StrokeThickness = 0;
             Width = 0;
             Height = 0;
@@ -98,13 +109,13 @@ namespace XAMLite
                 Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
                 SpriteBatch.Draw(Pixel, Panel, _fill * (float)Opacity);
                 Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, (int)Math.Round(StrokeThickness));
-                SpriteBatch.Draw(Pixel, Panel, _stroke * (float)Opacity);
+                SpriteBatch.Draw(Pixel, Panel, _strokeColor * (float)Opacity);
                 Panel = new Rectangle((int)Position.X, (int)Position.Y + Height - (int)Math.Round(StrokeThickness), Width, (int)Math.Round(StrokeThickness));
-                SpriteBatch.Draw(Pixel, Panel, _stroke * (float)Opacity);
+                SpriteBatch.Draw(Pixel, Panel, _strokeColor * (float)Opacity);
                 Panel = new Rectangle((int)Position.X, (int)Position.Y, (int)StrokeThickness, Height);
-                SpriteBatch.Draw(Pixel, Panel, _stroke * (float)Opacity);
+                SpriteBatch.Draw(Pixel, Panel, _strokeColor * (float)Opacity);
                 Panel = new Rectangle((int)Position.X + Width - (int)Math.Round(StrokeThickness), (int)Position.Y, (int)Math.Round(StrokeThickness), Height);
-                SpriteBatch.Draw(Pixel, Panel, _stroke * (float)Opacity);
+                SpriteBatch.Draw(Pixel, Panel, _strokeColor * (float)Opacity);
                 SpriteBatch.End();
             }
         }
