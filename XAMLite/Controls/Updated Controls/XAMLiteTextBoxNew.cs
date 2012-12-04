@@ -793,5 +793,20 @@ namespace XAMLite
                 _deleteTimer = TimeSpan.FromSeconds(0.15);
             }
         }
+
+        /// <summary>
+        /// Dispose of the XAMLiteLabel that is used for the Content portion of
+        /// the control.
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            foreach (var child in _grid.Children)
+            {
+                child.Dispose();
+            }
+        }
     }
 }
