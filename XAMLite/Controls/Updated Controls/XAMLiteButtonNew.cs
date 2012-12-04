@@ -538,36 +538,18 @@ namespace XAMLite
             }
         }
 
+        /// <summary>
+        /// Dispose of the XAMLiteLabel that is used for the Content portion of
+        /// the control.
+        /// </summary>
+        /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
 
-            if (_mainButton != null)
+            foreach (var child in _grid.Children)
             {
-                _mainButton.Dispose();
-            }
-
-            if (_mainButtonWithRollover != null)
-            {
-                _mainButtonWithRollover.Dispose();
-            }
-
-            if (_defaultImages != null)
-            {
-                foreach (var image in _defaultImages)
-                {
-                    image.Dispose();
-                }
-
-                foreach (var image in _defaultRolloverImages)
-                {
-                    image.Dispose();
-                }
-
-                foreach (var image in _defaultClickImages)
-                {
-                    image.Dispose();
-                }
+                child.Dispose();
             }
         }
     }
