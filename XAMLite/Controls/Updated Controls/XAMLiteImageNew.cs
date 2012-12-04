@@ -48,6 +48,18 @@ namespace XAMLite
         private Brush _background;
 
         /// <summary>
+        /// True when the image is the edge of a default button.
+        /// Notifies that the opacity should change.
+        /// </summary>
+        protected internal bool IsEdge;
+
+        /// <summary>
+        /// True when the image is the top edge of a default button.
+        /// Notifies that the opacity should change.
+        /// </summary>
+        protected internal bool IsTopEdge;
+
+        /// <summary>
         /// Background color of the Grid.
         /// </summary>
         public override Brush Background
@@ -138,11 +150,11 @@ namespace XAMLite
 
                 if (RenderTransform == null)
                 {
-                    SpriteBatch.Draw(Texture, Panel, IsColorized ? BackgroundColor : Color.White * (float)Opacity);
+                    SpriteBatch.Draw(Texture, Panel, IsColorized ? !IsEdge ? BackgroundColor : !IsTopEdge ? BackgroundColor * 0.75f : BackgroundColor * 0.5f : Color.White * (float)Opacity);
                 }
                 else
                 {
-                    SpriteBatch.Draw(Texture, Panel, null, IsColorized ? BackgroundColor : Color.White * (float)Opacity, 0f, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+                    SpriteBatch.Draw(Texture, Panel, null, IsColorized ? !IsEdge ? BackgroundColor : !IsTopEdge ? BackgroundColor * 0.75f : BackgroundColor * 0.5f : Color.White * (float)Opacity, 0f, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
                 }
 
                 SpriteBatch.End();

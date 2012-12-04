@@ -60,11 +60,47 @@ namespace XAMLite
         private string _defaultClickedSourceNameEdge;
 
         /// <summary>
+        /// This is the image file path, minus the file extension for the basic
+        /// default top edge texture.
+        /// </summary>
+        private string _defaultSourceNameTopEdge;
+
+        /// <summary>
+        /// This is the image file path, minus the file extension for the
+        /// default top rollover edge texture.
+        /// </summary>
+        private string _defaultRolloverSourceNameTopEdge;
+
+        /// <summary>
+        /// This is the image file path, minus the file extension for the
+        /// default top click edge texture.
+        /// </summary>
+        private string _defaultClickSourceNameTopEdge;
+
+        /// <summary>
+        /// This is the image file path, minus the file extension for the basic
+        /// default bottom edge texture.
+        /// </summary>
+        private string _defaultSourceNameBottomEdge;
+
+        /// <summary>
+        /// This is the image file path, minus the file extension for the
+        /// default bottom rollover edge texture.
+        /// </summary>
+        private string _defaultRolloverSourceNameBottomEdge;
+
+        /// <summary>
+        /// This is the image file path, minus the file extension for the
+        /// default bottom click edge texture.
+        /// </summary>
+        private string _defaultClickSourceNameBottomEdge;
+
+        /// <summary>
         /// Used for measuring the width of the texture and passed as a 
         /// parameter to the XAMLiteImage constructor so that the content is 
         /// not loaded from disk twice.
         /// </summary>
-        private Texture2D _edgeTexture;
+        private Texture2D _defaultEdgeTexture;
 
         /// <summary>
         /// Contains all of the assets that represent the XAMLiteButton.
@@ -162,8 +198,8 @@ namespace XAMLite
             // get a reference to the edge texture and get basic edge width
             if (_isDefaultTextures)
             {
-                _edgeTexture = Game.Content.Load<Texture2D>(_defaultSourceNameEdge);
-                Width += _edgeTexture.Width * 2;
+                _defaultEdgeTexture = Game.Content.Load<Texture2D>(_defaultSourceNameEdge);
+                Width += _defaultEdgeTexture.Width * 2;
             }
 
             // then load the grid.
@@ -254,43 +290,51 @@ namespace XAMLite
         /// </summary>
         private void LoadDefaultContent()
         {
-            _mainButton = new XAMLiteImageNew(Game, CreateGradientTexture(Height))
+
+            if (Background == null)
+            {
+                Background = Brushes.CornflowerBlue;
+            }
+
+            _mainButton = new XAMLiteImageNew(Game, CreateGradientTexture(0))
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
-                Width = Width - (_edgeTexture.Width * 2),
-                Height = Height,
+                VerticalAlignment = VerticalAlignment.Center,
+                Width = Width - (_defaultEdgeTexture.Width * 2),
+                Height = Height - (4),
                 Background = Background
             };
             _defaultImages.Add(_mainButton);
 
-            var defaultRolloverButton = new XAMLiteImageNew(Game)
+            var defaultRolloverButton = new XAMLiteImageNew(Game, CreateGradientTexture(75))
             {
-                SourceName = RolloverSourceName,
                 HorizontalAlignment = HorizontalAlignment.Center,
-                Width = _isDefaultTextures ? Width - (_edgeTexture.Width * 2) : Width,
-                Height = Height,
+                VerticalAlignment = VerticalAlignment.Center,
+                Width = _isDefaultTextures ? Width - (_defaultEdgeTexture.Width * 2) : Width,
+                Height = Height - (4),
                 Visible = Visibility.Hidden,
                 Background = Background
             };
             _defaultRolloverImages.Add(defaultRolloverButton);
 
-            _clickedButton = new XAMLiteImageNew(Game)
+            _clickedButton = new XAMLiteImageNew(Game, CreateGradientTexture(-75))
             {
-                SourceName = ClickSourceName,
                 HorizontalAlignment = HorizontalAlignment.Center,
-                Width = Width - (_edgeTexture.Width * 2),
-                Height = Height,
+                VerticalAlignment = VerticalAlignment.Center,
+                Width = Width - (_defaultEdgeTexture.Width * 2),
+                Height = Height - (4),
                 Visible = Visibility.Hidden,
                 Background = Background
             };
             _defaultClickImages.Add(_clickedButton);
 
-            var defaultLeftEdge = new XAMLiteImageNew(Game, _edgeTexture)
+            var defaultLeftEdge = new XAMLiteImageNew(Game, _defaultEdgeTexture)
             {
+                IsEdge = true,
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Right,
-                Height = Height,
-                Margin = new Thickness(0, 0, Width - _edgeTexture.Width, 0),
+                Height = Height - 4,
+                Margin = new Thickness(0, 0, Width - _defaultEdgeTexture.Width, 0),
                 Background = Background
             };
             _defaultImages.Add(defaultLeftEdge);
@@ -298,10 +342,11 @@ namespace XAMLite
             var defaultRolloverLeftEdge = new XAMLiteImageNew(Game)
             {
                 SourceName = _defaultRolloverSourceNameEdge,
+                IsEdge = true,
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Right,
-                Height = Height,
-                Margin = new Thickness(0, 0, Width - _edgeTexture.Width, 0),
+                Height = Height - 4,
+                Margin = new Thickness(0, 0, Width - _defaultEdgeTexture.Width, 0),
                 Visible = Visibility.Hidden,
                 Background = Background
             };
@@ -310,22 +355,24 @@ namespace XAMLite
             var defaultClickLeftEdge = new XAMLiteImageNew(Game)
             {
                 SourceName = _defaultClickedSourceNameEdge,
+                IsEdge = true,
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Right,
-                Height = Height,
-                Margin = new Thickness(0, 0, Width - _edgeTexture.Width, 0),
+                Height = Height - 4,
+                Margin = new Thickness(0, 0, Width - _defaultEdgeTexture.Width, 0),
                 Visible = Visibility.Hidden,
                 Background = Background
             };
             _defaultClickImages.Add(defaultClickLeftEdge);
 
-            var defaultRightEdge = new XAMLiteImageNew(Game, _edgeTexture)
+            var defaultRightEdge = new XAMLiteImageNew(Game, _defaultEdgeTexture)
             {
+                IsEdge = true,
                 RenderTransform = new ScaleTransform(-1, 0, 0.5, 0.5),
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Left,
-                Height = Height,
-                Margin = new Thickness(Width - _edgeTexture.Width, 0, 0, 0),
+                Height = Height - 4,
+                Margin = new Thickness(Width - _defaultEdgeTexture.Width, 0, 0, 0),
                 Background = Background
             };
             _defaultImages.Add(defaultRightEdge);
@@ -333,11 +380,12 @@ namespace XAMLite
             var defaultRolloverRightEdge = new XAMLiteImageNew(Game)
             {
                 SourceName = _defaultRolloverSourceNameEdge,
+                IsEdge = true,
                 RenderTransform = new ScaleTransform(-1, 0, 0.5, 0.5),
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Left,
-                Height = Height,
-                Margin = new Thickness(Width - _edgeTexture.Width, 0, 0, 0),
+                Height = Height - 4,
+                Margin = new Thickness(Width - _defaultEdgeTexture.Width, 0, 0, 0),
                 Visible = Visibility.Hidden,
                 Background = Background
             };
@@ -346,15 +394,95 @@ namespace XAMLite
             var defaultClickRightEdge = new XAMLiteImageNew(Game)
             {
                 SourceName = _defaultClickedSourceNameEdge,
+                IsEdge = true,
                 RenderTransform = new ScaleTransform(-1, 0, 0.5, 0.5),
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Left,
-                Height = Height,
-                Margin = new Thickness(Width - _edgeTexture.Width, 0, 0, 0),
+                Height = Height - 4,
+                Margin = new Thickness(Width - _defaultEdgeTexture.Width, 0, 0, 0),
                 Visible = Visibility.Hidden,
                 Background = Background
             };
             _defaultClickImages.Add(defaultClickRightEdge);
+
+            var defaultTopEdge = new XAMLiteImageNew(Game)
+            {
+                SourceName = _defaultSourceNameTopEdge,
+                IsEdge = true,
+                IsTopEdge = true,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Width = Width - 4,
+                Margin = new Thickness(0, 0, 0, Height - 4),
+                Background = Background
+            };
+            _defaultImages.Add(defaultTopEdge);
+
+            var defaultRolloverTopEdge = new XAMLiteImageNew(Game)
+            {
+                SourceName = _defaultRolloverSourceNameTopEdge,
+                IsEdge = true,
+                IsTopEdge = true,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Width = Width - 4,
+                Margin = new Thickness(0, 0, 0, Height - 4),
+                Visible = Visibility.Hidden,
+                Background = Background
+            };
+            _defaultRolloverImages.Add(defaultRolloverTopEdge);
+
+            var defaultClickTopEdge = new XAMLiteImageNew(Game)
+            {
+                SourceName = _defaultClickSourceNameTopEdge,
+                IsEdge = true,
+                IsTopEdge = true,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Width = Width - 4,
+                Margin = new Thickness(0, 0, 0, Height - 4),
+                Visible = Visibility.Hidden,
+                Background = Background
+            };
+            _defaultClickImages.Add(defaultClickTopEdge);
+
+            var defaultBottomEdge = new XAMLiteImageNew(Game)
+            {
+                SourceName = _defaultSourceNameBottomEdge,
+                IsEdge = true,
+                VerticalAlignment = VerticalAlignment.Top,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Width = Width - 4,
+                Margin = new Thickness(0, Height - 4, 0, 0),
+                Background = Background
+            };
+            _defaultImages.Add(defaultBottomEdge);
+
+            var defaultRolloverBottomEdge = new XAMLiteImageNew(Game)
+            {
+                SourceName = _defaultRolloverSourceNameBottomEdge,
+                IsEdge = true,
+                VerticalAlignment = VerticalAlignment.Top,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Width = Width - 4,
+                Margin = new Thickness(0, Height - 4, 0, 0),
+                Visible = Visibility.Hidden,
+                Background = Background
+            };
+            _defaultRolloverImages.Add(defaultRolloverBottomEdge);
+
+            var defaultClickBottomEdge = new XAMLiteImageNew(Game)
+            {
+                SourceName = _defaultClickSourceNameBottomEdge,
+                IsEdge = true,
+                VerticalAlignment = VerticalAlignment.Top,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Width = Width - 4,
+                Margin = new Thickness(0, Height - 4, 0, 0),
+                Visible = Visibility.Hidden,
+                Background = Background
+            };
+            _defaultClickImages.Add(defaultClickBottomEdge);
 
             foreach (var image in _defaultImages)
             {
@@ -389,23 +517,28 @@ namespace XAMLite
             _defaultSourceNameEdge = "Images/ButtonEdgeNormal";
             _defaultRolloverSourceNameEdge = "Images/ButtonEdgeOver";
             _defaultClickedSourceNameEdge = "Images/ButtonEdgeDown";
+            _defaultSourceNameTopEdge = "Images/ButtonTopNormal";
+            _defaultSourceNameBottomEdge = "Images/ButtonBottomNormal";
+            _defaultRolloverSourceNameTopEdge = "Images/ButtonTopOver";
+            _defaultRolloverSourceNameBottomEdge = "Images/ButtonBottomOver";
+            _defaultClickSourceNameTopEdge = "Images/ButtonTopDown";
+            _defaultClickSourceNameBottomEdge = "Images/ButtonBottomDown";
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="height"></param>
         /// <returns></returns>
-        private Texture2D CreateGradientTexture(int height)
+        private Texture2D CreateGradientTexture(int brightness)
         {
-            int gradientThickness = 2;
-            int gradientColor = 255;
-            Texture2D t = new Texture2D(Game.GraphicsDevice, Width, Height);
-            Color[] bgc = new Color[Width * Height];
+            const int GradientThickness = 3;
+            var t = new Texture2D(Game.GraphicsDevice, 55, Height);
+            Console.WriteLine(Width + "/" + Height);
+            var bgc = new Color[55 * Height];
 
-            for (int i = 0; i < bgc.Length; i++)
+            for (int i = bgc.Length - 1; i > 0; i--)
             {
-                gradientColor = ((i * 20) / (Height * gradientThickness));
+                var gradientColor = ((i * 20) / (Height * GradientThickness)) - brightness;
                 bgc[i] = new Color(gradientColor, gradientColor, gradientColor, gradientColor);
             }
 

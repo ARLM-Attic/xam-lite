@@ -68,11 +68,11 @@ namespace XAMLite
             SpriteBatch.Begin();
             if (RenderTransform == null)
             {
-                SpriteBatch.Draw(MouseEntered ? _rolloverTexture : Texture, Panel, (IsColorized ? BackgroundColor : Color.White * (float)Opacity));
+                SpriteBatch.Draw(MouseEntered ? _rolloverTexture : Texture, Panel, (IsColorized ? !IsEdge ? BackgroundColor : !IsTopEdge ? BackgroundColor * 0.75f : BackgroundColor * 0.5f : Color.White * (float)Opacity));
             }
             else
             {
-                SpriteBatch.Draw(MouseEntered ? _rolloverTexture : Texture, Panel, null, IsColorized ? BackgroundColor : Color.White * (float)Opacity, 0f, Vector2.Zero, SpriteEffects.FlipHorizontally, 1);
+                SpriteBatch.Draw(MouseEntered ? _rolloverTexture : Texture, Panel, null, IsColorized ? !IsEdge ? BackgroundColor : !IsTopEdge ? BackgroundColor * 0.75f : BackgroundColor * 0.5f : Color.White * (float)Opacity, 0f, Vector2.Zero, SpriteEffects.FlipHorizontally, 1);
             }
 
             SpriteBatch.End();
