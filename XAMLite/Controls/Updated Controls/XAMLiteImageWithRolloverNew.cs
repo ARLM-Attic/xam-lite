@@ -1,8 +1,8 @@
-﻿namespace XAMLite
-{
-    using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
+namespace XAMLite
+{
     /// <summary>
     /// Emulates a xaml image with rollover
     /// </summary>
@@ -32,6 +32,17 @@
         }
 
         /// <summary>
+        /// Constructor that includes a preloaded Texture2D for the
+        /// normal state of the rollover image.
+        /// </summary>
+        /// <param name="game"></param>
+        /// <param name="texture"> </param>
+        public XAMLiteImageWithRolloverNew(Game game, Texture2D texture)
+            : base(game, texture)
+        {
+        }
+
+        /// <summary>
         /// Loads the content for the control.
         /// </summary>
         protected override void LoadContent()
@@ -57,11 +68,11 @@
             SpriteBatch.Begin();
             if (RenderTransform == null)
             {
-                SpriteBatch.Draw(MouseEntered ? _rolloverTexture : Texture, Panel, (Color.White * (float)Opacity));
+                SpriteBatch.Draw(MouseEntered ? _rolloverTexture : Texture, Panel, (IsColorized ? BackgroundColor : Color.White * (float)Opacity));
             }
             else
             {
-                SpriteBatch.Draw(MouseEntered ? _rolloverTexture : Texture, Panel, null, Color.White * (float)Opacity, 0f, Vector2.Zero, SpriteEffects.FlipHorizontally, 1);
+                SpriteBatch.Draw(MouseEntered ? _rolloverTexture : Texture, Panel, null, IsColorized ? BackgroundColor : Color.White * (float)Opacity, 0f, Vector2.Zero, SpriteEffects.FlipHorizontally, 1);
             }
 
             SpriteBatch.End();

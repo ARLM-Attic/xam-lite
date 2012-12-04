@@ -32,6 +32,45 @@ namespace XAMLite
         public ScaleTransform RenderTransform;
 
         /// <summary>
+        /// True when a background has been set for the image. This is primitive
+        /// and only the color over the top of the image.
+        /// </summary>
+        protected bool IsColorized;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected Color BackgroundColor { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private Brush _background;
+
+        /// <summary>
+        /// Background color of the Grid.
+        /// </summary>
+        public override Brush Background
+        {
+            get
+            {
+                return _background;
+            }
+
+            set
+            {
+                _background = value;
+
+                if (_background != null)
+                {
+                    var solidBrush = (SolidColorBrush)value;
+                    var color = solidBrush.Color;
+                    BackgroundColor = new Color(color.R, color.G, color.B, color.A);
+                }
+            }
+        }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="game"></param>
@@ -41,12 +80,28 @@ namespace XAMLite
         }
 
         /// <summary>
+        /// Constructor that includes a loaded texture.  This can be used when 
+        /// complex controls are being created so that, if the Texture2D was 
+        /// already loaded from disk, it doesn't need to be loaded again.
+        /// </summary>
+        /// <param name="game"></param>
+        /// <param name="texture"> </param>
+        public XAMLiteImageNew(Game game, Texture2D texture)
+            : base(game)
+        {
+            Texture = texture;
+        }
+
+        /// <summary>
         /// Loads the content.
         /// </summary>
         protected override void LoadContent()
         {
-            Debug.Assert((SourceName != null), "Must set SourceName property. This is the image file path, minus the file extension.");
-            Texture = Game.Content.Load<Texture2D>(SourceName);
+            if (Texture == null)
+            {
+                Debug.Assert((SourceName != null), "Must set SourceName property. This is the image file path, minus the file extension.");
+                Texture = Game.Content.Load<Texture2D>(SourceName);
+            }
 
             if (Width == 0)
             {
@@ -56,6 +111,13 @@ namespace XAMLite
             if (Height == 0)
             {
                 Height = Texture.Height;
+            }
+
+            if (Background != null)
+            {
+                IsColorized = true;
+                //Color[] data = new Color[Texture.Width * Texture.Height];
+                //Texture.GetData(data);
             }
 
             base.LoadContent();
@@ -76,11 +138,11 @@ namespace XAMLite
 
                 if (RenderTransform == null)
                 {
-                    SpriteBatch.Draw(Texture, Panel, Color.White * (float)Opacity);
+                    SpriteBatch.Draw(Texture, Panel, IsColorized ? BackgroundColor : Color.White * (float)Opacity);
                 }
                 else
                 {
-                    SpriteBatch.Draw(Texture, Panel, null, Color.White * (float)Opacity, 0f, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+                    SpriteBatch.Draw(Texture, Panel, null, IsColorized ? BackgroundColor : Color.White * (float)Opacity, 0f, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
                 }
 
                 SpriteBatch.End();

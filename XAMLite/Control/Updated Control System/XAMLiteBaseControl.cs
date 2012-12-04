@@ -343,7 +343,7 @@ namespace XAMLite
         /// <summary>
         /// Background color of the Grid.
         /// </summary>
-        public Brush Background
+        public virtual Brush Background
         {
             get
             {
@@ -353,9 +353,13 @@ namespace XAMLite
             set
             {
                 _background = value;
-                var solidBrush = (SolidColorBrush)value;
-                var color = solidBrush.Color;
-                _backgroundColor = new Color(color.R, color.G, color.B, color.A);
+
+                if (_background != null)
+                {
+                    var solidBrush = (SolidColorBrush)value;
+                    var color = solidBrush.Color;
+                    _backgroundColor = new Color(color.R, color.G, color.B, color.A);
+                }
 
                 _transparent = value == Brushes.Transparent;
             }
