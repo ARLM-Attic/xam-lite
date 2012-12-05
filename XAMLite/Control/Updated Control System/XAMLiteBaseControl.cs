@@ -266,7 +266,7 @@ namespace XAMLite
         /// <summary>
         /// System.Windows.Visibility.  Maintains the visibility of a control.
         /// </summary>
-        public new Visibility Visible
+        public new virtual Visibility Visible
         {
             get
             {

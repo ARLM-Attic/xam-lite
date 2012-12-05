@@ -128,8 +128,6 @@ namespace XAMLite
             if (Background != null)
             {
                 IsColorized = true;
-                //Color[] data = new Color[Texture.Width * Texture.Height];
-                //Texture.GetData(data);
             }
 
             base.LoadContent();
@@ -141,24 +139,24 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            base.Draw(gameTime);
-
-
-            if (Visible == System.Windows.Visibility.Visible)
+            //base.Draw(gameTime);
+            if (Visible != System.Windows.Visibility.Visible)
             {
-                SpriteBatch.Begin();
-
-                if (RenderTransform == null)
-                {
-                    SpriteBatch.Draw(Texture, Panel, IsColorized ? !IsEdge ? BackgroundColor : !IsTopEdge ? BackgroundColor * 0.75f : BackgroundColor * 0.5f : Color.White * (float)Opacity);
-                }
-                else
-                {
-                    SpriteBatch.Draw(Texture, Panel, null, IsColorized ? !IsEdge ? BackgroundColor : !IsTopEdge ? BackgroundColor * 0.75f : BackgroundColor * 0.5f : Color.White * (float)Opacity, 0f, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
-                }
-
-                SpriteBatch.End();
+                return;
             }
+
+            SpriteBatch.Begin();
+
+            if (RenderTransform == null)
+            {
+                SpriteBatch.Draw(Texture, Panel, IsColorized ? !IsEdge ? BackgroundColor : !IsTopEdge ? BackgroundColor * 0.75f : BackgroundColor * 0.5f : Color.White * (float)Opacity);
+            }
+            else
+            {
+                SpriteBatch.Draw(Texture, Panel, null, IsColorized ? !IsEdge ? BackgroundColor : !IsTopEdge ? BackgroundColor * 0.75f : BackgroundColor * 0.5f : Color.White * (float)Opacity, 0f, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+            }
+
+            SpriteBatch.End();              
         }
     }
 }

@@ -98,6 +98,32 @@ namespace XAMLite
         private KeyboardState _lastKeyboardState;
 
         /// <summary>
+        /// TODO: Consider creating a base class for complex controls
+        /// TODO: so that adding all of these parts are not necessary every time.
+        /// </summary>
+        /// <summary>
+        /// TODO: Consider creating a base class for complex controls
+        /// TODO: so that adding all of these parts are not necessary every time.
+        /// </summary>
+        public override Visibility Visible
+        {
+            get
+            {
+                return base.Visible;
+            }
+
+            set
+            {
+                base.Visible = value;
+
+                if (_grid != null)
+                {
+                    _grid.Visible = value;
+                }
+            }
+        }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="game"></param>

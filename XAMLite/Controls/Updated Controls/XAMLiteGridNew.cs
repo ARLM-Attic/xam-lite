@@ -26,6 +26,8 @@ namespace XAMLite
         /// </summary>
         private bool[] _childVisibility;
 
+        private bool[] _currentChildVisibility;
+
         /// <summary>
         /// Holds a record of the child's natural opacity and is used to modify its opacity according to
         /// the opacity of the grid (grid opacity * child opacity).
@@ -35,7 +37,7 @@ namespace XAMLite
         /// <summary>
         /// True when a child of the grid becomes visible after being loaded.
         /// </summary>
-        private bool _isVisible;
+        //private bool _isVisible;
 
         /// <summary>
         /// Constructor.
@@ -104,19 +106,18 @@ namespace XAMLite
             // it should limit the increase to that of the grid's.
             CheckChildrenOpacity();
 
-            if (_childrenLoaded && !_isVisible)
+            for (var i = 0; i < Children.Count; i++)
             {
-                _isVisible = true;
-
-                var index = 0;
-                foreach (var child in Children)
+                if (Visible == Visibility.Visible)
                 {
-                    if (_childVisibility[index])
+                    if (_childVisibility[i] && Children[i].Visible == Visibility.Hidden)
                     {
-                        child.Visible = Visibility.Visible;
+                        _childVisibility[i] = false;
                     }
-
-                    index++;
+                    else
+                    {
+                        _childVisibility[i] = true;
+                    }
                 }
             }
         }
@@ -127,7 +128,7 @@ namespace XAMLite
         private void LoadChildren()
         {
             SaveChildOpacity();
-            SaveChildVisibility();
+            SaveInitialChildVisibility();
             HideChildren();
 
             // Add the child component to the game with the modified parameters.
@@ -226,9 +227,13 @@ namespace XAMLite
         /// Stores the original visibility of the child and initially sets its
         /// visibility to hidden until the grid is fully set up.
         /// </summary>
-        private void SaveChildVisibility()
+        private void SaveInitialChildVisibility()
         {
-            _childVisibility = new bool[Children.Count];
+            if (_childVisibility == null)
+            {
+                _childVisibility = new bool[Children.Count];
+                _currentChildVisibility = new bool[Children.Count];
+            }
 
             for (var i = 0; i < Children.Count; i++)
             {
@@ -256,13 +261,10 @@ namespace XAMLite
             if (Visible == Visibility.Hidden)
             {
                 // before making the child hidden, record its lateset visibility state.
-                SaveChildVisibility();
-
+                //SaveChildVisibility();
+                
                 // change the child visibility to hidden, like the grid.
-                foreach (var child in Children)
-                {
-                    child.Visible = Visibility.Hidden;
-                }
+                HideChildren();
             }
             else
             {
@@ -281,7 +283,10 @@ namespace XAMLite
         /// </summary>
         private void SaveChildOpacity()
         {
-            _childOpacity = new float[Children.Count];
+            if (_childOpacity == null)
+            {
+                _childOpacity = new float[Children.Count];
+            }
 
             for (var i = 0; i < Children.Count; i++)
             {

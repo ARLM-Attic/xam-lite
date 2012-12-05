@@ -149,7 +149,29 @@ namespace XAMLite
         /// Contains default XAMLite images used for the main body and left and
         /// right edges for the button's clicked state.
         /// </summary>
-        private List<XAMLiteImageNew> _defaultClickImages; 
+        private List<XAMLiteImageNew> _defaultClickImages;
+
+        /// <summary>
+        /// TODO: Consider creating a base class for complex controls
+        /// TODO: so that adding all of these parts are not necessary every time.
+        /// </summary>
+        public override Visibility Visible
+        {
+            get
+            {
+                return base.Visible;
+            }
+
+            set
+            {
+                base.Visible = value;
+
+                if (_grid != null)
+                {
+                    _grid.Visible = value;
+                }
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XAMLite.XAMLiteButton"/> class. 
@@ -533,7 +555,7 @@ namespace XAMLite
         {
             const int GradientThickness = 3;
             var t = new Texture2D(Game.GraphicsDevice, 55, Height);
-            Console.WriteLine(Width + "/" + Height);
+            
             var bgc = new Color[55 * Height];
 
             for (int i = bgc.Length - 1; i > 0; i--)
