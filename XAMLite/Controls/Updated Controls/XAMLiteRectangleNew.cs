@@ -103,7 +103,7 @@ namespace XAMLite
         {
             base.Draw(gameTime);
 
-            if (Visible == Visibility.Visible)
+            if (Visibility == Visibility.Visible)
             {
                 SpriteBatch.Begin();
                 Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);

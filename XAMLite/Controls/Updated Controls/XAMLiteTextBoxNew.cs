@@ -105,20 +105,20 @@ namespace XAMLite
         /// TODO: Consider creating a base class for complex controls
         /// TODO: so that adding all of these parts are not necessary every time.
         /// </summary>
-        public override Visibility Visible
+        public override Visibility Visibility
         {
             get
             {
-                return base.Visible;
+                return base.Visibility;
             }
 
             set
             {
-                base.Visible = value;
+                base.Visibility = value;
 
                 if (_grid != null)
                 {
-                    _grid.Visible = value;
+                    _grid.Visibility = value;
                 }
             }
         }
@@ -221,7 +221,7 @@ namespace XAMLite
                     Spacing = Spacing,
                     Foreground = Foreground,
                     Padding = _text.Padding,
-                    Visible = Visibility.Hidden
+                    Visibility = Visibility.Hidden
                 };
             _grid.Children.Add(_cursor);
 
@@ -328,7 +328,7 @@ namespace XAMLite
         {
             if (!IsFocused)
             {
-                _cursor.Visible = Visibility.Hidden;
+                _cursor.Visibility = Visibility.Hidden;
                 _cursorVisible = false;
                 _cursorBlink = false;
                 if (_text.Content.ToString() == string.Empty)
@@ -348,7 +348,7 @@ namespace XAMLite
                 }
             }
 
-            _cursor.Visible = _cursorBlink ? Visibility.Visible : Visibility.Hidden;
+            _cursor.Visibility = _cursorBlink ? Visibility.Visible : Visibility.Hidden;
 
             ProcessInput(gameTime);
             

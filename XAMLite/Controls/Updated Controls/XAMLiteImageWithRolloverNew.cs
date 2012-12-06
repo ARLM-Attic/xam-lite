@@ -60,7 +60,7 @@ namespace XAMLite
         {
             //base.Draw(gameTime);
 
-            if (Visible != System.Windows.Visibility.Visible)
+            if (Visibility != System.Windows.Visibility.Visible)
             {
                 return;
             }

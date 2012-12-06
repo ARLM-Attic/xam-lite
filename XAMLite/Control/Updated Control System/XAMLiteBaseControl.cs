@@ -261,21 +261,22 @@ namespace XAMLite
         /// <summary>
         /// True when the control is Visible.
         /// </summary>
-        private Visibility _visible;
+        private Visibility visibility;
 
         /// <summary>
         /// System.Windows.Visibility.  Maintains the visibility of a control.
         /// </summary>
-        public new virtual Visibility Visible
+        public virtual Visibility Visibility
         {
             get
             {
-                return _visible;
+                return visibility;
             }
 
             set
             {
-                _visible = value;
+                visibility = value;
+                
                 VisibilityChanged = true;
             }
         }
@@ -479,8 +480,8 @@ namespace XAMLite
             HorizontalAlignment = HorizontalAlignment.Left;
             VerticalAlignment = VerticalAlignment.Top;
             Opacity = 1.0;
-            Visible = new Visibility();
-            Visible = Visibility.Visible;
+            Visibility = new Visibility();
+            Visibility = Visibility.Visible;
             IsEnabled = true;
             _margin = new Thickness(0, 0, 0, 0);
             Viewport = Game.GraphicsDevice.Viewport;
@@ -541,7 +542,7 @@ namespace XAMLite
         {
             base.Draw(gameTime);
 
-            if (Visible == Visibility.Visible)
+            if (Visibility == Visibility.Visible)
             {
                 SpriteBatch.Begin();
 
@@ -592,7 +593,7 @@ namespace XAMLite
                 MousePressPosition.Y = MsRect.Y;
             }
 
-            if (IsEnabled && Visible == Visibility.Visible)
+            if (IsEnabled && Visibility == Visibility.Visible)
             {
                 if (Panel.Contains(MsRect))
                 {
@@ -714,18 +715,18 @@ namespace XAMLite
         /// </summary>
         public void ToggleVisibility()
         {
-            switch (Visible)
+            switch (Visibility)
             {
                 case Visibility.Visible:
-                    Visible = Visibility.Hidden;
+                    Visibility = Visibility.Hidden;
                     break;
 
                 case Visibility.Hidden:
-                    Visible = Visibility.Visible;
+                    Visibility = Visibility.Visible;
                     break;
 
                 case Visibility.Collapsed:
-                    Visible = Visibility.Visible;
+                    Visibility = Visibility.Visible;
                     break;
             }
         }

@@ -140,7 +140,7 @@ namespace XAMLite
         public override void Draw(GameTime gameTime)
         {
             //base.Draw(gameTime);
-            if (Visible != System.Windows.Visibility.Visible)
+            if (Visibility != System.Windows.Visibility.Visible)
             {
                 return;
             }

@@ -39,7 +39,7 @@ namespace XAMLite
         {
             base.Draw(gameTime);
 
-            if (Visible == Visibility.Hidden)
+            if (Visibility == Visibility.Hidden)
             {
                 return;
             }

@@ -101,20 +101,20 @@ namespace XAMLite
         /// TODO: Consider creating a base class for complex controls
         /// TODO: so that adding all of these parts are not necessary every time.
         /// </summary>
-        public override Visibility Visible
+        public override Visibility Visibility
         {
             get
             {
-                return base.Visible;
+                return base.Visibility;
             }
 
             set
             {
-                base.Visible = value;
+                base.Visibility = value;
 
                 if (_grid != null)
                 {
-                    _grid.Visible = value;
+                    _grid.Visibility = value;
                 }
             }
         }
@@ -176,7 +176,7 @@ namespace XAMLite
                 SourceName = SourceName,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Center,
-                Visible = !IsChecked ? Visibility.Visible : Visibility.Hidden
+                Visibility = !IsChecked ? Visibility.Visible : Visibility.Hidden
             };
             _grid.Children.Add(_uncheckedButton);
 
@@ -187,7 +187,7 @@ namespace XAMLite
                         SourceName = HoverSourceName,
                         HorizontalAlignment = HorizontalAlignment.Left,
                         VerticalAlignment = VerticalAlignment.Center,
-                        Visible = Visibility.Hidden
+                        Visibility = Visibility.Hidden
                     };
                 _grid.Children.Add(_uncheckedHoverButton);
             }
@@ -197,7 +197,7 @@ namespace XAMLite
                 SourceName = CheckedSourceName,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Center,
-                Visible = IsChecked ? Visibility.Visible : Visibility.Hidden
+                Visibility = IsChecked ? Visibility.Visible : Visibility.Hidden
             };    
             _grid.Children.Add(_checkedButton);
 
@@ -208,7 +208,7 @@ namespace XAMLite
                         SourceName = HoverCheckedSourceName,
                         HorizontalAlignment = HorizontalAlignment.Left,
                         VerticalAlignment = VerticalAlignment.Center,
-                        Visible = Visibility.Hidden
+                        Visibility = Visibility.Hidden
                     };
                 _grid.Children.Add(_checkedHoverButton);
             }
@@ -258,13 +258,13 @@ namespace XAMLite
             {
                 if (IsChecked)
                 {
-                    _checkedHoverButton.Visible = Visibility.Visible;
-                    _checkedButton.Visible = Visibility.Hidden;
+                    _checkedHoverButton.Visibility = Visibility.Visible;
+                    _checkedButton.Visibility = Visibility.Hidden;
                 }
                 else
                 {
-                    _uncheckedHoverButton.Visible = Visibility.Visible;
-                    _uncheckedButton.Visible = Visibility.Hidden;
+                    _uncheckedHoverButton.Visibility = Visibility.Visible;
+                    _uncheckedButton.Visibility = Visibility.Hidden;
                 }
             }
         }
@@ -285,13 +285,13 @@ namespace XAMLite
             {
                 if (IsChecked)
                 {
-                    _checkedHoverButton.Visible = Visibility.Hidden;
-                    _checkedButton.Visible = Visibility.Visible;
+                    _checkedHoverButton.Visibility = Visibility.Hidden;
+                    _checkedButton.Visibility = Visibility.Visible;
                 }
                 else
                 {
-                    _uncheckedHoverButton.Visible = Visibility.Hidden;
-                    _uncheckedButton.Visible = Visibility.Visible;
+                    _uncheckedHoverButton.Visibility = Visibility.Hidden;
+                    _uncheckedButton.Visibility = Visibility.Visible;
                 }
             }
         }
@@ -303,15 +303,15 @@ namespace XAMLite
         {
             if (IsChecked)
             {
-                _checkedHoverButton.Visible = Visibility.Visible;
-                _uncheckedButton.Visible = Visibility.Hidden;
-                _uncheckedHoverButton.Visible = Visibility.Hidden;
+                _checkedHoverButton.Visibility = Visibility.Visible;
+                _uncheckedButton.Visibility = Visibility.Hidden;
+                _uncheckedHoverButton.Visibility = Visibility.Hidden;
             }
             else
             {
-                _uncheckedHoverButton.Visible = Visibility.Visible;
-                _checkedButton.Visible = Visibility.Hidden;
-                _checkedHoverButton.Visible = Visibility.Hidden;
+                _uncheckedHoverButton.Visibility = Visibility.Visible;
+                _checkedButton.Visibility = Visibility.Hidden;
+                _checkedHoverButton.Visibility = Visibility.Hidden;
             }
         }
 

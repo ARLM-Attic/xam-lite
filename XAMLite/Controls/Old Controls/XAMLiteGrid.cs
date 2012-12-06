@@ -145,7 +145,7 @@ namespace XAMLite
             // Update Visibility of Children
             if (VisibilityChanged)
             {
-                Console.WriteLine("Vis changed in grid.");
+                //Console.WriteLine("Vis changed in grid.");
                 VisibilityChanged = false;
                 UpdateChildVisibility();
             }

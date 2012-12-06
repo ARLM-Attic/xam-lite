@@ -108,9 +108,9 @@ namespace XAMLite
 
             for (var i = 0; i < Children.Count; i++)
             {
-                if (Visible == Visibility.Visible)
+                if (Visibility == Visibility.Visible)
                 {
-                    if (_childVisibility[i] && Children[i].Visible == Visibility.Hidden)
+                    if (_childVisibility[i] && Children[i].Visibility == Visibility.Hidden)
                     {
                         _childVisibility[i] = false;
                     }
@@ -237,7 +237,7 @@ namespace XAMLite
 
             for (var i = 0; i < Children.Count; i++)
             {
-                _childVisibility[i] = Children[i].Visible == Visibility.Visible;
+                _childVisibility[i] = Children[i].Visibility == Visibility.Visible;
             }
         }
 
@@ -248,7 +248,7 @@ namespace XAMLite
         {
             foreach (var child in Children)
             {
-                child.Visible = Visibility.Hidden;
+                child.Visibility = Visibility.Hidden;
             }
         }
 
@@ -258,7 +258,7 @@ namespace XAMLite
         /// </summary>
         private void UpdateChildVisibility()
         {
-            if (Visible == Visibility.Hidden)
+            if (Visibility == Visibility.Hidden)
             {
                 // before making the child hidden, record its lateset visibility state.
                 //SaveChildVisibility();
@@ -272,7 +272,7 @@ namespace XAMLite
                 // like its parent.
                 for (var i = 0; i < _childVisibility.Length; i++)
                 {
-                    Children[i].Visible = _childVisibility[i] ? Visibility.Visible : Visibility.Hidden;
+                    Children[i].Visibility = _childVisibility[i] ? Visibility.Visible : Visibility.Hidden;
                 }
             }
         }

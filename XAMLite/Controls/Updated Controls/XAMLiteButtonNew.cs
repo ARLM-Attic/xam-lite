@@ -155,20 +155,20 @@ namespace XAMLite
         /// TODO: Consider creating a base class for complex controls
         /// TODO: so that adding all of these parts are not necessary every time.
         /// </summary>
-        public override Visibility Visible
+        public override Visibility Visibility
         {
             get
             {
-                return base.Visible;
+                return base.Visibility;
             }
 
             set
             {
-                base.Visible = value;
+                base.Visibility = value;
 
                 if (_grid != null)
                 {
-                    _grid.Visible = value;
+                    _grid.Visibility = value;
                 }
             }
         }
@@ -275,7 +275,7 @@ namespace XAMLite
                         HorizontalAlignment = HorizontalAlignment.Center,
                         Width = Width,
                         Height = Height,
-                        Visible = Visibility.Hidden,
+                        Visibility = Visibility.Hidden,
                         Background = Background
                     };
                     _grid.Children.Add(_clickedButton);
@@ -334,7 +334,7 @@ namespace XAMLite
                 VerticalAlignment = VerticalAlignment.Center,
                 Width = _isDefaultTextures ? Width - (_defaultEdgeTexture.Width * 2) : Width,
                 Height = Height - (4),
-                Visible = Visibility.Hidden,
+                Visibility = Visibility.Hidden,
                 Background = Background
             };
             _defaultRolloverImages.Add(defaultRolloverButton);
@@ -345,7 +345,7 @@ namespace XAMLite
                 VerticalAlignment = VerticalAlignment.Center,
                 Width = Width - (_defaultEdgeTexture.Width * 2),
                 Height = Height - (4),
-                Visible = Visibility.Hidden,
+                Visibility = Visibility.Hidden,
                 Background = Background
             };
             _defaultClickImages.Add(_clickedButton);
@@ -369,7 +369,7 @@ namespace XAMLite
                 HorizontalAlignment = HorizontalAlignment.Right,
                 Height = Height - 4,
                 Margin = new Thickness(0, 0, Width - _defaultEdgeTexture.Width, 0),
-                Visible = Visibility.Hidden,
+                Visibility = Visibility.Hidden,
                 Background = Background
             };
             _defaultRolloverImages.Add(defaultRolloverLeftEdge);
@@ -382,7 +382,7 @@ namespace XAMLite
                 HorizontalAlignment = HorizontalAlignment.Right,
                 Height = Height - 4,
                 Margin = new Thickness(0, 0, Width - _defaultEdgeTexture.Width, 0),
-                Visible = Visibility.Hidden,
+                Visibility = Visibility.Hidden,
                 Background = Background
             };
             _defaultClickImages.Add(defaultClickLeftEdge);
@@ -408,7 +408,7 @@ namespace XAMLite
                 HorizontalAlignment = HorizontalAlignment.Left,
                 Height = Height - 4,
                 Margin = new Thickness(Width - _defaultEdgeTexture.Width, 0, 0, 0),
-                Visible = Visibility.Hidden,
+                Visibility = Visibility.Hidden,
                 Background = Background
             };
             _defaultRolloverImages.Add(defaultRolloverRightEdge);
@@ -422,7 +422,7 @@ namespace XAMLite
                 HorizontalAlignment = HorizontalAlignment.Left,
                 Height = Height - 4,
                 Margin = new Thickness(Width - _defaultEdgeTexture.Width, 0, 0, 0),
-                Visible = Visibility.Hidden,
+                Visibility = Visibility.Hidden,
                 Background = Background
             };
             _defaultClickImages.Add(defaultClickRightEdge);
@@ -449,7 +449,7 @@ namespace XAMLite
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Width = Width - 4,
                 Margin = new Thickness(0, 0, 0, Height - 4),
-                Visible = Visibility.Hidden,
+                Visibility = Visibility.Hidden,
                 Background = Background
             };
             _defaultRolloverImages.Add(defaultRolloverTopEdge);
@@ -463,7 +463,7 @@ namespace XAMLite
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Width = Width - 4,
                 Margin = new Thickness(0, 0, 0, Height - 4),
-                Visible = Visibility.Hidden,
+                Visibility = Visibility.Hidden,
                 Background = Background
             };
             _defaultClickImages.Add(defaultClickTopEdge);
@@ -488,7 +488,7 @@ namespace XAMLite
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Width = Width - 4,
                 Margin = new Thickness(0, Height - 4, 0, 0),
-                Visible = Visibility.Hidden,
+                Visibility = Visibility.Hidden,
                 Background = Background
             };
             _defaultRolloverImages.Add(defaultRolloverBottomEdge);
@@ -501,7 +501,7 @@ namespace XAMLite
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Width = Width - 4,
                 Margin = new Thickness(0, Height - 4, 0, 0),
-                Visible = Visibility.Hidden,
+                Visibility = Visibility.Hidden,
                 Background = Background
             };
             _defaultClickImages.Add(defaultClickBottomEdge);
@@ -580,22 +580,22 @@ namespace XAMLite
             {
                 foreach (var image in _defaultRolloverImages)
                 {
-                    image.Visible = Visibility.Hidden;
+                    image.Visibility = Visibility.Hidden;
                 }
 
                 foreach (var image in _defaultClickImages)
                 {
-                    image.Visible = Visibility.Hidden;
+                    image.Visibility = Visibility.Hidden;
                 }
 
                 foreach (var image in _defaultImages)
                 {
-                    image.Visible = Visibility.Visible;
+                    image.Visibility = Visibility.Visible;
                 }
             }
             else
             {
-                _mainButtonWithRollover.Visible = Visibility.Visible;
+                _mainButtonWithRollover.Visibility = Visibility.Visible;
             }
         }
 
@@ -607,18 +607,18 @@ namespace XAMLite
                 {
                     foreach (var image in _defaultClickImages)
                     {
-                        image.Visible = Visibility.Hidden;
+                        image.Visibility = Visibility.Hidden;
                     }
                 }
 
                 foreach (var image in _defaultImages)
                 {
-                    image.Visible = Visibility.Hidden;
+                    image.Visibility = Visibility.Hidden;
                 }
 
                 foreach (var image in _defaultRolloverImages)
                 {
-                    image.Visible = Visibility.Visible;
+                    image.Visibility = Visibility.Visible;
                 }
             }
         }
@@ -632,28 +632,28 @@ namespace XAMLite
         {
             if (RolloverSourceName != null && ClickSourceName != null)
             {
-                _clickedButton.Visible = Visibility.Hidden;
+                _clickedButton.Visibility = Visibility.Hidden;
 
                 if (_isDefaultTextures)
                 {
                     foreach (var image in _defaultClickImages)
                     {
-                        image.Visible = Visibility.Hidden;
+                        image.Visibility = Visibility.Hidden;
                     }
 
                     foreach (var image in _defaultImages)
                     {
-                        image.Visible = Visibility.Hidden;
+                        image.Visibility = Visibility.Hidden;
                     }
 
                     foreach (var image in _defaultRolloverImages)
                     {
-                        image.Visible = Visibility.Visible;
+                        image.Visibility = Visibility.Visible;
                     }
                 }
                 else
                 {
-                    _mainButtonWithRollover.Visible = Visibility.Visible;
+                    _mainButtonWithRollover.Visibility = Visibility.Visible;
                 }
             }
         }
@@ -667,28 +667,28 @@ namespace XAMLite
         {
             if (RolloverSourceName != null && ClickSourceName != null)
             {
-                _clickedButton.Visible = Visibility.Visible;
+                _clickedButton.Visibility = Visibility.Visible;
 
                 if (_isDefaultTextures)
                 {
                     foreach (var image in _defaultImages)
                     {
-                        image.Visible = Visibility.Hidden;
+                        image.Visibility = Visibility.Hidden;
                     }
 
                     foreach (var image in _defaultRolloverImages)
                     {
-                        image.Visible = Visibility.Hidden;
+                        image.Visibility = Visibility.Hidden;
                     } 
                     
                     foreach (var image in _defaultClickImages)
                     {
-                        image.Visible = Visibility.Visible;
+                        image.Visibility = Visibility.Visible;
                     }
                 }
                 else
                 {
-                    _mainButtonWithRollover.Visible = Visibility.Hidden;
+                    _mainButtonWithRollover.Visibility = Visibility.Hidden;
                 }
             }
         }
