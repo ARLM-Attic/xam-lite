@@ -264,7 +264,7 @@ namespace XAMLite
         private Visibility visibility;
 
         /// <summary>
-        /// System.Windows.Visibility.  Maintains the visibility of a control.
+        /// Maintains the visibility of a control.
         /// </summary>
         public virtual Visibility Visibility
         {
@@ -480,8 +480,8 @@ namespace XAMLite
             HorizontalAlignment = HorizontalAlignment.Left;
             VerticalAlignment = VerticalAlignment.Top;
             Opacity = 1.0;
-            Visibility = new Visibility();
-            Visibility = Visibility.Visible;
+            //Visibility = new Visibility();
+            
             IsEnabled = true;
             _margin = new Thickness(0, 0, 0, 0);
             Viewport = Game.GraphicsDevice.Viewport;
@@ -501,6 +501,8 @@ namespace XAMLite
         protected override void LoadContent()
         {
             base.LoadContent();
+
+            Visibility = Visibility.Visible;
 
             // If the sprite batch that is shared across all XAMLite controls
             // hasn't yet been created, create it.
@@ -538,35 +540,35 @@ namespace XAMLite
         /// 
         /// </summary>
         /// <param name="gameTime"></param>
-        public override void Draw(GameTime gameTime)
-        {
-            base.Draw(gameTime);
+        //public override void Draw(GameTime gameTime)
+        //{
+        //    base.Draw(gameTime);
 
-            if (Visibility == Visibility.Visible)
-            {
-                SpriteBatch.Begin();
+        //    if (Visibility == Visibility.Visible)
+        //    {
+        //        SpriteBatch.Begin();
 
-                if (!_transparent)
-                {
-                    //if (this is XAMLiteLabelNew)
-                    //{
-                    //    SpriteBatch.Draw(
-                    //        Pixel,
-                    //        new Rectangle(Panel.X, Panel.Y, Panel.Width, Panel.Height - (int)(Height * 0.3)),
-                    //        _backgroundColor * (float)Opacity);
-                    //}
-                    //else
-                    {
-                        SpriteBatch.Draw(
-                            Pixel,
-                            Panel,
-                            _backgroundColor * (float)Opacity);
-                    }
-                }
+        //        if (!_transparent)
+        //        {
+        //            //if (this is XAMLiteLabelNew)
+        //            //{
+        //            //    SpriteBatch.Draw(
+        //            //        Pixel,
+        //            //        new Rectangle(Panel.X, Panel.Y, Panel.Width, Panel.Height - (int)(Height * 0.3)),
+        //            //        _backgroundColor * (float)Opacity);
+        //            //}
+        //            //else
+        //            {
+        //                SpriteBatch.Draw(
+        //                    Pixel,
+        //                    Panel,
+        //                    _backgroundColor * (float)Opacity);
+        //            }
+        //        }
 
-                SpriteBatch.End();
-            }
-        }
+        //        SpriteBatch.End();
+        //    }
+        //}
 
         /// <summary>
         /// 

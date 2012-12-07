@@ -12,6 +12,12 @@ namespace XAMLite
     public class XAMLiteLabelNew : XAMLiteBaseContent
     {
         /// <summary>
+        /// True when the control has been repositioned because the Font 
+        /// Family, Margin, or Position was not at its default state. 
+        /// </summary>
+        private bool _isModified;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="game"></param>
@@ -38,6 +44,14 @@ namespace XAMLite
         public override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
+
+            // allow the control to update once before drawing when
+            // Margins, positions, or Font are not default.
+            if (!_isModified && (Margin != new Thickness() || Position != Vector2.Zero || SpriteFont != Courier10SpriteFont))
+            {
+                _isModified = true;
+                return;
+            }
 
             if (Visibility == Visibility.Hidden)
             {

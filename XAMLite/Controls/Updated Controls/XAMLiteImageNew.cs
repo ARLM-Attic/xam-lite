@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -58,6 +59,12 @@ namespace XAMLite
         /// Notifies that the opacity should change.
         /// </summary>
         protected internal bool IsTopEdge;
+
+        /// <summary>
+        /// True when the control has been repositioned because the Margin or 
+        /// Position was not at its default state. 
+        /// </summary>
+        //private bool _isModified;
 
         /// <summary>
         /// Background color of the Grid.
@@ -139,8 +146,17 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            //base.Draw(gameTime);
-            if (Visibility != System.Windows.Visibility.Visible)
+            base.Draw(gameTime);
+
+            // allow the control to update once before drawing when
+            // Margins, positions, or Font are not default.
+            //if (!_isModified && (Margin != new Thickness() || Position != Vector2.Zero))
+            //{
+            //    _isModified = true;
+            //    return;
+            //}
+
+            if (Visibility != Visibility.Visible)
             {
                 return;
             }
