@@ -392,7 +392,7 @@ namespace XAMLite
         /// <summary>
         /// Mouse position.
         /// </summary>
-        protected Rectangle MsRect;
+        protected static Rectangle MsRect;
 
         /// <summary>
         /// True when the mouse has been pressed while over a control.
