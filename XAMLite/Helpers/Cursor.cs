@@ -1,38 +1,42 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Cursor.cs" company="Microsoft">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Windows;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace XAMLite
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Windows;
-    using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Graphics;
-
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
     public class Cursor : XAMLiteImageNew
     {
         /// <summary>
-        /// 
+        /// The default mouse texture, which currently isn't drawn to screen.
         /// </summary>
         private Texture2D _arrowTexture;
 
         /// <summary>
-        /// 
+        /// The Hand texture that is most often used for buttons.
         /// </summary>
         private Texture2D _handTexture;
 
+        /// <summary>
+        /// The IBeam texture used when over a text box.
+        /// </summary>
         private Texture2D _iBeamTexture;
 
+        /// <summary>
+        /// Adjustment to the mouse image in comparison to the actual mouse 
+        /// position, depending on the Cursor type. 
+        /// </summary>
         private Vector2 _cursorTypePositionAdjustment;
 
+        /// <summary>
+        /// Enum of possible XAMLite cursor types.
+        /// </summary>
         private Cursors _cursors;
 
         /// <summary>
@@ -100,7 +104,7 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// Loads the art assets for the Cursor.
         /// </summary>
         protected override void LoadContent()
         {    
@@ -113,6 +117,11 @@ namespace XAMLite
             base.LoadContent();
         }
 
+        /// <summary>
+        /// Modifies the position of the XAMLite cursor in relation
+        /// to the actual cursor.
+        /// </summary>
+        /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
             if (Cursors == Cursors.Arrow || Cursors == Cursors.None)

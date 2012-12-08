@@ -516,6 +516,8 @@ namespace XAMLite
                 Pixel.SetData(new[] { Color.White });
             }
 
+            // Create a single cursor when the game mouse is visible for 
+            // the application.
             if (Cursor == null)
             {
                 Cursor = new Cursor(Game);
