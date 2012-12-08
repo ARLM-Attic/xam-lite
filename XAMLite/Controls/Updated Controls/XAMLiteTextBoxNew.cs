@@ -255,6 +255,7 @@ namespace XAMLite
                 }
             }
 
+            MouseEnter += OnMouseEnter;
             MouseUp += OnMouseUp;
             MouseLeave += OnMouseLeave;
 
@@ -438,6 +439,16 @@ namespace XAMLite
         }
 
         /// <summary>
+        /// Changes the default cursor to the IBeam.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseEventArgs"></param>
+        private void OnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
+        {
+            Cursor.Cursors = Cursors.IBeam;
+        }
+
+        /// <summary>
         /// Handles when the textbox is selected.
         /// </summary>
         /// <param name="sender"></param>
@@ -466,6 +477,8 @@ namespace XAMLite
             {
                 ResetBorderBrush();
             }
+
+            Cursor.Cursors = Cursors.Arrow;
         }
 
         /// <summary>

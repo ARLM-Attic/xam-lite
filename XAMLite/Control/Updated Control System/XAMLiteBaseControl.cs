@@ -187,6 +187,7 @@ namespace XAMLite
                     {
                         Width = panel.Width;
                     }
+
                     break;
             }
 
@@ -208,6 +209,7 @@ namespace XAMLite
                     {
                         Height = panel.Y + panel.Height;
                     }
+
                     break;
 
                 case VerticalAlignment.Top:
@@ -371,11 +373,11 @@ namespace XAMLite
         /// </summary>
         private bool _transparent;
 
-        /// <summary>
-        /// The cursor that has the potential to change as it mouse over, 
-        /// clicks, etc. on a control.
-        /// </summary>
-        //public Cursor Cursor;
+        ///// <summary>
+        ///// The cursor that has the potential to change as it mouses over, 
+        ///// clicks, etc. on a control.
+        ///// </summary>
+        public static Cursor Cursor;
 
         /// <summary>
         /// The state of the mouse, whether pressed, released, etc.
@@ -480,7 +482,6 @@ namespace XAMLite
             HorizontalAlignment = HorizontalAlignment.Left;
             VerticalAlignment = VerticalAlignment.Top;
             Opacity = 1.0;
-            //Visibility = new Visibility();
             
             IsEnabled = true;
             _margin = new Thickness(0, 0, 0, 0);
@@ -513,6 +514,13 @@ namespace XAMLite
                 // for Background Color
                 Pixel = new Texture2D(Game.GraphicsDevice, 1, 1);
                 Pixel.SetData(new[] { Color.White });
+            }
+
+            if (Cursor == null)
+            {
+                Cursor = new Cursor(Game);
+                Cursor.Initialize();
+                Game.Components.Add(Cursor);
             }
 
             // Sets the size and location of the image.
