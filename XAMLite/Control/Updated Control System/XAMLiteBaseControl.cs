@@ -278,6 +278,7 @@ namespace XAMLite
             set
             {
                 visibility = value;
+                Visible = visibility == Visibility.Visible;
                 
                 VisibilityChanged = true;
             }

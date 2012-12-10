@@ -101,10 +101,6 @@ namespace XAMLite
         /// TODO: Consider creating a base class for complex controls
         /// TODO: so that adding all of these parts are not necessary every time.
         /// </summary>
-        /// <summary>
-        /// TODO: Consider creating a base class for complex controls
-        /// TODO: so that adding all of these parts are not necessary every time.
-        /// </summary>
         public override Visibility Visibility
         {
             get
