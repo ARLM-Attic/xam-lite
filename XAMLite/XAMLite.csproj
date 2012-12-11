@@ -107,6 +107,7 @@
     <Compile Include="Control\Updated Control System\XAMLiteBaseText.cs" />
     <Compile Include="Control\Old Control System\XAMLiteControl.cs" />
     <Compile Include="Control\Updated Control System\XAMLiteBaseContentControl.cs" />
+    <Compile Include="Helpers\Children.cs" />
     <Compile Include="Helpers\Cursor.cs" />
     <Compile Include="Helpers\Cursors.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

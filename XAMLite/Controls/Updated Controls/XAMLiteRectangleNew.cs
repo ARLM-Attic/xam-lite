@@ -103,21 +103,23 @@ namespace XAMLite
         {
             base.Draw(gameTime);
 
-            if (Visibility == Visibility.Visible)
+            if (Visibility == Visibility.Hidden) // || GridIsHidden)
             {
-                SpriteBatch.Begin();
-                Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
-                SpriteBatch.Draw(Pixel, Panel, _fill * (float)Opacity);
-                Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, (int)Math.Round(StrokeThickness));
-                SpriteBatch.Draw(Pixel, Panel, _strokeColor * (float)Opacity);
-                Panel = new Rectangle((int)Position.X, (int)Position.Y + Height - (int)Math.Round(StrokeThickness), Width, (int)Math.Round(StrokeThickness));
-                SpriteBatch.Draw(Pixel, Panel, _strokeColor * (float)Opacity);
-                Panel = new Rectangle((int)Position.X, (int)Position.Y, (int)StrokeThickness, Height);
-                SpriteBatch.Draw(Pixel, Panel, _strokeColor * (float)Opacity);
-                Panel = new Rectangle((int)Position.X + Width - (int)Math.Round(StrokeThickness), (int)Position.Y, (int)Math.Round(StrokeThickness), Height);
-                SpriteBatch.Draw(Pixel, Panel, _strokeColor * (float)Opacity);
-                SpriteBatch.End();
+                return;
             }
+
+            SpriteBatch.Begin();
+            Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
+            SpriteBatch.Draw(Pixel, Panel, _fill * (float)Opacity);
+            Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, (int)Math.Round(StrokeThickness));
+            SpriteBatch.Draw(Pixel, Panel, _strokeColor * (float)Opacity);
+            Panel = new Rectangle((int)Position.X, (int)Position.Y + Height - (int)Math.Round(StrokeThickness), Width, (int)Math.Round(StrokeThickness));
+            SpriteBatch.Draw(Pixel, Panel, _strokeColor * (float)Opacity);
+            Panel = new Rectangle((int)Position.X, (int)Position.Y, (int)StrokeThickness, Height);
+            SpriteBatch.Draw(Pixel, Panel, _strokeColor * (float)Opacity);
+            Panel = new Rectangle((int)Position.X + Width - (int)Math.Round(StrokeThickness), (int)Position.Y, (int)Math.Round(StrokeThickness), Height);
+            SpriteBatch.Draw(Pixel, Panel, _strokeColor * (float)Opacity);
+            SpriteBatch.End();
         }
     }
 }

@@ -14,7 +14,7 @@ namespace XAMLite
         /// <summary>
         /// Maintains a list of all controls contained within the grid.
         /// </summary>
-        public List<XAMLiteBaseControl> Children { get; set; }
+        public Children Children { get; set; }
 
         /// <summary>
         /// Used to determine whether the child has been loaded into the grid.
@@ -49,7 +49,7 @@ namespace XAMLite
         public XAMLiteGridNew(Game game)
             : base(game)
         {
-            Children = new List<XAMLiteBaseControl>();
+            Children = new Children(this);
         }
 
         /// <summary>
@@ -151,10 +151,14 @@ namespace XAMLite
         /// <param name="child"></param>
         private void AddChild(XAMLiteBaseControl child)
         {
-            child.IsAttachedToGrid = true;
-            child.Parent = this;
-            child.Window = Window;
-            Game.Components.Add(child);
+            try
+            {
+                Game.Components.Add(child);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
 
         /// <summary>
@@ -243,8 +247,8 @@ namespace XAMLite
         {
             if (_childVisibility == null)
             {
-                _childVisibility = new List<bool>(); // new bool[Children.Count];
-                _currentChildVisibility = new List<bool>(); // new bool[Children.Count];
+                _childVisibility = new List<bool>(); 
+                _currentChildVisibility = new List<bool>(); 
             }
 
             for (var i = 0; i < Children.Count; i++)
@@ -272,9 +276,6 @@ namespace XAMLite
         {
             if (Visibility == Visibility.Hidden)
             {
-                // before making the child hidden, record its lateset visibility state.
-                //SaveChildVisibility();
-                
                 // change the child visibility to hidden, like the grid.
                 HideChildren();
             }
@@ -333,8 +334,8 @@ namespace XAMLite
             // this means that a new child was added later.
             if (_childOpacity.Count != Children.Count)
             {
-                var numToAdd = Children.Count - _childOpacity.Count;
-                for (int i = Children.Count - numToAdd; i < Children.Count; i++)
+                //var numToAdd = Children.Count - _childOpacity.Count;
+                for (int i = _childOpacity.Count; i < Children.Count; i++)
                 {
                     _childOpacity.Add((float)Children[i].Opacity);
                 }
@@ -342,8 +343,8 @@ namespace XAMLite
 
             if (_childVisibility.Count != Children.Count)
             {
-                var numToAdd = Children.Count - _childVisibility.Count;
-                for (int i = Children.Count - numToAdd; i < Children.Count; i++)
+                //var numToAdd = Children.Count - _childVisibility.Count;
+                for (int i = _childVisibility.Count; i < Children.Count; i++)
                 {
                     _childVisibility.Add(Children[i].Visibility == Visibility.Visible);
                     AddChild(Children[i]);
@@ -399,6 +400,17 @@ namespace XAMLite
             }
 
             Children[index].Opacity = _childOpacity[index] * (float)Opacity;
+        }
+
+        /// <summary>
+        /// When a child is being removed from the list of Children, the
+        /// child Visibility and child Opacity counts are updated.
+        /// </summary>
+        /// <param name="index"></param>
+        internal void DecreaseChildrenLists(int index)
+        {
+            _childVisibility.RemoveAt(index);
+            _childOpacity.RemoveAt(index);
         }
     }
 }

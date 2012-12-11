@@ -156,7 +156,7 @@ namespace XAMLite
             //    return;
             //}
 
-            if (Visibility != Visibility.Visible)
+            if (Visibility == Visibility.Hidden) // || GridIsHidden)
             {
                 return;
             }

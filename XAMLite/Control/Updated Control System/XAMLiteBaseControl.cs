@@ -25,6 +25,12 @@ namespace XAMLite
         public virtual string Name { get; set; }
 
         /// <summary>
+        /// The index will be -1 when not associated with a XAMLiteGrid.
+        /// Otherwise, it will have some value from 0 or greater.
+        /// </summary>
+        internal int Index = -1;
+
+        /// <summary>
         /// Allows the developer to set a parent of a particular XAMLite class.
         /// In XAMLite, mainly used to build complex components that use a grid
         /// when this grid may be inside another grid.
@@ -77,6 +83,12 @@ namespace XAMLite
         /// a XAMLiteLabel associated with the XAMLiteCheckBox class.
         /// </summary>
         internal bool IsAttachedToGrid;
+
+        /// <summary>
+        /// If the control IsAttachedToGrid and the GridIsHidden, then the 
+        /// control will not draw.
+        /// </summary>
+        //internal bool GridIsHidden;
 
         /// <summary>
         /// Width of the control.
@@ -279,7 +291,17 @@ namespace XAMLite
             {
                 visibility = value;
                 Visible = visibility == Visibility.Visible;
-                
+
+                //if (Index >= 0 && Parent is XAMLiteGridNew)
+                //{
+                //    XAMLiteGridNew parent = (XAMLiteGridNew)Parent;
+
+                //    if (parent.Visibility == Visibility.Hidden)
+                //    {
+                //        parent.ModifyChildVisibility(Index, value);
+                //    }
+                //}
+
                 VisibilityChanged = true;
             }
         }

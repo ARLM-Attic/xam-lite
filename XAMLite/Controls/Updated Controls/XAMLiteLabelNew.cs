@@ -53,7 +53,7 @@ namespace XAMLite
                 return;
             }
 
-            if (Visibility == Visibility.Hidden)
+            if (Visibility == Visibility.Hidden) // || GridIsHidden)
             {
                 return;
             }
@@ -79,11 +79,6 @@ namespace XAMLite
                         ForegroundColor * (float)Opacity);
                 }
 
-                //SpriteBatch.Draw(Pixel, new Rectangle((int)TopLeftCorner.X, (int)TopLeftCorner.Y, 1, 1), Color.Yellow);
-                //SpriteBatch.Draw(Pixel, new Rectangle((int)BottomLeftCorner.X, (int)BottomLeftCorner.Y, 1, 1), Color.Yellow);
-                //SpriteBatch.Draw(Pixel, new Rectangle((int)TopRightCorner.X, (int)TopRightCorner.Y, 1, 1), Color.Yellow);
-                //SpriteBatch.Draw(Pixel, new Rectangle((int)BottomRightCorner.X, (int)BottomRightCorner.Y, 1, 1), Color.Yellow);
-                //SpriteBatch.Draw(Pixel, new Rectangle((int)Center.X, (int)Center.Y, 1, 1), Color.Aquamarine);
                 SpriteBatch.End();
             }
         }
