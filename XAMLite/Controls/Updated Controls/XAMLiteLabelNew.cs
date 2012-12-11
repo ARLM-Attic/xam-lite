@@ -3,6 +3,7 @@
 namespace XAMLite
 {
     using System.Windows;
+    using System.Windows.Media;
 
     /// <summary>
     /// Note: Currently under development.  Continue to use normal
@@ -53,7 +54,7 @@ namespace XAMLite
                 return;
             }
 
-            if (Visibility == Visibility.Hidden) // || GridIsHidden)
+            if (Visibility == Visibility.Hidden)
             {
                 return;
             }

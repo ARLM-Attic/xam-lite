@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework;
 
 namespace XAMLite
 {
+    using System.Windows.Media;
+
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
@@ -29,6 +31,18 @@ namespace XAMLite
             : base(game)
         {
             Items = new List<XAMLiteComboBoxItem>();
+            Height = 23;
+            Width = 120;
+            BorderBrush = Brushes.Black;
+            Background = Brushes.White;
+        }
+
+        /// <summary>
+        /// Loads the content of the Combo Box.
+        /// </summary>
+        protected override void LoadContent()
+        {
+            base.LoadContent();
         }
     }
 }
