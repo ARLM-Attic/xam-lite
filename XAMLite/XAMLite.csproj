@@ -84,6 +84,8 @@
     <Compile Include="Controls\Old Controls\XAMLiteCheckBox.cs" />
     <Compile Include="Controls\Updated Controls\XAMLiteCheckBoxNew.cs" />
     <Compile Include="Controls\Old Controls\XAMLiteGrid.cs" />
+    <Compile Include="Controls\Updated Controls\XAMLiteComboBox.cs" />
+    <Compile Include="Controls\Updated Controls\XAMLiteComboBoxItem.cs" />
     <Compile Include="Controls\Updated Controls\XAMLiteGridNew.cs" />
     <Compile Include="Controls\Old Controls\XAMLiteImage.cs" />
     <Compile Include="Controls\Updated Controls\XAMLiteImageNew.cs" />
