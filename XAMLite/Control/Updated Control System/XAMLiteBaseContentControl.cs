@@ -80,7 +80,7 @@ namespace XAMLite
         /// <summary>
         /// The color of the content, whether text or some other object.
         /// </summary>
-        public Brush Foreground { get; set; }
+        public virtual Brush Foreground { get; set; }
 
         /// <summary>
         /// Character spacing.

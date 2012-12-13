@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows;
+using Microsoft.Xna.Framework.Graphics;
 using System.Windows.Media;
 using Microsoft.Xna.Framework;
 
 namespace XAMLite
 {
-    using System.Windows;
-    using Microsoft.Xna.Framework.Graphics;
-
     /// <summary>
     /// Contains a list of selectable items.
     /// </summary>
@@ -34,9 +33,42 @@ namespace XAMLite
         private int _itemsIndex;
 
         /// <summary>
+        /// The private border color.
+        /// </summary>
+        private Brush _borderBrush;
+
+        /// <summary>
         /// The Border color.
         /// </summary>
-        public Brush BorderBrush { get; set; }
+        public Brush BorderBrush
+        {
+            get
+            {
+                return _borderBrush;
+            }
+
+            set
+            {
+                _borderBrush = value;
+
+                if (_rectangle == null)
+                {
+                    return;
+                }
+
+                _rectangle.Stroke = value;
+
+                if (_borderRectangles.Count <= 1)
+                {
+                    return;
+                }
+
+                for (var i = 1; i < _borderRectangles.Count; i++)
+                {
+                    _borderRectangles[i].Fill = value;
+                }
+            }
+        }
 
         /// <summary>
         /// The thickness of the border.
@@ -54,9 +86,41 @@ namespace XAMLite
         public Thickness Padding { get; set; }
 
         /// <summary>
+        /// The back ground color of the ListBox.
+        /// </summary>
+        public override Brush Background
+        {
+            get
+            {
+                return base.Background;
+            }
+
+            set
+            {
+                base.Background = value;
+
+                if (_rectangle != null)
+                {
+                    _rectangle.Fill = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Although not in WPF, this seems essential to override the default
+        /// colors in WPF for highlighting on mouse over or when selected.
+        /// </summary>
+        public Brush SelectedBackground { get; set; }
+
+        /// <summary>
         /// Contains all of the XAMLiteRectangles that make up the border.
         /// </summary>
         private readonly List<XAMLiteRectangleNew> _borderRectangles;
+
+        /// <summary>
+        /// Background of the ListBox.
+        /// </summary>
+        private XAMLiteRectangleNew _rectangle;
 
         /// <summary>
         /// TODO: Consider creating a base class for complex controls
@@ -109,6 +173,7 @@ namespace XAMLite
             Height = 100;
             Width = 120;
             Background = Brushes.White;
+            SelectedBackground = Brushes.CornflowerBlue;
             Foreground = Brushes.Black;
             BorderBrush = Brushes.Black;
             BorderThickness = new Thickness(1);
@@ -140,7 +205,7 @@ namespace XAMLite
 
             // If the thickness is uniform, the ListBox only needs one rectangle
             // to define it.
-            var rectangle = new XAMLiteRectangleNew(Game)
+            _rectangle = new XAMLiteRectangleNew(Game)
             {
                 Width = Width,
                 Height = Height,
@@ -148,7 +213,7 @@ namespace XAMLite
                 Stroke = BorderBrush,
                 StrokeThickness = _isBorderThicknessEqual ? BorderThickness.Left : 0
             };
-            _borderRectangles.Add(rectangle);
+            _borderRectangles.Add(_rectangle);
 
             if (!_isBorderThicknessEqual)
             {
@@ -278,7 +343,21 @@ namespace XAMLite
                     topMargin += Items[i - 1].Margin.Top + Items[i - 1].Height;
                 }
 
-                //Items[i].Width = Width;
+                if (Items[i].Background == Brushes.Transparent)
+                {
+                    Items[i].Background = Background;
+                }
+
+                if (Items[i].Foreground == Brushes.Transparent)
+                {
+                    Items[i].Foreground = Foreground;
+                }
+
+                if (Items[i].SelectedBackground == Brushes.Transparent)
+                {
+                    Items[i].SelectedBackground = SelectedBackground;
+                }
+
                 Items[i].UpdateMarginAndWidth(new Thickness(margin.Left + BorderThickness.Left, margin.Top + topMargin, margin.Right, margin.Bottom));
             }
 

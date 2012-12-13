@@ -27,7 +27,7 @@ namespace XAMLite
         /// <summary>
         /// The border color.
         /// </summary>
-        public Brush BorderBrush { get; set; }
+        public virtual Brush BorderBrush { get; set; }
 
         /// <summary>
         /// The border thickness.

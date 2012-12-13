@@ -67,6 +67,53 @@ namespace XAMLite
         }
 
         /// <summary>
+        /// Sets the Text color of the ListBoxItem.
+        /// </summary>
+        public override Brush Foreground
+        {
+            get
+            {
+                return base.Foreground;
+            }
+
+            set
+            {
+                base.Foreground = value;
+
+                if (_listBoxContent == null)
+                {
+                    return;
+                }
+
+                _listBoxContent.Foreground = value;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private Brush _selectedBackground;
+
+        /// <summary>
+        /// Although not in WPF, this seems essential to override the default
+        /// colors in WPF for highlighting on mouse over or when selected.  
+        /// If this is not explicitly set, it will receive the brush color
+        /// as specified by the ListBox that contains it.
+        /// </summary>
+        public Brush SelectedBackground 
+        { 
+            get
+            {
+                return _selectedBackground;
+            } 
+
+            set
+            {
+                _selectedBackground = value;
+            } 
+        }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="game"></param>
@@ -74,7 +121,8 @@ namespace XAMLite
             : base(game)
         {
             Background = Brushes.Transparent;
-            Foreground = Brushes.Black;
+            SelectedBackground = Brushes.Transparent;
+            Foreground = Brushes.Transparent;
             BorderBrush = Brushes.White;
             FontFamily = new FontFamily("Arial");
             BorderThickness = new Thickness(1);
@@ -144,7 +192,6 @@ namespace XAMLite
             Width = par.Width - (int)par.BorderThickness.Right - (int)par.BorderThickness.Left;
             _grid.Width = Width;
             _background.Width = Width;
-            
 
             MouseEnter += OnMouseEnter;
             MouseLeave += OnMouseLeave;
@@ -168,7 +215,7 @@ namespace XAMLite
         /// <param name="mouseEventArgs"></param>
         private void OnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
         {
-            _background.Fill = Background == Brushes.Transparent ? Brushes.CornflowerBlue : Background;
+            _background.Fill = SelectedBackground;
             _background.Visibility = Visibility.Visible;
         }
     }
