@@ -248,12 +248,12 @@ namespace XAMLite
             {
                 for (var i = _itemsIndex; i < Items.Count; i++)
                 {
-                    Console.WriteLine(Items[i].ToString());
+                    //Console.WriteLine(Items[i].ToString());
                     _grid.Children.Add(Items[i]);
                 }
 
                 _itemsIndex = Items.Count;
-                Console.WriteLine(Items.Count);
+                //Console.WriteLine(Items.Count);
             }
         }
 
