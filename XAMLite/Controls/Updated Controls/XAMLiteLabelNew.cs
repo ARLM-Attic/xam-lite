@@ -1,9 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Windows;
+using System.Windows.Media;
+using Microsoft.Xna.Framework;
 
 namespace XAMLite
 {
-    using System.Windows;
-    using System.Windows.Media;
+    using System;
 
     /// <summary>
     /// Note: Currently under development.  Continue to use normal
@@ -41,6 +42,19 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
+        protected override void LoadContent()
+        {
+            base.LoadContent();
+
+            if (Width == 0 || Height == 0)
+            {
+                RecalculateWidthAndHeight(Content);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
@@ -48,7 +62,7 @@ namespace XAMLite
 
             // allow the control to update once before drawing when
             // Margins, positions, or Font are not default.
-            if (!_isModified && (Margin != new Thickness() || Position != Vector2.Zero || SpriteFont != Courier10SpriteFont))
+            if (!_isModified && (Margin != new Thickness() || Position != Vector2.Zero || SpriteFont != Courier10SpriteFont || Height == 0))
             {
                 _isModified = true;
                 return;
@@ -62,6 +76,11 @@ namespace XAMLite
             if (Content != null)
             {
                 SpriteBatch.Begin();
+
+                if (Background != Brushes.Transparent)
+                {
+                    SpriteBatch.Draw(Pixel, Panel, BackgroundColor);
+                }
 
                 if (!IsAttachedToGrid)
                 {

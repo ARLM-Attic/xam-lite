@@ -47,6 +47,7 @@ namespace XAMLite
         /// The text contained in the text box.
         /// </summary>
         private XAMLiteLabelNew _content;
+        private bool _isBorderThicknessEqual;
 
         /// <summary>
         /// TODO: Consider creating a base class for complex controls
@@ -127,8 +128,10 @@ namespace XAMLite
 
             if (BorderBrush != null)
             {
-                if (BorderThickness.Left == BorderThickness.Right && BorderThickness.Right == BorderThickness.Top
-                    && BorderThickness.Top == BorderThickness.Bottom)
+                _isBorderThicknessEqual = BorderThickness.Left == BorderThickness.Right
+                                          && BorderThickness.Right == BorderThickness.Top
+                                          && BorderThickness.Top == BorderThickness.Bottom;
+                if (_isBorderThicknessEqual)
                 {
                     var border = new XAMLiteRectangleNew(Game)
                         { Stroke = BorderBrush, StrokeThickness = BorderThickness.Left };
@@ -139,10 +142,28 @@ namespace XAMLite
                     SetBorders();
                 }
 
+                AdjustControlPositions();
+
                 foreach (var borderRectangle in _borderRectangles)
                 {
                     _grid.Children.Add(borderRectangle);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Positions the XAMlite Controls according to the Border
+        // Thickness when the thickness is greater than 1.
+        /// </summary>
+        private void AdjustControlPositions()
+        {
+            if (_isBorderThicknessEqual)
+            {
+                
+            }
+            else
+            {
+                
             }
         }
 

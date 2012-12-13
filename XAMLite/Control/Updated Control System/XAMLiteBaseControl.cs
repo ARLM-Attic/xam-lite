@@ -93,12 +93,12 @@ namespace XAMLite
         /// <summary>
         /// Width of the control.
         /// </summary>
-        public int Width { get; set; }
+        public virtual int Width { get; set; }
 
         /// <summary>
         /// Height of the control.
         /// </summary>
-        public int Height { get; set; }
+        public virtual int Height { get; set; }
 
         /// <summary>
         /// The margin of the control.
@@ -292,16 +292,6 @@ namespace XAMLite
                 visibility = value;
                 Visible = visibility == Visibility.Visible;
 
-                //if (Index >= 0 && Parent is XAMLiteGridNew)
-                //{
-                //    XAMLiteGridNew parent = (XAMLiteGridNew)Parent;
-
-                //    if (parent.Visibility == Visibility.Hidden)
-                //    {
-                //        parent.ModifyChildVisibility(Index, value);
-                //    }
-                //}
-
                 VisibilityChanged = true;
             }
         }
@@ -359,7 +349,7 @@ namespace XAMLite
         /// <summary>
         /// Background color of the Grid.
         /// </summary>
-        private Color _backgroundColor;
+        protected Color BackgroundColor;
 
         /// <summary>
         /// 
@@ -384,7 +374,7 @@ namespace XAMLite
                 {
                     var solidBrush = (SolidColorBrush)value;
                     var color = solidBrush.Color;
-                    _backgroundColor = new Color(color.R, color.G, color.B, color.A);
+                    BackgroundColor = new Color(color.R, color.G, color.B, color.A);
                 }
 
                 _transparent = value == Brushes.Transparent;

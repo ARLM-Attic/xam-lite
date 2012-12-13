@@ -1,0 +1,172 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Windows;
+using System.Windows.Input;
+using System.Windows.Media;
+using Microsoft.Xna.Framework;
+
+namespace XAMLite
+{ 
+    /// <summary>
+    /// Represents a selectable item in a ListBox.
+    /// </summary>
+    public class XAMLiteListBoxItem : XAMLiteBaseContent
+    {
+        /// <summary>
+        /// The Border color.
+        /// </summary>
+        public Brush BorderBrush { get; set; }
+
+        /// <summary>
+        /// The thickness of the border.
+        /// </summary>
+        public Thickness BorderThickness { get; set; }
+
+        /// <summary>
+        /// True when the border thickness is of a uniform size.
+        /// </summary>
+        //private bool _isBorderThicknessEqual;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private XAMLiteGridNew _grid;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private XAMLiteLabelNew _listBoxContent;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private XAMLiteRectangleNew _background;
+
+        /// <summary>
+        /// TODO: Consider creating a base class for complex controls
+        /// TODO: so that adding all of these parts are not necessary every time.
+        /// </summary>
+        public override Visibility Visibility
+        {
+            get
+            {
+                return base.Visibility;
+            }
+
+            set
+            {
+                base.Visibility = value;
+
+                if (_grid != null)
+                {
+                    _grid.Visibility = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="game"></param>
+        public XAMLiteListBoxItem(Game game)
+            : base(game)
+        {
+            Background = Brushes.Transparent;
+            Foreground = Brushes.Black;
+            BorderBrush = Brushes.White;
+            FontFamily = new FontFamily("Arial");
+            BorderThickness = new Thickness(1);
+            Padding = new Thickness(4, 0, 0, 0);
+        }
+
+        /// <summary>
+        /// Loads the content of the control.
+        /// </summary>
+        protected override void LoadContent()
+        {
+            base.LoadContent();
+
+            UpdateFontMetrics();
+
+            var w = (int)SpriteFont.MeasureString(Content.ToString()).X;
+            var h = (int)SpriteFont.MeasureString(Content.ToString()).Y;
+
+            _grid = new XAMLiteGridNew(Game)
+                {
+                    Parent = this,
+                    Width = w,
+                    Height = h,
+                    HorizontalAlignment = HorizontalAlignment,
+                    VerticalAlignment = VerticalAlignment,
+                    Margin = Margin
+                };
+            Game.Components.Add(_grid);
+
+            _background = new XAMLiteRectangleNew(Game)
+                {
+                    Width = w,
+                    Height = h,
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    VerticalAlignment = VerticalAlignment.Top,
+                    Background = Brushes.CornflowerBlue   
+                };
+            _grid.Children.Add(_background);
+
+            _listBoxContent = new XAMLiteLabelNew(Game)
+                {
+                    Content = Content,
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    VerticalAlignment = VerticalAlignment.Top,
+                    FontFamily = FontFamily,
+                    Spacing = Spacing,
+                    Padding = Padding,
+                    Foreground = Foreground
+                };
+            _grid.Children.Add(_listBoxContent);
+        }
+
+        /// <summary>
+        /// Updates the position of the label.
+        /// </summary>
+        /// <param name="margin"></param>
+        internal void UpdateMargin(Thickness margin)
+        {
+            Margin = margin;
+            _background.Margin = Margin;
+            var par = (XAMLiteListBox)Parent;
+            Width = Parent.Width - (int)par.BorderThickness.Right - (int)par.BorderThickness.Left;
+            _grid.Width = Width;
+            //Console.WriteLine("Item parent: " + par + " Width: " + Parent.Width);
+            _background.Width = Width;
+            //Console.WriteLine("Rectangle Width: " + Width);
+            _listBoxContent.Margin = Margin;
+
+            MouseEnter += OnMouseEnter;
+            MouseLeave += OnMouseLeave;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseEventArgs"></param>
+        private void OnMouseLeave(object sender, MouseEventArgs mouseEventArgs)
+        {
+            _background.Fill = Background;
+            _background.Visibility = Visibility.Hidden;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseEventArgs"></param>
+        private void OnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
+        {
+            _background.Fill = Background == Brushes.Transparent ? Brushes.CornflowerBlue : Background;
+            _background.Visibility = Visibility.Visible;
+        }
+    }
+}

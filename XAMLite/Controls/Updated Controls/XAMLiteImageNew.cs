@@ -41,12 +41,12 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        protected Color BackgroundColor { get; set; }
+        //protected Color BackgroundColor { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        private Brush _background;
+        //private Brush _background;
 
         /// <summary>
         /// True when the image is the edge of a default button.
@@ -65,29 +65,6 @@ namespace XAMLite
         /// Position was not at its default state. 
         /// </summary>
         //private bool _isModified;
-
-        /// <summary>
-        /// Background color of the Grid.
-        /// </summary>
-        public override Brush Background
-        {
-            get
-            {
-                return _background;
-            }
-
-            set
-            {
-                _background = value;
-
-                if (_background != null)
-                {
-                    var solidBrush = (SolidColorBrush)value;
-                    var color = solidBrush.Color;
-                    BackgroundColor = new Color(color.R, color.G, color.B, color.A);
-                }
-            }
-        }
 
         /// <summary>
         /// Constructor.

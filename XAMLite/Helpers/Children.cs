@@ -34,7 +34,11 @@ namespace XAMLite
             child.Index = Count - 1;
             child.IsAttachedToGrid = true;
             //child.GridIsHidden = _parent.Visibility == Visibility.Hidden;
-            child.Parent = _parent;
+            if (child.Parent == null)
+            {
+                child.Parent = _parent;
+            }
+
             child.Window = _parent.Window;
             base.Add(child);
         }

@@ -199,7 +199,7 @@ namespace XAMLite
         public XAMLiteBaseContentControl(Game game)
             : base(game)
         {
-            Foreground = Brushes.White;
+            Foreground = Brushes.Black;
             Padding = new Thickness();
             Spacing = 0;
         }
