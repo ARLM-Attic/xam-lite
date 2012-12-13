@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
-using Microsoft.Xna.Framework.Graphics;
+using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace XAMLite
 {
@@ -14,6 +16,31 @@ namespace XAMLite
     /// </summary>
     public class XAMLiteListBox : XAMLiteBaseControl
     {
+        /// <summary>
+        /// True when the list box has been selected anywhere within its
+        /// boundaries.  If a ListBoxItem has been previously or newly
+        /// selected, the highlight brush color will return to its focused
+        /// colr.  If False, the highlight brush will be changed for the
+        /// unfocused brush color.
+        /// </summary>
+        public override bool IsFocused
+        {
+            get
+            {
+                return base.IsFocused;
+            }
+
+            set
+            {
+                base.IsFocused = value;
+
+                if (Focusable)
+                {
+                    ModifyChildHighlightColor();
+                }
+            }
+        }
+
         /// <summary>
         /// The text color of ListBoxItems when the
         /// ListBoxItem is not individually defined.
@@ -113,6 +140,12 @@ namespace XAMLite
         public Brush SelectedBackground { get; set; }
 
         /// <summary>
+        /// The brush color of a selected ListBoxItem when the ListBox that 
+        /// contains it loses focus.
+        /// </summary>
+        public Brush UnfocusedSelectedBackground { get; set; }
+
+        /// <summary>
         /// Contains all of the XAMLiteRectangles that make up the border.
         /// </summary>
         private readonly List<XAMLiteRectangleNew> _borderRectangles;
@@ -174,9 +207,11 @@ namespace XAMLite
             Width = 120;
             Background = Brushes.White;
             SelectedBackground = Brushes.CornflowerBlue;
+            UnfocusedSelectedBackground = Brushes.DarkGray;
             Foreground = Brushes.Black;
             BorderBrush = Brushes.Black;
             BorderThickness = new Thickness(1);
+            Focusable = true;
             Items = new Items(this);
             _borderRectangles = new List<XAMLiteRectangleNew>();
         }
@@ -275,10 +310,12 @@ namespace XAMLite
                 VerticalAlignment = VerticalAlignment.Bottom,
             };
             _borderRectangles.Add(bottomBorder);
+
+            MouseUp += OnMouseUp;
         }
 
         /// <summary>
-        /// 
+        /// Updates the control.
         /// </summary>
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
@@ -294,12 +331,27 @@ namespace XAMLite
 
             if (!_itemsUpdated)
             {
-                for (var i = 0; i < Items.Count; i++)
+                foreach (var t in Items)
                 {
-                    if (Items[i].Height == 0)
+                    if (t.Height == 0)
                     {
                         _needToUpdate = true;
                     }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Updates the highlight color of the selected ListBox item when the
+        /// ListBox loses focus.
+        /// </summary>
+        private void ModifyChildHighlightColor()
+        {
+            foreach (var item in Items)
+            {
+                if (item.IsSelected)
+                {
+                    item.UpdateSelectedBrush(IsFocused);
                 }
             }
         }
@@ -313,12 +365,10 @@ namespace XAMLite
             {
                 for (var i = _itemsIndex; i < Items.Count; i++)
                 {
-                    //Console.WriteLine(Items[i].ToString());
                     _grid.Children.Add(Items[i]);
                 }
 
                 _itemsIndex = Items.Count;
-                //Console.WriteLine(Items.Count);
             }
         }
 
@@ -358,11 +408,42 @@ namespace XAMLite
                     Items[i].SelectedBackground = SelectedBackground;
                 }
 
+                if (Items[i].UnfocusedSelectedBackground == Brushes.Transparent)
+                {
+                    Items[i].UnfocusedSelectedBackground = UnfocusedSelectedBackground;
+                }
+
                 Items[i].UpdateMarginAndWidth(new Thickness(margin.Left + BorderThickness.Left, margin.Top + topMargin, margin.Right, margin.Bottom));
             }
 
             _needToUpdate = false;
             _itemsUpdated = true;
+        }
+
+        /// <summary>
+        /// Deselects all Items except for the item listed at the provided 
+        /// index.
+        /// </summary>
+        /// <param name="index"></param>
+        public void DeselectAll(int index)
+        {
+            foreach (var item in Items)
+            {
+                if (item.Index != index)
+                {
+                    item.IsSelected = false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sets the focus to true.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseButtonEventArgs"></param>
+        private void OnMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        {
+            IsFocused = true;
         }
     }
 }

@@ -55,7 +55,7 @@ namespace XAMLite
         /// <summary>
         /// Gets or sets a value that determines whether this element has logical focus.
         /// </summary>
-        public bool IsFocused
+        public virtual bool IsFocused
         {
             get
             {

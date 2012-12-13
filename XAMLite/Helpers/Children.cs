@@ -31,11 +31,11 @@ namespace XAMLite
         /// <param name="child"></param>
         public new void Add(XAMLiteBaseControl child)
         {
-            child.Index = Count - 1;
             child.IsAttachedToGrid = true;
             //child.GridIsHidden = _parent.Visibility == Visibility.Hidden;
             if (child.Parent == null)
             {
+                child.Index = Count - 1;
                 child.Parent = _parent;
             }
 

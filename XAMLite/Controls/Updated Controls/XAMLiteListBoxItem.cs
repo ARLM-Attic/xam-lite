@@ -15,6 +15,32 @@ namespace XAMLite
     public class XAMLiteListBoxItem : XAMLiteBaseContent
     {
         /// <summary>
+        /// True when the ListBoxItem is selected.
+        /// </summary>
+        private bool _isSelected;
+
+        /// <summary>
+        /// True when the ListBoxItem is selected.
+        /// </summary>
+        public bool IsSelected
+        {
+            get
+            {
+                return _isSelected;
+            }
+
+            set
+            {
+                _isSelected = value;
+
+                if (!_isSelected)
+                {
+                    _background.Visibility = Visibility.Hidden;
+                }
+            }
+        }
+
+        /// <summary>
         /// The Border color.
         /// </summary>
         public Brush BorderBrush { get; set; }
@@ -23,11 +49,6 @@ namespace XAMLite
         /// The thickness of the border.
         /// </summary>
         public Thickness BorderThickness { get; set; }
-
-        /// <summary>
-        /// True when the border thickness is of a uniform size.
-        /// </summary>
-        //private bool _isBorderThicknessEqual;
 
         /// <summary>
         /// 
@@ -40,7 +61,7 @@ namespace XAMLite
         private XAMLiteLabelNew _listBoxContent;
 
         /// <summary>
-        /// 
+        /// The background of the control that changes colors when selected.
         /// </summary>
         private XAMLiteRectangleNew _background;
 
@@ -90,28 +111,18 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        private Brush _selectedBackground;
-
-        /// <summary>
         /// Although not in WPF, this seems essential to override the default
         /// colors in WPF for highlighting on mouse over or when selected.  
         /// If this is not explicitly set, it will receive the brush color
         /// as specified by the ListBox that contains it.
         /// </summary>
-        public Brush SelectedBackground 
-        { 
-            get
-            {
-                return _selectedBackground;
-            } 
+        public Brush SelectedBackground { get; set; }
 
-            set
-            {
-                _selectedBackground = value;
-            } 
-        }
+        /// <summary>
+        /// The brush color of a selected ListBoxItem when the ListBox that 
+        /// contains it loses focus.
+        /// </summary>
+        public Brush UnfocusedSelectedBackground { get; set; }
 
         /// <summary>
         /// Constructor.
@@ -122,6 +133,7 @@ namespace XAMLite
         {
             Background = Brushes.Transparent;
             SelectedBackground = Brushes.Transparent;
+            UnfocusedSelectedBackground = Brushes.Transparent;
             Foreground = Brushes.Transparent;
             BorderBrush = Brushes.White;
             FontFamily = new FontFamily("Arial");
@@ -193,29 +205,34 @@ namespace XAMLite
             _grid.Width = Width;
             _background.Width = Width;
 
-            MouseEnter += OnMouseEnter;
-            MouseLeave += OnMouseLeave;
+            MouseDown += OnMouseDown;
         }
 
         /// <summary>
-        /// 
+        /// Sets the selected color and calls its parent to deselect the other
+        /// Items.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="mouseEventArgs"></param>
-        private void OnMouseLeave(object sender, MouseEventArgs mouseEventArgs)
+        private void OnMouseDown(object sender, MouseEventArgs mouseEventArgs)
         {
-            _background.Fill = Background;
-            _background.Visibility = Visibility.Hidden;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="mouseEventArgs"></param>
-        private void OnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
-        {
+            IsSelected = true;
+            var par = (XAMLiteListBox)Parent;
+            par.DeselectAll(Index);
             _background.Fill = SelectedBackground;
+            _background.Visibility = Visibility.Visible;
+        }
+
+        /// <summary>
+        /// When the ListBox containing the ListBoxItem loses focus, the brush
+        /// color of the selected item changes.
+        /// </summary>
+        public void UpdateSelectedBrush(bool isFocused)
+        {
+            IsFocused = isFocused;
+
+            _background.Fill = isFocused ? SelectedBackground : UnfocusedSelectedBackground;
+            
             _background.Visibility = Visibility.Visible;
         }
     }
