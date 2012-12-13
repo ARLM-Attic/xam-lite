@@ -128,20 +128,23 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// Updates the position of the label.
+        /// Updates the margins and widths that make up the control.
         /// </summary>
         /// <param name="margin"></param>
-        internal void UpdateMargin(Thickness margin)
+        internal void UpdateMarginAndWidth(Thickness margin)
         {
+            // set margins
             Margin = margin;
+            _grid.Margin = Margin;
             _background.Margin = Margin;
-            var par = (XAMLiteListBox)Parent;
-            Width = Parent.Width - (int)par.BorderThickness.Right - (int)par.BorderThickness.Left;
-            _grid.Width = Width;
-            //Console.WriteLine("Item parent: " + par + " Width: " + Parent.Width);
-            _background.Width = Width;
-            //Console.WriteLine("Rectangle Width: " + Width);
             _listBoxContent.Margin = Margin;
+
+            // set Widths.
+            var par = (XAMLiteListBox)Parent;
+            Width = par.Width - (int)par.BorderThickness.Right - (int)par.BorderThickness.Left;
+            _grid.Width = Width;
+            _background.Width = Width;
+            
 
             MouseEnter += OnMouseEnter;
             MouseLeave += OnMouseLeave;

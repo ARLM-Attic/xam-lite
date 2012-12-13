@@ -279,7 +279,7 @@ namespace XAMLite
                 }
 
                 //Items[i].Width = Width;
-                Items[i].UpdateMargin(new Thickness(margin.Left + BorderThickness.Left, margin.Top + topMargin, margin.Right, margin.Bottom));
+                Items[i].UpdateMarginAndWidth(new Thickness(margin.Left + BorderThickness.Left, margin.Top + topMargin, margin.Right, margin.Bottom));
             }
 
             _needToUpdate = false;

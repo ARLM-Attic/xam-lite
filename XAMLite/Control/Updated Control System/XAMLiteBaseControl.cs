@@ -90,15 +90,43 @@ namespace XAMLite
         /// </summary>
         //internal bool GridIsHidden;
 
+        private int _width;
+
         /// <summary>
         /// Width of the control.
         /// </summary>
-        public virtual int Width { get; set; }
+        public virtual int Width
+        {
+            get
+            {
+                return _width;
+            } 
+ 
+            set
+            {
+                _width = value;
+                Panel = new Rectangle((int)Position.X, (int)Position.Y, value, Height);
+            }
+        }
+
+        private int _height;
 
         /// <summary>
         /// Height of the control.
         /// </summary>
-        public virtual int Height { get; set; }
+        public virtual int Height
+        {
+            get
+            {
+                return _height;
+            }
+
+            set
+            {
+                _height = value;
+                Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, value);
+            }
+        }
 
         /// <summary>
         /// The margin of the control.
