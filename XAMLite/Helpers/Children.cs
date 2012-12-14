@@ -35,7 +35,7 @@ namespace XAMLite
             //child.GridIsHidden = _parent.Visibility == Visibility.Hidden;
             if (child.Parent == null)
             {
-                child.Index = Count - 1;
+                child.Index = Count;
                 child.Parent = _parent;
             }
 

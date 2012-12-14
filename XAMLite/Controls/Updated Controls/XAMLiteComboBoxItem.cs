@@ -38,7 +38,6 @@ namespace XAMLite
             _parent = (XAMLiteComboBox)Parent;
 
             MouseEnter += OnMouseEnter;
-            MouseLeave += OnMouseLeave;
             MouseDown += OnMouseDown;
         }
 
@@ -50,23 +49,15 @@ namespace XAMLite
         private void OnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
         {
             _parent.DeselectAll(Index);
-            BackgroundRectangle.Fill = SelectedBackground;
-            BackgroundRectangle.Visibility = Visibility.Visible;
+            BackgroundPanel.Fill = SelectedBackground;
+            BackgroundPanel.Visibility = Visibility.Visible;
         }
 
         /// <summary>
-        /// 
+        /// Tells its parent to close the ComboBox.
         /// </summary>
         /// <param name="sender"></param>
-        /// <param name="mouseEventArgs"></param>
-        private void OnMouseLeave(object sender, MouseEventArgs mouseEventArgs)
-        {
-            if (!IsSelected && _parent.IsMouseOver)
-            {
-                BackgroundRectangle.Visibility = Visibility.Hidden;
-            }
-        }
-
+        /// <param name="mouseButtonEventArgs"></param>
         private void OnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
             _parent.Close();

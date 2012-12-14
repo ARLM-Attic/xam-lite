@@ -33,7 +33,7 @@ namespace XAMLite
         {
             if (item.Parent == null)
             {
-                item.Index = Count - 1;
+                item.Index = Count;
                 item.Parent = _parent;
             }
 

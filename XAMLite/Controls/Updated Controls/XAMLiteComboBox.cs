@@ -57,27 +57,7 @@ namespace XAMLite
                 h += item.Height;
             }
 
-            if (Height > (int)h)
-            {
-                //// move the bottom rectangle up.
-                //if (_borderRectangles.Count > 1)
-                //{
-                //    var rect = _borderRectangles[_borderRectangles.Count - 1];
-                //    rect.Margin = new Thickness(
-                //        rect.Margin.Left, rect.Margin.Top, rect.Margin.Right, rect.Margin.Bottom + (Height - h));
-                //}
-
-                Height = (int)h;
-                //_grid.Height = (int)h;
-
-                //foreach (var rectangle in _borderRectangles)
-                //{
-                //    if (rectangle.Height > Height)
-                //    {
-                //        rectangle.Height = Height;
-                //    }
-                //}
-            }
+            Height = (int)h;
         }
 
         /// <summary>

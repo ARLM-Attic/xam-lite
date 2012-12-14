@@ -631,7 +631,7 @@ namespace XAMLite
             MsRect.Y = Ms.Y;
 
             // if deselected after the control had focus, remove the focus
-            if (IsFocused && Ms.LeftButton == ButtonState.Pressed && !MousePressed)
+            if (IsFocused && Ms.LeftButton == ButtonState.Pressed && !Panel.Contains(MsRect))
             {
                 // focus removed.
                 IsFocused = false;

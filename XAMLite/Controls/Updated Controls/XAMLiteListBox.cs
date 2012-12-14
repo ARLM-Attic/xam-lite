@@ -20,7 +20,7 @@ namespace XAMLite
         /// True when the list box has been selected anywhere within its
         /// boundaries.  If a ListBoxItem has been previously or newly
         /// selected, the highlight brush color will return to its focused
-        /// color.  If False, the highlight brush will be changed for the
+        /// color.  If False, the highlight brush will be changed to the
         /// unfocused brush color.
         /// </summary>
         public override bool IsFocused
@@ -36,7 +36,10 @@ namespace XAMLite
 
                 if (Focusable)
                 {
-                    ModifyChildHighlightColor();
+                    if (!IsFocused)
+                    {
+                        ModifyChildFocusAndHighlightColor();
+                    }
                 }
             }
         }
@@ -53,18 +56,9 @@ namespace XAMLite
 
             set
             {
-                if (_borderRectangles != null)
-                {
-                    // Adjust the bottom rectangle's margin so that it meets 
-                    // the new height of the control, when it exists.
-                    if (_borderRectangles.Count > 1)
-                    {
-                        var rect = _borderRectangles[_borderRectangles.Count - 1];
-                        rect.Margin = new Thickness(
-                            rect.Margin.Left, rect.Margin.Top, rect.Margin.Right, rect.Margin.Bottom + (Height - value));
-                    }
-                }
-
+                // save prior value to modify margins
+                var h = Height;
+                
                 base.Height = value;
 
                 // Set the new grid height.
@@ -73,16 +67,26 @@ namespace XAMLite
                     _grid.Height = value;
                 }
 
+                if (_borderRectangles == null)
+                {
+                    return;
+                }
+
+                // Adjust the bottom rectangle's margin so that it meets 
+                // the new height of the control, when it exists.
+                if (_borderRectangles.Count > 1)
+                {
+                    var rect = _borderRectangles[_borderRectangles.Count - 1];
+                    rect.Margin = new Thickness(rect.Margin.Left, rect.Margin.Top, rect.Margin.Right, rect.Margin.Bottom + (h - value));
+                }
+
                 // Adjust the background rectangle and the borders so that they 
                 // are the correct height.
-                if (_borderRectangles != null)
+                foreach (var rectangle in _borderRectangles)
                 {
-                    foreach (var rectangle in _borderRectangles)
+                    if (rectangle.Height > Height)
                     {
-                        if (rectangle.Height > Height)
-                        {
-                            rectangle.Height = Height;
-                        }
+                        rectangle.Height = Height;
                     }
                 }
             }
@@ -364,7 +368,7 @@ namespace XAMLite
 
             MouseEnter += OnMouseEnter;
             MouseLeave += OnMouseLeave;
-            MouseUp += OnMouseUp;
+            MouseDown += OnMouseDown;
         }
 
         /// <summary>
@@ -395,16 +399,21 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// Updates the highlight color of the selected ListBox item when the
-        /// ListBox loses focus.
+        /// Updates the highlight color and focus of the selected ListBox item when the
+        /// ListBox focus changes.
         /// </summary>
-        protected virtual void ModifyChildHighlightColor()
+        protected virtual void ModifyChildFocusAndHighlightColor()
         {
+            if (IsFocused)
+            {
+                return;
+            }
+
             foreach (XAMLiteListBoxItem item in Items)
             {
                 if (item.IsSelected)
                 {
-                    item.UpdateSelectedBrush(IsFocused);
+                    item.UnfocusSelectedBrush(IsFocused);
                 }
             }
         }
@@ -468,7 +477,7 @@ namespace XAMLite
                     item.UnfocusedSelectedBackground = UnfocusedSelectedBackground;
                 }
 
-                item.UpdateMarginAndWidth(new Thickness(margin.Left + BorderThickness.Left, margin.Top + topMargin, margin.Right, margin.Bottom));
+                item.UpdateMarginAndWidth(new Thickness(margin.Left, margin.Top + topMargin, margin.Right, margin.Bottom));
             }
 
             _needToUpdate = false;
@@ -516,7 +525,7 @@ namespace XAMLite
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="mouseButtonEventArgs"></param>
-        private void OnMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        private void OnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
             IsFocused = true;
         }

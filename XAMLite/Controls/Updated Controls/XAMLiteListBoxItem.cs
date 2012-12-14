@@ -35,7 +35,7 @@ namespace XAMLite
 
                 if (!_isSelected)
                 {
-                    BackgroundRectangle.Visibility = Visibility.Hidden;
+                    BackgroundPanel.Visibility = Visibility.Hidden;
                 }
             }
         }
@@ -63,7 +63,9 @@ namespace XAMLite
         /// <summary>
         /// The background of the control that changes colors when selected.
         /// </summary>
-        protected internal XAMLiteRectangleNew BackgroundRectangle;
+        protected internal XAMLiteRectangleNew BackgroundPanel;
+
+        private XAMLiteListBox _parent;
 
         /// <summary>
         /// TODO: Consider creating a base class for complex controls
@@ -139,6 +141,7 @@ namespace XAMLite
             FontFamily = new FontFamily("Arial");
             BorderThickness = new Thickness(1);
             Padding = new Thickness(4, 0, 0, 0);
+            Focusable = true;
         }
 
         /// <summary>
@@ -164,14 +167,14 @@ namespace XAMLite
                 };
             Game.Components.Add(Grid);
 
-            BackgroundRectangle = new XAMLiteRectangleNew(Game)
+            BackgroundPanel = new XAMLiteRectangleNew(Game)
                 {
                     Width = w,
                     Height = h,
                     HorizontalAlignment = HorizontalAlignment.Left,
                     VerticalAlignment = VerticalAlignment.Top 
                 };
-            Grid.Children.Add(BackgroundRectangle);
+            Grid.Children.Add(BackgroundPanel);
 
             _listBoxContent = new XAMLiteLabelNew(Game)
                 {
@@ -187,6 +190,16 @@ namespace XAMLite
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public override void Initialize()
+        {
+            base.Initialize();
+
+            _parent = (XAMLiteListBox)Parent;
+        }
+
+        /// <summary>
         /// Updates the margins and widths that make up the control.
         /// </summary>
         /// <param name="margin"></param>
@@ -195,14 +208,14 @@ namespace XAMLite
             // set margins
             Margin = margin;
             Grid.Margin = Margin;
-            BackgroundRectangle.Margin = Margin;
-            _listBoxContent.Margin = Margin;
+            var m = new Thickness(margin.Left + _parent.BorderThickness.Left, margin.Top, margin.Right, margin.Bottom);
+            BackgroundPanel.Margin = m;
+            _listBoxContent.Margin = m;
 
             // set Widths.
-            var par = (XAMLiteListBox)Parent;
-            Width = par.Width - (int)par.BorderThickness.Right - (int)par.BorderThickness.Left;
+            Width = _parent.Width;
             Grid.Width = Width;
-            BackgroundRectangle.Width = Width;
+            BackgroundPanel.Width = Width - (int)_parent.BorderThickness.Right - (int)_parent.BorderThickness.Left;
 
             MouseDown += OnMouseDown;
         }
@@ -216,23 +229,22 @@ namespace XAMLite
         private void OnMouseDown(object sender, MouseEventArgs mouseEventArgs)
         {
             IsSelected = true;
-            var par = (XAMLiteListBox)Parent;
-            par.DeselectAll(Index);
-            BackgroundRectangle.Fill = SelectedBackground;
-            BackgroundRectangle.Visibility = Visibility.Visible;
+            IsFocused = true;
+            _parent.DeselectAll(Index);
+            BackgroundPanel.Fill = SelectedBackground;
+            BackgroundPanel.Visibility = Visibility.Visible;
         }
 
         /// <summary>
         /// When the ListBox containing the ListBoxItem loses focus, the brush
-        /// color of the selected item changes.
+        /// color of the selected item changes to an unfocused color.
         /// </summary>
-        public void UpdateSelectedBrush(bool isFocused)
+        public void UnfocusSelectedBrush(bool isFocused)
         {
-            IsFocused = isFocused;
-
-            BackgroundRectangle.Fill = isFocused ? SelectedBackground : UnfocusedSelectedBackground;
+            IsFocused = false;
             
-            BackgroundRectangle.Visibility = Visibility.Visible;
+            BackgroundPanel.Fill = UnfocusedSelectedBackground;
+            BackgroundPanel.Visibility = Visibility.Visible;
         }
 
         /// <summary>
