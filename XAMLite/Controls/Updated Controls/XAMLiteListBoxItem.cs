@@ -35,7 +35,7 @@ namespace XAMLite
 
                 if (!_isSelected)
                 {
-                    _background.Visibility = Visibility.Hidden;
+                    BackgroundRectangle.Visibility = Visibility.Hidden;
                 }
             }
         }
@@ -53,7 +53,7 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        private XAMLiteGridNew _grid;
+        protected internal XAMLiteGridNew Grid;
 
         /// <summary>
         /// 
@@ -63,7 +63,7 @@ namespace XAMLite
         /// <summary>
         /// The background of the control that changes colors when selected.
         /// </summary>
-        private XAMLiteRectangleNew _background;
+        protected internal XAMLiteRectangleNew BackgroundRectangle;
 
         /// <summary>
         /// TODO: Consider creating a base class for complex controls
@@ -80,9 +80,9 @@ namespace XAMLite
             {
                 base.Visibility = value;
 
-                if (_grid != null)
+                if (Grid != null)
                 {
-                    _grid.Visibility = value;
+                    Grid.Visibility = value;
                 }
             }
         }
@@ -153,7 +153,7 @@ namespace XAMLite
             var w = (int)SpriteFont.MeasureString(Content.ToString()).X;
             var h = (int)SpriteFont.MeasureString(Content.ToString()).Y;
 
-            _grid = new XAMLiteGridNew(Game)
+            Grid = new XAMLiteGridNew(Game)
                 {
                     Parent = this,
                     Width = w,
@@ -162,17 +162,16 @@ namespace XAMLite
                     VerticalAlignment = VerticalAlignment,
                     Margin = Margin
                 };
-            Game.Components.Add(_grid);
+            Game.Components.Add(Grid);
 
-            _background = new XAMLiteRectangleNew(Game)
+            BackgroundRectangle = new XAMLiteRectangleNew(Game)
                 {
                     Width = w,
                     Height = h,
                     HorizontalAlignment = HorizontalAlignment.Left,
-                    VerticalAlignment = VerticalAlignment.Top,
-                    Background = Brushes.CornflowerBlue   
+                    VerticalAlignment = VerticalAlignment.Top 
                 };
-            _grid.Children.Add(_background);
+            Grid.Children.Add(BackgroundRectangle);
 
             _listBoxContent = new XAMLiteLabelNew(Game)
                 {
@@ -184,7 +183,7 @@ namespace XAMLite
                     Padding = Padding,
                     Foreground = Foreground
                 };
-            _grid.Children.Add(_listBoxContent);
+            Grid.Children.Add(_listBoxContent);
         }
 
         /// <summary>
@@ -195,15 +194,15 @@ namespace XAMLite
         {
             // set margins
             Margin = margin;
-            _grid.Margin = Margin;
-            _background.Margin = Margin;
+            Grid.Margin = Margin;
+            BackgroundRectangle.Margin = Margin;
             _listBoxContent.Margin = Margin;
 
             // set Widths.
             var par = (XAMLiteListBox)Parent;
             Width = par.Width - (int)par.BorderThickness.Right - (int)par.BorderThickness.Left;
-            _grid.Width = Width;
-            _background.Width = Width;
+            Grid.Width = Width;
+            BackgroundRectangle.Width = Width;
 
             MouseDown += OnMouseDown;
         }
@@ -219,8 +218,8 @@ namespace XAMLite
             IsSelected = true;
             var par = (XAMLiteListBox)Parent;
             par.DeselectAll(Index);
-            _background.Fill = SelectedBackground;
-            _background.Visibility = Visibility.Visible;
+            BackgroundRectangle.Fill = SelectedBackground;
+            BackgroundRectangle.Visibility = Visibility.Visible;
         }
 
         /// <summary>
@@ -231,9 +230,24 @@ namespace XAMLite
         {
             IsFocused = isFocused;
 
-            _background.Fill = isFocused ? SelectedBackground : UnfocusedSelectedBackground;
+            BackgroundRectangle.Fill = isFocused ? SelectedBackground : UnfocusedSelectedBackground;
             
-            _background.Visibility = Visibility.Visible;
+            BackgroundRectangle.Visibility = Visibility.Visible;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            MouseDown -= OnMouseDown;
+            foreach (var child in Grid.Children)
+            {
+                child.Dispose();
+            }
         }
     }
 }

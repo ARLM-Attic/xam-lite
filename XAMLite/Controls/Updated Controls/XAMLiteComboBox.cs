@@ -2,26 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Media;
 using Microsoft.Xna.Framework;
 
 namespace XAMLite
 {
-    using System.Windows.Media;
+    using System.Windows;
+    using System.Windows.Input;
 
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
-    public class XAMLiteComboBox : XAMLiteBaseText
+    public class XAMLiteComboBox : XAMLiteListBox
     {
         /// <summary>
         /// 
         /// </summary>
-        public bool IsEditable { get; set; }
-
-        /// <summary>
-        /// List of Combo Box Items that make up the content of the control.
-        /// </summary>
-        public List<XAMLiteComboBoxItem> Items; 
+        //public bool IsEditable { get; set; }
 
         /// <summary>
         /// Constructor.
@@ -30,19 +27,14 @@ namespace XAMLite
         public XAMLiteComboBox(Game game)
             : base(game)
         {
-            Items = new List<XAMLiteComboBoxItem>();
-            Height = 23;
-            Width = 120;
-            BorderBrush = Brushes.Black;
-            Background = Brushes.White;
         }
 
         /// <summary>
-        /// Loads the content of the Combo Box.
+        /// Hides the Items portion of the combo box when selected.
         /// </summary>
-        protected override void LoadContent()
+        public void Close()
         {
-            base.LoadContent();
+            Visibility = Visibility.Hidden;
         }
     }
 }

@@ -20,7 +20,7 @@ namespace XAMLite
         /// True when the list box has been selected anywhere within its
         /// boundaries.  If a ListBoxItem has been previously or newly
         /// selected, the highlight brush color will return to its focused
-        /// colr.  If False, the highlight brush will be changed for the
+        /// color.  If False, the highlight brush will be changed for the
         /// unfocused brush color.
         /// </summary>
         public override bool IsFocused
@@ -42,14 +42,18 @@ namespace XAMLite
         }
 
         /// <summary>
+        /// True when the control contains the mouse.
+        /// </summary>
+        public bool IsMouseOver { get; set; }
+
+        /// <summary>
         /// The text color of ListBoxItems when the
         /// ListBoxItem is not individually defined.
         /// </summary>
         public Brush Foreground { get; set; }
 
         /// <summary>
-        /// List of XAMLiteListBoxItems that make up the content of the 
-        /// ListBox.
+        /// List of Items that make up the content of the control.
         /// </summary>
         public Items Items;
 
@@ -285,7 +289,7 @@ namespace XAMLite
                 Width = (int)BorderThickness.Right,
                 Height = Height,
                 HorizontalAlignment = HorizontalAlignment.Right,
-                VerticalAlignment = VerticalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Top,
             };
             _borderRectangles.Add(rightBorder);
 
@@ -311,7 +315,29 @@ namespace XAMLite
             };
             _borderRectangles.Add(bottomBorder);
 
+            MouseEnter += OnMouseEnter;
+            MouseLeave += OnMouseLeave;
             MouseUp += OnMouseUp;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseEventArgs"></param>
+        private void OnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
+        {
+            IsMouseOver = true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseEventArgs"></param>
+        private void OnMouseLeave(object sender, MouseEventArgs mouseEventArgs)
+        {
+            IsMouseOver = false;
         }
 
         /// <summary>
@@ -345,13 +371,26 @@ namespace XAMLite
         /// Updates the highlight color of the selected ListBox item when the
         /// ListBox loses focus.
         /// </summary>
-        private void ModifyChildHighlightColor()
+        protected virtual void ModifyChildHighlightColor()
         {
-            foreach (var item in Items)
+            if (Parent is XAMLiteComboBox)
             {
-                if (item.IsSelected)
+                foreach (XAMLiteComboBoxItem item in Items)
                 {
-                    item.UpdateSelectedBrush(IsFocused);
+                    if (item.IsSelected)
+                    {
+                        item.UpdateSelectedBrush(IsFocused);
+                    }
+                }
+            }
+            else
+            {
+                foreach (XAMLiteListBoxItem item in Items)
+                {
+                    if (item.IsSelected)
+                    {
+                        item.UpdateSelectedBrush(IsFocused);
+                    }
                 }
             }
         }
@@ -373,6 +412,46 @@ namespace XAMLite
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        private void UpdateHeight()
+        {
+            var h = BorderThickness.Top + BorderThickness.Bottom;
+
+            if (Items == null)
+            {
+                return;
+            }
+
+            foreach (var item in Items)
+            {
+                h += item.Height;
+            }
+
+            if (Height > (int)h)
+            {
+                // move the bottom rectangle up.
+                if (_borderRectangles.Count > 1)
+                {
+                    var rect = _borderRectangles[_borderRectangles.Count - 1];
+                    rect.Margin = new Thickness(
+                        rect.Margin.Left, rect.Margin.Top, rect.Margin.Right, rect.Margin.Bottom + (Height - h));
+                }
+
+                Height = (int)h;
+                _grid.Height = (int)h;
+
+                foreach (var rectangle in _borderRectangles)
+                {
+                    if (rectangle.Height > Height)
+                    {
+                        rectangle.Height = Height;
+                    } 
+                }
+            }
+        }
+
+        /// <summary>
         /// Sets margins, height, width, etc., once the item has been added to
         /// the grid.
         /// </summary>
@@ -380,7 +459,10 @@ namespace XAMLite
         {
             for (var i = 0; i < Items.Count; i++)
             {
-                var margin = Items[i].Margin;
+                var item = Items[i] is XAMLiteComboBoxItem
+                               ? (XAMLiteComboBoxItem)Items[i]
+                               : (XAMLiteListBoxItem)Items[i];
+                var margin = item.Margin;
 
                 double topMargin = 0;
 
@@ -393,27 +475,29 @@ namespace XAMLite
                     topMargin += Items[i - 1].Margin.Top + Items[i - 1].Height;
                 }
 
-                if (Items[i].Background == Brushes.Transparent)
+                if (item.Background == Brushes.Transparent)
                 {
-                    Items[i].Background = Background;
+                    item.Background = Background;
                 }
 
-                if (Items[i].Foreground == Brushes.Transparent)
+                if (item.Foreground == Brushes.Transparent)
                 {
-                    Items[i].Foreground = Foreground;
+                    item.Foreground = Foreground;
                 }
 
-                if (Items[i].SelectedBackground == Brushes.Transparent)
+                if (item.SelectedBackground == Brushes.Transparent)
                 {
-                    Items[i].SelectedBackground = SelectedBackground;
+                    item.SelectedBackground = SelectedBackground;
                 }
 
-                if (Items[i].UnfocusedSelectedBackground == Brushes.Transparent)
+                if (item.UnfocusedSelectedBackground == Brushes.Transparent)
                 {
-                    Items[i].UnfocusedSelectedBackground = UnfocusedSelectedBackground;
+                    item.UnfocusedSelectedBackground = UnfocusedSelectedBackground;
                 }
 
-                Items[i].UpdateMarginAndWidth(new Thickness(margin.Left + BorderThickness.Left, margin.Top + topMargin, margin.Right, margin.Bottom));
+                item.UpdateMarginAndWidth(new Thickness(margin.Left + BorderThickness.Left, margin.Top + topMargin, margin.Right, margin.Bottom));
+
+                UpdateHeight();
             }
 
             _needToUpdate = false;
@@ -425,13 +509,26 @@ namespace XAMLite
         /// index.
         /// </summary>
         /// <param name="index"></param>
-        public void DeselectAll(int index)
+        protected internal void DeselectAll(int index)
         {
-            foreach (var item in Items)
+            if (Parent is XAMLiteComboBox)
             {
-                if (item.Index != index)
+                foreach (XAMLiteComboBoxItem item in Items)
                 {
-                    item.IsSelected = false;
+                    if (item.Index != index)
+                    {
+                        item.IsSelected = false;
+                    }
+                }
+            }
+            else
+            {
+                foreach (XAMLiteListBoxItem item in Items)
+                {
+                    if (item.Index != index)
+                    {
+                        item.IsSelected = false;
+                    }
                 }
             }
         }
