@@ -42,15 +42,56 @@ namespace XAMLite
         }
 
         /// <summary>
+        /// Modifies all of the assets that make up the ListBox when set.
+        /// </summary>
+        public override int Height
+        {
+            get
+            {
+                return base.Height;
+            }
+
+            set
+            {
+                if (_borderRectangles != null)
+                {
+                    // Adjust the bottom rectangle's margin so that it meets 
+                    // the new height of the control, when it exists.
+                    if (_borderRectangles.Count > 1)
+                    {
+                        var rect = _borderRectangles[_borderRectangles.Count - 1];
+                        rect.Margin = new Thickness(
+                            rect.Margin.Left, rect.Margin.Top, rect.Margin.Right, rect.Margin.Bottom + (Height - value));
+                    }
+                }
+
+                base.Height = value;
+
+                // Set the new grid height.
+                if (_grid != null)
+                {
+                    _grid.Height = value;
+                }
+
+                // Adjust the background rectangle and the borders so that they 
+                // are the correct height.
+                if (_borderRectangles != null)
+                {
+                    foreach (var rectangle in _borderRectangles)
+                    {
+                        if (rectangle.Height > Height)
+                        {
+                            rectangle.Height = Height;
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// True when the control contains the mouse.
         /// </summary>
         public bool IsMouseOver { get; set; }
-
-        /// <summary>
-        /// The text color of ListBoxItems when the
-        /// ListBoxItem is not individually defined.
-        /// </summary>
-        public Brush Foreground { get; set; }
 
         /// <summary>
         /// List of Items that make up the content of the control.
@@ -115,6 +156,12 @@ namespace XAMLite
         /// Defines the position of ListBoxItems within the ListBox.
         /// </summary>
         public Thickness Padding { get; set; }
+
+        /// <summary>
+        /// The text color of ListBoxItems when the
+        /// ListBoxItem is not individually defined.
+        /// </summary>
+        public Brush Foreground { get; set; }
 
         /// <summary>
         /// The back ground color of the ListBox.
@@ -321,26 +368,6 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="mouseEventArgs"></param>
-        private void OnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
-        {
-            IsMouseOver = true;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="mouseEventArgs"></param>
-        private void OnMouseLeave(object sender, MouseEventArgs mouseEventArgs)
-        {
-            IsMouseOver = false;
-        }
-
-        /// <summary>
         /// Updates the control.
         /// </summary>
         /// <param name="gameTime"></param>
@@ -357,9 +384,9 @@ namespace XAMLite
 
             if (!_itemsUpdated)
             {
-                foreach (var t in Items)
+                foreach (var item in Items)
                 {
-                    if (t.Height == 0)
+                    if (item.Height == 0)
                     {
                         _needToUpdate = true;
                     }
@@ -373,24 +400,11 @@ namespace XAMLite
         /// </summary>
         protected virtual void ModifyChildHighlightColor()
         {
-            if (Parent is XAMLiteComboBox)
+            foreach (XAMLiteListBoxItem item in Items)
             {
-                foreach (XAMLiteComboBoxItem item in Items)
+                if (item.IsSelected)
                 {
-                    if (item.IsSelected)
-                    {
-                        item.UpdateSelectedBrush(IsFocused);
-                    }
-                }
-            }
-            else
-            {
-                foreach (XAMLiteListBoxItem item in Items)
-                {
-                    if (item.IsSelected)
-                    {
-                        item.UpdateSelectedBrush(IsFocused);
-                    }
+                    item.UpdateSelectedBrush(IsFocused);
                 }
             }
         }
@@ -412,56 +426,15 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        private void UpdateHeight()
-        {
-            var h = BorderThickness.Top + BorderThickness.Bottom;
-
-            if (Items == null)
-            {
-                return;
-            }
-
-            foreach (var item in Items)
-            {
-                h += item.Height;
-            }
-
-            if (Height > (int)h)
-            {
-                // move the bottom rectangle up.
-                if (_borderRectangles.Count > 1)
-                {
-                    var rect = _borderRectangles[_borderRectangles.Count - 1];
-                    rect.Margin = new Thickness(
-                        rect.Margin.Left, rect.Margin.Top, rect.Margin.Right, rect.Margin.Bottom + (Height - h));
-                }
-
-                Height = (int)h;
-                _grid.Height = (int)h;
-
-                foreach (var rectangle in _borderRectangles)
-                {
-                    if (rectangle.Height > Height)
-                    {
-                        rectangle.Height = Height;
-                    } 
-                }
-            }
-        }
-
-        /// <summary>
         /// Sets margins, height, width, etc., once the item has been added to
         /// the grid.
         /// </summary>
-        private void UpdateItems()
+        protected virtual void UpdateItems()
         {
             for (var i = 0; i < Items.Count; i++)
             {
-                var item = Items[i] is XAMLiteComboBoxItem
-                               ? (XAMLiteComboBoxItem)Items[i]
-                               : (XAMLiteListBoxItem)Items[i];
+                var item = (XAMLiteListBoxItem)Items[i];
+
                 var margin = item.Margin;
 
                 double topMargin = 0;
@@ -496,11 +469,6 @@ namespace XAMLite
                 }
 
                 item.UpdateMarginAndWidth(new Thickness(margin.Left + BorderThickness.Left, margin.Top + topMargin, margin.Right, margin.Bottom));
-
-                if (this is XAMLiteComboBox)
-                {
-                    UpdateHeight();
-                }
             }
 
             _needToUpdate = false;
@@ -514,26 +482,33 @@ namespace XAMLite
         /// <param name="index"></param>
         protected internal void DeselectAll(int index)
         {
-            if (Parent is XAMLiteComboBox)
+            foreach (XAMLiteListBoxItem item in Items)
             {
-                foreach (XAMLiteComboBoxItem item in Items)
+                if (item.Index != index)
                 {
-                    if (item.Index != index)
-                    {
-                        item.IsSelected = false;
-                    }
+                    item.IsSelected = false;
                 }
             }
-            else
-            {
-                foreach (XAMLiteListBoxItem item in Items)
-                {
-                    if (item.Index != index)
-                    {
-                        item.IsSelected = false;
-                    }
-                }
-            }
+        }
+
+        /// <summary>
+        /// Sets IsMouseOver to true when the control is entered.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseEventArgs"></param>
+        private void OnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
+        {
+            IsMouseOver = true;
+        }
+
+        /// <summary>
+        /// Sets IsMouseOver to false when the control is exited.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseEventArgs"></param>
+        private void OnMouseLeave(object sender, MouseEventArgs mouseEventArgs)
+        {
+            IsMouseOver = false;
         }
 
         /// <summary>
