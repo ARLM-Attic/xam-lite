@@ -62,9 +62,9 @@ namespace XAMLite
                 base.Height = value;
 
                 // Set the new grid height.
-                if (_grid != null)
+                if (Grid != null)
                 {
-                    _grid.Height = value;
+                    Grid.Height = value;
                 }
 
                 if (_borderRectangles == null)
@@ -225,9 +225,9 @@ namespace XAMLite
             {
                 base.Visibility = value;
 
-                if (_grid != null)
+                if (Grid != null)
                 {
-                    _grid.Visibility = value;
+                    Grid.Visibility = value;
                 }
             }
         }
@@ -236,7 +236,7 @@ namespace XAMLite
         /// The grid that contains all of the XAMLite objects which define the 
         /// ListBox.
         /// </summary>
-        private XAMLiteGridNew _grid;
+        protected XAMLiteGridNew Grid;
 
         /// <summary>
         /// Remains true, until the Items have been added to the grid and 
@@ -283,7 +283,7 @@ namespace XAMLite
                                           && BorderThickness.Right == BorderThickness.Top
                                           && BorderThickness.Top == BorderThickness.Bottom;
 
-            _grid = new XAMLiteGridNew(Game)
+            Grid = new XAMLiteGridNew(Game)
                 {
                     Width = Width,
                     Height = Height,
@@ -291,7 +291,7 @@ namespace XAMLite
                     VerticalAlignment = VerticalAlignment,
                     Margin = Margin
                 };
-            Game.Components.Add(_grid);
+            Game.Components.Add(Grid);
 
             // If the thickness is uniform, the ListBox only needs one rectangle
             // to define it.
@@ -312,7 +312,7 @@ namespace XAMLite
 
             foreach (var borderRectangle in _borderRectangles)
             {
-                _grid.Children.Add(borderRectangle);
+                Grid.Children.Add(borderRectangle);
             }
         }
 
@@ -384,6 +384,7 @@ namespace XAMLite
             if (_needToUpdate)
             {
                 UpdateItems();
+                UpdateMargins();
             }
 
             if (!_itemsUpdated)
@@ -393,6 +394,29 @@ namespace XAMLite
                     if (item.Height == 0)
                     {
                         _needToUpdate = true;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Updates the Margins of the control when they have changed.
+        /// </summary>
+        private void UpdateMargins()
+        {
+            if (Items[0].Margin.Top != Margin.Top)
+            {
+                var mi = Items[0].Margin;
+                foreach (var rectangle in _borderRectangles)
+                {
+                    if (rectangle.Index == _borderRectangles.Count - 1)
+                    {
+                        Console.WriteLine("Last to go: " + rectangle.Index);
+                        rectangle.Margin = new Thickness(mi.Left, mi.Top, mi.Right, rectangle.Margin.Bottom - Items[0].Height - BorderThickness.Top + BorderThickness.Bottom);
+                    }
+                    else
+                    {
+                        rectangle.Margin = new Thickness(mi.Left, mi.Top - BorderThickness.Top, mi.Right, mi.Bottom);
                     }
                 }
             }
@@ -427,7 +451,7 @@ namespace XAMLite
             {
                 for (var i = _itemsIndex; i < Items.Count; i++)
                 {
-                    _grid.Children.Add(Items[i]);
+                    Grid.Children.Add(Items[i]);
                 }
 
                 _itemsIndex = Items.Count;

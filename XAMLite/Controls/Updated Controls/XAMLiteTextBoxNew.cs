@@ -12,6 +12,27 @@ namespace XAMLite
     public class XAMLiteTextBoxNew : XAMLiteBaseText
     {
         /// <summary>
+        /// Sets the content of the label within the text box.
+        /// </summary>
+        public override string Text
+        {
+            get
+            {
+                return base.Text;
+            }
+
+            set
+            {
+                base.Text = value;
+
+                if (_text != null)
+                {
+                    _text.Content = value;
+                }
+            }
+        }
+
+        /// <summary>
         /// Grid that contains all of the TextBox assets.
         /// </summary>
         private XAMLiteGridNew _grid;
@@ -62,6 +83,11 @@ namespace XAMLite
         /// Special characters such as semicolons, brackets, etc.
         /// </summary>
         protected Keys[] SpecialInputKeys;
+
+        /// <summary>
+        /// When true, the cursor is overridden.
+        /// </summary>
+        internal bool IsCursorOveride;
 
         /// <summary>
         /// The character '|' that makes the blinking cursor.
@@ -250,11 +276,19 @@ namespace XAMLite
                 }
             }
 
+            Background = Brushes.Transparent;
+        }
+
+        /// <summary>
+        /// Initializes the event handlers.
+        /// </summary>
+        public override void Initialize()
+        {
+            base.Initialize();
+
             MouseEnter += OnMouseEnter;
             MouseUp += OnMouseUp;
             MouseLeave += OnMouseLeave;
-
-            Background = Brushes.Transparent;
         }
 
         /// <summary>
@@ -440,7 +474,10 @@ namespace XAMLite
         /// <param name="mouseEventArgs"></param>
         private void OnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
         {
-            Cursor.Cursors = Cursors.IBeam;
+            if (!IsCursorOveride)
+            {
+                Cursor.Cursors = Cursors.IBeam;
+            }
         }
 
         /// <summary>

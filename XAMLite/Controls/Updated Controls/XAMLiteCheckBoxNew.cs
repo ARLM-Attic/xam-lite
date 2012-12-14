@@ -303,15 +303,31 @@ namespace XAMLite
         {
             if (IsChecked)
             {
-                _checkedHoverButton.Visibility = Visibility.Visible;
                 _uncheckedButton.Visibility = Visibility.Hidden;
-                _uncheckedHoverButton.Visibility = Visibility.Hidden;
+
+                if (_checkedHoverButton != null && _uncheckedHoverButton != null)
+                {
+                    _checkedHoverButton.Visibility = Visibility.Visible;
+                    _uncheckedHoverButton.Visibility = Visibility.Hidden;
+                }
+                else
+                {
+                    _checkedButton.Visibility = Visibility.Visible;
+                }
             }
             else
             {
-                _uncheckedHoverButton.Visibility = Visibility.Visible;
                 _checkedButton.Visibility = Visibility.Hidden;
-                _checkedHoverButton.Visibility = Visibility.Hidden;
+
+                if (_checkedHoverButton != null && _uncheckedHoverButton != null)
+                {
+                    _uncheckedHoverButton.Visibility = Visibility.Visible;
+                    _checkedHoverButton.Visibility = Visibility.Hidden;
+                }
+                else
+                {
+                    _uncheckedButton.Visibility = Visibility.Visible;
+                }
             }
         }
 
