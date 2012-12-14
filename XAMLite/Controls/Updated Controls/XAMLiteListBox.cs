@@ -497,7 +497,10 @@ namespace XAMLite
 
                 item.UpdateMarginAndWidth(new Thickness(margin.Left + BorderThickness.Left, margin.Top + topMargin, margin.Right, margin.Bottom));
 
-                UpdateHeight();
+                if (Parent is XAMLiteComboBox)
+                {
+                    UpdateHeight();
+                }
             }
 
             _needToUpdate = false;
