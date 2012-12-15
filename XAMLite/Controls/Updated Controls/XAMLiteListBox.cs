@@ -45,6 +45,54 @@ namespace XAMLite
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public override int Width
+        {
+            get
+            {
+                return base.Width;
+            }
+
+            set
+            {
+                // save prior value to modify margins
+                var w = Width;
+
+                base.Width = value;
+
+                // Set the new grid height.
+                if (Grid != null)
+                {
+                    Grid.Width = value;
+                }
+
+                if (_borderRectangles == null)
+                {
+                    return;
+                }
+
+                Grid.Width = Width;
+                _rectangle.Width = Width - (int)BorderThickness.Right - (int)BorderThickness.Left;
+
+                // Adjust the bottom rectangle's margin so that it meets 
+                // the new height of the control, when it exists.
+                //if (_borderRectangles.Count > 1)
+                //{
+                //    var rect = _borderRectangles[_borderRectangles.Count - 1];
+                //    rect.Margin = new Thickness(rect.Margin.Left, rect.Margin.Top, rect.Margin.Right, rect.Margin.Bottom + (h - value));
+                //}
+
+                // Adjust the background rectangle and the borders so that they 
+                // are the correct height.
+                foreach (var rectangle in _borderRectangles)
+                {
+                    rectangle.Width = Width;
+                }
+            }
+        }
+
+        /// <summary>
         /// Modifies all of the assets that make up the ListBox when set.
         /// </summary>
         public override int Height
@@ -365,6 +413,14 @@ namespace XAMLite
                 VerticalAlignment = VerticalAlignment.Bottom,
             };
             _borderRectangles.Add(bottomBorder);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void Initialize()
+        {
+            base.Initialize();
 
             MouseEnter += OnMouseEnter;
             MouseLeave += OnMouseLeave;
@@ -411,7 +467,6 @@ namespace XAMLite
                 {
                     if (rectangle.Index == _borderRectangles.Count - 1)
                     {
-                        Console.WriteLine("Last to go: " + rectangle.Index);
                         rectangle.Margin = new Thickness(mi.Left, mi.Top, mi.Right, rectangle.Margin.Bottom - Items[0].Height - BorderThickness.Top + BorderThickness.Bottom);
                     }
                     else

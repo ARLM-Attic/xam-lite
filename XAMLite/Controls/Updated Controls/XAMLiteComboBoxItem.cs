@@ -48,11 +48,11 @@ namespace XAMLite
         /// <param name="mouseEventArgs"></param>
         private void OnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
         {
-            if (Visibility == Visibility.Visible)
+            //if (Visibility == Visibility.Visible)
             {
                 _parent.DeselectAll(Index);
-                BackgroundPanel.Fill = SelectedBackground;
-                BackgroundPanel.Visibility = Visibility.Visible;
+                //BackgroundPanel.Fill = SelectedBackground;
+                //BackgroundPanel.Visibility = Visibility.Visible;
             }
         }
 
@@ -63,7 +63,7 @@ namespace XAMLite
         /// <param name="mouseButtonEventArgs"></param>
         private void OnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
-            _parent.DeselectAll(Index);
+            //_parent.DeselectAll(Index);
             _parent.Close((string)Content);
         }
     }

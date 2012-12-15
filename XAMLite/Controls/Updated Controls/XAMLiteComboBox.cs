@@ -27,7 +27,7 @@ namespace XAMLite
         private string _defaultText;
 
         /// <summary>
-        /// The initial text to be displayed in the TextBox.
+        /// The text to be displayed in the TextBox.
         /// </summary>
         public string Text 
         { 
@@ -40,19 +40,25 @@ namespace XAMLite
             {
                 _text = value;
 
-                if (textBox != null)
+                if (_textBox != null)
                 {
-                    textBox.Text = value;
+                    _textBox.Text = value;
                 }   
             } 
         }
 
         /// <summary>
-        /// 
+        /// Represents the top portion of the ListBox.
         /// </summary>
-        private XAMLiteTextBoxNew textBox;
+        private XAMLiteTextBoxNew _textBox;
 
-        private bool _firstUpdate;
+        /// <summary>
+        /// At start up, the ComboBox should be initially closed,  but the
+        /// Items have not yet been added to the grid.  At the first Update
+        /// Items call, once the Items have been added, the control visibility
+        /// is toggled off.
+        /// </summary>
+        private bool _isFirstUpdate = true;
 
         /// <summary>
         /// Constructor.
@@ -64,7 +70,7 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// Loads the content for the control.
         /// </summary>
         protected override void LoadContent()
         {
@@ -72,9 +78,9 @@ namespace XAMLite
 
             _defaultText = Text;
 
-            textBox = new XAMLiteTextBoxNew(Game)
+            _textBox = new XAMLiteTextBoxNew(Game)
             {
-                Text = _defaultText == string.Empty ? "Combo Box" : _defaultText,
+                Text = _defaultText == string.Empty ? "Add default text" : _defaultText,
                 Width = Width,
                 IsCursorOveride = true,
                 Height = 28,
@@ -87,14 +93,17 @@ namespace XAMLite
                 VerticalAlignment = VerticalAlignment.Top,
                 Padding = new Thickness(7, 0, 7, 0)
             };
-            Grid.Children.Add(textBox);
+            Grid.Children.Add(_textBox);
         }
 
+        /// <summary>
+        /// Initializes any event handlers.
+        /// </summary>
         public override void Initialize()
         {
             base.Initialize();
 
-            textBox.MouseDown += TextBoxOnMouseDown;
+            _textBox.MouseDown += TextBoxOnMouseDown;
         }
 
         /// <summary>
@@ -103,23 +112,45 @@ namespace XAMLite
         /// </summary>
         protected override void UpdateItems()
         {
-            if (Items[0].Visibility == Visibility.Visible && _firstUpdate)
+            // The first time this method is called, the visibility of the 
+            // Items is set to hidden.
+            if (_isFirstUpdate)
             {
-                _firstUpdate = true;
+                _isFirstUpdate = false;
 
                 HideChildren();
             } 
 
+            // Since this class derives from a ListBox, the first Item must be
+            // moved downward to accommodate the top portion of the control.
+            // The remaining Items are adjusted in the base class.
             if (Items.Count > 0)
             {
                 var m = Items[0].Margin;
-                Items[0].Margin = new Thickness(m.Left, m.Top + textBox.Height, m.Right, m.Bottom);
+                Items[0].Margin = new Thickness(m.Left, m.Top + _textBox.Height, m.Right, m.Bottom);
             }
 
             base.UpdateItems();
 
+            //UpdateWidth();
             UpdateHeight();
         }
+
+        //private void UpdateWidth()
+        //{
+
+        //    var w = Width;
+
+        //    foreach (var item in Items)
+        //    {
+        //        if (item.Width > w)
+        //        {
+        //            w = item.Width;
+        //        }
+        //    }
+
+        //    Width = w;
+        //}
 
         /// <summary>
         /// Modifies the height of the control so that it is 
@@ -127,7 +158,7 @@ namespace XAMLite
         /// </summary>
         private void UpdateHeight()
         {
-            var h = BorderThickness.Top + BorderThickness.Bottom;
+            var h = BorderThickness.Top;
 
             if (Items == null)
             {
@@ -190,8 +221,8 @@ namespace XAMLite
         {
             base.Dispose(disposing);
 
-            textBox.MouseDown -= TextBoxOnMouseDown;
-            textBox.Dispose();
+            _textBox.MouseDown -= TextBoxOnMouseDown;
+            _textBox.Dispose();
         }
     }
 }
