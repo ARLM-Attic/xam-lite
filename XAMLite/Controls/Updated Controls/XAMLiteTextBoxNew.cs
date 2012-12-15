@@ -28,6 +28,11 @@ namespace XAMLite
                 if (_text != null)
                 {
                     _text.Content = value;
+
+                    if ((SpriteFont.MeasureString(_text.Content.ToString()).X + Padding.Left + Padding.Right) > Width)
+                    {
+                        UpdateControlWidth();
+                    }
                 }
             }
         }
@@ -415,6 +420,20 @@ namespace XAMLite
                     ResetBorderBrush();
                 }
             }
+        }
+
+        private void UpdateControlWidth()
+        {
+            Console.WriteLine("Width changed.");
+            Width = _text.Width + (int)BorderThickness.Left + (int)BorderThickness.Right;
+            Margin = Margin;
+            _grid.Width = Width;
+            foreach (var rectangle in _borderRectangles)
+            {
+                rectangle.Width = Width;
+            }
+
+
         }
 
         /// <summary>

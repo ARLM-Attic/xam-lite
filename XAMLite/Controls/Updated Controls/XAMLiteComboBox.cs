@@ -57,6 +57,26 @@ namespace XAMLite
         /// </summary>
         private bool _areItemsVisibile;
 
+        public override int Height
+        {
+            get
+            {
+                return base.Height;
+            }
+
+            set
+            {
+                base.Height = value;
+
+                if (_textBox == null)
+                {
+                    return;
+                }
+
+                UpdateRectangleHeights(_textBox.Height);
+            }
+        }
+
         /// <summary>
         /// At start up, the ComboBox should be initially closed,  but the
         /// Items have not yet been added to the grid.  At the first Update
@@ -112,6 +132,11 @@ namespace XAMLite
             LostFocus += OnLostFocus;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="eventArgs"></param>
         private void OnLostFocus(object sender, EventArgs eventArgs)
         {
             Close();
@@ -181,7 +206,7 @@ namespace XAMLite
                 h += item.Height;
             }
 
-            Height = (int)h;
+            Height = (int)h + _textBox.Height;
         }
 
         /// <summary>

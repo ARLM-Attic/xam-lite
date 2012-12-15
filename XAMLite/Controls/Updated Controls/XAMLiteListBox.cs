@@ -105,7 +105,7 @@ namespace XAMLite
             set
             {
                 // save prior value to modify margins
-                var h = Height;
+                // var h = Height;
                 
                 base.Height = value;
 
@@ -113,29 +113,6 @@ namespace XAMLite
                 if (Grid != null)
                 {
                     Grid.Height = value;
-                }
-
-                if (_borderRectangles == null)
-                {
-                    return;
-                }
-
-                // Adjust the bottom rectangle's margin so that it meets 
-                // the new height of the control, when it exists.
-                if (_borderRectangles.Count > 1)
-                {
-                    var rect = _borderRectangles[_borderRectangles.Count - 1];
-                    rect.Margin = new Thickness(rect.Margin.Left, rect.Margin.Top, rect.Margin.Right, rect.Margin.Bottom + (h - value));
-                }
-
-                // Adjust the background rectangle and the borders so that they 
-                // are the correct height.
-                foreach (var rectangle in _borderRectangles)
-                {
-                    if (rectangle.Height > Height)
-                    {
-                        rectangle.Height = Height;
-                    }
                 }
             }
         }
@@ -607,6 +584,31 @@ namespace XAMLite
         private void OnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
             IsFocused = true;
+        }
+
+        protected void UpdateRectangleHeights(int height)
+        {
+            if (_borderRectangles == null)
+            {
+                return;
+            }
+
+            //// Adjust the bottom rectangle's margin so that it meets 
+            //// the new height of the control, when it exists.
+            //if (_borderRectangles.Count > 1)
+            //{
+            //    var rect = _borderRectangles[_borderRectangles.Count - 1];
+            //    rect.Margin = new Thickness(rect.Margin.Left, rect.Margin.Top, rect.Margin.Right, rect.Margin.Bottom + (h - value));
+            //}
+            // Adjust the background rectangle and the borders so that they 
+            // are the correct height.
+            foreach (var rectangle in _borderRectangles)
+            {
+                if (rectangle.Height > Height)
+                {
+                    rectangle.Height = Height - height;
+                }
+            }
         }
     }
 }
