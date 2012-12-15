@@ -65,11 +65,14 @@ namespace XAMLite
         /// </summary>
         protected internal XAMLiteRectangleNew BackgroundPanel;
 
+        /// <summary>
+        /// Reference to the specific class that the parent represents.
+        /// </summary>
         private XAMLiteListBox _parent;
 
         /// <summary>
-        /// TODO: Consider creating a base class for complex controls
-        /// TODO: so that adding all of these parts are not necessary every time.
+        /// Modifies the visibility of the grid, and therefore all of the 
+        /// controls contained within it.
         /// </summary>
         public override Visibility Visibility
         {
@@ -230,6 +233,7 @@ namespace XAMLite
         {
             IsSelected = true;
             IsFocused = true;
+
             _parent.DeselectAll(Index);
             BackgroundPanel.Fill = SelectedBackground;
             BackgroundPanel.Visibility = Visibility.Visible;

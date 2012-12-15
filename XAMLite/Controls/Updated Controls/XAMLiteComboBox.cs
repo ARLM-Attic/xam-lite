@@ -53,6 +53,11 @@ namespace XAMLite
         private XAMLiteTextBoxNew _textBox;
 
         /// <summary>
+        /// True when the children are visible.
+        /// </summary>
+        private bool _areItemsVisibile;
+
+        /// <summary>
         /// At start up, the ComboBox should be initially closed,  but the
         /// Items have not yet been added to the grid.  At the first Update
         /// Items call, once the Items have been added, the control visibility
@@ -104,6 +109,12 @@ namespace XAMLite
             base.Initialize();
 
             _textBox.MouseDown += TextBoxOnMouseDown;
+            LostFocus += OnLostFocus;
+        }
+
+        private void OnLostFocus(object sender, EventArgs eventArgs)
+        {
+            Close();
         }
 
         /// <summary>
@@ -180,11 +191,28 @@ namespace XAMLite
         /// <param name="mouseButtonEventArgs"></param>
         private void TextBoxOnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
+            _areItemsVisibile = !_areItemsVisibile;
+
+
             foreach (var child in Grid.Children)
             {
                 if (!(child is XAMLiteTextBoxNew))
                 {
-                    child.Visibility = Visibility.Visible;
+                    child.Visibility = _areItemsVisibile ? Visibility.Visible : Visibility.Hidden;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void RemoveHighLightColor(int index)
+        {
+            foreach (XAMLiteComboBoxItem item in Items)
+            {
+                if (item.Index != index)
+                {
+                    item.RemoveHighLight();
                 }
             }
         }
@@ -204,13 +232,22 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// Hides the Items portion of the combo box when selected.
+        /// Hides the Items.
+        /// </summary>
+        public void Close()
+        {
+            _areItemsVisibile = false;
+            HideChildren();
+        }
+
+        /// <summary>
+        /// Sets the text and hides the Items.
         /// </summary>
         public void Close(string content)
         {
             Text = content;
 
-            HideChildren();
+            Close();
         }
 
         /// <summary>

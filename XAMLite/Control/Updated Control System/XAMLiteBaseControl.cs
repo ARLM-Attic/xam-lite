@@ -79,6 +79,11 @@ namespace XAMLite
         }
 
         /// <summary>
+        /// Event fired when a key is released.
+        /// </summary>
+        public event EventHandler LostFocus = delegate { };
+
+        /// <summary>
         /// True when the control is a part of another control.  For example, 
         /// a XAMLiteLabel associated with the XAMLiteCheckBox class.
         /// </summary>
@@ -635,6 +640,7 @@ namespace XAMLite
             {
                 // focus removed.
                 IsFocused = false;
+                LostFocus(this, EventArgs.Empty);
             }
 
             // record the mouse down vector2

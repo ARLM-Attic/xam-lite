@@ -20,12 +20,38 @@ namespace XAMLite
         private XAMLiteComboBox _parent;
 
         /// <summary>
+        /// 
+        /// </summary>
+        public override Visibility Visibility
+        {
+            get
+            {
+                return base.Visibility;
+            }
+
+            set
+            {
+                base.Visibility = value;
+
+                if (Grid == null)
+                {
+                    return;
+                }
+     
+                if (value == Visibility.Hidden)
+                {
+                    RemoveHighLight();
+                }
+            }
+        }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="game"></param>
         public XAMLiteComboBoxItem(Game game)
             : base(game)
-        { 
+        {
         }
 
         /// <summary>
@@ -48,11 +74,11 @@ namespace XAMLite
         /// <param name="mouseEventArgs"></param>
         private void OnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
         {
-            //if (Visibility == Visibility.Visible)
+            if (Visibility == Visibility.Visible)
             {
-                _parent.DeselectAll(Index);
-                //BackgroundPanel.Fill = SelectedBackground;
-                //BackgroundPanel.Visibility = Visibility.Visible;
+                _parent.RemoveHighLightColor(Index);
+                BackgroundPanel.Fill = SelectedBackground;
+                BackgroundPanel.Visibility = Visibility.Visible;
             }
         }
 
@@ -63,8 +89,16 @@ namespace XAMLite
         /// <param name="mouseButtonEventArgs"></param>
         private void OnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
-            //_parent.DeselectAll(Index);
             _parent.Close((string)Content);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void RemoveHighLight()
+        {
+            BackgroundPanel.Fill = Brushes.Transparent;
+            BackgroundPanel.Visibility = Visibility.Hidden;
         }
     }
 }
