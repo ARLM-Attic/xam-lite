@@ -1,11 +1,7 @@
-﻿using System.Windows.Media;
-using Microsoft.Xna.Framework;
-using Color = Microsoft.Xna.Framework.Color;
+﻿using Microsoft.Xna.Framework;
 
 namespace XAMLite
-{
-    using System;
-
+{  
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
@@ -30,7 +26,7 @@ namespace XAMLite
         /// Updates the FontFamily, Spacing, and recalculates the new
         /// Width and Height.
         /// </summary>
-        protected override void UpdateFontMetrics()
+        internal override void UpdateFontMetrics()
         {
             base.UpdateFontMetrics();
 

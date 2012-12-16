@@ -68,44 +68,6 @@ namespace XAMLite
         /// </summary>
         public double StrokeThickness { get; set; }
 
-        //public override int Width
-        //{
-        //    get
-        //    {
-        //        return base.Width;
-        //    }
-
-        //    set
-        //    {
-        //        base.Width = value;
-
-        //        if (Panel.Width != value)
-        //        {
-        //            Panel = new Rectangle((int)Position.X, (int)Position.Y, value, Height);
-        //        }
-
-        //        Console.WriteLine("The actual set value: " + value);
-        //    }
-        //}
-
-        //public override int Height
-        //{
-        //    get
-        //    {
-        //        return base.Height;
-        //    }
-
-        //    set
-        //    {
-        //        base.Height = value;
-
-        //        if (Panel.Height != value)
-        //        {
-        //            Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, value);
-        //        }
-        //    }
-        //}
-
         /// <summary>
         /// Constructor.
         /// </summary>

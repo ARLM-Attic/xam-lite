@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
 
 namespace XAMLite
 { 
@@ -32,7 +27,6 @@ namespace XAMLite
         public new void Add(XAMLiteBaseControl child)
         {
             child.IsAttachedToGrid = true;
-            //child.GridIsHidden = _parent.Visibility == Visibility.Hidden;
             if (child.Parent == null)
             {
                 child.Index = Count;

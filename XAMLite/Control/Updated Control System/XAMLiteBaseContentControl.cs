@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -255,7 +254,7 @@ namespace XAMLite
         /// Updates the spacing, font family, and retakes the string 
         /// measurements
         /// </summary>
-        protected virtual void UpdateFontMetrics()
+        internal virtual void UpdateFontMetrics()
         {
             UpdateFontFamily(_fontFamily);
             SpriteFont.Spacing = Spacing;

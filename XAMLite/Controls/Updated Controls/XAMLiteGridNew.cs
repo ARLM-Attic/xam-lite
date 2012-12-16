@@ -50,6 +50,7 @@ namespace XAMLite
             : base(game)
         {
             Children = new Children(this);
+            BackgroundColor = Color.Transparent;
         }
 
         /// <summary>
@@ -61,10 +62,17 @@ namespace XAMLite
 
             // set internal variable, IsAttachedToGrid, when the grid is a component of a complex 
             // XAMLite object that is embedded in another grid.
-            if (Parent != null && Parent.Parent != null)
-            {
-                IsAttachedToGrid = (Parent.Parent.Width != Viewport.Width) || (Parent.Parent.Height != Viewport.Height);
-            }
+            //if (Parent != null)
+            //if (Parent != null && Parent.Parent != null)
+            //{
+            //    if (Name == "Image")
+            //    {
+            //        Console.WriteLine("Name: " + Name + " Parent: " + Parent.Name);
+            //    }
+            //    //Console.WriteLine("Parent of Parent of grid: " + Parent.parent);
+            //    IsAttachedToGrid = (Parent.Parent.Width != Viewport.Width) || (Parent.Parent.Height != Viewport.Height);
+            //    //IsAttachedToGrid = (Parent.Width != Viewport.Width) || (Parent.Height != Viewport.Height);
+            //}
 
             // set the internal Window to the Panel.
             Window = Panel;
@@ -125,6 +133,15 @@ namespace XAMLite
             }
         }
 
+        public override void Draw(GameTime gameTime)
+        {
+            base.Draw(gameTime);
+
+            SpriteBatch.Begin();
+            //SpriteBatch.Draw(Pixel, Panel, BackgroundColor);
+            SpriteBatch.End();
+        }
+
         /// <summary>
         /// Loads the children once the grid has been set up.
         /// </summary>
@@ -137,7 +154,7 @@ namespace XAMLite
             // Add the child component to the game with the modified parameters.
             foreach (var child in Children)
             {
-                AddChild(child);     
+                AddChild(child);
             }
 
             ModifyChildPositionAndWidth();
@@ -163,7 +180,7 @@ namespace XAMLite
 
         /// <summary>
         /// Modifies a grid's position when it is a component of a complex 
-        // XAMLite object that is embedded in another grid.
+        /// XAMLite object that is embedded in another grid.
         /// </summary>
         private void ModifyGridPosition()
         {
@@ -235,6 +252,8 @@ namespace XAMLite
                     child.Height = Height;
                 }
 
+                child.Window = Panel;
+
                 child.PositionChanged = true;
             }
         }
@@ -247,8 +266,8 @@ namespace XAMLite
         {
             if (_childVisibility == null)
             {
-                _childVisibility = new List<bool>(); 
-                _currentChildVisibility = new List<bool>(); 
+                _childVisibility = new List<bool>();
+                _currentChildVisibility = new List<bool>();
             }
 
             for (var i = 0; i < Children.Count; i++)
@@ -317,7 +336,7 @@ namespace XAMLite
         private void UpdateChildOpacity()
         {
             CheckForNewChildren();
-            
+
             for (var i = 0; i < Children.Count; i++)
             {
                 Children[i].Opacity = Opacity * _childOpacity[i];

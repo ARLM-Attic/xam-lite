@@ -12,12 +12,72 @@ namespace XAMLite
 
     /// <summary>
     /// Button class with rollover and mouse down textures.
-    /// 
     /// Note: Currently under development.  Continue to use normal
     /// XAMLiteButton class until this class replaces it.
     /// </summary>
-    public class XAMLiteButtonNew : XAMLiteBaseContent
+    public class XAMLiteButtonNew : XAMLiteGridNew
     {
+        /// <summary>
+        /// Object contained in the control, which might include
+        /// string, date/time, etc.
+        /// </summary>
+        public object Content { get; set; }
+
+        /// <summary>
+        /// Character spacing.
+        /// </summary>
+        public int Spacing { get; set; }
+
+        /// <summary>
+        /// The font family the text belongs to.
+        /// </summary>
+        private FontFamily _fontFamily;
+
+        /// <summary>
+        /// The font family the text belongs to.
+        /// </summary>
+        public FontFamily FontFamily
+        {
+            get
+            {
+                return _fontFamily;
+            }
+
+            set
+            {
+                _fontFamily = value;
+                FontFamilyChanged = true;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Thickness Padding { get; set; }
+
+        /// <summary>
+        /// True when the font family has changed.
+        /// </summary>
+        protected bool FontFamilyChanged;
+
+        /// <summary>
+        /// The content color.
+        /// </summary>
+        protected Color ForegroundColor
+        {
+            get
+            {
+                var solidBrush = (SolidColorBrush)Foreground;
+                var color = solidBrush.Color;
+                return new Color(color.R, color.G, color.B, color.A);
+            }
+        }
+
+        /// <summary>
+        /// The color of the content, whether text or some other object.
+        /// </summary>
+        public virtual Brush Foreground { get; set; }
+
         /// <summary>
         /// The 2-D image for the button that is not hovered over nor being
         /// clicked. Used specifically for measuring the grid size before
@@ -103,11 +163,6 @@ namespace XAMLite
         private Texture2D _defaultEdgeTexture;
 
         /// <summary>
-        /// Contains all of the assets that represent the XAMLiteButton.
-        /// </summary>
-        private XAMLiteGridNew _grid;
-
-        /// <summary>
         /// Represents the normal state of the button and has no rollover 
         /// state. When a source name is not included, this represents the
         /// normal default state.
@@ -119,6 +174,8 @@ namespace XAMLite
         /// state.
         /// </summary>
         private XAMLiteImageWithRolloverNew _mainButtonWithRollover;
+
+        private XAMLiteLabelNew label;
 
         /// <summary>
         /// Represents the clicked state of a button and has no rollover state.
@@ -152,28 +209,6 @@ namespace XAMLite
         private List<XAMLiteImageNew> _defaultClickImages;
 
         /// <summary>
-        /// TODO: Consider creating a base class for complex controls
-        /// TODO: so that adding all of these parts are not necessary every time.
-        /// </summary>
-        public override Visibility Visibility
-        {
-            get
-            {
-                return base.Visibility;
-            }
-
-            set
-            {
-                base.Visibility = value;
-
-                if (_grid != null)
-                {
-                    _grid.Visibility = value;
-                }
-            }
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="XAMLite.XAMLiteButton"/> class. 
         /// </summary>
         /// <param name="game">
@@ -200,13 +235,30 @@ namespace XAMLite
                 LoadDefaultTexturePaths();
             }
 
-            _texture = Game.Content.Load<Texture2D>(SourceName);
-
             if (Content != null)
             {
-                UpdateFontMetrics();
+                label = new XAMLiteLabelNew(Game)
+                    {
+                        Content = Content,
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        FontFamily = FontFamily,
+                        Spacing = Spacing,
+                        Foreground = Foreground,
+                        Padding = Padding,
+                        Visibility = Visibility.Hidden
+                    };
+
+                Game.Components.Add(label);
+
+                Width = label.Width;
+                Height = label.Height;
+
+                Game.Components.Remove(label);
             }
-            
+
+            _texture = Game.Content.Load<Texture2D>(SourceName);
+
             if (Width == 0)
             {
                 Width = _texture.Width;
@@ -224,18 +276,6 @@ namespace XAMLite
                 Width += _defaultEdgeTexture.Width * 2;
             }
 
-            // then load the grid.
-            _grid = new XAMLiteGridNew(Game)
-                {
-                    Parent = this,
-                    Width = Width,
-                    Height = Height,
-                    HorizontalAlignment = HorizontalAlignment,
-                    VerticalAlignment = VerticalAlignment,
-                    Margin = Margin
-                };
-            Game.Components.Add(_grid);
-
             // load the default XAMLiteObjects if none set by the developer.
             if (_isDefaultTextures)
             {
@@ -247,13 +287,14 @@ namespace XAMLite
                 {
                     _mainButtonWithRollover = new XAMLiteImageWithRolloverNew(Game, _texture)
                     {
+                        Name = "Rollover Image",
                         RolloverSourceName = RolloverSourceName,
                         HorizontalAlignment = HorizontalAlignment.Center,
                         Width = Width,
                         Height = Height,
                         Background = Background
                     };
-                    _grid.Children.Add(_mainButtonWithRollover);
+                    Children.Add(_mainButtonWithRollover);
                 }
                 else
                 {
@@ -264,7 +305,7 @@ namespace XAMLite
                         Height = Height,
                         Background = Background
                     };
-                    _grid.Children.Add(_mainButton);
+                    Children.Add(_mainButton);
                 }
 
                 if (ClickSourceName != null)
@@ -278,23 +319,13 @@ namespace XAMLite
                         Visibility = Visibility.Hidden,
                         Background = Background
                     };
-                    _grid.Children.Add(_clickedButton);
+                    Children.Add(_clickedButton);
                 }
             }
-            
+
             if (Content != null)
             {
-                var label = new XAMLiteLabelNew(Game)
-                    {
-                        Content = Content,
-                        HorizontalAlignment = HorizontalAlignment.Center,
-                        VerticalAlignment = VerticalAlignment.Center,
-                        FontFamily = FontFamily,
-                        Spacing = Spacing,
-                        Foreground = Foreground,
-                        Padding = Padding
-                    };
-                _grid.Children.Add(label);
+                Children.Add(label);
             }
 
             // Set to transparent so that only the button textures get 
@@ -312,7 +343,6 @@ namespace XAMLite
         /// </summary>
         private void LoadDefaultContent()
         {
-
             if (Background == null)
             {
                 Background = Brushes.CornflowerBlue;
@@ -508,17 +538,17 @@ namespace XAMLite
 
             foreach (var image in _defaultImages)
             {
-                _grid.Children.Add(image);
+                Children.Add(image);
             }
 
             foreach (var image in _defaultRolloverImages)
             {
-                _grid.Children.Add(image);
+                Children.Add(image);
             }
 
             foreach (var image in _defaultClickImages)
             {
-                _grid.Children.Add(image);
+                Children.Add(image);
             }
         }
 
@@ -548,14 +578,14 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// Builds the gradient-styled default buttons.
         /// </summary>
         /// <returns></returns>
         private Texture2D CreateGradientTexture(int brightness)
         {
             const int GradientThickness = 3;
             var t = new Texture2D(Game.GraphicsDevice, 55, Height);
-            
+
             var bgc = new Color[55 * Height];
 
             for (int i = bgc.Length - 1; i > 0; i--)
@@ -679,8 +709,8 @@ namespace XAMLite
                     foreach (var image in _defaultRolloverImages)
                     {
                         image.Visibility = Visibility.Hidden;
-                    } 
-                    
+                    }
+
                     foreach (var image in _defaultClickImages)
                     {
                         image.Visibility = Visibility.Visible;
@@ -702,7 +732,7 @@ namespace XAMLite
         {
             base.Dispose(disposing);
 
-            foreach (var child in _grid.Children)
+            foreach (var child in Children)
             {
                 child.Dispose();
             }

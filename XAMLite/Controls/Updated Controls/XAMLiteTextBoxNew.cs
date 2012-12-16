@@ -9,38 +9,124 @@ using Keyboard = Microsoft.Xna.Framework.Input.Keyboard;
 
 namespace XAMLite
 {
-    public class XAMLiteTextBoxNew : XAMLiteBaseText
+    public class XAMLiteTextBoxNew : XAMLiteGridNew
     {
         /// <summary>
-        /// Sets the content of the label within the text box.
+        /// Adjusts the width of the TextBox.
         /// </summary>
-        public override string Text
+        public override int Width
         {
             get
             {
-                return base.Text;
+                return base.Width;
             }
 
             set
             {
-                base.Text = value;
+                base.Width = value;
 
-                if (_text != null)
+                if (fill != null)
                 {
-                    _text.Content = value;
+                    fill.Width = Width;
+                }
+            }
+        }
 
-                    if ((SpriteFont.MeasureString(_text.Content.ToString()).X + Padding.Left + Padding.Right) > Width)
-                    {
-                        UpdateControlWidth();
-                    }
+        private string _text;
+
+        /// <summary>
+        /// Sets the content of the label within the text box.
+        /// </summary>
+        public string Text
+        {
+            get
+            {
+                return _text;
+            }
+
+            set
+            {
+                _text = value;
+
+                if (_textLabel != null)
+                {
+                    _textLabel.Content = value;
                 }
             }
         }
 
         /// <summary>
-        /// Grid that contains all of the TextBox assets.
+        /// Character spacing.
         /// </summary>
-        private XAMLiteGridNew _grid;
+        public int Spacing { get; set; }
+
+        /// <summary>
+        /// The font family the text belongs to.
+        /// </summary>
+        protected FontFamily _fontFamily;
+
+        /// <summary>
+        /// The font family the text belongs to.
+        /// </summary>
+        public FontFamily FontFamily
+        {
+            get
+            {
+                return _fontFamily;
+            }
+
+            set
+            {
+                _fontFamily = value;
+                FontFamilyChanged = true;
+            }
+        }
+
+        /// <summary>
+        /// True when the font family has changed.
+        /// </summary>
+        protected bool FontFamilyChanged;
+
+        /// <summary>
+        /// The padding that surrounds the text within the control.  Note, in 
+        /// WPF, only the top and left can be set.
+        /// </summary>
+        public Thickness Padding { get; set; }
+
+        /// <summary>
+        /// The color of the content, whether text or some other object.
+        /// </summary>
+        public Brush Foreground { get; set; }
+
+        /// <summary>
+        /// When true, the text is not editable and the blinking cursor will not appear.
+        /// </summary>
+        public bool IsReadOnly { get; set; }
+
+        /// <summary>
+        /// Sets the alignment of the text.
+        /// </summary>
+        public TextAlignment TextAlignment { get; set; }
+
+        /// <summary>
+        /// The border color.
+        /// </summary>
+        public virtual Brush BorderBrush { get; set; }
+
+        /// <summary>
+        /// The border thickness.
+        /// </summary>
+        public Thickness BorderThickness { get; set; }
+
+        /// <summary>
+        /// Sets the max number of characters allowed in the text box
+        /// </summary>
+        public int MaxLength;
+
+        /// <summary>
+        /// The background of the text box.
+        /// </summary>
+        private XAMLiteRectangleNew fill;
 
         /// <summary>
         /// Contains all of the XAMLiteRectangles that make up the border.
@@ -50,7 +136,7 @@ namespace XAMLite
         /// <summary>
         /// The text contained in the text box.
         /// </summary>
-        private XAMLiteLabelNew _text;
+        private XAMLiteLabelNew _textLabel;
 
         /// <summary>
         /// Default text as designated by the developer.
@@ -128,28 +214,6 @@ namespace XAMLite
         private KeyboardState _lastKeyboardState;
 
         /// <summary>
-        /// TODO: Consider creating a base class for complex controls
-        /// TODO: so that adding all of these parts are not necessary every time.
-        /// </summary>
-        public override Visibility Visibility
-        {
-            get
-            {
-                return base.Visibility;
-            }
-
-            set
-            {
-                base.Visibility = value;
-
-                if (_grid != null)
-                {
-                    _grid.Visibility = value;
-                }
-            }
-        }
-
-        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="game"></param>
@@ -204,18 +268,58 @@ namespace XAMLite
             _initialText = Text;
             _initialPadding = Padding.Left;
 
-            _grid = new XAMLiteGridNew(Game)
+            _textLabel = new XAMLiteLabelNew(Game)
             {
-                Parent = this,
-                HorizontalAlignment = HorizontalAlignment,
-                VerticalAlignment = VerticalAlignment,
-                Width = Width,
-                Height = Height,
-                Margin = Margin,
+                Content = Text,
+                HorizontalAlignment = TextAlignment == TextAlignment.Left 
+                    || TextAlignment == TextAlignment.Justify ? 
+                    HorizontalAlignment.Left : TextAlignment == TextAlignment.Center ? 
+                    HorizontalAlignment.Center : HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Center,
+                FontFamily = FontFamily,
+                Spacing = Spacing,
+                Foreground = Foreground,
+                Padding = new Thickness(BorderThickness.Left > 1 ? Padding.Left + BorderThickness.Left : Padding.Left,
+                    BorderThickness.Top > 1 ? Padding.Top + BorderThickness.Top : Padding.Top, 0, 0),
+                DrawOrder = 5000,
+                Visibility = Visibility.Hidden
             };
-            Game.Components.Add(_grid);
 
-            var fill = new XAMLiteRectangleNew(Game)
+            // the developer did not set a specific Width and therefore, the 
+            // control needs to be quickly added to get a measurement.  Then 
+            // it is removed and added to the grid.
+            if (_textLabel.Width == 0)
+            {
+                Game.Components.Add(_textLabel);
+            }
+
+            // get the width and height of the text label to make sure the 
+            // control will be large enough to contain it.
+            if (Width < (int)_textLabel.MeasureString().X + (int)_textLabel.Padding.Left + (int)_textLabel.Padding.Right)
+            {
+                var pl = 0;
+
+                if (_textLabel.Padding.Right == 0)
+                {
+                    pl = _textLabel.Padding.Left > 0 ? (int)_textLabel.Padding.Left : 5;
+                }
+
+                Width = (int)_textLabel.MeasureString().X + (int)_textLabel.Padding.Left + (int)_textLabel.Padding.Right + pl;
+            }
+
+            if (Height < (int)_textLabel.MeasureString().Y + (int)_textLabel.Padding.Top + (int)_textLabel.Padding.Bottom)
+            {
+                Height = (int)_textLabel.MeasureString().Y + (int)_textLabel.Padding.Top + (int)_textLabel.Padding.Bottom;
+            }
+
+            // If it was added as a component already, then remove it so it can 
+            // be added to the grid.
+            if (Game.Components.Contains(_textLabel))
+            {
+                Game.Components.Remove(_textLabel);
+            }
+
+            fill = new XAMLiteRectangleNew(Game)
             {
                 Fill = Background,
                 Width = Width,
@@ -223,33 +327,25 @@ namespace XAMLite
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
             };
-            _grid.Children.Add(fill);
+            Children.Add(fill);
 
-            _text = new XAMLiteLabelNew(Game)
-                {
-                    Content = Text,
-                    HorizontalAlignment = TextAlignment == TextAlignment.Left || TextAlignment == TextAlignment.Justify ? HorizontalAlignment.Left : TextAlignment == TextAlignment.Center ? HorizontalAlignment.Center : HorizontalAlignment.Right,
-                    VerticalAlignment = VerticalAlignment.Center,
-                    FontFamily = FontFamily,
-                    Spacing = Spacing,
-                    Foreground = Foreground,
-                    Padding = new Thickness(BorderThickness.Left > 1 ? Padding.Left + BorderThickness.Left : Padding.Left, 
-                        BorderThickness.Top > 1 ? Padding.Top + BorderThickness.Top : Padding.Top, 0, 0),
-                };
-            _grid.Children.Add(_text);
+            Children.Add(_textLabel);
 
-            _cursor = new XAMLiteLabelNew(Game)
-                {
-                    Content = TextBoxCursor,
-                    HorizontalAlignment = _text.HorizontalAlignment,
-                    VerticalAlignment = _text.VerticalAlignment,
-                    FontFamily = FontFamily,
-                    Spacing = Spacing,
-                    Foreground = Foreground,
-                    Padding = _text.Padding,
-                    Visibility = Visibility.Hidden
-                };
-            _grid.Children.Add(_cursor);
+            if (!IsReadOnly)
+            {
+                _cursor = new XAMLiteLabelNew(Game)
+                    {
+                        Content = TextBoxCursor,
+                        HorizontalAlignment = _textLabel.HorizontalAlignment,
+                        VerticalAlignment = _textLabel.VerticalAlignment,
+                        FontFamily = FontFamily,
+                        Spacing = Spacing,
+                        Foreground = Foreground,
+                        Padding = _textLabel.Padding,
+                        Visibility = Visibility.Hidden
+                    };
+                Children.Add(_cursor);
+            }
 
             if (BorderBrush == null)
             {
@@ -277,7 +373,7 @@ namespace XAMLite
 
                 foreach (var borderRectangle in _borderRectangles)
                 {
-                    _grid.Children.Add(borderRectangle);
+                    Children.Add(borderRectangle);
                 }
             }
 
@@ -363,31 +459,38 @@ namespace XAMLite
         {
             if (!IsFocused)
             {
-                _cursor.Visibility = Visibility.Hidden;
-                _cursorVisible = false;
-                _cursorBlink = false;
-                if (_text.Content.ToString() == string.Empty)
+                if (!IsReadOnly)
                 {
-                    _text.Content = _initialText;
+                    _cursor.Visibility = Visibility.Hidden;
+                    _cursorVisible = false;
+                    _cursorBlink = false;
+                }
+
+                if (_textLabel.Content.ToString() == string.Empty)
+                {
+                    _textLabel.Content = _initialText;
                 }
             }
 
-            // handling the blinky cursor.
-            if (_cursorVisible)
+            if (!IsReadOnly)
             {
-                _cursorBlinkTime -= gameTime.ElapsedGameTime;
-                if (_cursorBlinkTime <= TimeSpan.Zero)
+                // handling the blinky cursor.
+                if (_cursorVisible)
                 {
-                    _cursorBlinkTime = TimeSpan.FromSeconds(0.5);
-                    _cursorBlink = !_cursorBlink;
+                    _cursorBlinkTime -= gameTime.ElapsedGameTime;
+                    if (_cursorBlinkTime <= TimeSpan.Zero)
+                    {
+                        _cursorBlinkTime = TimeSpan.FromSeconds(0.5);
+                        _cursorBlink = !_cursorBlink;
+                    }
                 }
+
+                _cursor.Visibility = _cursorBlink ? Visibility.Visible : Visibility.Hidden;
+
+                ProcessInput(gameTime);
+
+                UpdateTextAndCursor();
             }
-
-            _cursor.Visibility = _cursorBlink ? Visibility.Visible : Visibility.Hidden;
-
-            ProcessInput(gameTime);
-            
-            UpdateTextAndCursor();
 
             UpdateBorders();
 
@@ -420,20 +523,6 @@ namespace XAMLite
                     ResetBorderBrush();
                 }
             }
-        }
-
-        private void UpdateControlWidth()
-        {
-            Console.WriteLine("Width changed.");
-            Width = _text.Width + (int)BorderThickness.Left + (int)BorderThickness.Right;
-            Margin = Margin;
-            _grid.Width = Width;
-            foreach (var rectangle in _borderRectangles)
-            {
-                rectangle.Width = Width;
-            }
-
-
         }
 
         /// <summary>
@@ -477,13 +566,11 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// Updates the text for the label that is visually
-        /// displayed.
+        /// Updates the cursor position.
         /// </summary>
         private void UpdateTextAndCursor()
         {
-            Text = _text.Content.ToString();
-            _cursor.Padding = new Thickness(_initialPadding + SpriteFont.MeasureString(Text).X + Spacing, Padding.Top, 0, 0);
+            _cursor.Padding = new Thickness(_initialPadding + _textLabel.MeasureString().X + Spacing, Padding.Top, 0, 0);
         }
 
         /// <summary>
@@ -508,9 +595,9 @@ namespace XAMLite
         {
             IsFocused = true;
 
-            if ((string)_text.Content == _initialText)
+            if ((string)_textLabel.Content == _initialText)
             {
-                _text.Content = string.Empty;
+                _textLabel.Content = string.Empty;
             }
 
             _cursorVisible = true;
@@ -569,7 +656,7 @@ namespace XAMLite
                 }
             }
 
-            CursorPosition.X = CursorStartPosition + (int)SpriteFont.MeasureString(Text).X + 2;
+            CursorPosition.X = CursorStartPosition + _textLabel.MeasureString().X + 2;
         }
 
         /// <summary>
@@ -602,9 +689,9 @@ namespace XAMLite
         {
             var newChar = "";
 
-            if (_text.Content.ToString().Length >= MaxLength && key != Keys.Back && key != Keys.Delete &&
-                key != Keys.Tab && key != Keys.Enter && (int)SpriteFont.MeasureString(_text.Content.ToString()).X >=
-                Width - _text.Padding.Left - BorderThickness.Right - BorderThickness.Left - 6)
+            if (_textLabel.Content.ToString().Length >= MaxLength && key != Keys.Back && key != Keys.Delete &&
+                key != Keys.Tab && key != Keys.Enter && _textLabel.MeasureString().X >=
+                Width - _textLabel.Padding.Left - BorderThickness.Right - BorderThickness.Left - 6)
             {
                 return;
             }
@@ -842,7 +929,7 @@ namespace XAMLite
                 }
             }
 
-            _text.Content += newChar;
+            _textLabel.Content += newChar;
             OnKeyDown();
         }
 
@@ -865,9 +952,9 @@ namespace XAMLite
             _deleteNextChar = false;
             _backspaceheld = true;
             _numDeletedKeys++;
-            if (_text.Content.ToString().Length != 0)
+            if (_textLabel.Content.ToString().Length != 0)
             {
-                _text.Content = _text.Content.ToString().Remove(Text.Length - 1);
+                _textLabel.Content = _textLabel.Content.ToString().Remove(_textLabel.Content.ToString().Length - 1);
             }
 
             if (_numDeletedKeys <= 2)
@@ -893,7 +980,7 @@ namespace XAMLite
         {
             base.Dispose(disposing);
 
-            foreach (var child in _grid.Children)
+            foreach (var child in Children)
             {
                 child.Dispose();
             }

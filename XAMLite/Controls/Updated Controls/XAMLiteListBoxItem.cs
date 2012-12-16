@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Xna.Framework;
 
 namespace XAMLite
-{ 
+{
     /// <summary>
     /// Represents a selectable item in a ListBox.
     /// </summary>
-    public class XAMLiteListBoxItem : XAMLiteBaseContent
+    public class XAMLiteListBoxItem : XAMLiteGridNew
     {
         /// <summary>
         /// True when the ListBoxItem is selected.
@@ -40,6 +36,63 @@ namespace XAMLite
             }
         }
 
+        public override Brush Background
+        {
+            get
+            {
+                return BackgroundPanel.Background;
+            }
+
+            set
+            {
+                if (BackgroundPanel != null)
+                BackgroundPanel.Background = value;
+            }
+        }
+
+        /// <summary>
+        /// Object contained in the control, which might include
+        /// string, date/time, etc.
+        /// </summary>
+        public object Content { get; set; }
+
+        /// <summary>
+        /// Character spacing.
+        /// </summary>
+        public int Spacing { get; set; }
+
+        /// <summary>
+        /// The font family the text belongs to.
+        /// </summary>
+        protected FontFamily _fontFamily;
+
+        /// <summary>
+        /// The font family the text belongs to.
+        /// </summary>
+        public FontFamily FontFamily
+        {
+            get
+            {
+                return _fontFamily;
+            }
+
+            set
+            {
+                _fontFamily = value;
+                FontFamilyChanged = true;
+            }
+        }
+
+        /// <summary>
+        /// True when the font family has changed.
+        /// </summary>
+        protected bool FontFamilyChanged;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Thickness Padding { get; set; }
+
         /// <summary>
         /// The Border color.
         /// </summary>
@@ -49,11 +102,6 @@ namespace XAMLite
         /// The thickness of the border.
         /// </summary>
         public Thickness BorderThickness { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        protected internal XAMLiteGridNew Grid;
 
         /// <summary>
         /// 
@@ -70,41 +118,21 @@ namespace XAMLite
         /// </summary>
         private XAMLiteListBox _parent;
 
-        /// <summary>
-        /// Modifies the visibility of the grid, and therefore all of the 
-        /// controls contained within it.
-        /// </summary>
-        public override Visibility Visibility
-        {
-            get
-            {
-                return base.Visibility;
-            }
-
-            set
-            {
-                base.Visibility = value;
-
-                if (Grid != null)
-                {
-                    Grid.Visibility = value;
-                }
-            }
-        }
+        private Brush _foreground;
 
         /// <summary>
         /// Sets the Text color of the ListBoxItem.
         /// </summary>
-        public override Brush Foreground
+        public Brush Foreground
         {
             get
             {
-                return base.Foreground;
+                return _foreground;
             }
 
             set
             {
-                base.Foreground = value;
+                _foreground = value;
 
                 if (_listBoxContent == null)
                 {
@@ -140,7 +168,7 @@ namespace XAMLite
             SelectedBackground = Brushes.Transparent;
             UnfocusedSelectedBackground = Brushes.Transparent;
             Foreground = Brushes.Transparent;
-            BorderBrush = Brushes.White;
+            BorderBrush = Brushes.Transparent;
             FontFamily = new FontFamily("Arial");
             BorderThickness = new Thickness(1);
             Padding = new Thickness(4, 0, 0, 0);
@@ -154,46 +182,57 @@ namespace XAMLite
         {
             base.LoadContent();
 
-            UpdateFontMetrics();
+            _listBoxContent = new XAMLiteLabelNew(Game)
+            {
+                Content = Content,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                FontFamily = FontFamily,
+                Spacing = Spacing,
+                Padding = Padding,
+                Foreground = Foreground,
+                Visibility = Visibility.Hidden
+            };
+            Game.Components.Add(_listBoxContent);
 
-            var w = (int)SpriteFont.MeasureString(Content.ToString()).X;
-            var h = (int)SpriteFont.MeasureString(Content.ToString()).Y;
+            var w = _listBoxContent.MeasureString().X + Padding.Left + Padding.Right;
+            var h = _listBoxContent.MeasureString().Y + Padding.Top + Padding.Bottom;
 
-            Grid = new XAMLiteGridNew(Game)
-                {
-                    Parent = this,
-                    Width = w,
-                    Height = h,
-                    HorizontalAlignment = HorizontalAlignment,
-                    VerticalAlignment = VerticalAlignment,
-                    Margin = Margin
-                };
-            Game.Components.Add(Grid);
+            if (w > Width)
+            {
+                Width = (int)w;
+            }
+            
+            if (h > Height)
+            {
+                Height = (int)h;
+            }
+
+            var width = _listBoxContent.Width + (int)Padding.Left + (int)Padding.Right;
+            if (Parent.Width < width)
+            {
+                var parent = (XAMLiteListBox)Parent;
+                parent.UpdateWidth(width);
+            }
+
+            Game.Components.Remove(_listBoxContent);
 
             BackgroundPanel = new XAMLiteRectangleNew(Game)
                 {
-                    Width = w,
-                    Height = h,
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                    VerticalAlignment = VerticalAlignment.Top 
-                };
-            Grid.Children.Add(BackgroundPanel);
-
-            _listBoxContent = new XAMLiteLabelNew(Game)
-                {
-                    Content = Content,
+                    Width = Width,
+                    Height = Height,
                     HorizontalAlignment = HorizontalAlignment.Left,
                     VerticalAlignment = VerticalAlignment.Top,
-                    FontFamily = FontFamily,
-                    Spacing = Spacing,
-                    Padding = Padding,
-                    Foreground = Foreground
+                    Margin = new Thickness(BorderThickness.Left, 0, BorderThickness.Top, BorderThickness.Bottom),
+                    Opacity = 0.45f
                 };
-            Grid.Children.Add(_listBoxContent);
+            Children.Add(BackgroundPanel);
+
+            Children.Add(_listBoxContent);
         }
 
         /// <summary>
-        /// 
+        /// Sets a reference to the specific class that the parent represents.
         /// </summary>
         public override void Initialize()
         {
@@ -210,15 +249,14 @@ namespace XAMLite
         {
             // set margins
             Margin = margin;
-            Grid.Margin = Margin;
-            var m = new Thickness(margin.Left + _parent.BorderThickness.Left, margin.Top, margin.Right, margin.Bottom);
-            BackgroundPanel.Margin = m;
-            _listBoxContent.Margin = m;
 
             // set Widths.
             Width = _parent.Width;
-            Grid.Width = Width;
             BackgroundPanel.Width = Width - (int)_parent.BorderThickness.Right - (int)_parent.BorderThickness.Left;
+            var m = BackgroundPanel.Margin;
+            BackgroundPanel.Margin = new Thickness(_parent.BorderThickness.Left, m.Top, m.Right, m.Bottom);
+            m = _listBoxContent.Margin;
+            _listBoxContent.Margin = new Thickness(_parent.BorderThickness.Left, m.Top, m.Right, m.Bottom);
 
             MouseDown += OnMouseDown;
         }
@@ -260,10 +298,20 @@ namespace XAMLite
             base.Dispose(disposing);
 
             MouseDown -= OnMouseDown;
-            foreach (var child in Grid.Children)
+            foreach (var child in Children)
             {
                 child.Dispose();
             }
+        }
+
+        /// <summary>
+        /// Modifies the width when necessary.
+        /// </summary>
+        public void ModifyWidth(int width)
+        {
+            Width = width;
+            _listBoxContent.Width = width;
+            BackgroundPanel.Width = width - (int)BorderThickness.Left - (int)BorderThickness.Right;
         }
     }
 }

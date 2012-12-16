@@ -344,7 +344,7 @@ namespace XAMLite
         /// when it is rendered in the user interface (UI). Default opacity is 1.0. 
         /// Expected values are between 0.0 and 1.0.
         /// </summary>
-        public double Opacity
+        public virtual double Opacity
         {
             get
             {
@@ -591,40 +591,6 @@ namespace XAMLite
                 PositionChanged = false;
             }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="gameTime"></param>
-        //public override void Draw(GameTime gameTime)
-        //{
-        //    base.Draw(gameTime);
-
-        //    if (Visibility == Visibility.Visible)
-        //    {
-        //        SpriteBatch.Begin();
-
-        //        if (!_transparent)
-        //        {
-        //            //if (this is XAMLiteLabelNew)
-        //            //{
-        //            //    SpriteBatch.Draw(
-        //            //        Pixel,
-        //            //        new Rectangle(Panel.X, Panel.Y, Panel.Width, Panel.Height - (int)(Height * 0.3)),
-        //            //        _backgroundColor * (float)Opacity);
-        //            //}
-        //            //else
-        //            {
-        //                SpriteBatch.Draw(
-        //                    Pixel,
-        //                    Panel,
-        //                    _backgroundColor * (float)Opacity);
-        //            }
-        //        }
-
-        //        SpriteBatch.End();
-        //    }
-        //}
 
         /// <summary>
         /// 

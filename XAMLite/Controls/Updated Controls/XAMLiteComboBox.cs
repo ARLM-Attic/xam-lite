@@ -9,6 +9,9 @@ using Microsoft.Xna.Framework;
 
 namespace XAMLite
 {
+    using Microsoft.Xna.Framework.Graphics;
+    using Color = Microsoft.Xna.Framework.Color;
+
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
@@ -48,34 +51,47 @@ namespace XAMLite
         }
 
         /// <summary>
+        /// The font family the text belongs to.
+        /// </summary>
+        protected FontFamily _fontFamily;
+
+        /// <summary>
+        /// The font family the text belongs to.
+        /// </summary>
+        public FontFamily FontFamily
+        {
+            get
+            {
+                return _fontFamily;
+            }
+
+            set
+            {
+                _fontFamily = value;
+                FontFamilyChanged = true;
+            }
+        }
+
+        /// <summary>
+        /// True when the font family has changed.
+        /// </summary>
+        protected bool FontFamilyChanged;
+
+        /// <summary>
         /// Represents the top portion of the ListBox.
         /// </summary>
         private XAMLiteTextBoxNew _textBox;
+
+        private XAMLiteImageNew _textBoxHover;
+
+        private XAMLiteImageNew button;
+
+        private XAMLiteImageNew buttonOver;
 
         /// <summary>
         /// True when the children are visible.
         /// </summary>
         private bool _areItemsVisibile;
-
-        public override int Height
-        {
-            get
-            {
-                return base.Height;
-            }
-
-            set
-            {
-                base.Height = value;
-
-                if (_textBox == null)
-                {
-                    return;
-                }
-
-                UpdateRectangleHeights(_textBox.Height);
-            }
-        }
 
         /// <summary>
         /// At start up, the ComboBox should be initially closed,  but the
@@ -92,6 +108,11 @@ namespace XAMLite
         public XAMLiteComboBox(Game game)
             : base(game)
         {
+            FontFamily = new FontFamily("Verdana12");
+            Foreground = Brushes.Black;
+            Background = Brushes.White;
+            BorderBrush = Brushes.Black;
+            BorderThickness = new Thickness(1);
         }
 
         /// <summary>
@@ -105,20 +126,60 @@ namespace XAMLite
 
             _textBox = new XAMLiteTextBoxNew(Game)
             {
+                IsReadOnly = true,
                 Text = _defaultText == string.Empty ? "Add default text" : _defaultText,
                 Width = Width,
                 IsCursorOveride = true,
                 Height = 28,
-                FontFamily = new FontFamily("Verdana12"),
-                Foreground = Brushes.Black,
-                Background = Brushes.White,
-                BorderBrush = Brushes.Black,
-                BorderThickness = new Thickness(1),
+                FontFamily = FontFamily,
+                Foreground = Foreground,
+                Background = Background,
+                BorderBrush = BorderBrush,
+                BorderThickness = BorderThickness,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
                 Padding = new Thickness(7, 0, 7, 0)
             };
-            Grid.Children.Add(_textBox);
+            Children.Add(_textBox);
+
+            //var texture = Game.Content.Load<Texture2D>("Icons/combobox-arrow");
+            _textBoxHover = new XAMLiteImageNew(Game, CreateGradientTexture(150))
+            {
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                Width = _textBox.Width - (int)_textBox.BorderThickness.Left - (int)_textBox.BorderThickness.Right,
+                Height = _textBox.Height - (int)_textBox.BorderThickness.Top - (int)_textBox.BorderThickness.Bottom,
+                Margin = new Thickness(_textBox.BorderThickness.Left, _textBox.BorderThickness.Top, 0, 0),
+                Background = SelectedBackground,
+                DrawOrder = 4999
+            };
+            Children.Add(_textBoxHover);
+
+            button = new XAMLiteImageNew(Game)
+                {
+                    SourceName = "Icons/combobox-arrow",
+                    Width = 15,
+                    Height = 8,
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                    VerticalAlignment = VerticalAlignment.Top,
+                    Margin = new Thickness(0, 10, 5, 0),
+                    Background = BorderBrush,
+                    DrawOrder = 5000
+                };
+            Children.Add(button);
+
+            buttonOver = new XAMLiteImageNew(Game)
+            {
+                SourceName = "Icons/combobox-arrow-hover",
+                Width = 15,
+                Height = 8,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Top,
+                Margin = new Thickness(0, 10, 5, 0),
+                Background = SelectedBackground,
+                DrawOrder = 5000
+            };
+            Children.Add(buttonOver);
         }
 
         /// <summary>
@@ -129,11 +190,36 @@ namespace XAMLite
             base.Initialize();
 
             _textBox.MouseDown += TextBoxOnMouseDown;
+            _textBox.MouseEnter += TextBoxOnMouseEnter;
+            _textBox.MouseLeave += TextBoxOnMouseLeave;
             LostFocus += OnLostFocus;
         }
 
         /// <summary>
-        /// 
+        /// Updates the width of the control according to the largest item's 
+        /// width.
+        /// </summary>
+        private void UpdateWidth()
+        {
+            var w = _textBox.Width;
+
+            foreach (var item in Items)
+            {
+                var i = (XAMLiteComboBoxItem)item;
+                var width = i.Width + (int)i.Padding.Left + (int)i.Padding.Right + (int)BorderThickness.Left + (int)BorderThickness.Right;
+                if (width > w)
+                {
+                    w = width;
+                }
+            }
+
+            Width = w;
+            _textBox.Width = Width;
+            _textBoxHover.Width = Width - (int)BorderThickness.Left - (int)BorderThickness.Right;
+        }
+
+        /// <summary>
+        /// Closes the dialog when focus is lost.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="eventArgs"></param>
@@ -163,30 +249,14 @@ namespace XAMLite
             if (Items.Count > 0)
             {
                 var m = Items[0].Margin;
-                Items[0].Margin = new Thickness(m.Left, m.Top + _textBox.Height, m.Right, m.Bottom);
+                Items[0].Margin = new Thickness(m.Left, m.Top + _textBox.Height - BorderThickness.Top, m.Right, m.Bottom);
             }
 
-            base.UpdateItems();
-
-            //UpdateWidth();
+            UpdateWidth();
             UpdateHeight();
+
+            base.UpdateItems();
         }
-
-        //private void UpdateWidth()
-        //{
-
-        //    var w = Width;
-
-        //    foreach (var item in Items)
-        //    {
-        //        if (item.Width > w)
-        //        {
-        //            w = item.Width;
-        //        }
-        //    }
-
-        //    Width = w;
-        //}
 
         /// <summary>
         /// Modifies the height of the control so that it is 
@@ -194,7 +264,7 @@ namespace XAMLite
         /// </summary>
         private void UpdateHeight()
         {
-            var h = BorderThickness.Top;
+            var h = BorderThickness.Top + BorderThickness.Bottom;
 
             if (Items == null)
             {
@@ -206,7 +276,7 @@ namespace XAMLite
                 h += item.Height;
             }
 
-            Height = (int)h + _textBox.Height;
+            Height = (int)h + _textBox.Height - (int)BorderThickness.Top;
         }
 
         /// <summary>
@@ -218,13 +288,66 @@ namespace XAMLite
         {
             _areItemsVisibile = !_areItemsVisibile;
 
-
-            foreach (var child in Grid.Children)
+            foreach (var child in Children)
             {
-                if (!(child is XAMLiteTextBoxNew))
+                if (!(child is XAMLiteTextBoxNew) && !(child is XAMLiteImageNew))
                 {
                     child.Visibility = _areItemsVisibile ? Visibility.Visible : Visibility.Hidden;
                 }
+            }
+
+            ToggleButtons();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseEventArgs"></param>
+        private void TextBoxOnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
+        {
+            buttonOver.Visibility = Visibility.Visible;
+            _textBoxHover.Visibility = Visibility.Visible;
+            button.Visibility = Visibility.Hidden;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseEventArgs"></param>
+        private void TextBoxOnMouseLeave(object sender, MouseEventArgs mouseEventArgs)
+        {
+            if (_areItemsVisibile)
+            {
+                buttonOver.Visibility = Visibility.Visible;
+                _textBoxHover.Visibility = Visibility.Visible;
+                button.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                button.Visibility = Visibility.Visible;
+                buttonOver.Visibility = Visibility.Hidden;
+                _textBoxHover.Visibility = Visibility.Hidden;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void ToggleButtons()
+        {
+            if (_areItemsVisibile)
+            {
+                buttonOver.Visibility = Visibility.Visible;
+                _textBoxHover.Visibility = Visibility.Visible;
+                button.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                button.Visibility = Visibility.Visible;
+                buttonOver.Visibility = Visibility.Hidden;
+                _textBoxHover.Visibility = Visibility.Hidden;
             }
         }
 
@@ -247,12 +370,14 @@ namespace XAMLite
         /// </summary>
         private void HideChildren()
         {
-            foreach (var child in Grid.Children)
+            foreach (var child in Children)
             {
-                if (!(child is XAMLiteTextBoxNew))
+                if (!(child is XAMLiteTextBoxNew) && !(child is XAMLiteImageNew))
                 {
                     child.Visibility = Visibility.Hidden;
                 }
+
+                ToggleButtons();
             }
         }
 
@@ -273,6 +398,28 @@ namespace XAMLite
             Text = content;
 
             Close();
+        }
+
+        /// <summary>
+        /// Builds the gradient-styled default buttons.
+        /// </summary>
+        /// <returns></returns>
+        private Texture2D CreateGradientTexture(int brightness)
+        {
+            const int GradientThickness = 3;
+            var t = new Texture2D(Game.GraphicsDevice, 55, Height);
+
+            var bgc = new Color[55 * Height];
+
+            for (int i = bgc.Length - 1; i > 0; i--)
+            {
+                var gradientColor = ((i * 20) / (Height * GradientThickness)) - brightness;
+                bgc[i] = new Color(gradientColor, gradientColor, gradientColor, gradientColor);
+            }
+
+            t.SetData(bgc);
+
+            return t;
         }
 
         /// <summary>

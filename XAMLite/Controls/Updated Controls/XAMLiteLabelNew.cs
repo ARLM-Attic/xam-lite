@@ -1,11 +1,10 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Media;
 using Microsoft.Xna.Framework;
 
 namespace XAMLite
 {
-    using System;
-
     /// <summary>
     /// Note: Currently under development.  Continue to use normal
     /// XAMLiteLabel class until this class replaces it.
@@ -26,6 +25,7 @@ namespace XAMLite
         public XAMLiteLabelNew(Game game)
             : base(game)
         {
+            FontFamily = new FontFamily("Arial");
         }
 
         /// <summary>
@@ -36,6 +36,7 @@ namespace XAMLite
         public XAMLiteLabelNew(Game game, object content)
             : base(game)
         {
+            FontFamily = new FontFamily("Arial");
             SetContent(content);
         }
 
@@ -46,10 +47,7 @@ namespace XAMLite
         {
             base.LoadContent();
 
-            if (Width == 0 || Height == 0)
-            {
-                RecalculateWidthAndHeight(Content);
-            }
+            UpdateFontMetrics();
         }
 
         /// <summary>
@@ -82,15 +80,15 @@ namespace XAMLite
                     SpriteBatch.Draw(Pixel, Panel, BackgroundColor);
                 }
 
-                if (!IsAttachedToGrid)
-                {
-                    SpriteBatch.DrawString(
-                        SpriteFont,
-                        Content.ToString(),
-                        new Vector2(ContentPosition.X, ContentPosition.Y - (float)(Height * 0.14)),
-                        ForegroundColor * (float)Opacity);
-                }
-                else
+                //if (!IsAttachedToGrid)
+                //{
+                //    SpriteBatch.DrawString(
+                //        SpriteFont,
+                //        Content.ToString(),
+                //        new Vector2(ContentPosition.X, ContentPosition.Y - (float)(Height * 0.14)),
+                //        ForegroundColor * (float)Opacity);
+                //}
+                //else
                 {
                     SpriteBatch.DrawString(
                         SpriteFont,
@@ -101,6 +99,20 @@ namespace XAMLite
 
                 SpriteBatch.End();
             }
+        }
+
+        /// <summary>
+        /// Returns the width and height of a label, NOT including its padding.
+        /// </summary>
+        /// <returns></returns>
+        public Vector2 MeasureString()
+        {
+            if (SpriteFont != null && Content != null)
+            {
+                return new Vector2(SpriteFont.MeasureString(Content.ToString()).X, SpriteFont.MeasureString(Content.ToString()).Y);
+            }
+
+            return new Vector2();
         }
 
         /// <summary>

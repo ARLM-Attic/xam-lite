@@ -33,11 +33,6 @@ namespace XAMLite
             {
                 base.Visibility = value;
 
-                if (Grid == null)
-                {
-                    return;
-                }
-     
                 if (value == Visibility.Hidden)
                 {
                     RemoveHighLight();
@@ -97,8 +92,11 @@ namespace XAMLite
         /// </summary>
         public void RemoveHighLight()
         {
-            BackgroundPanel.Fill = Brushes.Transparent;
-            BackgroundPanel.Visibility = Visibility.Hidden;
+            if (BackgroundPanel != null)
+            {
+                BackgroundPanel.Fill = Brushes.Transparent;
+                BackgroundPanel.Visibility = Visibility.Hidden;
+            }
         }
     }
 }

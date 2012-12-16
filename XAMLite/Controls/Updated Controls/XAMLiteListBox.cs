@@ -1,20 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace XAMLite
 {
     /// <summary>
     /// Contains a list of selectable items.
     /// </summary>
-    public class XAMLiteListBox : XAMLiteBaseControl
+    public class XAMLiteListBox : XAMLiteGridNew
     {
         /// <summary>
         /// True when the list box has been selected anywhere within its
@@ -40,79 +36,6 @@ namespace XAMLite
                     {
                         ModifyChildFocusAndHighlightColor();
                     }
-                }
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public override int Width
-        {
-            get
-            {
-                return base.Width;
-            }
-
-            set
-            {
-                // save prior value to modify margins
-                var w = Width;
-
-                base.Width = value;
-
-                // Set the new grid height.
-                if (Grid != null)
-                {
-                    Grid.Width = value;
-                }
-
-                if (_borderRectangles == null)
-                {
-                    return;
-                }
-
-                Grid.Width = Width;
-                _rectangle.Width = Width - (int)BorderThickness.Right - (int)BorderThickness.Left;
-
-                // Adjust the bottom rectangle's margin so that it meets 
-                // the new height of the control, when it exists.
-                //if (_borderRectangles.Count > 1)
-                //{
-                //    var rect = _borderRectangles[_borderRectangles.Count - 1];
-                //    rect.Margin = new Thickness(rect.Margin.Left, rect.Margin.Top, rect.Margin.Right, rect.Margin.Bottom + (h - value));
-                //}
-
-                // Adjust the background rectangle and the borders so that they 
-                // are the correct height.
-                foreach (var rectangle in _borderRectangles)
-                {
-                    rectangle.Width = Width;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Modifies all of the assets that make up the ListBox when set.
-        /// </summary>
-        public override int Height
-        {
-            get
-            {
-                return base.Height;
-            }
-
-            set
-            {
-                // save prior value to modify margins
-                // var h = Height;
-                
-                base.Height = value;
-
-                // Set the new grid height.
-                if (Grid != null)
-                {
-                    Grid.Height = value;
                 }
             }
         }
@@ -236,39 +159,11 @@ namespace XAMLite
         private XAMLiteRectangleNew _rectangle;
 
         /// <summary>
-        /// TODO: Consider creating a base class for complex controls
-        /// TODO: so that adding all of these parts are not necessary every time.
-        /// </summary>
-        public override Visibility Visibility
-        {
-            get
-            {
-                return base.Visibility;
-            }
-
-            set
-            {
-                base.Visibility = value;
-
-                if (Grid != null)
-                {
-                    Grid.Visibility = value;
-                }
-            }
-        }
-
-        /// <summary>
-        /// The grid that contains all of the XAMLite objects which define the 
-        /// ListBox.
-        /// </summary>
-        protected XAMLiteGridNew Grid;
-
-        /// <summary>
         /// Remains true, until the Items have been added to the grid and 
         /// therefore, the label now has a height and can be positioned 
         /// inside the ListBox.
         /// </summary>
-        private bool _needToUpdate;
+        private bool _needToUpdate = true;
 
         /// <summary>
         /// When true, the update method stops looking at the Items to see if 
@@ -308,16 +203,6 @@ namespace XAMLite
                                           && BorderThickness.Right == BorderThickness.Top
                                           && BorderThickness.Top == BorderThickness.Bottom;
 
-            Grid = new XAMLiteGridNew(Game)
-                {
-                    Width = Width,
-                    Height = Height,
-                    HorizontalAlignment = HorizontalAlignment,
-                    VerticalAlignment = VerticalAlignment,
-                    Margin = Margin
-                };
-            Game.Components.Add(Grid);
-
             // If the thickness is uniform, the ListBox only needs one rectangle
             // to define it.
             _rectangle = new XAMLiteRectangleNew(Game)
@@ -337,7 +222,7 @@ namespace XAMLite
 
             foreach (var borderRectangle in _borderRectangles)
             {
-                Grid.Children.Add(borderRectangle);
+                Children.Add(borderRectangle);
             }
         }
 
@@ -387,7 +272,8 @@ namespace XAMLite
                 Width = Width - 2,
                 Height = (int)BorderThickness.Bottom,
                 HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Bottom,
+                VerticalAlignment = VerticalAlignment.Top,
+                Margin = new Thickness(0, Height, 0, 0)
             };
             _borderRectangles.Add(bottomBorder);
         }
@@ -417,7 +303,6 @@ namespace XAMLite
             if (_needToUpdate)
             {
                 UpdateItems();
-                UpdateMargins();
             }
 
             if (!_itemsUpdated)
@@ -427,28 +312,6 @@ namespace XAMLite
                     if (item.Height == 0)
                     {
                         _needToUpdate = true;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Updates the Margins of the control when they have changed.
-        /// </summary>
-        private void UpdateMargins()
-        {
-            if (Items[0].Margin.Top != Margin.Top)
-            {
-                var mi = Items[0].Margin;
-                foreach (var rectangle in _borderRectangles)
-                {
-                    if (rectangle.Index == _borderRectangles.Count - 1)
-                    {
-                        rectangle.Margin = new Thickness(mi.Left, mi.Top, mi.Right, rectangle.Margin.Bottom - Items[0].Height - BorderThickness.Top + BorderThickness.Bottom);
-                    }
-                    else
-                    {
-                        rectangle.Margin = new Thickness(mi.Left, mi.Top - BorderThickness.Top, mi.Right, mi.Bottom);
                     }
                 }
             }
@@ -483,7 +346,7 @@ namespace XAMLite
             {
                 for (var i = _itemsIndex; i < Items.Count; i++)
                 {
-                    Grid.Children.Add(Items[i]);
+                    Children.Add(Items[i]);
                 }
 
                 _itemsIndex = Items.Count;
@@ -503,10 +366,9 @@ namespace XAMLite
                 var margin = item.Margin;
 
                 double topMargin = 0;
-
                 if (i == 0)
                 {
-                    topMargin = BorderThickness.Top;
+                    topMargin = Items[0].Margin.Top + BorderThickness.Top;
                 }
                 else
                 {
@@ -533,11 +395,58 @@ namespace XAMLite
                     item.UnfocusedSelectedBackground = UnfocusedSelectedBackground;
                 }
 
-                item.UpdateMarginAndWidth(new Thickness(margin.Left, margin.Top + topMargin, margin.Right, margin.Bottom));
+                item.UpdateMarginAndWidth(new Thickness(margin.Left, topMargin, margin.Right, margin.Bottom));
             }
 
+            UpdateHeight();
+            UpdateBorders();
             _needToUpdate = false;
             _itemsUpdated = true;
+        }
+
+        private void UpdateHeight()
+        {
+            var h = 0;
+            foreach (var item in Items)
+            {
+                h += item.Height;
+            }
+
+            if (h > Height)
+            {
+                Height = h + (int)BorderThickness.Top + (int)BorderThickness.Bottom;
+            }
+        }
+
+        /// <summary>
+        /// Updates the borders of the ListBox.
+        /// </summary>
+        private void UpdateBorders()
+        {
+            if (_borderRectangles.Count == 1)
+            {
+                _rectangle.Width = Width;
+                _rectangle.Height = Height;
+            }
+            else
+            {
+                _rectangle.Width = Width;
+                _rectangle.Height = Height;
+                _borderRectangles[1].Height = Height;
+                _borderRectangles[2].Height = Height;
+                _borderRectangles[3].Width = Width;
+                _borderRectangles[4].Width = Width;
+                _borderRectangles[4].Margin = new Thickness(0, Height - _borderRectangles[4].Height, 0, 0);
+            }
+        }
+
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void UpdateWidth(int width)
+        {
+            Width = width + (int)BorderThickness.Left + (int)BorderThickness.Right;
         }
 
         /// <summary>
