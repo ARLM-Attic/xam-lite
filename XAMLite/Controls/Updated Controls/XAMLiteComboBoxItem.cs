@@ -20,33 +20,13 @@ namespace XAMLite
         private XAMLiteComboBox _parent;
 
         /// <summary>
-        /// 
-        /// </summary>
-        public override Visibility Visibility
-        {
-            get
-            {
-                return base.Visibility;
-            }
-
-            set
-            {
-                base.Visibility = value;
-
-                if (value == Visibility.Hidden)
-                {
-                    RemoveHighLight();
-                }
-            }
-        }
-
-        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="game"></param>
         public XAMLiteComboBoxItem(Game game)
             : base(game)
         {
+            Padding = new Thickness(7, 2, 4, 2);
         }
 
         /// <summary>
@@ -84,7 +64,19 @@ namespace XAMLite
         /// <param name="mouseButtonEventArgs"></param>
         private void OnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
+            IsSelected = true;
+            IsFocused = false;
             _parent.Close((string)Content);
+        }
+
+        /// <summary>
+        /// When the ListBox containing the ListBoxItem loses focus, the brush
+        /// color of the selected item changes to an unfocused color.
+        /// </summary>
+        public override void ModifySelectedBrush(bool isFocused)
+        {
+            BackgroundPanel.Fill = SelectedBackground;
+            BackgroundPanel.Visibility = Visibility.Visible;
         }
 
         /// <summary>

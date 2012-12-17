@@ -32,10 +32,7 @@ namespace XAMLite
 
                 if (Focusable)
                 {
-                    if (!IsFocused)
-                    {
-                        ModifyChildFocusAndHighlightColor();
-                    }
+                    ModifyChildFocusAndHighlightColor();
                 }
             }
         }
@@ -287,7 +284,7 @@ namespace XAMLite
 
             MouseEnter += OnMouseEnter;
             MouseLeave += OnMouseLeave;
-            MouseDown += OnMouseDown;
+            LostFocus += OnLostFocus;
         }
 
         /// <summary>
@@ -332,7 +329,7 @@ namespace XAMLite
             {
                 if (item.IsSelected)
                 {
-                    item.UnfocusSelectedBrush(IsFocused);
+                    item.ModifySelectedBrush(IsFocused);
                 }
             }
         }
@@ -439,7 +436,6 @@ namespace XAMLite
                 _borderRectangles[4].Margin = new Thickness(0, Height - _borderRectangles[4].Height, 0, 0);
             }
         }
-
         
         /// <summary>
         /// 
@@ -456,6 +452,11 @@ namespace XAMLite
         /// <param name="index"></param>
         protected internal void DeselectAll(int index)
         {
+            if (!IsFocused)
+            {
+                IsFocused = true;
+            }
+
             foreach (XAMLiteListBoxItem item in Items)
             {
                 if (item.Index != index)
@@ -486,13 +487,16 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// Sets the focus to true.
+        /// 
         /// </summary>
         /// <param name="sender"></param>
-        /// <param name="mouseButtonEventArgs"></param>
-        private void OnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        /// <param name="eventArgs"></param>
+        private void OnLostFocus(object sender, EventArgs eventArgs)
         {
-            IsFocused = true;
+            if (IsFocused)
+            {
+                IsFocused = false;
+            }
         }
 
         protected void UpdateRectangleHeights(int height)
@@ -517,6 +521,20 @@ namespace XAMLite
                 {
                     rectangle.Height = Height - height;
                 }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            foreach (var child in Children)
+            {
+                child.Dispose();
             }
         }
     }

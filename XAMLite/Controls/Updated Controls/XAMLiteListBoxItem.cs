@@ -169,9 +169,10 @@ namespace XAMLite
             UnfocusedSelectedBackground = Brushes.Transparent;
             Foreground = Brushes.Transparent;
             BorderBrush = Brushes.Transparent;
-            FontFamily = new FontFamily("Arial");
+            FontFamily = new FontFamily("Verdana12");
+            Spacing = 2;
             BorderThickness = new Thickness(1);
-            Padding = new Thickness(4, 0, 0, 0);
+            Padding = new Thickness(4, 2, 4, 2);
             Focusable = true;
         }
 
@@ -281,9 +282,9 @@ namespace XAMLite
         /// When the ListBox containing the ListBoxItem loses focus, the brush
         /// color of the selected item changes to an unfocused color.
         /// </summary>
-        public void UnfocusSelectedBrush(bool isFocused)
+        public virtual void ModifySelectedBrush(bool isFocused)
         {
-            IsFocused = false;
+            IsFocused = isFocused;
             
             BackgroundPanel.Fill = UnfocusedSelectedBackground;
             BackgroundPanel.Visibility = Visibility.Visible;

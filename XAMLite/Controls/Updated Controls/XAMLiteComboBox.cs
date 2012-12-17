@@ -6,12 +6,11 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {
-    using Microsoft.Xna.Framework.Graphics;
-    using Color = Microsoft.Xna.Framework.Color;
-
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
@@ -94,6 +93,11 @@ namespace XAMLite
         private bool _areItemsVisibile;
 
         /// <summary>
+        /// The height of the control when the items are visible.
+        /// </summary>
+        private int _openHeight;
+
+        /// <summary>
         /// At start up, the ComboBox should be initially closed,  but the
         /// Items have not yet been added to the grid.  At the first Update
         /// Items call, once the Items have been added, the control visibility
@@ -142,7 +146,6 @@ namespace XAMLite
             };
             Children.Add(_textBox);
 
-            //var texture = Game.Content.Load<Texture2D>("Icons/combobox-arrow");
             _textBoxHover = new XAMLiteImageNew(Game, CreateGradientTexture(150))
             {
                 HorizontalAlignment = HorizontalAlignment.Left,
@@ -151,6 +154,7 @@ namespace XAMLite
                 Height = _textBox.Height - (int)_textBox.BorderThickness.Top - (int)_textBox.BorderThickness.Bottom,
                 Margin = new Thickness(_textBox.BorderThickness.Left, _textBox.BorderThickness.Top, 0, 0),
                 Background = SelectedBackground,
+                Visibility = Visibility.Hidden,
                 DrawOrder = 4999
             };
             Children.Add(_textBoxHover);
@@ -225,6 +229,8 @@ namespace XAMLite
         /// <param name="eventArgs"></param>
         private void OnLostFocus(object sender, EventArgs eventArgs)
         {
+            _textBoxHover.Visibility = Visibility.Hidden;
+
             Close();
         }
 
@@ -277,6 +283,8 @@ namespace XAMLite
             }
 
             Height = (int)h + _textBox.Height - (int)BorderThickness.Top;
+
+            _openHeight = Height;
         }
 
         /// <summary>
@@ -293,9 +301,20 @@ namespace XAMLite
                 if (!(child is XAMLiteTextBoxNew) && !(child is XAMLiteImageNew))
                 {
                     child.Visibility = _areItemsVisibile ? Visibility.Visible : Visibility.Hidden;
+                    child.IsEnabled = _areItemsVisibile;
                 }
             }
 
+            if (_areItemsVisibile && !IsFocused)
+            {
+                IsFocused = true;
+            }
+            else if (!_areItemsVisibile && IsFocused)
+            {
+                IsFocused = false;
+            }
+
+            Height = _openHeight;
             ToggleButtons();
         }
 
@@ -347,7 +366,24 @@ namespace XAMLite
             {
                 button.Visibility = Visibility.Visible;
                 buttonOver.Visibility = Visibility.Hidden;
-                _textBoxHover.Visibility = Visibility.Hidden;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected override void ModifyChildFocusAndHighlightColor()
+        {
+            foreach (XAMLiteComboBoxItem item in Items)
+            {
+                if (item.IsSelected)
+                {
+                    item.ModifySelectedBrush(IsFocused);
+                }
+                else
+                {
+                    item.RemoveHighLight();
+                }
             }
         }
 
@@ -375,7 +411,10 @@ namespace XAMLite
                 if (!(child is XAMLiteTextBoxNew) && !(child is XAMLiteImageNew))
                 {
                     child.Visibility = Visibility.Hidden;
+                    child.IsEnabled = false;
                 }
+
+                Height = _textBox.Height;
 
                 ToggleButtons();
             }
