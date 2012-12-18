@@ -40,7 +40,7 @@ namespace XAMLite
         /// <summary>
         /// Any interactive control becomes inactive when this is false.
         /// </summary>
-        public bool IsEnabled { get; set; }
+        public virtual bool IsEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets a value that indicates whether the element can receive focus.
@@ -618,7 +618,7 @@ namespace XAMLite
                 MousePressPosition.Y = MsRect.Y;
             }
 
-            if (IsEnabled && Visibility == Visibility.Visible)
+            if (Visibility == Visibility.Visible)
             {
                 if (Panel.Contains(MsRect))
                 {

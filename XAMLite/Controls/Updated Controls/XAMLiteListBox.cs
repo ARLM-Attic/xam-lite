@@ -365,7 +365,7 @@ namespace XAMLite
             for (var i = _itemsIndex; i < Items.Count; i++)
             {
                 var item = (XAMLiteListBoxItem)Items[i];
-
+                
                 var margin = item.Margin;
 
                 double topMargin = 0;

@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework;
 
 namespace XAMLite
 {
+    using System;
+
     /// <summary>
     /// Represents a selectable item in a ListBox.
     /// </summary>
@@ -14,6 +16,30 @@ namespace XAMLite
         /// True when the ListBoxItem is selected.
         /// </summary>
         private bool _isSelected;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public override bool IsEnabled
+        {
+            get
+            {
+                return base.IsEnabled;
+            }
+
+            set
+            {
+                base.IsEnabled = value;
+
+                if (_listBoxContent != null)
+                {
+                    Console.WriteLine(value);
+                    _listBoxContent.Opacity = value ? 1f : 0.55f;
+                    //_listBoxContent.Opacity = value ? 1f : 0.75f;
+                    //Console.WriteLine(_listBoxContent.Opacity);
+                }
+            }
+        }
 
         /// <summary>
         /// True when the ListBoxItem is selected.
@@ -130,6 +156,9 @@ namespace XAMLite
         /// </summary>
         private XAMLiteListBox _parent;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private Brush _foreground;
 
         /// <summary>
@@ -186,6 +215,7 @@ namespace XAMLite
             BorderThickness = new Thickness(1);
             Padding = new Thickness(4, 2, 4, 2);
             Focusable = true;
+            IsEnabled = true;
         }
 
         /// <summary>
@@ -204,6 +234,7 @@ namespace XAMLite
                 Spacing = Spacing,
                 Padding = Padding,
                 Foreground = Foreground,
+                Opacity = IsEnabled ? 1f : 0.75f
                 //Visibility = Visibility.Hidden
             };
             Game.Components.Add(_listBoxContent);
@@ -295,6 +326,16 @@ namespace XAMLite
         }
 
         /// <summary>
+        /// Modifies the width when necessary.
+        /// </summary>
+        public void ModifyWidth(int width)
+        {
+            Width = width;
+            _listBoxContent.Width = width;
+            BackgroundPanel.Width = width - (int)BorderThickness.Left - (int)BorderThickness.Right;
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="disposing"></param>
@@ -307,16 +348,6 @@ namespace XAMLite
             {
                 child.Dispose();
             }
-        }
-
-        /// <summary>
-        /// Modifies the width when necessary.
-        /// </summary>
-        public void ModifyWidth(int width)
-        {
-            Width = width;
-            _listBoxContent.Width = width;
-            BackgroundPanel.Width = width - (int)BorderThickness.Left - (int)BorderThickness.Right;
         }
     }
 }

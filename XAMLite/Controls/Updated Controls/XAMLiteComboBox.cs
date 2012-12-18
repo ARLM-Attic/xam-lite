@@ -13,11 +13,6 @@ namespace XAMLite
     /// </summary>
     public class XAMLiteComboBox : XAMLiteListBox
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        //public bool IsEditable { get; set; }
-
         private string _text;
 
         /// <summary>
@@ -319,7 +314,6 @@ namespace XAMLite
                 if (!(child is XAMLiteTextBoxNew) && !(child is XAMLiteImageNew))
                 {
                     child.Visibility = _areItemsVisibile ? Visibility.Visible : Visibility.Hidden;
-                    child.IsEnabled = _areItemsVisibile;
                 }
             }
 
@@ -430,7 +424,6 @@ namespace XAMLite
                 if (!(child is XAMLiteTextBoxNew) && !(child is XAMLiteImageNew))
                 {
                     child.Visibility = Visibility.Hidden;
-                    child.IsEnabled = false;
                 }
 
                 Height = _textBox.Height;
@@ -445,6 +438,7 @@ namespace XAMLite
         public void Close()
         {
             _areItemsVisibile = false;
+
             HideChildren();
         }
 
