@@ -84,10 +84,20 @@ namespace XAMLite
         /// </summary>
         private XAMLiteTextBoxNew _textBox;
 
+        /// <summary>
+        /// The gradient color that displays when the combo box has been 
+        /// selected.
+        /// </summary>
         private XAMLiteImageNew _textBoxHover;
 
+        /// <summary>
+        /// The normal state button.
+        /// </summary>
         private XAMLiteImageNew button;
 
+        /// <summary>
+        /// The hover state button.
+        /// </summary>
         private XAMLiteImageNew buttonOver;
 
         /// <summary>
@@ -294,13 +304,15 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// Makes visible all of the ComboBoxItems.
+        /// Makes visible/hidden all of the ComboBoxItems.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="mouseButtonEventArgs"></param>
         private void TextBoxOnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
             _areItemsVisibile = !_areItemsVisibile;
+
+            SelectedIndex = -1;
 
             foreach (var child in Children)
             {
@@ -320,7 +332,8 @@ namespace XAMLite
                 IsFocused = false;
             }
 
-            Height = _openHeight;
+            Height = _areItemsVisibile ? _openHeight : _textBox.Height;
+
             ToggleButtons();
         }
 

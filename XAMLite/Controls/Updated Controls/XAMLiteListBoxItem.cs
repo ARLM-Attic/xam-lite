@@ -58,6 +58,11 @@ namespace XAMLite
         }
 
         /// <summary>
+        /// Index of object in Items as opposed to its grid index.
+        /// </summary>
+        internal int ItemIndex;
+
+        /// <summary>
         /// Object contained in the control, which might include
         /// string, date/time, etc.
         /// </summary>

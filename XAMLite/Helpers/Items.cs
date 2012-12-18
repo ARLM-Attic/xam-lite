@@ -27,18 +27,16 @@ namespace XAMLite
         /// <param name="item"></param>
         public new void Add(XAMLiteBaseControl item)
         {
-            if (item.Parent == null)
-            {
-                //item.Index = Count;
-                //item.Parent = _parent;
-            }
-
             if (_parent is XAMLiteComboBox && item is XAMLiteComboBoxItem)
             {
+                var i = item as XAMLiteComboBoxItem;
+                i.ItemIndex = Count;
                 base.Add(item);
             }
             else if (_parent is XAMLiteListBox && item is XAMLiteListBoxItem)
             {
+                var i = item as XAMLiteListBoxItem;
+                i.ItemIndex = Count;
                 base.Add(item);
             }
             else

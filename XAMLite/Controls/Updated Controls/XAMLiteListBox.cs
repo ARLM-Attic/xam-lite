@@ -38,6 +38,29 @@ namespace XAMLite
         }
 
         /// <summary>
+        /// Gets or sets the index of the item in the current selection or 
+        /// returns negative one (-1) if the selection is empty.
+        /// </summary>
+        private int _selectedIndex;
+
+        /// <summary>
+        /// Gets or sets the index of the item in the current selection or 
+        /// returns negative one (-1) if the selection is empty.
+        /// </summary>
+        public int SelectedIndex
+        {
+            get
+            {
+                return _selectedIndex;
+            } 
+
+            set
+            {
+                _selectedIndex = value;
+            }
+        }
+
+        /// <summary>
         /// True when the control contains the mouse.
         /// </summary>
         public bool IsMouseOver { get; set; }
@@ -477,10 +500,13 @@ namespace XAMLite
         /// <param name="eventArgs"></param>
         private void OnLostFocus(object sender, EventArgs eventArgs)
         {
-            if (IsFocused)
+            if (!IsFocused)
             {
-                IsFocused = false;
+                return;
             }
+
+            _selectedIndex = -1;
+            IsFocused = false;
         }
 
         protected void UpdateRectangleHeights(int height)
@@ -490,13 +516,6 @@ namespace XAMLite
                 return;
             }
 
-            //// Adjust the bottom rectangle's margin so that it meets 
-            //// the new height of the control, when it exists.
-            //if (_borderRectangles.Count > 1)
-            //{
-            //    var rect = _borderRectangles[_borderRectangles.Count - 1];
-            //    rect.Margin = new Thickness(rect.Margin.Left, rect.Margin.Top, rect.Margin.Right, rect.Margin.Bottom + (h - value));
-            //}
             // Adjust the background rectangle and the borders so that they 
             // are the correct height.
             foreach (var rectangle in _borderRectangles)

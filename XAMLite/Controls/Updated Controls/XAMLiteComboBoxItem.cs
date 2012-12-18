@@ -56,6 +56,7 @@ namespace XAMLite
         {
             if (Visibility == Visibility.Visible)
             {
+                _parent.SelectedIndex = ItemIndex;
                 _parent.RemoveHighLightColor(Index);
                 BackgroundPanel.Fill = SelectedBackground;
                 BackgroundPanel.Visibility = Visibility.Visible;
