@@ -29,14 +29,19 @@ namespace XAMLite
             Padding = new Thickness(7, 2, 4, 2);
         }
 
+        protected override void LoadContent()
+        {
+            base.LoadContent();
+
+            _parent = (XAMLiteComboBox)Parent;
+        }
+
         /// <summary>
         /// 
         /// </summary>
         public override void Initialize()
         {
             base.Initialize();
-
-            _parent = (XAMLiteComboBox)Parent;
 
             MouseEnter += OnMouseEnter;
             MouseDown += OnMouseDown;

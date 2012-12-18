@@ -163,12 +163,6 @@ namespace XAMLite
         private bool _needToUpdate = true;
 
         /// <summary>
-        /// When true, the update method stops looking at the Items to see if 
-        /// any have 0 heights.
-        /// </summary>
-        private bool _itemsUpdated;
-
-        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="game"></param>
@@ -276,7 +270,7 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// Initializes the event handlers.
         /// </summary>
         public override void Initialize()
         {
@@ -293,24 +287,16 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            LoadItems();
-
+            if (_itemsIndex != Items.Count)
+            {
+                LoadItems();
+            }
+            
             base.Update(gameTime);
-
+            
             if (_needToUpdate)
             {
                 UpdateItems();
-            }
-
-            if (!_itemsUpdated)
-            {
-                foreach (var item in Items)
-                {
-                    if (item.Height == 0)
-                    {
-                        _needToUpdate = true;
-                    }
-                }
             }
         }
 
@@ -339,15 +325,12 @@ namespace XAMLite
         /// </summary>
         private void LoadItems()
         {
-            if (_itemsIndex != Items.Count && Items.Count > 0)
+            for (var i = _itemsIndex; i < Items.Count; i++)
             {
-                for (var i = _itemsIndex; i < Items.Count; i++)
-                {
-                    Children.Add(Items[i]);
-                }
-
-                _itemsIndex = Items.Count;
+                Children.Add(Items[i]);
             }
+
+            _needToUpdate = true;
         }
 
         /// <summary>
@@ -356,7 +339,7 @@ namespace XAMLite
         /// </summary>
         protected virtual void UpdateItems()
         {
-            for (var i = 0; i < Items.Count; i++)
+            for (var i = _itemsIndex; i < Items.Count; i++)
             {
                 var item = (XAMLiteListBoxItem)Items[i];
 
@@ -398,7 +381,8 @@ namespace XAMLite
             UpdateHeight();
             UpdateBorders();
             _needToUpdate = false;
-            _itemsUpdated = true;
+
+            _itemsIndex = Items.Count;
         }
 
         private void UpdateHeight()

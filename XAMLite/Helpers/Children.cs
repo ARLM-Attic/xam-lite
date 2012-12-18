@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 namespace XAMLite
-{ 
+{
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
@@ -27,6 +27,7 @@ namespace XAMLite
         public new void Add(XAMLiteBaseControl child)
         {
             child.IsAttachedToGrid = true;
+            
             if (child.Parent == null)
             {
                 child.Index = Count;

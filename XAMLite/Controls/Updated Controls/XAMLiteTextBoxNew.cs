@@ -466,7 +466,7 @@ namespace XAMLite
                     _cursorBlink = false;
                 }
 
-                if (_textLabel.Content.ToString() == string.Empty)
+                if (_textLabel.Content != null && _textLabel.Content.ToString() == string.Empty)
                 {
                     _textLabel.Content = _initialText;
                 }

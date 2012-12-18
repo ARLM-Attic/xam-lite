@@ -40,13 +40,20 @@ namespace XAMLite
         {
             get
             {
-                return BackgroundPanel.Background;
+                if (BackgroundPanel != null)
+                {
+                    return BackgroundPanel.Background;
+                }
+
+                return Brushes.Transparent;
             }
 
             set
             {
                 if (BackgroundPanel != null)
-                BackgroundPanel.Background = value;
+                {
+                    BackgroundPanel.Background = value;
+                }
             }
         }
 
@@ -192,7 +199,7 @@ namespace XAMLite
                 Spacing = Spacing,
                 Padding = Padding,
                 Foreground = Foreground,
-                Visibility = Visibility.Hidden
+                //Visibility = Visibility.Hidden
             };
             Game.Components.Add(_listBoxContent);
 
@@ -230,14 +237,6 @@ namespace XAMLite
             Children.Add(BackgroundPanel);
 
             Children.Add(_listBoxContent);
-        }
-
-        /// <summary>
-        /// Sets a reference to the specific class that the parent represents.
-        /// </summary>
-        public override void Initialize()
-        {
-            base.Initialize();
 
             _parent = (XAMLiteListBox)Parent;
         }

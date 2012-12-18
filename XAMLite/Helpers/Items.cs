@@ -29,8 +29,8 @@ namespace XAMLite
         {
             if (item.Parent == null)
             {
-                item.Index = Count;
-                item.Parent = _parent;
+                //item.Index = Count;
+                //item.Parent = _parent;
             }
 
             if (_parent is XAMLiteComboBox && item is XAMLiteComboBoxItem)

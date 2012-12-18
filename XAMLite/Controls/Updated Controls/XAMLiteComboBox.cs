@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -49,6 +46,12 @@ namespace XAMLite
             } 
         }
 
+        /// <summary>
+        /// Gets or sets a value that enables or disables editing of the text 
+        /// in text box of the ComboBox.
+        /// </summary>
+        public bool IsEditable { get; set; }
+        
         /// <summary>
         /// The font family the text belongs to.
         /// </summary>
@@ -196,6 +199,9 @@ namespace XAMLite
             _textBox.MouseDown += TextBoxOnMouseDown;
             _textBox.MouseEnter += TextBoxOnMouseEnter;
             _textBox.MouseLeave += TextBoxOnMouseLeave;
+
+            // This is messing up Virtual pig once the 
+            // gameplay screen is active.
             LostFocus += OnLostFocus;
         }
 
@@ -434,7 +440,10 @@ namespace XAMLite
         /// </summary>
         public void Close(string content)
         {
-            Text = content;
+            if (IsEditable)
+            {
+                Text = content;
+            }
 
             Close();
         }
@@ -470,7 +479,14 @@ namespace XAMLite
             base.Dispose(disposing);
 
             _textBox.MouseDown -= TextBoxOnMouseDown;
-            _textBox.Dispose();
+            _textBox.MouseEnter -= TextBoxOnMouseEnter;
+            _textBox.MouseLeave -= TextBoxOnMouseLeave;
+            LostFocus -= OnLostFocus;
+
+            foreach (var item in Items)
+            {
+                item.Dispose();
+            }
         }
     }
 }

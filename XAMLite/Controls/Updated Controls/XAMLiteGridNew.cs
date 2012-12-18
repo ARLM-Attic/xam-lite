@@ -19,7 +19,7 @@ namespace XAMLite
         /// <summary>
         /// Used to determine whether the child has been loaded into the grid.
         /// </summary>
-        private bool _childrenLoaded;
+        //private bool _childrenLoaded;
 
         /// <summary>
         /// Holds a record of the child's natural visibility prior to being affected by the grid.
@@ -38,9 +38,9 @@ namespace XAMLite
         private List<float> _childOpacity;
 
         /// <summary>
-        /// True when a child of the grid becomes visible after being loaded.
+        /// 
         /// </summary>
-        //private bool _isVisible;
+        private int _gridCount;
 
         /// <summary>
         /// Constructor.
@@ -59,20 +59,6 @@ namespace XAMLite
         protected override void LoadContent()
         {
             base.LoadContent();
-
-            // set internal variable, IsAttachedToGrid, when the grid is a component of a complex 
-            // XAMLite object that is embedded in another grid.
-            //if (Parent != null)
-            //if (Parent != null && Parent.Parent != null)
-            //{
-            //    if (Name == "Image")
-            //    {
-            //        Console.WriteLine("Name: " + Name + " Parent: " + Parent.Name);
-            //    }
-            //    //Console.WriteLine("Parent of Parent of grid: " + Parent.parent);
-            //    IsAttachedToGrid = (Parent.Parent.Width != Viewport.Width) || (Parent.Parent.Height != Viewport.Height);
-            //    //IsAttachedToGrid = (Parent.Width != Viewport.Width) || (Parent.Height != Viewport.Height);
-            //}
 
             // set the internal Window to the Panel.
             Window = Panel;
@@ -94,10 +80,14 @@ namespace XAMLite
         {
             base.Update(gameTime);
 
-            if (!_childrenLoaded)
+            if (_gridCount != Children.Count)
             {
                 LoadChildren();
             }
+            //if (!_childrenLoaded)
+            //{
+            //    LoadChildren();
+            //}
 
             // Update Visibility of Children according to the grid's visibility.
             if (VisibilityChanged)
@@ -133,6 +123,10 @@ namespace XAMLite
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
@@ -152,14 +146,13 @@ namespace XAMLite
             HideChildren();
 
             // Add the child component to the game with the modified parameters.
-            foreach (var child in Children)
+            for (var i = _gridCount; i < Children.Count; i++)
             {
-                AddChild(child);
+                AddChild(Children[i]);
             }
 
+            _gridCount = Children.Count;
             ModifyChildPositionAndWidth();
-
-            _childrenLoaded = true;
         }
 
         /// <summary>
@@ -170,7 +163,10 @@ namespace XAMLite
         {
             try
             {
-                Game.Components.Add(child);
+                if (!Game.Components.Contains(child))
+                {
+                    Game.Components.Add(child);
+                }
             }
             catch (Exception e)
             {
@@ -270,7 +266,7 @@ namespace XAMLite
                 _currentChildVisibility = new List<bool>();
             }
 
-            for (var i = 0; i < Children.Count; i++)
+            for (var i = _gridCount; i < Children.Count; i++)
             {
                 _childVisibility.Add(Children[i].Visibility == Visibility.Visible);
             }
@@ -320,7 +316,7 @@ namespace XAMLite
         {
             if (_childOpacity == null)
             {
-                _childOpacity = new List<float>(); // new float[Children.Count];
+                _childOpacity = new List<float>(); 
             }
 
             for (var i = 0; i < Children.Count; i++)
@@ -345,7 +341,7 @@ namespace XAMLite
 
         private void CheckForNewChildren()
         {
-            if (_childOpacity.Count == _childVisibility.Count && _childVisibility.Count == Children.Count)
+            if (_gridCount == Children.Count && Children.Count == _childOpacity.Count && _childOpacity.Count == _childVisibility.Count && _childVisibility.Count == Children.Count)
             {
                 return;
             }
@@ -353,7 +349,6 @@ namespace XAMLite
             // this means that a new child was added later.
             if (_childOpacity.Count != Children.Count)
             {
-                //var numToAdd = Children.Count - _childOpacity.Count;
                 for (int i = _childOpacity.Count; i < Children.Count; i++)
                 {
                     _childOpacity.Add((float)Children[i].Opacity);
@@ -362,8 +357,7 @@ namespace XAMLite
 
             if (_childVisibility.Count != Children.Count)
             {
-                //var numToAdd = Children.Count - _childVisibility.Count;
-                for (int i = _childVisibility.Count; i < Children.Count; i++)
+                for (var i = _childVisibility.Count; i < Children.Count; i++)
                 {
                     _childVisibility.Add(Children[i].Visibility == Visibility.Visible);
                     AddChild(Children[i]);
