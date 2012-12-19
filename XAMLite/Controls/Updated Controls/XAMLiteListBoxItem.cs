@@ -302,10 +302,13 @@ namespace XAMLite
         /// <param name="mouseEventArgs"></param>
         private void OnMouseDown(object sender, MouseEventArgs mouseEventArgs)
         {
-            IsSelected = true;
-            IsFocused = true;
+            if (IsEnabled)
+            {
+                IsSelected = true;
+                IsFocused = true;
 
-            _parent.DeselectAll(Index);
+                _parent.DeselectAll(Index);
+            }
             BackgroundPanel.Fill = SelectedBackground;
             BackgroundPanel.Visibility = Visibility.Visible;
         }
