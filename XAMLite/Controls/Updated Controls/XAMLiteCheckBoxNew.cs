@@ -355,6 +355,8 @@ namespace XAMLite
             {
                 child.Dispose();
             }
+
+            _grid.Dispose();
         }
     }
 }

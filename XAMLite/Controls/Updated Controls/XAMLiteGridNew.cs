@@ -17,19 +17,9 @@ namespace XAMLite
         public Children Children { get; set; }
 
         /// <summary>
-        /// Used to determine whether the child has been loaded into the grid.
-        /// </summary>
-        //private bool _childrenLoaded;
-
-        /// <summary>
         /// Holds a record of the child's natural visibility prior to being affected by the grid.
         /// </summary>
         private List<bool> _childVisibility;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private List<bool> _currentChildVisibility;
 
         /// <summary>
         /// Holds a record of the child's natural opacity and is used to modify its opacity according to
@@ -132,7 +122,7 @@ namespace XAMLite
             base.Draw(gameTime);
 
             SpriteBatch.Begin();
-            //SpriteBatch.Draw(Pixel, Panel, BackgroundColor);
+            //SpriteBatch.Draw(Pixel, Panel, Color.Red);
             SpriteBatch.End();
         }
 
@@ -263,7 +253,6 @@ namespace XAMLite
             if (_childVisibility == null)
             {
                 _childVisibility = new List<bool>();
-                _currentChildVisibility = new List<bool>();
             }
 
             for (var i = _gridCount; i < Children.Count; i++)
@@ -350,15 +339,10 @@ namespace XAMLite
             // this means that a new child was added later.
             if (_childOpacity.Count != Children.Count)
             {
-                Console.WriteLine("Opacity count not the same");
                 for (int i = _childOpacity.Count; i < Children.Count; i++)
                 {
                     _childOpacity.Add((float)Children[i].Opacity);
                 }
-
-                Console.WriteLine("Grid Count: " + _gridCount);
-                Console.WriteLine("Child count: " + _childOpacity.Count);
-                Console.WriteLine("Children count: " + Children.Count);
             }
 
             if (_childVisibility.Count != Children.Count)
@@ -401,7 +385,6 @@ namespace XAMLite
         /// <param name="difference"></param>
         private void ModifyChildOpacity(int index, float difference)
         {
-            Console.WriteLine("Opacity changed.");
             float newChildOpacity = _childOpacity[index] + difference;
             if (newChildOpacity <= 1f && newChildOpacity >= 0f)
             {

@@ -401,13 +401,20 @@ namespace XAMLite
                 item.UpdateMarginAndWidth(new Thickness(margin.Left, topMargin, margin.Right, margin.Bottom));
             }
 
-            UpdateHeight();
+            if (!(this is XAMLiteComboBox))
+            {
+                UpdateHeight();
+            }
+
             UpdateBorders();
             _needToUpdate = false;
 
             _itemsIndex = Items.Count;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void UpdateHeight()
         {
             var h = 0;

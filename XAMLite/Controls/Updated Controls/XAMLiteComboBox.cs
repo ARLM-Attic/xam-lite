@@ -295,6 +295,7 @@ namespace XAMLite
 
             Height = (int)h + _textBox.Height - (int)BorderThickness.Top;
 
+            // set the open height.
             _openHeight = Height;
         }
 

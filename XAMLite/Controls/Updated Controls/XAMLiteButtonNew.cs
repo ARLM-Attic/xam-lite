@@ -577,6 +577,20 @@ namespace XAMLite
             _defaultClickSourceNameBottomEdge = "Images/ButtonBottomDown";
         }
 
+        public override void Update(GameTime gameTime)
+        {
+            // adjust the children in the button grid.
+            if (PositionChanged && !_isDefaultTextures)
+            {
+                foreach (var child in Children)
+                {
+                    child.Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
+                }
+            }
+
+            base.Update(gameTime);
+        }
+
         /// <summary>
         /// Builds the gradient-styled default buttons.
         /// </summary>

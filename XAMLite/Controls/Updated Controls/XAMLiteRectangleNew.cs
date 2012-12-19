@@ -114,7 +114,6 @@ namespace XAMLite
             }
 
             SpriteBatch.Begin();
-            //Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
             SpriteBatch.Draw(Pixel, Panel, _fill * (float)Opacity);
             _strokePanel = new Rectangle((int)Position.X, (int)Position.Y, Width, (int)Math.Round(StrokeThickness));
             SpriteBatch.Draw(Pixel, _strokePanel, _strokeColor * (float)Opacity);

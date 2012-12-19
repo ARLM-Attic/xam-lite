@@ -33,10 +33,7 @@ namespace XAMLite
 
                 if (_listBoxContent != null)
                 {
-                    Console.WriteLine(value);
                     _listBoxContent.Opacity = value ? 1f : 0.55f;
-                    //_listBoxContent.Opacity = value ? 1f : 0.75f;
-                    //Console.WriteLine(_listBoxContent.Opacity);
                 }
             }
         }

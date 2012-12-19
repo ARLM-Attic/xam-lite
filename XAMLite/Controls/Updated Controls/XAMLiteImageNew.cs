@@ -7,8 +7,6 @@ using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {
-    using System;
-
     /// <summary>
     /// Emulates the code behind for a xaml image.
     /// 
@@ -39,16 +37,6 @@ namespace XAMLite
         protected bool IsColorized;
 
         /// <summary>
-        /// 
-        /// </summary>
-        //protected Color BackgroundColor { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        //private Brush _background;
-
-        /// <summary>
         /// True when the image is the edge of a default button.
         /// Notifies that the opacity should change.
         /// </summary>
@@ -59,12 +47,6 @@ namespace XAMLite
         /// Notifies that the opacity should change.
         /// </summary>
         protected internal bool IsTopEdge;
-
-        /// <summary>
-        /// True when the control has been repositioned because the Margin or 
-        /// Position was not at its default state. 
-        /// </summary>
-        //private bool _isModified;
 
         /// <summary>
         /// Constructor.
@@ -125,15 +107,7 @@ namespace XAMLite
         {
             base.Draw(gameTime);
 
-            // allow the control to update once before drawing when
-            // Margins, positions, or Font are not default.
-            //if (!_isModified && (Margin != new Thickness() || Position != Vector2.Zero))
-            //{
-            //    _isModified = true;
-            //    return;
-            //}
-
-            if (Visibility == Visibility.Hidden) // || GridIsHidden)
+            if (Visibility == Visibility.Hidden)
             {
                 return;
             }
