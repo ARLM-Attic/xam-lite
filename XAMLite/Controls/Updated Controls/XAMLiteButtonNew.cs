@@ -246,7 +246,8 @@ namespace XAMLite
                         Spacing = Spacing,
                         Foreground = Foreground,
                         Padding = Padding,
-                        Visibility = Visibility.Hidden
+                        Visibility = Visibility.Hidden,
+                        DrawOrder = DrawOrder
                     };
 
                 Game.Components.Add(label);
@@ -292,7 +293,8 @@ namespace XAMLite
                         HorizontalAlignment = HorizontalAlignment.Center,
                         Width = Width,
                         Height = Height,
-                        Background = Background
+                        Background = Background,
+                        DrawOrder = DrawOrder
                     };
                     Children.Add(_mainButtonWithRollover);
                 }
@@ -303,7 +305,8 @@ namespace XAMLite
                         HorizontalAlignment = HorizontalAlignment.Center,
                         Width = Width,
                         Height = Height,
-                        Background = Background
+                        Background = Background,
+                        DrawOrder = DrawOrder
                     };
                     Children.Add(_mainButton);
                 }
@@ -317,7 +320,8 @@ namespace XAMLite
                         Width = Width,
                         Height = Height,
                         Visibility = Visibility.Hidden,
-                        Background = Background
+                        Background = Background,
+                        DrawOrder = DrawOrder
                     };
                     Children.Add(_clickedButton);
                 }
@@ -354,7 +358,8 @@ namespace XAMLite
                 VerticalAlignment = VerticalAlignment.Center,
                 Width = Width - (_defaultEdgeTexture.Width * 2),
                 Height = Height - (4),
-                Background = Background
+                Background = Background,
+                DrawOrder = DrawOrder
             };
             _defaultImages.Add(_mainButton);
 
@@ -365,7 +370,8 @@ namespace XAMLite
                 Width = _isDefaultTextures ? Width - (_defaultEdgeTexture.Width * 2) : Width,
                 Height = Height - (4),
                 Visibility = Visibility.Hidden,
-                Background = Background
+                Background = Background,
+                DrawOrder = DrawOrder
             };
             _defaultRolloverImages.Add(defaultRolloverButton);
 
@@ -376,7 +382,8 @@ namespace XAMLite
                 Width = Width - (_defaultEdgeTexture.Width * 2),
                 Height = Height - (4),
                 Visibility = Visibility.Hidden,
-                Background = Background
+                Background = Background,
+                DrawOrder = DrawOrder
             };
             _defaultClickImages.Add(_clickedButton);
 
@@ -387,7 +394,8 @@ namespace XAMLite
                 HorizontalAlignment = HorizontalAlignment.Right,
                 Height = Height - 4,
                 Margin = new Thickness(0, 0, Width - _defaultEdgeTexture.Width, 0),
-                Background = Background
+                Background = Background,
+                DrawOrder = DrawOrder
             };
             _defaultImages.Add(defaultLeftEdge);
 
@@ -400,7 +408,8 @@ namespace XAMLite
                 Height = Height - 4,
                 Margin = new Thickness(0, 0, Width - _defaultEdgeTexture.Width, 0),
                 Visibility = Visibility.Hidden,
-                Background = Background
+                Background = Background,
+                DrawOrder = DrawOrder
             };
             _defaultRolloverImages.Add(defaultRolloverLeftEdge);
 
@@ -413,7 +422,8 @@ namespace XAMLite
                 Height = Height - 4,
                 Margin = new Thickness(0, 0, Width - _defaultEdgeTexture.Width, 0),
                 Visibility = Visibility.Hidden,
-                Background = Background
+                Background = Background,
+                DrawOrder = DrawOrder
             };
             _defaultClickImages.Add(defaultClickLeftEdge);
 
@@ -425,7 +435,8 @@ namespace XAMLite
                 HorizontalAlignment = HorizontalAlignment.Left,
                 Height = Height - 4,
                 Margin = new Thickness(Width - _defaultEdgeTexture.Width, 0, 0, 0),
-                Background = Background
+                Background = Background,
+                DrawOrder = DrawOrder
             };
             _defaultImages.Add(defaultRightEdge);
 
@@ -439,7 +450,8 @@ namespace XAMLite
                 Height = Height - 4,
                 Margin = new Thickness(Width - _defaultEdgeTexture.Width, 0, 0, 0),
                 Visibility = Visibility.Hidden,
-                Background = Background
+                Background = Background,
+                DrawOrder = DrawOrder
             };
             _defaultRolloverImages.Add(defaultRolloverRightEdge);
 
@@ -453,7 +465,8 @@ namespace XAMLite
                 Height = Height - 4,
                 Margin = new Thickness(Width - _defaultEdgeTexture.Width, 0, 0, 0),
                 Visibility = Visibility.Hidden,
-                Background = Background
+                Background = Background,
+                DrawOrder = DrawOrder
             };
             _defaultClickImages.Add(defaultClickRightEdge);
 
@@ -466,7 +479,8 @@ namespace XAMLite
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Width = Width - 4,
                 Margin = new Thickness(0, 0, 0, Height - 4),
-                Background = Background
+                Background = Background,
+                DrawOrder = DrawOrder
             };
             _defaultImages.Add(defaultTopEdge);
 
@@ -480,7 +494,8 @@ namespace XAMLite
                 Width = Width - 4,
                 Margin = new Thickness(0, 0, 0, Height - 4),
                 Visibility = Visibility.Hidden,
-                Background = Background
+                Background = Background,
+                DrawOrder = DrawOrder
             };
             _defaultRolloverImages.Add(defaultRolloverTopEdge);
 
@@ -494,7 +509,8 @@ namespace XAMLite
                 Width = Width - 4,
                 Margin = new Thickness(0, 0, 0, Height - 4),
                 Visibility = Visibility.Hidden,
-                Background = Background
+                Background = Background,
+                DrawOrder = DrawOrder
             };
             _defaultClickImages.Add(defaultClickTopEdge);
 
@@ -506,7 +522,8 @@ namespace XAMLite
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Width = Width - 4,
                 Margin = new Thickness(0, Height - 4, 0, 0),
-                Background = Background
+                Background = Background,
+                DrawOrder = DrawOrder
             };
             _defaultImages.Add(defaultBottomEdge);
 
@@ -519,7 +536,8 @@ namespace XAMLite
                 Width = Width - 4,
                 Margin = new Thickness(0, Height - 4, 0, 0),
                 Visibility = Visibility.Hidden,
-                Background = Background
+                Background = Background,
+                DrawOrder = DrawOrder
             };
             _defaultRolloverImages.Add(defaultRolloverBottomEdge);
 
@@ -532,7 +550,8 @@ namespace XAMLite
                 Width = Width - 4,
                 Margin = new Thickness(0, Height - 4, 0, 0),
                 Visibility = Visibility.Hidden,
-                Background = Background
+                Background = Background,
+                DrawOrder = DrawOrder
             };
             _defaultClickImages.Add(defaultClickBottomEdge);
 

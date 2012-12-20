@@ -163,7 +163,7 @@ namespace XAMLite
                 Margin = new Thickness(_textBox.BorderThickness.Left, _textBox.BorderThickness.Top, 0, 0),
                 Background = SelectedBackground,
                 Visibility = Visibility.Hidden,
-                DrawOrder = 4999
+                DrawOrder = _textBox.DrawOrder + 1
             };
             Children.Add(_textBoxHover);
 
@@ -176,7 +176,7 @@ namespace XAMLite
                     VerticalAlignment = VerticalAlignment.Top,
                     Margin = new Thickness(0, 10, 5, 0),
                     Background = BorderBrush,
-                    DrawOrder = 5000
+                    DrawOrder = _textBox.DrawOrder + 2
                 };
             Children.Add(button);
 
