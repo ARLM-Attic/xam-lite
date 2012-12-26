@@ -454,17 +454,4 @@ namespace XAMLite
             return i + 1;
         }
     }
-
-    // for mocking the WPF constructor
-    // XAMLiteTextBlock textBlock = new XAMLiteTextBlock(this, new Run("This is text."));
-    // this value gets placed into the "string Run" of XAMLiteTextBlock.cs
-    public class Run
-    {
-        public string TextBlock { get; set; }
-
-        public Run(string textBlock)
-        {
-            TextBlock = textBlock;
-        }
-    }
 }

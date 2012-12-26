@@ -11,5 +11,8 @@
         <CheckBox Content="B) CatImage Visible" Height="16" HorizontalAlignment="Left" Margin="129,43,0,0" Name="catCheckBox" VerticalAlignment="Top" Checked="catCheckBox_Checked" Unchecked="catCheckBox_Unchecked" IsChecked="True" />
         <CheckBox Content="C) DogImage Visible" Height="16" HorizontalAlignment="Left" Margin="129,65,0,0" Name="dogCheckBox" VerticalAlignment="Top" Checked="dogCheckBox_Checked" Unchecked="dogCheckBox_Unchecked" IsChecked="False" />
         <Image Height="100" HorizontalAlignment="Right" Name="clickableImage" Stretch="Fill" VerticalAlignment="Bottom" Width="100" Source="/WpfReferenceDemo;component/Content/Button.jpg" MouseDown="clickableImage_MouseDown" />
+        <RichTextBox Height="100" HorizontalAlignment="Left" Margin="371,84,0,0" Name="richTextBox1" VerticalAlignment="Top" Width="200" />
+        <TextBlock Height="100" HorizontalAlignment="Left" Margin="173,204,0,0" Name="textBlock1" Text="TextBlock" VerticalAlignment="Top" Width="120" Background="#FFEF1414" />
+        <ScrollBar Height="100" HorizontalAlignment="Left" Margin="276,204,0,0" Name="scrollBar1" VerticalAlignment="Top" Width="17" />
     </Grid>
 </Window>
