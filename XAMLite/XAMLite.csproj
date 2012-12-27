@@ -112,13 +112,13 @@
     <Compile Include="Control\Updated Control System\XAMLiteBaseText.cs" />
     <Compile Include="Control\Old Control System\XAMLiteControl.cs" />
     <Compile Include="Control\Updated Control System\XAMLiteBaseContentControl.cs" />
-    <Compile Include="Helpers\Children.cs" />
-    <Compile Include="Helpers\Cursor.cs" />
-    <Compile Include="Helpers\Cursors.cs" />
-    <Compile Include="Helpers\Items.cs" />
-    <Compile Include="Helpers\Run.cs" />
+    <Compile Include="Lists\Children.cs" />
+    <Compile Include="Supporting Classes\Cursor.cs" />
+    <Compile Include="Supporting Classes\Cursors.cs" />
+    <Compile Include="Lists\Items.cs" />
+    <Compile Include="Supporting Classes\Run.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Helpers\XAMLiteHelper.cs" />
+    <Compile Include="Helpers\XAMLiteDisposer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XAMLiteContent\XAMLiteContent.contentproj">

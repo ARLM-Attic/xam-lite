@@ -8,7 +8,7 @@ namespace XAMLite
     /// <summary>
     /// Static helper methods for XAMLite.
     /// </summary>
-    public static class XAMLiteHelper
+    public static class XAMLiteDisposer
     {
         /// <summary>
         /// Calls dispose, but does a null check first.

@@ -176,8 +176,9 @@ namespace XAMLite
 
             if (Text != string.Empty || _textLabel.Width == 0)
             {
+                // Add to the game so that it has a measureable size.
                 Game.Components.Add(_textLabel);
-                UpdateText();
+                UpdateForTextWrapping();
             }
 
             UpdateWidthAndHeight();
@@ -205,7 +206,6 @@ namespace XAMLite
         /// </summary>
         private void UpdateWidthAndHeight()
         {
-            
             var w = (int)_textLabel.MeasureString().X + (int)_textLabel.Padding.Left + (int)_textLabel.Padding.Right;
             Console.WriteLine("w: " + w);
             Console.WriteLine("Width: " + Width);
@@ -220,7 +220,7 @@ namespace XAMLite
         /// <summary>
         /// Word wraps the text when TextWrapping = Wrap.
         /// </summary>
-        private void UpdateText()
+        private void UpdateForTextWrapping()
         {
             // 1.  if no word wrapping, adjust the width and height of the control to match the text label dimensions.
             // 2.  if word wrapping, wrap the text and create the label.
