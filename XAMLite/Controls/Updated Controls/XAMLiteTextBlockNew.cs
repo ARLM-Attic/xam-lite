@@ -200,12 +200,12 @@ namespace XAMLite
         /// </summary>
         private void UpdateWidthAndHeight()
         {
-            var w = (int)_textLabel.MeasureString().X + (int)_textLabel.Padding.Left + (int)_textLabel.Padding.Right;
-            Console.WriteLine("w: " + w);
-            Console.WriteLine("Width: " + Width);
-            Width = Width < w ? w : Width;
+            //var w = (int)_textLabel.MeasureString().X + (int)_textLabel.Padding.Left + (int)_textLabel.Padding.Right;
+            //Console.WriteLine("w: " + w);
+            //Console.WriteLine("Width: " + Width);
+            //Width = Width < w ? w : Width;
 
-            Console.WriteLine("Final Width: " + Width);
+            //Console.WriteLine("Final Width: " + Width);
 
             var h = (int)_textLabel.MeasureString().Y + (int)_textLabel.Padding.Top + (int)_textLabel.Padding.Bottom;
             Height = Height < h ? h : Height;
@@ -216,9 +216,7 @@ namespace XAMLite
         /// </summary>
         private void UpdateForTextWrapping()
         {
-            // 1.  if no word wrapping, adjust the width and height of the control to match the text label dimensions.
-            // 2.  if word wrapping, wrap the text and create the label.
-            // 3.  fit the label and modify the whole control as necessary.
+            // When applicable, wrap the text and create the label.
             if (TextWrapping == TextWrapping.Wrap)
             {
                 Text = WordWrapper.Wrap(Text, Width, (int)_textLabel.MeasureString().X, _textLabel.Padding);

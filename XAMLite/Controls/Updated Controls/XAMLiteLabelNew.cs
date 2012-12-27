@@ -109,7 +109,11 @@ namespace XAMLite
         {
             if (SpriteFont != null && Content != null)
             {
-                return new Vector2(SpriteFont.MeasureString(Content.ToString()).X, SpriteFont.MeasureString(Content.ToString()).Y);
+                // first remove any newline modifiers, "\n", if any.
+                var s = Content.ToString();
+                s = s.Replace("\n", "");
+                
+                return SpriteFont.MeasureString(s);
             }
 
             return new Vector2();
