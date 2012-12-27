@@ -112,6 +112,7 @@
     <Compile Include="Control\Updated Control System\XAMLiteBaseText.cs" />
     <Compile Include="Control\Old Control System\XAMLiteControl.cs" />
     <Compile Include="Control\Updated Control System\XAMLiteBaseContentControl.cs" />
+    <Compile Include="Helpers\WordWrapper.cs" />
     <Compile Include="Lists\Children.cs" />
     <Compile Include="Supporting Classes\Cursor.cs" />
     <Compile Include="Supporting Classes\Cursors.cs" />

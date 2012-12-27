@@ -49,12 +49,6 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// Used to build a string for the text block with formatting such as
-        /// characters per line.
-        /// </summary>
-        private StringBuilder _sb;
-
-        /// <summary>
         /// Specifies whether text wraps when it reaches the edge of the containing box.
         /// </summary>
         public TextWrapping TextWrapping { get; set; }
@@ -227,136 +221,8 @@ namespace XAMLite
             // 3.  fit the label and modify the whole control as necessary.
             if (TextWrapping == TextWrapping.Wrap)
             {
-                Text = WordWrap(Text, (int)_textLabel.MeasureString().X);
+                Text = WordWrapper.Wrap(Text, Width, (int)_textLabel.MeasureString().X, _textLabel.Padding);
             }
-        }
-
-        // used to break the string into seperate lines of text
-        protected const string Newline = "\n";
-
-        /// <summary>
-        /// Word wraps the given text to fit within the specified width.
-        /// </summary>
-        /// <param name="text">Text to be word wrapped</param>
-        /// <param name="width">Width, in pixels, to which the text
-        /// should be word wrapped</param>
-        /// <returns>The modified text</returns>
-        /// 
-        public string WordWrap(string text, int width)
-        {
-            // return if string length is less than width of textblock
-            if (Width > width)
-            {
-                return text;
-            }
-
-            // just for clarity
-            float strLenPixels = width;
-            var numCharsinString = 0;
-
-            // determining total number of characters in the string 
-            for (var i = 0; i < text.Length; i++)
-            {
-                numCharsinString++;
-            }
-
-            // Now removing any whitespaces that might be at the end of the string
-            while ((numCharsinString - 1) >= 0 && char.IsWhiteSpace(text[numCharsinString - 1]))
-            {
-                numCharsinString--;
-            }
-
-            // finding number of pixels per character in string length
-            float pxPerChar = strLenPixels / numCharsinString;
-
-            // determining max number of characters per line to fit textblock
-            int charsPerLine;
-
-            var paddingAdjust = (int)Padding.Left + (int)Padding.Right;
-
-            if (paddingAdjust < Width)
-            {
-                charsPerLine = (int)(Width / pxPerChar);
-            }
-            else
-            {
-                charsPerLine = 1;
-            }
-
-            _sb = new StringBuilder();
-            int pos, next;
-            for (pos = 0; pos < text.Length; pos = next)
-            {
-                // Find end of line
-                var eol = text.IndexOf(Newline, pos, StringComparison.Ordinal);
-                if (eol == -1)
-                {
-                    next = eol = text.Length;
-                }
-                else
-                {
-                    next = eol + Newline.Length;
-                }
-
-                if (eol > pos)
-                {
-                    do
-                    {
-                        var len = eol - pos;
-                        if (len > charsPerLine)
-                        {
-                            len = BreakLine(text, pos, charsPerLine);
-                        }
-
-                        _sb.Append(text, pos, len);
-
-                        // update position
-                        pos += len;
-
-                        // "if" statement prevents extra line being added at end of text for drawing the background block
-                        if (pos != text.Length)
-                        {
-                            _sb.Append(Newline);
-                        }
-
-                        // Trim whitespace following break
-                        while (pos < eol && char.IsWhiteSpace(text[pos]))
-                        {
-                            pos++;
-                        }
-                    }
-                    while (eol > pos);
-                }
-                else
-                {
-                    _sb.Append(Newline);
-                }
-            }
-
-            return _sb.ToString();
-        }
-
-        public int BreakLine(string text, int pos, int max)
-        {
-            // Find last whitespace in line
-            var i = max - 1;
-            while (i >= 0 && !char.IsWhiteSpace(text[pos + i]))
-            {
-                i--;
-            }
-
-            if (i < 0)
-            {
-                return max; // No whitespace found; break at maximum length
-            }
-            // Find start of whitespace
-            while (i >= 0 && char.IsWhiteSpace(text[pos + i]))
-            {
-                i--;
-            }
-
-            // Return length of text before whitespace
-            return i + 1;
         }
     }
 }
