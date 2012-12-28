@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework;
 namespace XAMLite
 {
     using System.Windows;
+    using System.Windows.Input;
+    using Microsoft.Xna.Framework.Graphics;
 
     /// <summary>
     /// The orientation of the control, whether horizontal or vertical.
@@ -24,9 +26,44 @@ namespace XAMLite
     public class XAMLiteScrollBar : XAMLiteGridNew
     {
         /// <summary>
-        /// The orientation of the scroll bar, whether horizontal or vertical.
+        /// Gets or sets whether the ScrollBar is displayed horizontally or vertically.
         /// </summary>
-        public Orientation Orientation;
+        public Orientation Orientation { get; set; }
+
+        /// <summary>
+        /// Gets or sets the current magnitude of the range control. 
+        /// </summary>
+        public double Value { get; set; }
+
+        /// <summary>
+        /// Gets or sets the highest possible Value of the range element.
+        /// </summary>
+        public double Maximum { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Minimum possible Value of the range element.
+        /// </summary>
+        public double Minimum { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private XAMLiteImageWithRolloverNew _upArrowButton;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private XAMLiteImageNew _upArrowButtonMouseDown;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private XAMLiteImageWithRolloverNew _downArrowButton;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private XAMLiteImageNew _downArrowButtonMouseDown;
 
         /// <summary>
         /// Constructor.
@@ -36,6 +73,8 @@ namespace XAMLite
             : base(game)
         {
             Orientation = Orientation.Vertical;
+            Height = 100;
+            Width = 21;
         }
 
         /// <summary>
@@ -54,37 +93,94 @@ namespace XAMLite
             };
             Children.Add(backDrop);
 
-            var upArrowButton = new XAMLiteImageWithRolloverNew(Game)
+            _upArrowButton = new XAMLiteImageWithRolloverNew(Game)
                 {
                     SourceName = "Icons/ArrowButton", 
                     RolloverSourceName = "Icons/ArrowButtonHover", 
-                    RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateCounterClockwise90
+                    RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateCounterClockwise90,
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    VerticalAlignment = VerticalAlignment.Top
                 };
-            Children.Add(upArrowButton);
+            Children.Add(_upArrowButton);
+            _upArrowButton.MouseDown += UpArrowButtonOnMouseDown;
 
-            var upArrowButtonMouseDown = new XAMLiteImageNew(Game)
+            _upArrowButtonMouseDown = new XAMLiteImageNew(Game)
             {
                 SourceName = "Icons/ArrowButtonMouseDown",
                 RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateCounterClockwise90,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                    VerticalAlignment = VerticalAlignment.Top,
                 Visibility = Visibility.Hidden
             };
-            Children.Add(upArrowButtonMouseDown);
+            Children.Add(_upArrowButtonMouseDown);
+            _upArrowButtonMouseDown.MouseUp += UpArrowButtonMouseDownOnMouseUp;
 
-            var downArrowButton = new XAMLiteImageWithRolloverNew(Game)
+            _downArrowButton = new XAMLiteImageWithRolloverNew(Game)
             {
                 SourceName = "Icons/ArrowButton",
                 RolloverSourceName = "Icons/ArrowButtonHover",
-                RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.FlipVertical : RenderTransform.RotateClockwise90
+                RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.FlipVertical : RenderTransform.RotateClockwise90,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Bottom
             };
-            Children.Add(downArrowButton);
+            Children.Add(_downArrowButton);
+            _downArrowButton.MouseDown += DownArrowButtonOnMouseDown;
 
-            var downArrowButtonMouseDown = new XAMLiteImageNew(Game)
+            _downArrowButtonMouseDown = new XAMLiteImageNew(Game)
             {
                 SourceName = "Icons/ArrowButtonMouseDown",
                 RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.FlipVertical : RenderTransform.RotateClockwise90,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Bottom,
                 Visibility = Visibility.Hidden
             };
-            Children.Add(downArrowButtonMouseDown);
+            Children.Add(_downArrowButtonMouseDown);
+            _downArrowButtonMouseDown.MouseUp += DownArrowButtonMouseDownOnMouseUp;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseButtonEventArgs"></param>
+        private void UpArrowButtonOnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        {
+            _upArrowButton.Visibility = Visibility.Hidden;
+            _upArrowButtonMouseDown.Visibility = Visibility.Visible;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseButtonEventArgs"></param>
+        private void DownArrowButtonOnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        {
+            _downArrowButton.Visibility = Visibility.Hidden;
+            _downArrowButtonMouseDown.Visibility = Visibility.Visible;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseButtonEventArgs"></param>
+        private void UpArrowButtonMouseDownOnMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        {
+            _upArrowButtonMouseDown.Visibility = Visibility.Hidden;
+            _upArrowButton.Visibility = Visibility.Visible;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseButtonEventArgs"></param>
+        private void DownArrowButtonMouseDownOnMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        {
+            _downArrowButtonMouseDown.Visibility = Visibility.Hidden;
+            _downArrowButton.Visibility = Visibility.Visible;
+        }
+
     }
 }
