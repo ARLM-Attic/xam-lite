@@ -222,5 +222,20 @@ namespace XAMLite
                 Text = WordWrapper.Wrap(Text, Width, (int)_textLabel.MeasureString().X, _textLabel.Padding);
             }
         }
+
+        /// <summary>
+        /// Dispose of the XAMLiteLabel that is used for the Content portion of
+        /// the control.
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            foreach (var child in Children)
+            {
+                child.Dispose();
+            }
+        }
     }
 }

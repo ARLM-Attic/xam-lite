@@ -158,7 +158,7 @@ namespace XAMLite
 
             SpriteBatch.Begin();
 
-            if (RenderTransform == null)
+            if (RenderTransform == RenderTransform.Normal)
             {
                 SpriteBatch.Draw(Texture, Panel, IsColorized ? !IsEdge ? BackgroundColor : !IsTopEdge ? BackgroundColor * 0.75f : BackgroundColor * 0.5f : Color.White * (float)Opacity);
             }

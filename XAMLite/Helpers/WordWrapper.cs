@@ -26,8 +26,9 @@ namespace XAMLite
         /// <param name="text">Text to be word wrapped</param>
         /// <param name="controlWidth"> Width, in pixels, of the control that the string must be fit into.</param>
         /// <param name="stringWidth"> Initial Width of the string that must be wrapped into the control.</param>
+        /// <param name="padding"> </param>
         /// <returns>The modified text</returns>
-        public static string Wrap(string text, int controlWidth, int stringWidth, Thickness Padding)
+        public static string Wrap(string text, int controlWidth, int stringWidth, Thickness padding)
         {
             // return if string length is less than width of textblock
             if (controlWidth > stringWidth)
@@ -52,21 +53,24 @@ namespace XAMLite
             }
 
             // finding number of pixels per character in string length
-            float pxPerChar = strLenPixels / numCharsinString;
+            var pxPerChar = strLenPixels / numCharsinString;
+            //Console.WriteLine("Pixels per character: " + pxPerChar);
 
             // determining max number of characters per line to fit textblock
-            int charsPerLine;
+            float charsPerLine;
 
-            var paddingAdjust = (int)Padding.Left + (int)Padding.Right;
+            var paddingAdjust = (int)padding.Left + (int)padding.Right;
 
             if (paddingAdjust < controlWidth)
             {
-                charsPerLine = (int)(controlWidth / pxPerChar);
+                charsPerLine = ((controlWidth - paddingAdjust) / pxPerChar);
             }
             else
             {
                 charsPerLine = 1;
             }
+
+            //Console.WriteLine("Characters per line: " + charsPerLine);
 
             _sb = new StringBuilder();
             int pos, next;
@@ -74,6 +78,7 @@ namespace XAMLite
             {
                 // Find end of line
                 var eol = text.IndexOf(Newline, pos, StringComparison.Ordinal);
+                //Console.WriteLine("EOL: " + (eol - pos));
                 if (eol == -1)
                 {
                     next = eol = text.Length;
@@ -90,7 +95,7 @@ namespace XAMLite
                         var len = eol - pos;
                         if (len > charsPerLine)
                         {
-                            len = BreakLine(text, pos, charsPerLine);
+                            len = BreakLine(text, pos, (int)charsPerLine);
                         }
 
                         _sb.Append(text, pos, len);

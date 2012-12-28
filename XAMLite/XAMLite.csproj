@@ -103,6 +103,7 @@
     <Compile Include="Controls\Updated Controls\XAMLiteRectangleNew.cs" />
     <Compile Include="Controls\Old Controls\XAMLiteTextBlock.cs" />
     <Compile Include="Controls\Old Controls\XAMLiteTextBox.cs" />
+    <Compile Include="Controls\Updated Controls\XAMLiteScrollBar.cs" />
     <Compile Include="Controls\Updated Controls\XAMLiteTextBlockNew.cs" />
     <Compile Include="Controls\Updated Controls\XAMLiteTextBoxNew.cs" />
     <Compile Include="Controls\Old Controls\XAMLiteToolTip.cs" />

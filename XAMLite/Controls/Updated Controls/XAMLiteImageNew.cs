@@ -8,6 +8,24 @@ using Color = Microsoft.Xna.Framework.Color;
 namespace XAMLite
 {
     /// <summary>
+    /// Used by the XAMLiteImage class for transforming an image.
+    /// </summary>
+    public enum RenderTransform
+    {
+        FlipHorizontal,
+
+        FlipVertical,
+
+        FlipHorizontalAndVertical,
+
+        Normal,
+
+        Rotate90,
+
+        Rotate180
+    }
+
+    /// <summary>
     /// Emulates the code behind for a xaml image.
     /// 
     /// Note: Currently under development.  Continue to use normal
@@ -28,7 +46,7 @@ namespace XAMLite
         /// <summary>
         /// Applies a render transform to the button.
         /// </summary>
-        public ScaleTransform RenderTransform;
+        public RenderTransform RenderTransform;
 
         /// <summary>
         /// True when a background has been set for the image. This is primitive
@@ -55,6 +73,7 @@ namespace XAMLite
         public XAMLiteImageNew(Game game)
             : base(game)
         {
+            RenderTransform = RenderTransform.Normal;
         }
 
         /// <summary>
@@ -68,6 +87,7 @@ namespace XAMLite
             : base(game)
         {
             Texture = texture;
+            RenderTransform = RenderTransform.Normal;
         }
 
         /// <summary>
@@ -114,13 +134,17 @@ namespace XAMLite
 
             SpriteBatch.Begin();
 
-            if (RenderTransform == null)
+            if (RenderTransform == RenderTransform.Normal)
             {
                 SpriteBatch.Draw(Texture, Panel, IsColorized ? !IsEdge ? BackgroundColor : !IsTopEdge ? BackgroundColor * 0.75f : BackgroundColor * 0.5f : Color.White * (float)Opacity);
             }
-            else
+            else if (RenderTransform == RenderTransform.FlipHorizontal)
             {
                 SpriteBatch.Draw(Texture, Panel, null, IsColorized ? !IsEdge ? BackgroundColor : !IsTopEdge ? BackgroundColor * 0.75f : BackgroundColor * 0.5f : Color.White * (float)Opacity, 0f, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+            }
+            else if (RenderTransform == RenderTransform.Rotate90)
+            {
+                SpriteBatch.Draw(Texture, Panel, null, IsColorized ? !IsEdge ? BackgroundColor : !IsTopEdge ? BackgroundColor * 0.75f : BackgroundColor * 0.5f : Color.White * (float)Opacity, 90, Vector2.Zero, SpriteEffects.None, 1);
             }
 
             SpriteBatch.End();              

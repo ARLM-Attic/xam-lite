@@ -430,7 +430,7 @@ namespace XAMLite
             var defaultRightEdge = new XAMLiteImageNew(Game, _defaultEdgeTexture)
             {
                 IsEdge = true,
-                RenderTransform = new ScaleTransform(-1, 0, 0.5, 0.5),
+                RenderTransform = RenderTransform.FlipHorizontal,
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 Height = Height - 4,
@@ -444,7 +444,7 @@ namespace XAMLite
             {
                 SourceName = _defaultRolloverSourceNameEdge,
                 IsEdge = true,
-                RenderTransform = new ScaleTransform(-1, 0, 0.5, 0.5),
+                RenderTransform = RenderTransform.FlipHorizontal,
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 Height = Height - 4,
@@ -459,7 +459,7 @@ namespace XAMLite
             {
                 SourceName = _defaultClickedSourceNameEdge,
                 IsEdge = true,
-                RenderTransform = new ScaleTransform(-1, 0, 0.5, 0.5),
+                RenderTransform = RenderTransform.FlipHorizontal,
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 Height = Height - 4,
