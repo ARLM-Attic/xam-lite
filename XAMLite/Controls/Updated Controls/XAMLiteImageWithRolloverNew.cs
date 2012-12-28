@@ -66,13 +66,27 @@ namespace XAMLite
             }
 
             SpriteBatch.Begin();
-            if (RenderTransform == RenderTransform.Normal)
+
+            switch (RenderTransform)
             {
-                SpriteBatch.Draw(MouseEntered ? _rolloverTexture : Texture, Panel, (IsColorized ? !IsEdge ? BackgroundColor : !IsTopEdge ? BackgroundColor * 0.75f : BackgroundColor * 0.5f : Color.White * (float)Opacity));
-            }
-            else
-            {
-                SpriteBatch.Draw(MouseEntered ? _rolloverTexture : Texture, Panel, null, IsColorized ? !IsEdge ? BackgroundColor : !IsTopEdge ? BackgroundColor * 0.75f : BackgroundColor * 0.5f : Color.White * (float)Opacity, 0f, Vector2.Zero, SpriteEffects.FlipHorizontally, 1);
+                case RenderTransform.Normal:
+                    SpriteBatch.Draw(MouseEntered ? _rolloverTexture : Texture, Panel, (IsColorized ? !IsEdge ? BackgroundColor : !IsTopEdge ? BackgroundColor * 0.75f : BackgroundColor * 0.5f : Color.White * (float)Opacity));
+                    break;
+                case RenderTransform.FlipHorizontal:
+                    SpriteBatch.Draw(MouseEntered ? _rolloverTexture : Texture, Panel, null, IsColorized ? !IsEdge ? BackgroundColor : !IsTopEdge ? BackgroundColor * 0.75f : BackgroundColor * 0.5f : Color.White * (float)Opacity, 0f, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+                    break;
+                case RenderTransform.FlipVertical:
+                    SpriteBatch.Draw(MouseEntered ? _rolloverTexture : Texture, Panel, null, IsColorized ? !IsEdge ? BackgroundColor : !IsTopEdge ? BackgroundColor * 0.75f : BackgroundColor * 0.5f : Color.White * (float)Opacity, 0f, Vector2.Zero, SpriteEffects.FlipVertically, 0);
+                    break;
+                case RenderTransform.FlipHorizontalAndVertical:
+                    SpriteBatch.Draw(MouseEntered ? _rolloverTexture : Texture, Panel, null, IsColorized ? !IsEdge ? BackgroundColor : !IsTopEdge ? BackgroundColor * 0.75f : BackgroundColor * 0.5f : Color.White * (float)Opacity, 180, Vector2.Zero, SpriteEffects.FlipHorizontally, 1);
+                    break;
+                case RenderTransform.RotateClockwise90:
+                    SpriteBatch.Draw(MouseEntered ? _rolloverTexture : Texture, Panel, null, IsColorized ? !IsEdge ? BackgroundColor : !IsTopEdge ? BackgroundColor * 0.75f : BackgroundColor * 0.5f : Color.White * (float)Opacity, 90, Vector2.Zero, SpriteEffects.None, 1);
+                    break;
+                case RenderTransform.RotateClockwise180:
+                    SpriteBatch.Draw(MouseEntered ? _rolloverTexture : Texture, Panel, null, IsColorized ? !IsEdge ? BackgroundColor : !IsTopEdge ? BackgroundColor * 0.75f : BackgroundColor * 0.5f : Color.White * (float)Opacity, 180, Vector2.Zero, SpriteEffects.None, 1);
+                    break;
             }
 
             SpriteBatch.End();
