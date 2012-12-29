@@ -54,7 +54,6 @@ namespace XAMLite
 
             // finding number of pixels per character in string length
             var pxPerChar = strLenPixels / numCharsinString;
-            //Console.WriteLine("Pixels per character: " + pxPerChar);
 
             // determining max number of characters per line to fit textblock
             float charsPerLine;
@@ -70,15 +69,12 @@ namespace XAMLite
                 charsPerLine = 1;
             }
 
-            //Console.WriteLine("Characters per line: " + charsPerLine);
-
             _sb = new StringBuilder();
             int pos, next;
             for (pos = 0; pos < text.Length; pos = next)
             {
                 // Find end of line
                 var eol = text.IndexOf(Newline, pos, StringComparison.Ordinal);
-                //Console.WriteLine("EOL: " + (eol - pos));
                 if (eol == -1)
                 {
                     next = eol = text.Length;

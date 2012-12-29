@@ -20,10 +20,20 @@ namespace XAMLite
     }
 
     /// <summary>
-    /// TODO: Update summary.
+    /// TODO: Remove color from textures so that the assets can be colorized to any color.
     /// </summary>
     public class XAMLiteScrollBar : XAMLiteGridNew
     {
+        /// <summary>
+        /// The child that reacts to user interaction of the scroll bar.
+        /// </summary>
+        public XAMLiteBaseControl Child;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private XAMLiteGridNew _grid;
+
         /// <summary>
         /// Gets or sets whether the ScrollBar is displayed horizontally or vertically.
         /// </summary>
@@ -65,6 +75,11 @@ namespace XAMLite
         private XAMLiteImageNew _downArrowButtonMouseDown;
 
         /// <summary>
+        /// 
+        /// </summary>
+        private object _content;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="game"></param>
@@ -72,8 +87,6 @@ namespace XAMLite
             : base(game)
         {
             Orientation = Orientation.Vertical;
-            Height = 100;
-            Width = 21;
         }
 
         /// <summary>
@@ -83,18 +96,52 @@ namespace XAMLite
         {
             base.LoadContent();
 
-            BackgroundColor = Color.Red;
-            var h = Height;
-
-            if (Orientation == Orientation.Horizontal)
+            switch (Orientation)
             {
-                Width = Parent.Width;
+                case Orientation.Vertical:
+                    Width = 21;
+                    Height = Child != null && Height == 0 ? Child.Height : 100;
+                    break;
+                case Orientation.Horizontal:
+                    Width = Child != null && Width == 0 ? Child.Width : 100;
+                    Height = 21;
+                    break;
+            }
+
+            // If there is a child linked to the Scroll Bar, set up a grid that imitates the
+            // child's location so that the scroll bar will be positioned within its child's
+            // boundaries. Also, modify the padding of the child to accommodate the space
+            // that the scroll bar needs.
+            if (Child != null)
+            {
+                _grid = new XAMLiteGridNew(Game)
+                    {
+                        Width = Child.Width,
+                        Height = Child.Height,
+                        Margin = Child.Margin,
+                        HorizontalAlignment = Child.HorizontalAlignment,
+                        VerticalAlignment = Child.VerticalAlignment
+                    };
+                Game.Components.Add(_grid);
+                _grid.Children.Add(this);
+
+                if (Child is XAMLiteTextBlockNew)
+                {
+                    var child = (XAMLiteTextBlockNew)Child;
+
+                    _content = child.Text;
+
+                    ModifyChildPadding(child);
+                }
+                else
+                {
+                    ModifyChildMargin();
+                }
             }
 
             var backDrop = new XAMLiteImageNew(Game)
             {
                 SourceName = "Icons/ScrollBackDrop",
-                //RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateClockwise90,
                 Height = Height,
                 Width = Width
             };
@@ -130,7 +177,7 @@ namespace XAMLite
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Bottom
             };
-            //Children.Add(_downArrowButton);
+            Children.Add(_downArrowButton);
             _downArrowButton.MouseDown += DownArrowButtonOnMouseDown;
 
             _downArrowButtonMouseDown = new XAMLiteImageNew(Game)
@@ -141,8 +188,102 @@ namespace XAMLite
                 VerticalAlignment = VerticalAlignment.Bottom,
                 Visibility = Visibility.Hidden
             };
-            //Children.Add(_downArrowButtonMouseDown);
+            Children.Add(_downArrowButtonMouseDown);
             _downArrowButtonMouseDown.MouseUp += DownArrowButtonMouseDownOnMouseUp;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            //if (_scrollUpButton.State == ButtonStates.Down)
+            //{
+            //    _currentTimeToScroll += dt;
+            //    if (_currentTimeToScroll > TimePerScroll)
+            //    {
+            //        _currentTimeToScroll = 0;
+            //        _currentScroll = (int)MathHelper.Clamp(_currentScroll + ScrollDownSpeed, _minScroll, 0);
+            //    }
+            //}
+            //else if (_scrollDownButton.State == ButtonStates.Down)
+            //{
+            //    _currentTimeToScroll += dt;
+            //    if (_currentTimeToScroll > TimePerScroll)
+            //    {
+            //        _currentTimeToScroll = 0;
+            //        _currentScroll = (int)MathHelper.Clamp(_currentScroll - ScrollDownSpeed, _minScroll, 0);
+            //    }
+            //}
+            //else
+            //{
+            //    _currentTimeToScroll = 0;
+            //}
+
+            //if (_scrollUpButton.HandleInput(dt))
+            //{
+            //    return true;
+            //}
+
+            //if (_scrollDownButton.HandleInput(dt))
+            //{
+            //    return true;
+            //}
+
+            //if (Bounds.Contains(Input.X, Input.Y))
+            //{
+            //    if (Input.DeltaWheel != 0)
+            //    {
+            //        _currentScroll = (int)MathHelper.Clamp(_currentScroll + ((Input.DeltaWheel * 0.01f) * ScrollDownSpeed), _minScroll, 0);
+            //    }
+            //}
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void ModifyChildMargin()
+        {
+            //throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void ModifyChildPadding(XAMLiteTextBlockNew child)
+        {
+            var p = child.Padding;
+            switch (Orientation)
+            {
+                case Orientation.Horizontal:
+                    switch (VerticalAlignment)
+                    {
+                        case VerticalAlignment.Top:
+                            child.Padding = new Thickness(p.Left, p.Top + Height, p.Right, p.Bottom);
+                            break;
+                        case VerticalAlignment.Bottom:
+                            child.Padding = new Thickness(p.Left, p.Top, p.Right, p.Bottom + Height);
+                            break;
+                    }
+
+                    break;
+
+                case Orientation.Vertical:
+                    switch (HorizontalAlignment)
+                    {
+                        case HorizontalAlignment.Left:
+                            child.Padding = new Thickness(p.Left + Width, p.Top, p.Right, p.Bottom);
+                            break;
+                        case HorizontalAlignment.Right:
+                            child.Padding = new Thickness(p.Left, p.Top, p.Right + Width, p.Bottom);
+                            break;
+                    }
+
+                    break;
+            }
         }
 
         /// <summary>
@@ -188,6 +329,5 @@ namespace XAMLite
             _downArrowButtonMouseDown.Visibility = Visibility.Hidden;
             _downArrowButton.Visibility = Visibility.Visible;
         }
-
     }
 }

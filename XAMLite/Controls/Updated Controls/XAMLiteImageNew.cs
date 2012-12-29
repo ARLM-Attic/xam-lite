@@ -179,6 +179,7 @@ namespace XAMLite
 
             SpriteBatch.Begin();
 
+            // NOTE:  When an image is rotated, the image currently cannot have an Alignment = Stretch
             switch (RenderTransform)
             {
                 case RenderTransform.Normal:

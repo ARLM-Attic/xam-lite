@@ -54,7 +54,7 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            base.Draw(gameTime);
+            // base.Draw(gameTime);
 
             if (Visibility != System.Windows.Visibility.Visible)
             {

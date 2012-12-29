@@ -49,6 +49,17 @@ namespace XAMLite
         }
 
         /// <summary>
+        /// Contains the original text before it was word wrapped, in case the 
+        /// padding changes later and the text needs to be word wrapped again.
+        /// </summary>
+        private string _originalText;
+
+        ///// <summary>
+        ///// The current visible content contained within the viewable area of the text block.
+        ///// </summary>
+        //private string _currentContent;
+
+        /// <summary>
         /// Specifies whether text wraps when it reaches the edge of the containing box.
         /// </summary>
         public TextWrapping TextWrapping { get; set; }
@@ -91,10 +102,33 @@ namespace XAMLite
         public int Spacing { get; set; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        private Thickness _padding;
+
+        /// <summary>
         /// Amount of space between the text and the edge of the background 
         /// that contains it.
         /// </summary>
-        public Thickness Padding { get; set; }
+        public Thickness Padding
+        {
+            get
+            {
+                return _padding;
+            } 
+            
+            set
+            {
+                _padding = value;
+
+                if (_textLabel != null)
+                {
+                    _textLabel.Padding = value;
+                    Text = _originalText;
+                    UpdateForTextWrapping();
+                }
+            }
+        }
 
         /// <summary>
         /// The color of the content, whether text or some other object.
@@ -121,11 +155,13 @@ namespace XAMLite
             Text = "TextBlock";
             TextAlignment = TextAlignment.Left;
             TextWrapping = TextWrapping.Wrap;
-            FontFamily = new FontFamily("Verdana12"); 
+            FontFamily = new FontFamily("Verdana12");
+            Background = Brushes.White;
             Foreground = Brushes.Black;
             Padding = new Thickness(5, 2, 5, 5);
             Spacing = 2;
             Width = 50;
+            Height = 28;
         }
 
         /// <summary>
@@ -140,10 +176,12 @@ namespace XAMLite
             FontFamily = new FontFamily("Verdana12");
             TextAlignment = TextAlignment.Left;
             TextWrapping = TextWrapping.Wrap;
+            Background = Brushes.White;
             Foreground = Brushes.Black;
             Padding = new Thickness(5, 2, 5, 5);
             Spacing = 2;
             Width = 50;
+            Height = 28;
         }
 
         /// <summary>
@@ -152,6 +190,8 @@ namespace XAMLite
         protected override void LoadContent()
         {
             base.LoadContent();
+
+            _originalText = Text;
 
             _textLabel = new XAMLiteLabelNew(Game)
             {
