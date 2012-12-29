@@ -7,6 +7,8 @@ using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {
+    using Matrix = Microsoft.Xna.Framework.Matrix;
+
     /// <summary>
     /// Used by the XAMLiteImage class for transforming an image.
     /// </summary>
@@ -16,17 +18,13 @@ namespace XAMLite
 
         FlipVertical,
 
-        FlipHorizontalAndVertical,
-
         Normal,
 
         RotateClockwise90,
 
         RotateCounterClockwise90,
 
-        RotateClockwise180,
-
-        RotateCounterClockwise180
+        Rotate180,
     }
 
     /// <summary>
@@ -51,6 +49,12 @@ namespace XAMLite
         /// Applies a render transform to the button.
         /// </summary>
         public RenderTransform RenderTransform;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private RenderTransform _previousRenderTransform;
+
 
         /// <summary>
         /// True when a background has been set for the image. This is primitive
@@ -78,6 +82,7 @@ namespace XAMLite
             : base(game)
         {
             RenderTransform = RenderTransform.Normal;
+            _previousRenderTransform = RenderTransform;
         }
 
         /// <summary>
@@ -99,6 +104,8 @@ namespace XAMLite
         /// </summary>
         protected override void LoadContent()
         {
+            base.LoadContent();
+
             if (Texture == null)
             {
                 Debug.Assert((SourceName != null), "Must set SourceName property. This is the image file path, minus the file extension.");
@@ -120,7 +127,41 @@ namespace XAMLite
                 IsColorized = true;
             }
 
-            base.LoadContent();
+            UpdatePanel();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            UpdatePanel();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected virtual void UpdatePanel()
+        {
+            if (RenderTransform == _previousRenderTransform)
+            {
+                return;
+            }
+
+            switch (RenderTransform)
+            {
+                case RenderTransform.RotateClockwise90:
+                case RenderTransform.RotateCounterClockwise90:
+                    var h = Height;
+                    Height = Width;
+                    Width = h;
+                    break;
+            }
+
+            _previousRenderTransform = RenderTransform;
         }
 
         /// <summary>
@@ -149,24 +190,18 @@ namespace XAMLite
                 case RenderTransform.FlipVertical:
                     SpriteBatch.Draw(Texture, Panel, null, IsColorized ? !IsEdge ? BackgroundColor : !IsTopEdge ? BackgroundColor * 0.75f : BackgroundColor * 0.5f : Color.White * (float)Opacity, 0f, Vector2.Zero, SpriteEffects.FlipVertically, 0);
                     break;
-                case RenderTransform.FlipHorizontalAndVertical:
-                    SpriteBatch.Draw(Texture, Panel, null, IsColorized ? !IsEdge ? BackgroundColor : !IsTopEdge ? BackgroundColor * 0.75f : BackgroundColor * 0.5f : Color.White * (float)Opacity, 180, Vector2.Zero, SpriteEffects.FlipHorizontally, 1);
-                    break;
                 case RenderTransform.RotateClockwise90:
-                    SpriteBatch.Draw(Texture, Panel, null, IsColorized ? !IsEdge ? BackgroundColor : !IsTopEdge ? BackgroundColor * 0.75f : BackgroundColor * 0.5f : Color.White * (float)Opacity, 90, Vector2.Zero, SpriteEffects.None, 1);
+                    SpriteBatch.Draw(Texture, new Vector2(Panel.X, Panel.Y), null, IsColorized ? !IsEdge ? BackgroundColor : !IsTopEdge ? BackgroundColor * 0.75f : BackgroundColor * 0.5f : Color.White * (float)Opacity, MathHelper.PiOver2, new Vector2(0, Panel.Width), 1, SpriteEffects.None, 1);
                     break;
                 case RenderTransform.RotateCounterClockwise90:
-                    SpriteBatch.Draw(Texture, Panel, null, IsColorized ? !IsEdge ? BackgroundColor : !IsTopEdge ? BackgroundColor * 0.75f : BackgroundColor * 0.5f : Color.White * (float)Opacity, -90, Vector2.Zero, SpriteEffects.None, 1);
+                    SpriteBatch.Draw(Texture, new Vector2(Panel.X, Panel.Y), null, IsColorized ? !IsEdge ? BackgroundColor : !IsTopEdge ? BackgroundColor * 0.75f : BackgroundColor * 0.5f : Color.White * (float)Opacity, -MathHelper.PiOver2, new Vector2(Panel.Height, 0), 1, SpriteEffects.None, 1);
                     break;
-                case RenderTransform.RotateClockwise180:
-                    SpriteBatch.Draw(Texture, Panel, null, IsColorized ? !IsEdge ? BackgroundColor : !IsTopEdge ? BackgroundColor * 0.75f : BackgroundColor * 0.5f : Color.White * (float)Opacity, 180, Vector2.Zero, SpriteEffects.None, 1);
-                    break;
-                case RenderTransform.RotateCounterClockwise180:
-                    SpriteBatch.Draw(Texture, Panel, null, IsColorized ? !IsEdge ? BackgroundColor : !IsTopEdge ? BackgroundColor * 0.75f : BackgroundColor * 0.5f : Color.White * (float)Opacity, -180, Vector2.Zero, SpriteEffects.None, 1);
+                case RenderTransform.Rotate180:
+                    SpriteBatch.Draw(Texture, new Vector2(Panel.X, Panel.Y), null, IsColorized ? !IsEdge ? BackgroundColor : !IsTopEdge ? BackgroundColor * 0.75f : BackgroundColor * 0.5f : Color.White * (float)Opacity, MathHelper.Pi, new Vector2(Panel.Width, Panel.Height), 1, SpriteEffects.None, 1);
                     break;
             }
 
-            SpriteBatch.End();              
+            SpriteBatch.End();
         }
     }
 }

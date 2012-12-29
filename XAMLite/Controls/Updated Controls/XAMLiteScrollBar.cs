@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows;
+using System.Windows.Input;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace XAMLite
 {
-    using System.Windows;
-    using System.Windows.Input;
-    using Microsoft.Xna.Framework.Graphics;
-
     /// <summary>
     /// The orientation of the control, whether horizontal or vertical.
     /// </summary>
@@ -84,12 +83,20 @@ namespace XAMLite
         {
             base.LoadContent();
 
+            BackgroundColor = Color.Red;
+            var h = Height;
+
+            if (Orientation == Orientation.Horizontal)
+            {
+                Width = Parent.Width;
+            }
+
             var backDrop = new XAMLiteImageNew(Game)
             {
                 SourceName = "Icons/ScrollBackDrop",
-                RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateCounterClockwise90,
-                Height = Orientation == Orientation.Vertical ? Height : 21,
-                Width = Orientation == Orientation.Vertical ? 21 : Width
+                //RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateClockwise90,
+                Height = Height,
+                Width = Width
             };
             Children.Add(backDrop);
 
@@ -123,7 +130,7 @@ namespace XAMLite
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Bottom
             };
-            Children.Add(_downArrowButton);
+            //Children.Add(_downArrowButton);
             _downArrowButton.MouseDown += DownArrowButtonOnMouseDown;
 
             _downArrowButtonMouseDown = new XAMLiteImageNew(Game)
@@ -134,7 +141,7 @@ namespace XAMLite
                 VerticalAlignment = VerticalAlignment.Bottom,
                 Visibility = Visibility.Hidden
             };
-            Children.Add(_downArrowButtonMouseDown);
+            //Children.Add(_downArrowButtonMouseDown);
             _downArrowButtonMouseDown.MouseUp += DownArrowButtonMouseDownOnMouseUp;
         }
 

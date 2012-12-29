@@ -122,7 +122,7 @@ namespace XAMLite
             base.Draw(gameTime);
 
             SpriteBatch.Begin();
-            //SpriteBatch.Draw(Pixel, Panel, Color.Red);
+            //SpriteBatch.Draw(Pixel, Panel, BackgroundColor);
             SpriteBatch.End();
         }
 
