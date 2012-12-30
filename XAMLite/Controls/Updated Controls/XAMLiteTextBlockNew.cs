@@ -129,20 +129,25 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// This modifies both the grid's and the text label's margins but leaves
-        /// background alone.  This allows for scrolling when it is attached to a
-        /// scroll bar.
+        /// This modifies both the grid's and the text label's margins but 
+        /// leaves the background alone.  This allows for scrolling when it is 
+        /// attached to a scroll bar.
         /// </summary>
         public override Thickness Margin
         {
             get
             {
+                if (_textLabel != null)
+                {
+                    return _textLabel.Margin;
+                }
+
                 return base.Margin;
             }
 
             set
             {
-                base.Margin = value;
+                //base.Margin = value;
 
                 if (_textLabel != null)
                 {

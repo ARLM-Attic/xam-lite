@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework;
 
 namespace XAMLite
 {
+    using Microsoft.Xna.Framework.Graphics;
+
     /// <summary>
     /// Note: Currently under development.  Continue to use normal
     /// XAMLiteLabel class until this class replaces it.
@@ -17,6 +19,11 @@ namespace XAMLite
         /// Family, Margin, or Position was not at its default state. 
         /// </summary>
         private bool _isModified;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private RasterizerState _rasterizeState;
 
         /// <summary>
         /// Constructor.
@@ -47,6 +54,11 @@ namespace XAMLite
         {
             base.LoadContent();
 
+            if (Parent != null)
+            {
+                
+            }
+
             UpdateFontMetrics();
         }
 
@@ -73,7 +85,16 @@ namespace XAMLite
 
             if (Content != null)
             {
-                SpriteBatch.Begin();
+                if (Parent != null)
+                {
+                    _rasterizeState = new RasterizerState { ScissorTestEnable = true };
+                    SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, _rasterizeState);
+                    SpriteBatch.GraphicsDevice.ScissorRectangle = Parent.Panel;
+                }
+                else
+                {
+                    SpriteBatch.Begin();
+                }
 
                 if (Background != Brushes.Transparent)
                 {
@@ -89,13 +110,9 @@ namespace XAMLite
                 //        ForegroundColor * (float)Opacity);
                 //}
                 //else
-                {
-                    SpriteBatch.DrawString(
-                        SpriteFont,
-                        Content.ToString(),
-                        ContentPosition,
-                        ForegroundColor * (float)Opacity);
-                }
+                //{
+                    SpriteBatch.DrawString(SpriteFont, Content.ToString(), ContentPosition, ForegroundColor * (float)Opacity);
+                //}
 
                 SpriteBatch.End();
             }

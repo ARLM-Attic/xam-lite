@@ -30,7 +30,8 @@ namespace XAMLite
         public XAMLiteBaseControl Child;
 
         /// <summary>
-        /// 
+        /// The grid that contains all of the assets which define the scroll 
+        /// bar.
         /// </summary>
         private XAMLiteGridNew _grid;
 
@@ -55,29 +56,39 @@ namespace XAMLite
         public double Minimum { get; set; }
 
         /// <summary>
-        /// 
+        /// The normal and hover states of the Up Arrow Button.
         /// </summary>
         private XAMLiteImageWithRolloverNew _upArrowButton;
 
         /// <summary>
-        /// 
+        /// The Mouse Down state of the Up Arrow Button.
         /// </summary>
         private XAMLiteImageNew _upArrowButtonMouseDown;
 
         /// <summary>
-        /// 
+        /// The normal and hover states of the Down Arrow Button.
         /// </summary>
         private XAMLiteImageWithRolloverNew _downArrowButton;
 
         /// <summary>
-        /// 
+        /// The Mouse Down state of the Down Arrow Button.
         /// </summary>
         private XAMLiteImageNew _downArrowButtonMouseDown;
 
         /// <summary>
-        /// 
+        /// True when the left mouse button is pressed on the Up Arrow button.
         /// </summary>
-        private object _content;
+        private bool _mouseDownUpArrow;
+
+        /// <summary>
+        /// True when the left mouse button is pressed on the Up Arrow button.
+        /// </summary>
+        private bool _mouseDownDownArrow;
+
+        /// <summary>
+        /// Timer for determining when to next scroll the text.
+        /// </summary>
+        private TimeSpan _scrollTimer;
 
         /// <summary>
         /// Constructor.
@@ -87,6 +98,7 @@ namespace XAMLite
             : base(game)
         {
             Orientation = Orientation.Vertical;
+            _scrollTimer = TimeSpan.Zero;
         }
 
         /// <summary>
@@ -128,8 +140,6 @@ namespace XAMLite
                 if (Child is XAMLiteTextBlockNew)
                 {
                     var child = (XAMLiteTextBlockNew)Child;
-
-                    _content = child.Text;
 
                     ModifyChildPadding(child);
                 }
@@ -194,38 +204,58 @@ namespace XAMLite
             SetInitialScrollValues();
         }
 
+        /// <summary>
+        /// Sets the Minimum, Maximum, and initial Value.
+        /// </summary>
         private void SetInitialScrollValues()
         {
             Value = 0;
             Minimum = 0;
 
-            //var child = (XAMLiteGridNew)Child;
-
             switch (Orientation)
             {
                 case Orientation.Vertical:
-                    if (Child is XAMLiteTextBlockNew)
+                    var child = Child as XAMLiteTextBlockNew;
+                    if (child != null)
                     {
-                        var child = (XAMLiteTextBlockNew)Child;
                         var textHeight = child.MeasureText().Y;
                         Maximum = Math.Abs(Height - textHeight);
                     }
           
-                    Console.WriteLine("Maximum: " + Maximum);
                     break;
                 case Orientation.Horizontal:
-                    Maximum = Width - Child.Width;
+                    // TODO: Still need to implement.
+                    // Maximum = Width - Child.Width;
                     break;
             }
         }
 
         /// <summary>
-        /// 
+        /// Handles the different means by which the text can be scrolled.
         /// </summary>
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            if (_mouseDownUpArrow)
+            {
+                _scrollTimer -= gameTime.ElapsedGameTime;
+                if (_scrollTimer <= TimeSpan.Zero)
+                {
+                    UpdateMouseArrowUp();
+                    _scrollTimer = TimeSpan.FromSeconds(0.1);
+                }
+            }
+            else if (_mouseDownDownArrow)
+            {
+                _scrollTimer -= gameTime.ElapsedGameTime;
+                if (_scrollTimer <= TimeSpan.Zero)
+                {
+                    UpdateMouseArrowDown();
+                    _scrollTimer = TimeSpan.FromSeconds(0.1);
+                }
+            }
 
             //if (_scrollUpButton.State == ButtonStates.Down)
             //{
@@ -270,7 +300,57 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// Moves the text up as the text is scrolled to its end.
+        /// </summary>
+        private void UpdateMouseArrowDown()
+        {
+            if (Value >= Maximum)
+            {
+                return;
+            }
+
+            Value += 10;
+
+            var m = Child.Margin;
+
+            switch (Orientation)
+            {
+                case Orientation.Vertical:
+                    Child.Margin = new Thickness(m.Left, m.Top - 10, m.Right, m.Bottom);
+                    break;
+                case Orientation.Horizontal:
+                    Child.Margin = new Thickness(m.Left - 10, m.Top, m.Right, m.Bottom);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Moves the text down as the text is scrolled to its beginning.
+        /// </summary>
+        private void UpdateMouseArrowUp()
+        {
+            if (Value <= Minimum)
+            {
+                return;
+            }
+
+            Value -= 10;
+
+            var m = Child.Margin;
+
+            switch (Orientation)
+            {
+                case Orientation.Vertical:
+                    Child.Margin = new Thickness(m.Left, m.Top + 10, m.Right, m.Bottom);
+                    break;
+                case Orientation.Horizontal:
+                    Child.Margin = new Thickness(m.Left + 10, m.Top, m.Right, m.Bottom);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// TODO: Still need to implement.
         /// </summary>
         private void ModifyChildMargin()
         {
@@ -278,7 +358,8 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// Adjust the padding of the child so that the scroll bar does not
+        /// cover what it will be scrolling.
         /// </summary>
         private void ModifyChildPadding(XAMLiteTextBlockNew child)
         {
@@ -314,7 +395,7 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// Handles when the Up Arrow Button is pressed.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="mouseButtonEventArgs"></param>
@@ -323,28 +404,12 @@ namespace XAMLite
             _upArrowButton.Visibility = Visibility.Hidden;
             _upArrowButtonMouseDown.Visibility = Visibility.Visible;
 
-            if (Value <= Minimum)
-            {
-                return;
-            }
-
-            Value -= 10;
-
-            var m = Child.Margin;
-
-            switch (Orientation)
-            {
-                case Orientation.Vertical:
-                    Child.Margin = new Thickness(m.Left, m.Top + 10, m.Right, m.Bottom);
-                    break;
-                case Orientation.Horizontal:
-                    Child.Margin = new Thickness(m.Left + 10, m.Top, m.Right, m.Bottom);
-                    break;
-            } 
+            _scrollTimer = TimeSpan.Zero;
+            _mouseDownUpArrow = true;
         }
 
         /// <summary>
-        /// 
+        /// Handles when the Down Arrow Button is pressed.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="mouseButtonEventArgs"></param>
@@ -353,28 +418,12 @@ namespace XAMLite
             _downArrowButton.Visibility = Visibility.Hidden;
             _downArrowButtonMouseDown.Visibility = Visibility.Visible;
 
-            if (Value >= Maximum)
-            {
-                return;
-            }
-
-            Value += 10;
-
-            var m = Child.Margin;
-
-            switch (Orientation)
-            {
-                case Orientation.Vertical:
-                    Child.Margin = new Thickness(m.Left, m.Top - 10, m.Right, m.Bottom);
-                    break;
-                case Orientation.Horizontal:
-                    Child.Margin = new Thickness(m.Left - 10, m.Top, m.Right, m.Bottom);
-                    break;
-            } 
+            _scrollTimer = TimeSpan.Zero;
+            _mouseDownDownArrow = true;
         }
 
         /// <summary>
-        /// 
+        /// Handles when the Up Arrow Button is released.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="mouseButtonEventArgs"></param>
@@ -382,10 +431,12 @@ namespace XAMLite
         {
             _upArrowButtonMouseDown.Visibility = Visibility.Hidden;
             _upArrowButton.Visibility = Visibility.Visible;
+
+            _mouseDownUpArrow = false;
         }
 
         /// <summary>
-        /// 
+        /// Handles when the Down Arrow Button is released.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="mouseButtonEventArgs"></param>
@@ -393,6 +444,8 @@ namespace XAMLite
         {
             _downArrowButtonMouseDown.Visibility = Visibility.Hidden;
             _downArrowButton.Visibility = Visibility.Visible;
+
+            _mouseDownDownArrow = false;
         }
     }
 }
