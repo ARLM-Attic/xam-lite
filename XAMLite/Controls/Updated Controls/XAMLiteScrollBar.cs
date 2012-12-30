@@ -190,6 +190,33 @@ namespace XAMLite
             };
             Children.Add(_downArrowButtonMouseDown);
             _downArrowButtonMouseDown.MouseUp += DownArrowButtonMouseDownOnMouseUp;
+
+            SetInitialScrollValues();
+        }
+
+        private void SetInitialScrollValues()
+        {
+            Value = 0;
+            Minimum = 0;
+
+            //var child = (XAMLiteGridNew)Child;
+
+            switch (Orientation)
+            {
+                case Orientation.Vertical:
+                    if (Child is XAMLiteTextBlockNew)
+                    {
+                        var child = (XAMLiteTextBlockNew)Child;
+                        var textHeight = child.MeasureText().Y;
+                        Maximum = Math.Abs(Height - textHeight);
+                    }
+          
+                    Console.WriteLine("Maximum: " + Maximum);
+                    break;
+                case Orientation.Horizontal:
+                    Maximum = Width - Child.Width;
+                    break;
+            }
         }
 
         /// <summary>
@@ -295,6 +322,25 @@ namespace XAMLite
         {
             _upArrowButton.Visibility = Visibility.Hidden;
             _upArrowButtonMouseDown.Visibility = Visibility.Visible;
+
+            if (Value <= Minimum)
+            {
+                return;
+            }
+
+            Value -= 10;
+
+            var m = Child.Margin;
+
+            switch (Orientation)
+            {
+                case Orientation.Vertical:
+                    Child.Margin = new Thickness(m.Left, m.Top + 10, m.Right, m.Bottom);
+                    break;
+                case Orientation.Horizontal:
+                    Child.Margin = new Thickness(m.Left + 10, m.Top, m.Right, m.Bottom);
+                    break;
+            } 
         }
 
         /// <summary>
@@ -306,6 +352,25 @@ namespace XAMLite
         {
             _downArrowButton.Visibility = Visibility.Hidden;
             _downArrowButtonMouseDown.Visibility = Visibility.Visible;
+
+            if (Value >= Maximum)
+            {
+                return;
+            }
+
+            Value += 10;
+
+            var m = Child.Margin;
+
+            switch (Orientation)
+            {
+                case Orientation.Vertical:
+                    Child.Margin = new Thickness(m.Left, m.Top - 10, m.Right, m.Bottom);
+                    break;
+                case Orientation.Horizontal:
+                    Child.Margin = new Thickness(m.Left - 10, m.Top, m.Right, m.Bottom);
+                    break;
+            } 
         }
 
         /// <summary>

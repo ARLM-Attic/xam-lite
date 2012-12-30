@@ -18,7 +18,7 @@ namespace XAMLite
         /// <summary>
         /// Font texture.
         /// </summary>
-        protected SpriteFont SpriteFont;
+        internal SpriteFont SpriteFont;
 
         /// <summary>
         /// The font family the text belongs to.

@@ -25,6 +25,9 @@ namespace XAMLite
             set { Text = value; }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private string _text;
 
         /// <summary>
@@ -53,11 +56,6 @@ namespace XAMLite
         /// padding changes later and the text needs to be word wrapped again.
         /// </summary>
         private string _originalText;
-
-        ///// <summary>
-        ///// The current visible content contained within the viewable area of the text block.
-        ///// </summary>
-        //private string _currentContent;
 
         /// <summary>
         /// Specifies whether text wraps when it reaches the edge of the containing box.
@@ -126,6 +124,29 @@ namespace XAMLite
                     _textLabel.Padding = value;
                     Text = _originalText;
                     UpdateForTextWrapping();
+                }
+            }
+        }
+
+        /// <summary>
+        /// This modifies both the grid's and the text label's margins but leaves
+        /// background alone.  This allows for scrolling when it is attached to a
+        /// scroll bar.
+        /// </summary>
+        public override Thickness Margin
+        {
+            get
+            {
+                return base.Margin;
+            }
+
+            set
+            {
+                base.Margin = value;
+
+                if (_textLabel != null)
+                {
+                    _textLabel.Margin = value;
                 }
             }
         }
@@ -215,7 +236,7 @@ namespace XAMLite
                 UpdateForTextWrapping();
             }
 
-            UpdateWidthAndHeight();
+            //UpdateWidthAndHeight();
 
             if (Game.Components.Contains(_textLabel))
             {
@@ -236,20 +257,29 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// Updates the Width and Height of the control.
+        /// Measures the text block Text Height, which may be different than the background and grid size.
         /// </summary>
-        private void UpdateWidthAndHeight()
+        /// <returns></returns>
+        internal Vector2 MeasureText()
         {
-            //var w = (int)_textLabel.MeasureString().X + (int)_textLabel.Padding.Left + (int)_textLabel.Padding.Right;
-            //Console.WriteLine("w: " + w);
-            //Console.WriteLine("Width: " + Width);
-            //Width = Width < w ? w : Width;
-
-            //Console.WriteLine("Final Width: " + Width);
-
-            var h = (int)_textLabel.MeasureString().Y + (int)_textLabel.Padding.Top + (int)_textLabel.Padding.Bottom;
-            Height = Height < h ? h : Height;
+            return _textLabel.SpriteFont.MeasureString(Text);
         }
+
+        ///// <summary>
+        ///// Updates the Width and Height of the control.
+        ///// </summary>
+        //private void UpdateWidthAndHeight()
+        //{
+        //    //var w = (int)_textLabel.MeasureString().X + (int)_textLabel.Padding.Left + (int)_textLabel.Padding.Right;
+        //    //Console.WriteLine("w: " + w);
+        //    //Console.WriteLine("Width: " + Width);
+        //    //Width = Width < w ? w : Width;
+
+        //    var h = (int)_textLabel.MeasureString().Y + (int)_textLabel.Padding.Top + (int)_textLabel.Padding.Bottom;
+
+        //    Console.WriteLine(h);
+        //    Height = Height < h ? h : Height;
+        //}
 
         /// <summary>
         /// Word wraps the text when TextWrapping = Wrap.
