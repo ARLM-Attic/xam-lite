@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Xna.Framework;
@@ -56,24 +54,30 @@ namespace XAMLite
         public double Minimum { get; set; }
 
         /// <summary>
-        /// The normal and hover states of the Up Arrow Button.
-        /// </summary>
-        private XAMLiteImageWithRolloverNew _upArrowButton;
-
-        /// <summary>
         /// The Mouse Down state of the Up Arrow Button.
         /// </summary>
         private XAMLiteImageNew _upArrowButtonMouseDown;
 
         /// <summary>
-        /// The normal and hover states of the Down Arrow Button.
-        /// </summary>
-        private XAMLiteImageWithRolloverNew _downArrowButton;
-
-        /// <summary>
         /// The Mouse Down state of the Down Arrow Button.
         /// </summary>
         private XAMLiteImageNew _downArrowButtonMouseDown;
+
+        /// <summary>
+        /// Grid that contains all of the XAMLiteImages for creating the 
+        /// scrollable bar.
+        /// </summary>
+        private XAMLiteGridNew _scrollBar;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private XAMLiteGridNew _upArrow;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private XAMLiteGridNew _downArrow;
 
         /// <summary>
         /// True when the left mouse button is pressed on the Up Arrow button.
@@ -89,6 +93,30 @@ namespace XAMLite
         /// Timer for determining when to next scroll the text.
         /// </summary>
         private TimeSpan _scrollTimer;
+ 
+        /// <summary>
+        /// Contains all XAMLite objects that make up the normal state scroll 
+        /// bar.
+        /// </summary>
+        private List<XAMLiteImageNew> _scrollBarNormal;
+
+        /// <summary>
+        /// Contains all XAMLite objects that make up the hover state scroll 
+        /// bar.
+        /// </summary>
+        private List<XAMLiteImageNew> _scrollBarHover;
+
+        /// <summary>
+        /// Contains all XAMLite objects that make up the mouse down state 
+        /// scroll bar.
+        /// </summary>
+        private List<XAMLiteImageNew> _scrollBarMouseDown;
+
+        /// <summary>
+        /// The height of the text, which may be different than the height of 
+        /// the Child, when a scroll bar is necessary.
+        /// </summary>
+        private float _childTextHeight;
 
         /// <summary>
         /// Constructor.
@@ -157,38 +185,91 @@ namespace XAMLite
             };
             Children.Add(backDrop);
 
-            _upArrowButton = new XAMLiteImageWithRolloverNew(Game)
+            var t = Game.Content.Load<Texture2D>("Icons/ArrowButton");
+
+            var upArrowNormalButton = new XAMLiteImageNew(Game, t)
+            {
+                RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateCounterClockwise90,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top
+            };   
+
+            var downArrowNormalButton = new XAMLiteImageNew(Game)
+            {
+                SourceName = "Icons/ArrowButton",
+                RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.FlipVertical : RenderTransform.RotateClockwise90,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Bottom
+            };
+
+            var c = Child as XAMLiteTextBlockNew;
+
+            // if the text height is less than the height of the block, do not load
+            // scroll bar nor set the event handlers.
+            if (c != null)
+            {
+                _childTextHeight = c.MeasureText().Y;
+
+                if (_childTextHeight <= Child.Height)
                 {
-                    SourceName = "Icons/ArrowButton", 
-                    RolloverSourceName = "Icons/ArrowButtonHover", 
-                    RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateCounterClockwise90,
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                    VerticalAlignment = VerticalAlignment.Top
-                };
-            Children.Add(_upArrowButton);
-            _upArrowButton.MouseDown += UpArrowButtonOnMouseDown;
+                    Children.Add(upArrowNormalButton);
+                    Children.Add(downArrowNormalButton);
+
+                    return;
+                }
+            }
+
+            _upArrow = new XAMLiteGridNew(Game)
+            {
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                Width = t.Width,
+                Height = t.Height
+            };    
+            Children.Add(_upArrow);
+
+            _upArrow.Children.Add(upArrowNormalButton);
+
+            var upArrowHoverButton = new XAMLiteImageNew(Game)
+            {
+                SourceName = "Icons/ArrowButtonHover",
+                RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateCounterClockwise90,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                Visibility = Visibility.Hidden
+            };
+            _upArrow.Children.Add(upArrowHoverButton);
 
             _upArrowButtonMouseDown = new XAMLiteImageNew(Game)
             {
                 SourceName = "Icons/ArrowButtonMouseDown",
                 RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateCounterClockwise90,
                 HorizontalAlignment = HorizontalAlignment.Left,
-                    VerticalAlignment = VerticalAlignment.Top,
+                VerticalAlignment = VerticalAlignment.Top,
                 Visibility = Visibility.Hidden
             };
-            Children.Add(_upArrowButtonMouseDown);
-            _upArrowButtonMouseDown.MouseUp += UpArrowButtonMouseDownOnMouseUp;
+            _upArrow.Children.Add(_upArrowButtonMouseDown);
 
-            _downArrowButton = new XAMLiteImageWithRolloverNew(Game)
+            _downArrow = new XAMLiteGridNew(Game)
             {
-                SourceName = "Icons/ArrowButton",
-                RolloverSourceName = "Icons/ArrowButtonHover",
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                Width = t.Width,
+                Height = t.Height
+            };
+            Children.Add(_downArrow);
+
+            _downArrow.Children.Add(downArrowNormalButton);
+
+            var downArrowHoverButton = new XAMLiteImageNew(Game)
+            {
+                SourceName = "Icons/ArrowButtonHover",
                 RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.FlipVertical : RenderTransform.RotateClockwise90,
                 HorizontalAlignment = HorizontalAlignment.Right,
-                VerticalAlignment = VerticalAlignment.Bottom
+                VerticalAlignment = VerticalAlignment.Bottom,
+                Visibility = Visibility.Hidden
             };
-            Children.Add(_downArrowButton);
-            _downArrowButton.MouseDown += DownArrowButtonOnMouseDown;
+            _downArrow.Children.Add(downArrowHoverButton);
 
             _downArrowButtonMouseDown = new XAMLiteImageNew(Game)
             {
@@ -198,10 +279,141 @@ namespace XAMLite
                 VerticalAlignment = VerticalAlignment.Bottom,
                 Visibility = Visibility.Hidden
             };
-            Children.Add(_downArrowButtonMouseDown);
-            _downArrowButtonMouseDown.MouseUp += DownArrowButtonMouseDownOnMouseUp;
+            _downArrow.Children.Add(_downArrowButtonMouseDown);
+
+            // load the event handlers for the arrow buttons.
+            _upArrow.MouseEnter += UpArrowOnMouseEnter;
+            _upArrow.MouseLeave += UpArrowOnMouseLeave;
+            _upArrow.MouseDown += UpArrowOnMouseDown;
+            _upArrow.MouseUp += UpArrowOnMouseUp;
+
+            _downArrow.MouseEnter += DownArrowOnMouseEnter;
+            _downArrow.MouseLeave += DownArrowOnMouseLeave;
+            _downArrow.MouseDown += DownArrowOnMouseDown;
+            _downArrow.MouseUp += DownArrowOnMouseUp;
 
             SetInitialScrollValues();
+
+            _scrollBarNormal = new List<XAMLiteImageNew>();
+            _scrollBarHover = new List<XAMLiteImageNew>();
+            _scrollBarMouseDown = new List<XAMLiteImageNew>();
+
+            _scrollBar = new XAMLiteGridNew(Game)
+            {
+                Width = Orientation == Orientation.Vertical ? Width : Width - (t.Width * 2),
+                Height = Orientation == Orientation.Vertical ? Height - (t.Height * 2) : Height,
+                HorizontalAlignment = Orientation == Orientation.Vertical ? HorizontalAlignment.Left : HorizontalAlignment.Center,
+                VerticalAlignment = Orientation == Orientation.Vertical ? VerticalAlignment.Center : VerticalAlignment.Top
+            };
+            Children.Add(_scrollBar);
+            _scrollBar.MouseEnter += ScrollBarOnMouseEnter;
+            _scrollBar.MouseLeave += ScrollBarOnMouseLeave;
+            _scrollBar.MouseDown += ScrollBarOnMouseDown;
+            _scrollBar.MouseUp += ScrollBarOnMouseUp;
+
+            var tTop = Game.Content.Load<Texture2D>("Icons/ScrollButtonTopNoHover");
+            var tBottom = Game.Content.Load<Texture2D>("Icons/ScrollButtonBottomNoHover");
+
+            var scrollBarTopNoHover = new XAMLiteImageNew(Game, tTop)
+            {
+                RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateCounterClockwise90,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top
+            };    
+            _scrollBar.Children.Add(scrollBarTopNoHover);
+            _scrollBarNormal.Add(scrollBarTopNoHover);
+
+            var scrollBarTopHover = new XAMLiteImageNew(Game)
+            {
+                SourceName = "Icons/ScrollButtonTopHover",
+                RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateCounterClockwise90,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                Visibility = Visibility.Hidden
+            };
+            _scrollBar.Children.Add(scrollBarTopHover);
+            _scrollBarHover.Add(scrollBarTopHover);
+
+            var scrollBarTopMouseDown = new XAMLiteImageNew(Game)
+            {
+                SourceName = "Icons/ScrollButtonTopMouseDown",
+                RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateCounterClockwise90,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                Visibility = Visibility.Hidden
+            };
+            _scrollBar.Children.Add(scrollBarTopMouseDown);
+            _scrollBarMouseDown.Add(scrollBarTopMouseDown);
+
+            var scrollBarBottomNoHover = new XAMLiteImageNew(Game)
+            {
+                SourceName = "Icons/ScrollButtonBottomNoHover",
+                RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateClockwise90,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Bottom
+            };
+            _scrollBar.Children.Add(scrollBarBottomNoHover);
+            _scrollBarNormal.Add(scrollBarBottomNoHover);
+
+            var scrollBarBottomHover = new XAMLiteImageNew(Game)
+            {
+                SourceName = "Icons/ScrollButtonBottomHover",
+                RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateClockwise90,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                Visibility = Visibility.Hidden
+            };
+            _scrollBar.Children.Add(scrollBarBottomHover);
+            _scrollBarHover.Add(scrollBarBottomHover);
+
+            var scrollBarBottomMouseDown = new XAMLiteImageNew(Game)
+            {
+                SourceName = "Icons/ScrollButtonBottomMouseDown",
+                RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateClockwise90,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                Visibility = Visibility.Hidden
+            };
+            _scrollBar.Children.Add(scrollBarBottomMouseDown);
+            _scrollBarMouseDown.Add(scrollBarBottomMouseDown);
+
+            var scrollBarBodyNoHover = new XAMLiteImageNew(Game)
+            {
+                SourceName = "Icons/ScrollButtonBodyNoHover",
+                Width = Orientation == Orientation.Vertical ? _scrollBar.Width : _scrollBar.Width - tTop.Width - tBottom.Width,
+                Height = Orientation == Orientation.Vertical ? _scrollBar.Height - tTop.Height - tBottom.Height : _scrollBar.Height,
+                RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateCounterClockwise90,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            _scrollBar.Children.Add(scrollBarBodyNoHover);
+            _scrollBarNormal.Add(scrollBarBodyNoHover);
+
+            var scrollBarBodyHover = new XAMLiteImageNew(Game)
+            {
+                SourceName = "Icons/ScrollButtonBodyHover",
+                Width = Orientation == Orientation.Vertical ? _scrollBar.Width : _scrollBar.Width - tTop.Width - tBottom.Width,
+                Height = Orientation == Orientation.Vertical ? _scrollBar.Height - tTop.Height - tBottom.Height : _scrollBar.Height,
+                RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateCounterClockwise90,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Visibility = Visibility.Hidden
+            };
+            _scrollBar.Children.Add(scrollBarBodyHover);
+            _scrollBarHover.Add(scrollBarBodyHover);
+
+            var scrollBarBodyMouseDown = new XAMLiteImageNew(Game)
+            {
+                SourceName = "Icons/ScrollButtonBodyMouseDown",
+                Width = Orientation == Orientation.Vertical ? _scrollBar.Width : _scrollBar.Width - tTop.Width - tBottom.Width,
+                Height = Orientation == Orientation.Vertical ? _scrollBar.Height - tTop.Height - tBottom.Height : _scrollBar.Height,
+                RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateCounterClockwise90,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Visibility = Visibility.Hidden
+            };
+            _scrollBar.Children.Add(scrollBarBodyMouseDown);
+            _scrollBarMouseDown.Add(scrollBarBodyMouseDown);
         }
 
         /// <summary>
@@ -215,14 +427,9 @@ namespace XAMLite
             switch (Orientation)
             {
                 case Orientation.Vertical:
-                    var child = Child as XAMLiteTextBlockNew;
-                    if (child != null)
-                    {
-                        var textHeight = child.MeasureText().Y;
-                        Maximum = Math.Abs(Height - textHeight);
-                    }
-          
+                    Maximum = Math.Abs(Height - _childTextHeight);
                     break;
+
                 case Orientation.Horizontal:
                     // TODO: Still need to implement.
                     // Maximum = Width - Child.Width;
@@ -256,47 +463,6 @@ namespace XAMLite
                     _scrollTimer = TimeSpan.FromSeconds(0.1);
                 }
             }
-
-            //if (_scrollUpButton.State == ButtonStates.Down)
-            //{
-            //    _currentTimeToScroll += dt;
-            //    if (_currentTimeToScroll > TimePerScroll)
-            //    {
-            //        _currentTimeToScroll = 0;
-            //        _currentScroll = (int)MathHelper.Clamp(_currentScroll + ScrollDownSpeed, _minScroll, 0);
-            //    }
-            //}
-            //else if (_scrollDownButton.State == ButtonStates.Down)
-            //{
-            //    _currentTimeToScroll += dt;
-            //    if (_currentTimeToScroll > TimePerScroll)
-            //    {
-            //        _currentTimeToScroll = 0;
-            //        _currentScroll = (int)MathHelper.Clamp(_currentScroll - ScrollDownSpeed, _minScroll, 0);
-            //    }
-            //}
-            //else
-            //{
-            //    _currentTimeToScroll = 0;
-            //}
-
-            //if (_scrollUpButton.HandleInput(dt))
-            //{
-            //    return true;
-            //}
-
-            //if (_scrollDownButton.HandleInput(dt))
-            //{
-            //    return true;
-            //}
-
-            //if (Bounds.Contains(Input.X, Input.Y))
-            //{
-            //    if (Input.DeltaWheel != 0)
-            //    {
-            //        _currentScroll = (int)MathHelper.Clamp(_currentScroll + ((Input.DeltaWheel * 0.01f) * ScrollDownSpeed), _minScroll, 0);
-            //    }
-            //}
         }
 
         /// <summary>
@@ -395,57 +561,201 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// Handles when the Up Arrow Button is pressed.
+        /// Sets the hover state to visible.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseEventArgs"></param>
+        private void UpArrowOnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
+        {
+            _upArrow.Children[0].Visibility = Visibility.Hidden;
+            _upArrow.Children[2].Visibility = Visibility.Hidden;
+            _upArrow.Children[1].Visibility = Visibility.Visible;
+        }
+
+        /// <summary>
+        /// Sets the hover state to hidden.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseEventArgs"></param>
+        private void UpArrowOnMouseLeave(object sender, MouseEventArgs mouseEventArgs)
+        {
+            _upArrow.Children[1].Visibility = Visibility.Hidden;
+            _upArrow.Children[2].Visibility = Visibility.Hidden;
+            _upArrow.Children[0].Visibility = Visibility.Visible;
+        }
+
+        /// <summary>
+        /// Sets the mouse down state to visible.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="mouseButtonEventArgs"></param>
-        private void UpArrowButtonOnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        private void UpArrowOnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
-            _upArrowButton.Visibility = Visibility.Hidden;
-            _upArrowButtonMouseDown.Visibility = Visibility.Visible;
+            _upArrow.Children[0].Visibility = Visibility.Hidden;
+            _upArrow.Children[1].Visibility = Visibility.Hidden;
+            _upArrow.Children[2].Visibility = Visibility.Visible;
 
             _scrollTimer = TimeSpan.Zero;
             _mouseDownUpArrow = true;
         }
 
         /// <summary>
-        /// Handles when the Down Arrow Button is pressed.
+        /// Sets the mouse down state to hidden.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="mouseButtonEventArgs"></param>
-        private void DownArrowButtonOnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        private void UpArrowOnMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
-            _downArrowButton.Visibility = Visibility.Hidden;
-            _downArrowButtonMouseDown.Visibility = Visibility.Visible;
+            _upArrow.Children[0].Visibility = Visibility.Hidden;
+            _upArrow.Children[2].Visibility = Visibility.Hidden;
+            _upArrow.Children[1].Visibility = Visibility.Visible;
+
+            _mouseDownUpArrow = false;
+        }
+
+        /// <summary>
+        /// Sets the hover state to visible.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseEventArgs"></param>
+        private void DownArrowOnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
+        {
+            _downArrow.Children[0].Visibility = Visibility.Hidden;
+            _downArrow.Children[2].Visibility = Visibility.Hidden;
+            _downArrow.Children[1].Visibility = Visibility.Visible;
+        }
+
+        /// <summary>
+        /// Sets the hover state to hidden.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseEventArgs"></param>
+        private void DownArrowOnMouseLeave(object sender, MouseEventArgs mouseEventArgs)
+        {
+            _downArrow.Children[1].Visibility = Visibility.Hidden;
+            _downArrow.Children[2].Visibility = Visibility.Hidden;
+            _downArrow.Children[0].Visibility = Visibility.Visible;
+        }
+
+        /// <summary>
+        /// Sets the mouse down state to visible.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseButtonEventArgs"></param>
+        private void DownArrowOnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        {
+            _downArrow.Children[0].Visibility = Visibility.Hidden;
+            _downArrow.Children[1].Visibility = Visibility.Hidden;
+            _downArrow.Children[2].Visibility = Visibility.Visible;
 
             _scrollTimer = TimeSpan.Zero;
             _mouseDownDownArrow = true;
         }
 
         /// <summary>
-        /// Handles when the Up Arrow Button is released.
+        /// Sets the mouse down state to hidden.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="mouseButtonEventArgs"></param>
-        private void UpArrowButtonMouseDownOnMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        private void DownArrowOnMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
-            _upArrowButtonMouseDown.Visibility = Visibility.Hidden;
-            _upArrowButton.Visibility = Visibility.Visible;
+            _downArrow.Children[0].Visibility = Visibility.Hidden;
+            _downArrow.Children[2].Visibility = Visibility.Hidden;
+            _downArrow.Children[1].Visibility = Visibility.Visible;
 
-            _mouseDownUpArrow = false;
+            _mouseDownDownArrow = false;
         }
 
         /// <summary>
-        /// Handles when the Down Arrow Button is released.
+        /// Updates the visibility of the scroll bar on mouse up.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="mouseButtonEventArgs"></param>
-        private void DownArrowButtonMouseDownOnMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        private void ScrollBarOnMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
-            _downArrowButtonMouseDown.Visibility = Visibility.Hidden;
-            _downArrowButton.Visibility = Visibility.Visible;
+            for (var i = 0; i < _scrollBarNormal.Count; i++)
+            {
+                _scrollBarNormal[i].Visibility = Visibility.Hidden;
+                _scrollBarMouseDown[i].Visibility = Visibility.Hidden;
+                _scrollBarHover[i].Visibility = Visibility.Visible;
+            }
+        }
 
-            _mouseDownDownArrow = false;
+        /// <summary>
+        /// Updates the visibility of the scroll bar on mouse down.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseButtonEventArgs"></param>
+        private void ScrollBarOnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        {
+            for (var i = 0; i < _scrollBarNormal.Count; i++)
+            {
+                _scrollBarNormal[i].Visibility = Visibility.Hidden;
+                _scrollBarHover[i].Visibility = Visibility.Hidden;
+                _scrollBarMouseDown[i].Visibility = Visibility.Visible;
+            }
+        }
+
+        /// <summary>
+        /// Updates the visibility of the scroll bar on mouse leave.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseEventArgs"></param>
+        private void ScrollBarOnMouseLeave(object sender, MouseEventArgs mouseEventArgs)
+        {
+            for (var i = 0; i < _scrollBarNormal.Count; i++)
+            {
+                _scrollBarHover[i].Visibility = Visibility.Hidden;
+                _scrollBarMouseDown[i].Visibility = Visibility.Hidden;
+                _scrollBarNormal[i].Visibility = Visibility.Visible;
+            }
+        }
+
+        /// <summary>
+        /// Updates the visibility of the scroll bar on mouse enter.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseEventArgs"></param>
+        private void ScrollBarOnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
+        {
+            for (var i = 0; i < _scrollBarNormal.Count; i++)
+            {
+                _scrollBarNormal[i].Visibility = Visibility.Hidden;
+                _scrollBarMouseDown[i].Visibility = Visibility.Hidden;
+                _scrollBarHover[i].Visibility = Visibility.Visible;
+            }
+        }
+
+        /// <summary>
+        /// Disposes of the XAMLite Objects.
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            if (Child != null && _childTextHeight > Child.Height)
+            {
+                _upArrow.MouseEnter -= UpArrowOnMouseEnter;
+                _upArrow.MouseLeave -= UpArrowOnMouseLeave;
+                _upArrow.MouseDown -= UpArrowOnMouseDown;
+                _upArrow.MouseUp -= UpArrowOnMouseUp;
+
+                _downArrow.MouseEnter -= DownArrowOnMouseEnter;
+                _downArrow.MouseLeave -= DownArrowOnMouseLeave;
+                _downArrow.MouseDown -= DownArrowOnMouseDown;
+                _downArrow.MouseUp -= DownArrowOnMouseUp;
+
+                _scrollBar.MouseEnter -= ScrollBarOnMouseEnter;
+                _scrollBar.MouseLeave -= ScrollBarOnMouseLeave;
+                _scrollBar.MouseDown -= ScrollBarOnMouseDown;
+                _scrollBar.MouseUp -= ScrollBarOnMouseUp;
+            }
+
+            foreach (var child in Children)
+            {
+                child.Dispose();
+            }
         }
     }
 }
