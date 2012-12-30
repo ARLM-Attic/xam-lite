@@ -137,6 +137,11 @@ namespace XAMLite
         {
             get
             {
+                if (_isLoading)
+                {
+                    return base.Margin;
+                }
+
                 if (_textLabel != null)
                 {
                     return _textLabel.Margin;
@@ -147,7 +152,10 @@ namespace XAMLite
 
             set
             {
-                //base.Margin = value;
+                if (_isLoading)
+                {
+                    base.Margin = value;
+                }
 
                 if (_textLabel != null)
                 {
@@ -170,6 +178,11 @@ namespace XAMLite
         /// Background fo the text block.
         /// </summary>
         private XAMLiteRectangleNew _background;
+
+        /// <summary>
+        /// Initially true so that the margin can be set and then locked.
+        /// </summary>
+        private bool _isLoading = true;
 
         /// <summary>
         /// Constructor.
@@ -259,6 +272,18 @@ namespace XAMLite
             Children.Add(_background);
 
             Children.Add(_textLabel);
+
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            // lock the margin for the text block.
+            if (_isLoading)
+            {
+                _isLoading = false;
+            }
         }
 
         /// <summary>
