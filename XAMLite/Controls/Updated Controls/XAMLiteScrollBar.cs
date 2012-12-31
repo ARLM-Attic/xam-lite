@@ -204,19 +204,21 @@ namespace XAMLite
 
             var c = Child as XAMLiteTextBlockNew;
 
+            if (c == null)
+            {
+                return;
+            }
+
             // if the text height is less than the height of the block, do not load
             // scroll bar nor set the event handlers.
-            if (c != null)
+            _childTextHeight = c.MeasureText().Y;
+
+            if (_childTextHeight <= Child.Height)
             {
-                _childTextHeight = c.MeasureText().Y;
+                Children.Add(upArrowNormalButton);
+                Children.Add(downArrowNormalButton);
 
-                if (_childTextHeight <= Child.Height)
-                {
-                    Children.Add(upArrowNormalButton);
-                    Children.Add(downArrowNormalButton);
-
-                    return;
-                }
+                return;
             }
 
             _upArrow = new XAMLiteGridNew(Game)
@@ -298,12 +300,20 @@ namespace XAMLite
             _scrollBarHover = new List<XAMLiteImageNew>();
             _scrollBarMouseDown = new List<XAMLiteImageNew>();
 
+            // percent of the text height versus the child height.
+            var childToTextRatio = Child.Height / _childTextHeight;
+
+            // scroll slider height and width
+            var scrollHeight = Orientation == Orientation.Vertical ? (int)((Height - (t.Height * 2) + 1) * childToTextRatio) : Height;
+            var scrollWidth = Orientation == Orientation.Vertical ? Width : (int)((Width - (t.Width * 2) + 1) * childToTextRatio);
+            
             _scrollBar = new XAMLiteGridNew(Game)
             {
-                Width = Orientation == Orientation.Vertical ? Width : Width - (t.Width * 2),
-                Height = Orientation == Orientation.Vertical ? Height - (t.Height * 2) : Height,
-                HorizontalAlignment = Orientation == Orientation.Vertical ? HorizontalAlignment.Left : HorizontalAlignment.Center,
-                VerticalAlignment = Orientation == Orientation.Vertical ? VerticalAlignment.Center : VerticalAlignment.Top
+                Width = scrollWidth,
+                Height = scrollHeight,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                Margin = Orientation == Orientation.Vertical ? new Thickness(0, t.Height, 0, 0) : new Thickness(t.Width, 0, 0, 0)
             };
             Children.Add(_scrollBar);
             _scrollBar.MouseEnter += ScrollBarOnMouseEnter;
