@@ -131,6 +131,11 @@ namespace XAMLite
         private bool _scrollSliderMouseDown;
 
         /// <summary>
+        /// The Value when a mouse Down first occurs on the Slider.
+        /// </summary>
+        private double _initialSliderValue;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="game"></param>
@@ -300,12 +305,10 @@ namespace XAMLite
             _upArrow.MouseEnter += UpArrowOnMouseEnter;
             _upArrow.MouseLeave += UpArrowOnMouseLeave;
             _upArrow.MouseDown += UpArrowOnMouseDown;
-            _upArrow.MouseUp += UpArrowOnMouseUp;
 
             _downArrow.MouseEnter += DownArrowOnMouseEnter;
             _downArrow.MouseLeave += DownArrowOnMouseLeave;
             _downArrow.MouseDown += DownArrowOnMouseDown;
-            _downArrow.MouseUp += DownArrowOnMouseUp;
 
             SetInitialScrollValues();
 
@@ -332,7 +335,6 @@ namespace XAMLite
             _scrollBar.MouseEnter += ScrollBarOnMouseEnter;
             _scrollBar.MouseLeave += ScrollBarOnMouseLeave;
             _scrollBar.MouseDown += ScrollBarOnMouseDown;
-            _scrollBar.MouseUp += ScrollBarOnMouseUp;
 
             var tTop = Game.Content.Load<Texture2D>("Icons/ScrollButtonTopNoHover");
             var tBottom = Game.Content.Load<Texture2D>("Icons/ScrollButtonBottomNoHover");
@@ -454,8 +456,7 @@ namespace XAMLite
                     break;
 
                 case Orientation.Horizontal:
-                    // TODO: Still need to implement.
-                    // Maximum = Width - Child.Width;
+                    //Maximum = Math.Abs(Width - _childTextWidth) + 2;
                     break;
             }
         }
@@ -470,21 +471,17 @@ namespace XAMLite
 
             if (_scrollSliderMouseDown)
             {
-                //UpdateScrollSlider();
+                UpdateScrollSliderValue();
             }
 
-            if (_scrollSliderMouseDown && Ms.LeftButton == ButtonState.Released)
-            {
-                _scrollSliderMouseDown = false;
-                _initialClickPosition = Vector2.Zero;
-            }
-
+            HandleMouseUp();
+            
             if (_mouseDownUpArrow)
             {
                 _scrollTimer -= gameTime.ElapsedGameTime;
                 if (_scrollTimer <= TimeSpan.Zero)
                 {
-                    UpdateMouseArrowUp();
+                    UpdateMouseArrowUpValue();
                     _scrollTimer = TimeSpan.FromSeconds(0.1);
                 }
             }
@@ -493,42 +490,51 @@ namespace XAMLite
                 _scrollTimer -= gameTime.ElapsedGameTime;
                 if (_scrollTimer <= TimeSpan.Zero)
                 {
-                    UpdateMouseArrowDown();
+                    UpdateMouseArrowDownValue();
                     _scrollTimer = TimeSpan.FromSeconds(0.1);
                 }
             }
         }
 
         /// <summary>
-        /// 
+        /// Handles whenever a Mouse Up event occurs, regardless of whether it was released over the control.
         /// </summary>
-        private void UpdateScrollSlider()
+        private void HandleMouseUp()
         {
-            if (Value < Minimum)
+            if (_scrollSliderMouseDown && Ms.LeftButton == ButtonState.Released)
+            {
+                SliderReleased();
+            }
+            else if (_mouseDownUpArrow && Ms.LeftButton == ButtonState.Released)
+            {
+                UpArrowReleased();
+            }
+            else if (_mouseDownDownArrow && Ms.LeftButton == ButtonState.Released)
+            {
+                DownArrowReleased();
+            }
+        }
+
+        /// <summary>
+        /// Moves the text down as the text is scrolled to its beginning.
+        /// </summary>
+        private void UpdateMouseArrowUpValue()
+        {
+            Value -= 10;
+
+            if (Value <= Minimum)
             {
                 Value = Minimum;
-                return;
             }
-            else if (Value > Maximum)
-            {
-                Value = Maximum;
-                return;
-            }
-            else
-            {
-                Value = Orientation == Orientation.Vertical ? Ms.Y - _initialClickPosition.Y : Ms.X - _initialClickPosition.Y;
-                _scrollBar.Margin = Orientation == Orientation.Vertical ? new Thickness(0, _upArrow.Height + Value, 0, 0) : new Thickness(_upArrow.Width + Value, 0, 0, 0);
-                foreach (var children in _scrollBarNormal)
-                {
-                    children.Margin = _scrollBar.Margin;
-                }
-            }
+
+            UpdateChildPosition();
+            UpdateScrollSliderPosition(Value);
         }
 
         /// <summary>
         /// Moves the text up as the text is scrolled to its end.
         /// </summary>
-        private void UpdateMouseArrowDown()
+        private void UpdateMouseArrowDownValue()
         {
             Value += 10;
 
@@ -537,24 +543,33 @@ namespace XAMLite
                 Value = Maximum;
             }
 
-            var m = Child.Margin;
-
-            switch (Orientation)
-            {
-                case Orientation.Vertical:
-                    Child.Margin = new Thickness(m.Left, -Value, m.Right, m.Bottom);
-                    break;
-
-                case Orientation.Horizontal:
-                    Child.Margin = new Thickness(-Value, m.Top, m.Right, m.Bottom);
-                    break;
-            }
-
+            UpdateChildPosition();
             UpdateScrollSliderPosition(Value);
         }
 
         /// <summary>
-        /// 
+        /// Calculates the new Slider position and then makes a method call to
+        /// visually modify the text position and slider position.
+        /// </summary>
+        private void UpdateScrollSliderValue()
+        {
+            Value = Orientation == Orientation.Vertical ? _initialSliderValue + Ms.Y - _initialClickPosition.Y : _initialSliderValue + Ms.X - _initialClickPosition.X;
+
+            if (Value <= Minimum)
+            {
+                Value = Minimum;
+            }
+            else if (Value >= Maximum)
+            {
+                Value = Maximum;
+            }
+
+            UpdateChildPosition();
+            UpdateScrollSliderPosition(Value);
+        }
+
+        /// <summary>
+        /// Updates the position of the slider.
         /// </summary>
         /// <param name="value"></param>
         private void UpdateScrollSliderPosition(double value)
@@ -575,19 +590,62 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// Moves the text down as the text is scrolled to its beginning.
+        /// Sets the mouse down state to hidden.
         /// </summary>
-        private void UpdateMouseArrowUp()
+        private void UpArrowReleased()
         {
-            Value -= 10;
+            _upArrow.Children[0].Visibility = Visibility.Hidden;
+            _upArrow.Children[2].Visibility = Visibility.Hidden;
+            _upArrow.Children[1].Visibility = Visibility.Visible;
 
-            if (Value <= Minimum)
+            _mouseDownUpArrow = false;
+        }
+
+        /// <summary>
+        /// Sets the mouse down state to hidden.
+        /// </summary>
+        private void DownArrowReleased()
+        {
+            _downArrow.Children[0].Visibility = Visibility.Hidden;
+            _downArrow.Children[2].Visibility = Visibility.Hidden;
+            _downArrow.Children[1].Visibility = Visibility.Visible;
+
+            _mouseDownDownArrow = false;
+        }
+
+        /// <summary>
+        /// Updates the visibility of the scroll bar on mouse up.
+        /// </summary>
+        private void SliderReleased()
+        {
+            _scrollSliderMouseDown = false;
+            _initialClickPosition = Vector2.Zero;
+
+            if (Panel.Contains(Ms.X, Ms.Y))
             {
-                Value = Minimum;
+                for (var i = 0; i < _scrollBarNormal.Count; i++)
+                {
+                    _scrollBarNormal[i].Visibility = Visibility.Hidden;
+                    _scrollBarMouseDown[i].Visibility = Visibility.Hidden;
+                    _scrollBarHover[i].Visibility = Visibility.Visible;
+                }
             }
+            else
+            {
+                for (var i = 0; i < _scrollBarNormal.Count; i++)
+                {
+                    _scrollBarHover[i].Visibility = Visibility.Hidden;
+                    _scrollBarMouseDown[i].Visibility = Visibility.Hidden;
+                    _scrollBarNormal[i].Visibility = Visibility.Visible;
+                }
+            }
+        }
 
-            UpdateScrollSliderPosition(Value);
-            
+        /// <summary>
+        /// Updates the position of the child.
+        /// </summary>
+        private void UpdateChildPosition()
+        {
             var m = Child.Margin;
 
             switch (Orientation)
@@ -595,6 +653,7 @@ namespace XAMLite
                 case Orientation.Vertical:
                     Child.Margin = new Thickness(m.Left, -Value, m.Right, m.Bottom);
                     break;
+
                 case Orientation.Horizontal:
                     Child.Margin = new Thickness(-Value, m.Top, m.Right, m.Bottom);
                     break;
@@ -686,20 +745,6 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// Sets the mouse down state to hidden.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="mouseButtonEventArgs"></param>
-        private void UpArrowOnMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
-        {
-            _upArrow.Children[0].Visibility = Visibility.Hidden;
-            _upArrow.Children[2].Visibility = Visibility.Hidden;
-            _upArrow.Children[1].Visibility = Visibility.Visible;
-
-            _mouseDownUpArrow = false;
-        }
-
-        /// <summary>
         /// Sets the hover state to visible.
         /// </summary>
         /// <param name="sender"></param>
@@ -739,35 +784,6 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// Sets the mouse down state to hidden.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="mouseButtonEventArgs"></param>
-        private void DownArrowOnMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
-        {
-            _downArrow.Children[0].Visibility = Visibility.Hidden;
-            _downArrow.Children[2].Visibility = Visibility.Hidden;
-            _downArrow.Children[1].Visibility = Visibility.Visible;
-
-            _mouseDownDownArrow = false;
-        }
-
-        /// <summary>
-        /// Updates the visibility of the scroll bar on mouse up.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="mouseButtonEventArgs"></param>
-        private void ScrollBarOnMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
-        {
-            for (var i = 0; i < _scrollBarNormal.Count; i++)
-            {
-                _scrollBarNormal[i].Visibility = Visibility.Hidden;
-                _scrollBarMouseDown[i].Visibility = Visibility.Hidden;
-                _scrollBarHover[i].Visibility = Visibility.Visible;
-            }
-        }
-
-        /// <summary>
         /// Updates the visibility of the scroll bar on mouse down.
         /// </summary>
         /// <param name="sender"></param>
@@ -781,6 +797,7 @@ namespace XAMLite
                 _scrollBarMouseDown[i].Visibility = Visibility.Visible;
             }
 
+            _initialSliderValue = Value;
             _initialClickPosition = new Vector2(Ms.X, Ms.Y);
             _scrollSliderMouseDown = true;
         }
@@ -792,11 +809,14 @@ namespace XAMLite
         /// <param name="mouseEventArgs"></param>
         private void ScrollBarOnMouseLeave(object sender, MouseEventArgs mouseEventArgs)
         {
-            for (var i = 0; i < _scrollBarNormal.Count; i++)
+            if (Ms.LeftButton == ButtonState.Released) 
             {
-                _scrollBarHover[i].Visibility = Visibility.Hidden;
-                _scrollBarMouseDown[i].Visibility = Visibility.Hidden;
-                _scrollBarNormal[i].Visibility = Visibility.Visible;
+                for (var i = 0; i < _scrollBarNormal.Count; i++)
+                {
+                    _scrollBarHover[i].Visibility = Visibility.Hidden;
+                    _scrollBarMouseDown[i].Visibility = Visibility.Hidden;
+                    _scrollBarNormal[i].Visibility = Visibility.Visible;
+                }
             }
         }
 
@@ -807,11 +827,14 @@ namespace XAMLite
         /// <param name="mouseEventArgs"></param>
         private void ScrollBarOnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
         {
-            for (var i = 0; i < _scrollBarNormal.Count; i++)
+            if (!_scrollSliderMouseDown) 
             {
-                _scrollBarNormal[i].Visibility = Visibility.Hidden;
-                _scrollBarMouseDown[i].Visibility = Visibility.Hidden;
-                _scrollBarHover[i].Visibility = Visibility.Visible;
+                for (var i = 0; i < _scrollBarNormal.Count; i++)
+                {
+                    _scrollBarNormal[i].Visibility = Visibility.Hidden;
+                    _scrollBarMouseDown[i].Visibility = Visibility.Hidden;
+                    _scrollBarHover[i].Visibility = Visibility.Visible;
+                }
             }
         }
 
@@ -828,17 +851,14 @@ namespace XAMLite
                 _upArrow.MouseEnter -= UpArrowOnMouseEnter;
                 _upArrow.MouseLeave -= UpArrowOnMouseLeave;
                 _upArrow.MouseDown -= UpArrowOnMouseDown;
-                _upArrow.MouseUp -= UpArrowOnMouseUp;
 
                 _downArrow.MouseEnter -= DownArrowOnMouseEnter;
                 _downArrow.MouseLeave -= DownArrowOnMouseLeave;
                 _downArrow.MouseDown -= DownArrowOnMouseDown;
-                _downArrow.MouseUp -= DownArrowOnMouseUp;
 
                 _scrollBar.MouseEnter -= ScrollBarOnMouseEnter;
                 _scrollBar.MouseLeave -= ScrollBarOnMouseLeave;
                 _scrollBar.MouseDown -= ScrollBarOnMouseDown;
-                _scrollBar.MouseUp -= ScrollBarOnMouseUp;
             }
 
             foreach (var child in Children)
