@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace XAMLite
 {
+    using Microsoft.Xna.Framework.Input;
+
     /// <summary>
     /// The orientation of the control, whether horizontal or vertical.
     /// </summary>
@@ -119,6 +121,16 @@ namespace XAMLite
         private float _childTextHeight;
 
         /// <summary>
+        /// Initial position when a mouse down event occurs on the scroll bar slider.
+        /// </summary>
+        private Vector2 _initialClickPosition;
+
+        /// <summary>
+        /// True when a mouse down occurs on the slider
+        /// </summary>
+        private bool _scrollSliderMouseDown;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="game"></param>
@@ -127,6 +139,7 @@ namespace XAMLite
         {
             Orientation = Orientation.Vertical;
             _scrollTimer = TimeSpan.Zero;
+            _initialClickPosition = Vector2.Zero;
         }
 
         /// <summary>
@@ -304,16 +317,16 @@ namespace XAMLite
             var childToTextRatio = Child.Height / _childTextHeight;
 
             // scroll slider height and width
-            var scrollHeight = Orientation == Orientation.Vertical ? (int)((Height - (t.Height * 2) + 1) * childToTextRatio) : Height;
-            var scrollWidth = Orientation == Orientation.Vertical ? Width : (int)((Width - (t.Width * 2) + 1) * childToTextRatio);
-            
+            var scrollHeight = Orientation == Orientation.Vertical ? (int)((Height - (t.Height * 2)) * childToTextRatio) : Height;
+            var scrollWidth = Orientation == Orientation.Vertical ? Width : (int)((Width - (t.Width * 2)) * childToTextRatio);
+
             _scrollBar = new XAMLiteGridNew(Game)
             {
                 Width = scrollWidth,
                 Height = scrollHeight,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
-                Margin = Orientation == Orientation.Vertical ? new Thickness(0, t.Height, 0, 0) : new Thickness(t.Width, 0, 0, 0)
+                Margin = Orientation == Orientation.Vertical ? new Thickness(0, t.Height - 1, 0, 0) : new Thickness(t.Width - 1, 0, 0, 0)
             };
             Children.Add(_scrollBar);
             _scrollBar.MouseEnter += ScrollBarOnMouseEnter;
@@ -355,38 +368,6 @@ namespace XAMLite
             _scrollBar.Children.Add(scrollBarTopMouseDown);
             _scrollBarMouseDown.Add(scrollBarTopMouseDown);
 
-            var scrollBarBottomNoHover = new XAMLiteImageNew(Game)
-            {
-                SourceName = "Icons/ScrollButtonBottomNoHover",
-                RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateClockwise90,
-                HorizontalAlignment = HorizontalAlignment.Right,
-                VerticalAlignment = VerticalAlignment.Bottom
-            };
-            _scrollBar.Children.Add(scrollBarBottomNoHover);
-            _scrollBarNormal.Add(scrollBarBottomNoHover);
-
-            var scrollBarBottomHover = new XAMLiteImageNew(Game)
-            {
-                SourceName = "Icons/ScrollButtonBottomHover",
-                RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateClockwise90,
-                HorizontalAlignment = HorizontalAlignment.Right,
-                VerticalAlignment = VerticalAlignment.Bottom,
-                Visibility = Visibility.Hidden
-            };
-            _scrollBar.Children.Add(scrollBarBottomHover);
-            _scrollBarHover.Add(scrollBarBottomHover);
-
-            var scrollBarBottomMouseDown = new XAMLiteImageNew(Game)
-            {
-                SourceName = "Icons/ScrollButtonBottomMouseDown",
-                RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateClockwise90,
-                HorizontalAlignment = HorizontalAlignment.Right,
-                VerticalAlignment = VerticalAlignment.Bottom,
-                Visibility = Visibility.Hidden
-            };
-            _scrollBar.Children.Add(scrollBarBottomMouseDown);
-            _scrollBarMouseDown.Add(scrollBarBottomMouseDown);
-
             var scrollBarBodyNoHover = new XAMLiteImageNew(Game)
             {
                 SourceName = "Icons/ScrollButtonBodyNoHover",
@@ -424,6 +405,38 @@ namespace XAMLite
             };
             _scrollBar.Children.Add(scrollBarBodyMouseDown);
             _scrollBarMouseDown.Add(scrollBarBodyMouseDown);
+
+            var scrollBarBottomNoHover = new XAMLiteImageNew(Game)
+            {
+                SourceName = "Icons/ScrollButtonBottomNoHover",
+                RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateClockwise90,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Bottom
+            };
+            _scrollBar.Children.Add(scrollBarBottomNoHover);
+            _scrollBarNormal.Add(scrollBarBottomNoHover);
+
+            var scrollBarBottomHover = new XAMLiteImageNew(Game)
+            {
+                SourceName = "Icons/ScrollButtonBottomHover",
+                RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateClockwise90,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                Visibility = Visibility.Hidden
+            };
+            _scrollBar.Children.Add(scrollBarBottomHover);
+            _scrollBarHover.Add(scrollBarBottomHover);
+
+            var scrollBarBottomMouseDown = new XAMLiteImageNew(Game)
+            {
+                SourceName = "Icons/ScrollButtonBottomMouseDown",
+                RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateClockwise90,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                Visibility = Visibility.Hidden
+            };
+            _scrollBar.Children.Add(scrollBarBottomMouseDown);
+            _scrollBarMouseDown.Add(scrollBarBottomMouseDown);
         }
 
         /// <summary>
@@ -437,7 +450,7 @@ namespace XAMLite
             switch (Orientation)
             {
                 case Orientation.Vertical:
-                    Maximum = Math.Abs(Height - _childTextHeight);
+                    Maximum = Math.Abs(Height - _childTextHeight) + 2;
                     break;
 
                 case Orientation.Horizontal:
@@ -454,6 +467,17 @@ namespace XAMLite
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            if (_scrollSliderMouseDown)
+            {
+                //UpdateScrollSlider();
+            }
+
+            if (_scrollSliderMouseDown && Ms.LeftButton == ButtonState.Released)
+            {
+                _scrollSliderMouseDown = false;
+                _initialClickPosition = Vector2.Zero;
+            }
 
             if (_mouseDownUpArrow)
             {
@@ -476,28 +500,78 @@ namespace XAMLite
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        private void UpdateScrollSlider()
+        {
+            if (Value < Minimum)
+            {
+                Value = Minimum;
+                return;
+            }
+            else if (Value > Maximum)
+            {
+                Value = Maximum;
+                return;
+            }
+            else
+            {
+                Value = Orientation == Orientation.Vertical ? Ms.Y - _initialClickPosition.Y : Ms.X - _initialClickPosition.Y;
+                _scrollBar.Margin = Orientation == Orientation.Vertical ? new Thickness(0, _upArrow.Height + Value, 0, 0) : new Thickness(_upArrow.Width + Value, 0, 0, 0);
+                foreach (var children in _scrollBarNormal)
+                {
+                    children.Margin = _scrollBar.Margin;
+                }
+            }
+        }
+
+        /// <summary>
         /// Moves the text up as the text is scrolled to its end.
         /// </summary>
         private void UpdateMouseArrowDown()
         {
+            Value += 10;
+
             if (Value >= Maximum)
             {
-                return;
+                Value = Maximum;
             }
-
-            Value += 10;
 
             var m = Child.Margin;
 
             switch (Orientation)
             {
                 case Orientation.Vertical:
-                    Child.Margin = new Thickness(m.Left, m.Top - 10, m.Right, m.Bottom);
+                    Child.Margin = new Thickness(m.Left, -Value, m.Right, m.Bottom);
                     break;
+
                 case Orientation.Horizontal:
-                    Child.Margin = new Thickness(m.Left - 10, m.Top, m.Right, m.Bottom);
+                    Child.Margin = new Thickness(-Value, m.Top, m.Right, m.Bottom);
                     break;
             }
+
+            UpdateScrollSliderPosition(Value);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        private void UpdateScrollSliderPosition(double value)
+        {
+            var m = Orientation == Orientation.Vertical ? new Thickness(0, value < Maximum ? value : value - 2, 0, 0) : new Thickness(value < Maximum ? value : value - 2, 0, 0, 0);
+            _scrollBarNormal[0].Margin = m;
+            _scrollBarHover[0].Margin = m;
+            _scrollBarMouseDown[0].Margin = m;
+            
+            _scrollBarNormal[1].Margin = m;
+            _scrollBarHover[1].Margin = m;
+            _scrollBarMouseDown[1].Margin = m;
+
+            m = Orientation == Orientation.Vertical ? new Thickness(0, 0, 0, value < Maximum ? -value : -value + 2) : new Thickness(0, 0, value < Maximum ? -value : -value + 2, 0);
+            _scrollBarNormal[2].Margin = m;
+            _scrollBarHover[2].Margin = m;
+            _scrollBarMouseDown[2].Margin = m;
         }
 
         /// <summary>
@@ -505,22 +579,24 @@ namespace XAMLite
         /// </summary>
         private void UpdateMouseArrowUp()
         {
-            if (Value <= Minimum)
-            {
-                return;
-            }
-
             Value -= 10;
 
+            if (Value <= Minimum)
+            {
+                Value = Minimum;
+            }
+
+            UpdateScrollSliderPosition(Value);
+            
             var m = Child.Margin;
 
             switch (Orientation)
             {
                 case Orientation.Vertical:
-                    Child.Margin = new Thickness(m.Left, m.Top + 10, m.Right, m.Bottom);
+                    Child.Margin = new Thickness(m.Left, -Value, m.Right, m.Bottom);
                     break;
                 case Orientation.Horizontal:
-                    Child.Margin = new Thickness(m.Left + 10, m.Top, m.Right, m.Bottom);
+                    Child.Margin = new Thickness(-Value, m.Top, m.Right, m.Bottom);
                     break;
             }
         }
@@ -704,6 +780,9 @@ namespace XAMLite
                 _scrollBarHover[i].Visibility = Visibility.Hidden;
                 _scrollBarMouseDown[i].Visibility = Visibility.Visible;
             }
+
+            _initialClickPosition = new Vector2(Ms.X, Ms.Y);
+            _scrollSliderMouseDown = true;
         }
 
         /// <summary>

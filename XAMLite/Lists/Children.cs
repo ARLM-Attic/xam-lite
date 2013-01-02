@@ -32,7 +32,6 @@ namespace XAMLite
             {
                 child.Index = Count;
                 child.Parent = _parent;
-                //Console.WriteLine("Child Parent: " + child.Index);
             }
 
             child.Window = _parent.Window;
