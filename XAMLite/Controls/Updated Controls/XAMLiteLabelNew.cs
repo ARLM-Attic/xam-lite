@@ -32,7 +32,7 @@ namespace XAMLite
         public XAMLiteLabelNew(Game game)
             : base(game)
         {
-            FontFamily = new FontFamily("Arial");
+            FontFamily = new FontFamily("Verdana12");
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace XAMLite
         public XAMLiteLabelNew(Game game, object content)
             : base(game)
         {
-            FontFamily = new FontFamily("Arial");
+            FontFamily = new FontFamily("Verdana12");
             SetContent(content);
         }
 
@@ -53,11 +53,6 @@ namespace XAMLite
         protected override void LoadContent()
         {
             base.LoadContent();
-
-            if (Parent != null)
-            {
-                
-            }
 
             UpdateFontMetrics();
         }
@@ -126,9 +121,15 @@ namespace XAMLite
         {
             if (SpriteFont != null && Content != null)
             {
-                // first remove any newline modifiers, "\n", if any.
+                // first remove any newline modifiers, "\n", or basic html tags, if any.
                 var s = Content.ToString();
                 s = s.Replace("\n", "");
+                s = s.Replace("<b>", "");
+                s = s.Replace("</b>", "");
+                s = s.Replace("<i>", "");
+                s = s.Replace("</i>", "");
+                s = s.Replace("<u>", "");
+                s = s.Replace("</u>", "");
                 
                 return SpriteFont.MeasureString(s);
             }

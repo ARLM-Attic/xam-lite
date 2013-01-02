@@ -44,9 +44,9 @@ namespace XAMLite
             {
                 _text = value;
 
-                if (_textLabel != null)
+                if (TextLabel != null)
                 {
-                    _textLabel.Content = value;
+                    TextLabel.Content = value;
                 }
             }
         }
@@ -119,9 +119,9 @@ namespace XAMLite
             {
                 _padding = value;
 
-                if (_textLabel != null)
+                if (TextLabel != null)
                 {
-                    _textLabel.Padding = value;
+                    TextLabel.Padding = value;
                     Text = _originalText;
                     UpdateForTextWrapping();
                 }
@@ -142,9 +142,9 @@ namespace XAMLite
                     return base.Margin;
                 }
 
-                if (_textLabel != null)
+                if (TextLabel != null)
                 {
-                    return _textLabel.Margin;
+                    return TextLabel.Margin;
                 }
 
                 return base.Margin;
@@ -157,9 +157,9 @@ namespace XAMLite
                     base.Margin = value;
                 }
 
-                if (_textLabel != null)
+                if (TextLabel != null)
                 {
-                    _textLabel.Margin = value;
+                    TextLabel.Margin = value;
                 }
             }
         }
@@ -172,7 +172,7 @@ namespace XAMLite
         /// <summary>
         /// The text contained in the text box.
         /// </summary>
-        private XAMLiteLabelNew _textLabel;
+        protected XAMLiteLabelNew TextLabel;
 
         /// <summary>
         /// Background fo the text block.
@@ -232,7 +232,7 @@ namespace XAMLite
 
             _originalText = Text;
 
-            _textLabel = new XAMLiteLabelNew(Game)
+            TextLabel = new XAMLiteLabelNew(Game)
             {
                 Content = Text,
                 HorizontalAlignment = TextAlignment == TextAlignment.Left
@@ -247,18 +247,16 @@ namespace XAMLite
                 Width = Width
             };
 
-            if (Text != string.Empty || _textLabel.Width == 0)
+            if (Text != string.Empty || TextLabel.Width == 0)
             {
                 // Add to the game so that it has a measureable size.
-                Game.Components.Add(_textLabel);
+                Game.Components.Add(TextLabel);
                 UpdateForTextWrapping();
             }
 
-            //UpdateWidthAndHeight();
-
-            if (Game.Components.Contains(_textLabel))
+            if (Game.Components.Contains(TextLabel))
             {
-                Game.Components.Remove(_textLabel);
+                Game.Components.Remove(TextLabel);
             }
 
             _background = new XAMLiteRectangleNew(Game)
@@ -271,7 +269,7 @@ namespace XAMLite
                 };
             Children.Add(_background);
 
-            Children.Add(_textLabel);
+            Children.Add(TextLabel);
 
         }
 
@@ -296,34 +294,18 @@ namespace XAMLite
         /// <returns></returns>
         internal Vector2 MeasureText()
         {
-            return _textLabel.SpriteFont.MeasureString(Text);
+            return TextLabel.SpriteFont.MeasureString(Text);
         }
-
-        ///// <summary>
-        ///// Updates the Width and Height of the control.
-        ///// </summary>
-        //private void UpdateWidthAndHeight()
-        //{
-        //    //var w = (int)_textLabel.MeasureString().X + (int)_textLabel.Padding.Left + (int)_textLabel.Padding.Right;
-        //    //Console.WriteLine("w: " + w);
-        //    //Console.WriteLine("Width: " + Width);
-        //    //Width = Width < w ? w : Width;
-
-        //    var h = (int)_textLabel.MeasureString().Y + (int)_textLabel.Padding.Top + (int)_textLabel.Padding.Bottom;
-
-        //    Console.WriteLine(h);
-        //    Height = Height < h ? h : Height;
-        //}
 
         /// <summary>
         /// Word wraps the text when TextWrapping = Wrap.
         /// </summary>
-        private void UpdateForTextWrapping()
+        protected virtual void UpdateForTextWrapping()
         {
             // When applicable, wrap the text and create the label.
             if (TextWrapping == TextWrapping.Wrap)
             {
-                Text = WordWrapper.Wrap(Text, Width, (int)_textLabel.MeasureString().X, _textLabel.Padding);
+                Text = WordWrapper.Wrap(Text, Width, (int)TextLabel.MeasureString().X, TextLabel.Padding);
             }
         }
 
