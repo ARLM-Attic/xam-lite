@@ -201,6 +201,7 @@ namespace XAMLite
             Spacing = 2;
             Width = 50;
             Height = 28;
+            Focusable = true;
         }
 
         /// <summary>
@@ -221,6 +222,7 @@ namespace XAMLite
             Spacing = 2;
             Width = 50;
             Height = 28;
+            Focusable = true;
         }
 
         /// <summary>

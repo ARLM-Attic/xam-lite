@@ -96,18 +96,10 @@ namespace XAMLite
                     SpriteBatch.Draw(Pixel, Panel, BackgroundColor);
                 }
 
-                //if (!IsAttachedToGrid)
-                //{
-                //    SpriteBatch.DrawString(
-                //        SpriteFont,
-                //        Content.ToString(),
-                //        new Vector2(ContentPosition.X, ContentPosition.Y - (float)(Height * 0.14)),
-                //        ForegroundColor * (float)Opacity);
-                //}
-                //else
-                //{
+                if (!(Parent is XAMLiteRichTextBlock))
+                {
                     SpriteBatch.DrawString(SpriteFont, Content.ToString(), ContentPosition, ForegroundColor * (float)Opacity);
-                //}
+                }
 
                 SpriteBatch.End();
             }
@@ -124,12 +116,12 @@ namespace XAMLite
                 // first remove any newline modifiers, "\n", or basic html tags, if any.
                 var s = Content.ToString();
                 s = s.Replace("\n", "");
-                s = s.Replace("<b>", "");
-                s = s.Replace("</b>", "");
-                s = s.Replace("<i>", "");
-                s = s.Replace("</i>", "");
-                s = s.Replace("<u>", "");
-                s = s.Replace("</u>", "");
+                //s = s.Replace("<b>", "");
+                //s = s.Replace("</b>", "");
+                //s = s.Replace("<i>", "");
+                //s = s.Replace("</i>", "");
+                //s = s.Replace("<u>", "");
+                //s = s.Replace("</u>", "");
                 
                 return SpriteFont.MeasureString(s);
             }

@@ -4,11 +4,10 @@ using System.Windows;
 using System.Windows.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace XAMLite
 {
-    using Microsoft.Xna.Framework.Input;
-
     /// <summary>
     /// The orientation of the control, whether horizontal or vertical.
     /// </summary>
@@ -136,6 +135,12 @@ namespace XAMLite
         private double _initialSliderValue;
 
         /// <summary>
+        /// This is used to compare against the current scroll wheel value.  
+        /// When they are different, the child will scroll.
+        /// </summary>
+        private int _previousScrollWheelValue;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="game"></param>
@@ -227,6 +232,7 @@ namespace XAMLite
                 return;
             }
 
+            c.MouseDown += ChildOnMouseDown;
             // if the text height is less than the height of the block, do not load
             // scroll bar nor set the event handlers.
             _childTextHeight = c.MeasureText().Y;
@@ -494,6 +500,30 @@ namespace XAMLite
                     _scrollTimer = TimeSpan.FromSeconds(0.1);
                 }
             }
+
+            if (Child == null || !Child.IsFocused)
+            {
+                return;
+            }
+
+            if (Ms.LeftButton == ButtonState.Pressed && !Child.Panel.Contains(Ms.X, Ms.Y))
+            {
+                Child.IsFocused = false;
+            }
+
+            if (Ms.ScrollWheelValue != _previousScrollWheelValue)
+            {
+                if (Ms.ScrollWheelValue > _previousScrollWheelValue)
+                {
+                    UpdateMouseArrowUpValue();
+                }
+                else
+                {
+                    UpdateMouseArrowDownValue();
+                }
+
+                _previousScrollWheelValue = Ms.ScrollWheelValue;
+            }
         }
 
         /// <summary>
@@ -702,6 +732,19 @@ namespace XAMLite
                     }
 
                     break;
+            }
+        }
+
+        /// <summary>
+        /// Gives focus to the child when a mouse down occurs on it.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseButtonEventArgs"></param>
+        private void ChildOnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        {
+            if (!Child.IsFocused)
+            {
+                Child.IsFocused = true;
             }
         }
 
