@@ -325,10 +325,13 @@ namespace XAMLite
             for (var i = 0; i < Children.Count; i++)
             {
                 Children[i].Opacity = Opacity * _childOpacity[i];
-                
             }
         }
 
+        /// <summary>
+        /// Determines whether new children have been added to the grid. If so,
+        /// their opacity and visibility are recorded.
+        /// </summary>
         private void CheckForNewChildren()
         {
             if (_gridCount == Children.Count && Children.Count == _childOpacity.Count && _childOpacity.Count == _childVisibility.Count && _childVisibility.Count == Children.Count)
@@ -368,9 +371,10 @@ namespace XAMLite
             {
                 var previousChildOpacity = _childOpacity[i];
 
-                if (Math.Abs((float)Children[i].Opacity - previousChildOpacity) > 0.01)
+                if ((float)Children[i].Opacity != previousChildOpacity)
                 {
                     var opacityDifference = (float)Children[i].Opacity - previousChildOpacity;
+                    
                     ModifyChildOpacity(i, opacityDifference);
                 }
             }
@@ -402,7 +406,7 @@ namespace XAMLite
                 }
             }
 
-            Children[index].Opacity = _childOpacity[index] * (float)Opacity;
+            Children[index].Opacity = _childOpacity[index];
         }
 
         /// <summary>

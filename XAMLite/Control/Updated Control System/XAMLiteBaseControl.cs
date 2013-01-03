@@ -662,18 +662,6 @@ namespace XAMLite
             }
         }
 
-        public override void Draw(GameTime gameTime)
-        {
-            base.Draw(gameTime);
-
-            if (this is XAMLiteImageWithRolloverNew)
-            {
-                SpriteBatch.Begin();
-                SpriteBatch.Draw(Pixel, Panel, Color.Red);
-                SpriteBatch.End();
-            }
-        }
-
         /// <summary>
         /// Fires off the key down event.
         /// </summary>

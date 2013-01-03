@@ -639,6 +639,11 @@ namespace XAMLite
         /// <param name="mouseEventArgs"></param>
         private void OnMouseLeave(object sender, MouseEventArgs mouseEventArgs)
         {
+            if (!IsEnabled)
+            {
+                return;
+            }
+
             if (_isDefaultTextures)
             {
                 foreach (var image in _defaultRolloverImages)
@@ -664,6 +669,11 @@ namespace XAMLite
 
         private void OnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
         {
+            if (!IsEnabled)
+            {
+                return;
+            }
+
             if (_isDefaultTextures)
             {
                 if (!MousePressed)
@@ -693,6 +703,11 @@ namespace XAMLite
         /// <param name="mouseButtonEventArgs"></param>
         private void OnMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
+            if (!IsEnabled)
+            {
+                return;
+            }
+
             if (RolloverSourceName != null && ClickSourceName != null)
             {
                 _clickedButton.Visibility = Visibility.Hidden;
@@ -728,6 +743,11 @@ namespace XAMLite
         /// <param name="mouseButtonEventArgs"></param>
         private void OnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
+            if (!IsEnabled)
+            {
+                return;
+            }
+
             if (RolloverSourceName != null && ClickSourceName != null)
             {
                 _clickedButton.Visibility = Visibility.Visible;
