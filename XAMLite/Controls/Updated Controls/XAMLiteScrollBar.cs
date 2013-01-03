@@ -908,6 +908,25 @@ namespace XAMLite
             {
                 child.Dispose();
             }
+
+            foreach (var child in _scrollBar.Children)
+            {
+                child.Dispose();
+            }
+
+            foreach (var child in _downArrow.Children)
+            {
+                child.Dispose();
+            }
+
+            foreach (var child in _upArrow.Children)
+            {
+                child.Dispose();
+            }
+
+            _scrollBarNormal = null;
+            _scrollBarHover = null;
+            _scrollBarMouseDown = null;
         }
     }
 }
