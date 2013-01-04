@@ -5,11 +5,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {
-    using Color = Microsoft.Xna.Framework.Color;
-
     /// <summary>
     /// Button class with rollover and mouse down textures.
     /// Note: Currently under development.  Continue to use normal
@@ -175,6 +174,9 @@ namespace XAMLite
         /// </summary>
         private XAMLiteImageWithRolloverNew _mainButtonWithRollover;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private XAMLiteLabelNew label;
 
         /// <summary>
@@ -207,6 +209,29 @@ namespace XAMLite
         /// right edges for the button's clicked state.
         /// </summary>
         private List<XAMLiteImageNew> _defaultClickImages;
+
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        //public override double Opacity
+        //{
+        //    get
+        //    {
+        //        return base.Opacity;
+        //    }
+
+        //    set
+        //    {
+        //        if (label != null)
+        //        {
+        //            label.Opacity = value;
+        //        }
+        //        else
+        //        {
+        //            base.Opacity = value;
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XAMLite.XAMLiteButton"/> class. 
@@ -630,6 +655,19 @@ namespace XAMLite
             t.SetData(bgc);
 
             return t;
+        }
+
+        /// <summary>
+        /// Updates the child opacity.
+        /// </summary>
+        protected override void UpdateChildOpacity()
+        {
+            CheckForNewChildren();
+
+            foreach (var child in Children)
+            {
+                child.Opacity = Opacity;
+            }
         }
 
         /// <summary>

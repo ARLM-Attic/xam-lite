@@ -96,21 +96,6 @@ namespace XAMLite
             // makes sure that if Opacity of child was changed separate from grid after initialization, then
             // it should limit the increase to that of the grid's.
             CheckChildrenOpacity();
-
-            //for (var i = 0; i < Children.Count; i++)
-            //{
-            //    if (Visibility == Visibility.Visible)
-            //    {
-            //        if (_childVisibility[i] && Children[i].Visibility == Visibility.Hidden)
-            //        {
-            //            _childVisibility[i] = false;
-            //        }
-            //        else
-            //        {
-            //            _childVisibility[i] = true;
-            //        }
-            //    }
-            //}
         }
 
         /// <summary>
@@ -318,7 +303,7 @@ namespace XAMLite
         /// Modifies the opacity of the child according to the opacity of the grid and the opacity
         /// of the child.
         /// </summary>
-        private void UpdateChildOpacity()
+        protected virtual void UpdateChildOpacity()
         {
             CheckForNewChildren();
 
@@ -332,7 +317,7 @@ namespace XAMLite
         /// Determines whether new children have been added to the grid. If so,
         /// their opacity and visibility are recorded.
         /// </summary>
-        private void CheckForNewChildren()
+        protected void CheckForNewChildren()
         {
             if (_gridCount == Children.Count && Children.Count == _childOpacity.Count && _childOpacity.Count == _childVisibility.Count && _childVisibility.Count == Children.Count)
             {
@@ -342,7 +327,7 @@ namespace XAMLite
             // this means that a new child was added later.
             if (_childOpacity.Count != Children.Count)
             {
-                for (int i = _childOpacity.Count; i < Children.Count; i++)
+                for (var i = _childOpacity.Count; i < Children.Count; i++)
                 {
                     _childOpacity.Add((float)Children[i].Opacity);
                 }
@@ -373,9 +358,8 @@ namespace XAMLite
 
                 if ((float)Children[i].Opacity != previousChildOpacity)
                 {
-                    var opacityDifference = (float)Children[i].Opacity - previousChildOpacity;
-                    
-                    ModifyChildOpacity(i, opacityDifference);
+                    var opacity = (float)Children[i].Opacity;
+                    ModifyChildOpacity(i, opacity);
                 }
             }
         }
@@ -386,17 +370,16 @@ namespace XAMLite
         /// parent.
         /// </summary>
         /// <param name="index"></param>
-        /// <param name="difference"></param>
-        private void ModifyChildOpacity(int index, float difference)
+        /// <param name="opacity"></param>
+        private void ModifyChildOpacity(int index, float opacity)
         {
-            float newChildOpacity = _childOpacity[index] + difference;
-            if (newChildOpacity <= 1f && newChildOpacity >= 0f)
+            if (opacity <= 1f && opacity >= 0f)
             {
-                _childOpacity[index] = newChildOpacity;
+                _childOpacity[index] = opacity;
             }
             else
             {
-                if (newChildOpacity > 1f)
+                if (opacity > 1f)
                 {
                     _childOpacity[index] = 1f;
                 }
@@ -405,8 +388,6 @@ namespace XAMLite
                     _childOpacity[index] = 0f;
                 }
             }
-
-            Children[index].Opacity = _childOpacity[index];
         }
 
         /// <summary>

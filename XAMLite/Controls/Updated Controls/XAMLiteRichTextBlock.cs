@@ -130,7 +130,7 @@ namespace XAMLite
                 SpriteBatch.Begin();
             }
 
-            int count = 0;
+            var count = 0;
             for (var i = 0; i < _blocks.Length; i++)
             {
                 //if (!_blocks[i].Contains("<b>") && !_blocks[i].Contains("</b>") && !_blocks[i].Contains("<i>") && !_blocks[i].Contains("</i>") && !_blocks[i].Contains("<u>") && !_blocks[i].Contains("</u>"))
@@ -164,7 +164,7 @@ namespace XAMLite
                     if (indexStart >= 0)
                     {
                         var s = text.Substring(indexStart, (indexEnd + 2) - indexStart);
-                        Console.WriteLine(s);
+                        //Console.WriteLine(s);
                         var str = " ";
                         for (var i = 0; i < s.Length - 1; i++)
                         {
