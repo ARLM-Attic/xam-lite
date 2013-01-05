@@ -583,12 +583,15 @@ namespace XAMLite
         {
             base.Update(gameTime);
 
-            HandleInput(gameTime);
-
             if (PositionChanged)
             {
                 Panel = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
                 PositionChanged = false;
+            }
+
+            if (IsEnabled)
+            {
+                HandleInput(gameTime);
             }
         }
 

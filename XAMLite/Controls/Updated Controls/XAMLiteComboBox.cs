@@ -88,12 +88,12 @@ namespace XAMLite
         /// <summary>
         /// The normal state button.
         /// </summary>
-        private XAMLiteImageNew button;
+        private XAMLiteImageNew _button;
 
         /// <summary>
         /// The hover state button.
         /// </summary>
-        private XAMLiteImageNew buttonOver;
+        private XAMLiteImageNew _buttonOver;
 
         /// <summary>
         /// True when the children are visible.
@@ -150,7 +150,8 @@ namespace XAMLite
                 BorderThickness = BorderThickness,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
-                Padding = new Thickness(7, 0, 7, 0)
+                Padding = new Thickness(7, 0, 7, 0),
+                DrawOrder = DrawOrder
             };
             Children.Add(_textBox);
 
@@ -163,11 +164,11 @@ namespace XAMLite
                 Margin = new Thickness(_textBox.BorderThickness.Left, _textBox.BorderThickness.Top, 0, 0),
                 Background = SelectedBackground,
                 Visibility = Visibility.Hidden,
-                DrawOrder = _textBox.DrawOrder + 1
+                DrawOrder = DrawOrder + 1
             };
             Children.Add(_textBoxHover);
 
-            button = new XAMLiteImageNew(Game)
+            _button = new XAMLiteImageNew(Game)
                 {
                     SourceName = "Icons/combobox-arrow",
                     Width = 15,
@@ -176,11 +177,11 @@ namespace XAMLite
                     VerticalAlignment = VerticalAlignment.Top,
                     Margin = new Thickness(0, 10, 5, 0),
                     Background = BorderBrush,
-                    DrawOrder = _textBox.DrawOrder + 2
+                    DrawOrder = DrawOrder + 1
                 };
-            Children.Add(button);
+            Children.Add(_button);
 
-            buttonOver = new XAMLiteImageNew(Game)
+            _buttonOver = new XAMLiteImageNew(Game)
             {
                 SourceName = "Icons/combobox-arrow-hover",
                 Width = 15,
@@ -189,9 +190,9 @@ namespace XAMLite
                 VerticalAlignment = VerticalAlignment.Top,
                 Margin = new Thickness(0, 10, 5, 0),
                 Background = SelectedBackground,
-                DrawOrder = 5000
+                DrawOrder = DrawOrder + 1
             };
-            Children.Add(buttonOver);
+            Children.Add(_buttonOver);
         }
 
         /// <summary>
@@ -257,7 +258,7 @@ namespace XAMLite
             {
                 _isFirstUpdate = false;
 
-                HideChildren();
+                Close();
             } 
 
             // Since this class derives from a ListBox, the first Item must be
@@ -339,9 +340,9 @@ namespace XAMLite
         /// <param name="mouseEventArgs"></param>
         private void TextBoxOnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
         {
-            buttonOver.Visibility = Visibility.Visible;
+            _buttonOver.Visibility = Visibility.Visible;
             _textBoxHover.Visibility = Visibility.Visible;
-            button.Visibility = Visibility.Hidden;
+            _button.Visibility = Visibility.Hidden;
         }
 
         /// <summary>
@@ -353,14 +354,14 @@ namespace XAMLite
         {
             if (_areItemsVisibile)
             {
-                buttonOver.Visibility = Visibility.Visible;
+                _buttonOver.Visibility = Visibility.Visible;
                 _textBoxHover.Visibility = Visibility.Visible;
-                button.Visibility = Visibility.Hidden;
+                _button.Visibility = Visibility.Hidden;
             }
             else
             {
-                button.Visibility = Visibility.Visible;
-                buttonOver.Visibility = Visibility.Hidden;
+                _button.Visibility = Visibility.Visible;
+                _buttonOver.Visibility = Visibility.Hidden;
                 _textBoxHover.Visibility = Visibility.Hidden;
             }
         }
@@ -372,14 +373,14 @@ namespace XAMLite
         {
             if (_areItemsVisibile)
             {
-                buttonOver.Visibility = Visibility.Visible;
+                _buttonOver.Visibility = Visibility.Visible;
                 _textBoxHover.Visibility = Visibility.Visible;
-                button.Visibility = Visibility.Hidden;
+                _button.Visibility = Visibility.Hidden;
             }
             else
             {
-                button.Visibility = Visibility.Visible;
-                buttonOver.Visibility = Visibility.Hidden;
+                _button.Visibility = Visibility.Visible;
+                _buttonOver.Visibility = Visibility.Hidden;
             }
         }
 
@@ -454,6 +455,27 @@ namespace XAMLite
             }
 
             Close();
+        }
+
+        /// <summary>
+        /// Overrides the natural grid mode to make every child return
+        /// to its prior visibility state when it the grid becomes visible.
+        /// Instead, the items will remain closed if !IsFocused.
+        /// </summary>
+        protected override void UpdateChildVisibility()
+        {
+            base.UpdateChildVisibility();
+
+            if (!IsFocused)
+            {
+                Close();
+
+                if (Visibility == Visibility.Hidden)
+                {
+                    _button.Visibility = Visibility.Hidden;
+                    _buttonOver.Visibility = Visibility.Hidden;
+                }
+            }
         }
 
         /// <summary>

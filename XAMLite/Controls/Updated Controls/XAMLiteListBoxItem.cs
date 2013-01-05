@@ -231,8 +231,8 @@ namespace XAMLite
                 Spacing = Spacing,
                 Padding = Padding,
                 Foreground = Foreground,
-                Opacity = IsEnabled ? 1f : 0.75f
-                //Visibility = Visibility.Hidden
+                Opacity = IsEnabled ? 1f : 0.75f,
+                DrawOrder = Parent.DrawOrder
             };
             Game.Components.Add(_listBoxContent);
 
@@ -265,7 +265,8 @@ namespace XAMLite
                     HorizontalAlignment = HorizontalAlignment.Left,
                     VerticalAlignment = VerticalAlignment.Top,
                     Margin = new Thickness(BorderThickness.Left, 0, BorderThickness.Top, BorderThickness.Bottom),
-                    Opacity = 0.45f
+                    Opacity = 0.45f,
+                    DrawOrder = Parent.DrawOrder
                 };
             Children.Add(BackgroundPanel);
 
@@ -309,6 +310,7 @@ namespace XAMLite
 
                 _parent.DeselectAll(Index);
             }
+
             BackgroundPanel.Fill = SelectedBackground;
             BackgroundPanel.Visibility = Visibility.Visible;
         }

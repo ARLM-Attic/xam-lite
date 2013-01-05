@@ -225,7 +225,8 @@ namespace XAMLite
                 Height = Height,
                 Fill = Background,
                 Stroke = BorderBrush,
-                StrokeThickness = _isBorderThicknessEqual ? BorderThickness.Left : 0
+                StrokeThickness = _isBorderThicknessEqual ? BorderThickness.Left : 0,
+                DrawOrder = DrawOrder
             };
             _borderRectangles.Add(_rectangle);
 
@@ -253,7 +254,8 @@ namespace XAMLite
                 Width = (int)BorderThickness.Left,
                 Height = Height,
                 HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Top
+                VerticalAlignment = VerticalAlignment.Top,
+                DrawOrder = DrawOrder
             };
             _borderRectangles.Add(leftBorder);
 
@@ -265,6 +267,7 @@ namespace XAMLite
                 Height = Height,
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Top,
+                DrawOrder = DrawOrder
             };
             _borderRectangles.Add(rightBorder);
 
@@ -276,6 +279,7 @@ namespace XAMLite
                 Height = (int)BorderThickness.Top,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Top,
+                DrawOrder = DrawOrder
             };
             _borderRectangles.Add(topBorder);
 
@@ -287,7 +291,8 @@ namespace XAMLite
                 Height = (int)BorderThickness.Bottom,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Top,
-                Margin = new Thickness(0, Height, 0, 0)
+                Margin = new Thickness(0, Height, 0, 0),
+                DrawOrder = DrawOrder
             };
             _borderRectangles.Add(bottomBorder);
         }

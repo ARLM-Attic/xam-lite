@@ -326,7 +326,9 @@ namespace XAMLite
                 Height = Height,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
+                DrawOrder = DrawOrder
             };
+
             Children.Add(fill);
 
             Children.Add(_textLabel);
@@ -342,7 +344,8 @@ namespace XAMLite
                         Spacing = Spacing,
                         Foreground = Foreground,
                         Padding = _textLabel.Padding,
-                        Visibility = Visibility.Hidden
+                        Visibility = Visibility.Hidden,
+                        DrawOrder = DrawOrder
                     };
                 Children.Add(_cursor);
             }
@@ -362,7 +365,8 @@ namespace XAMLite
                     var border = new XAMLiteRectangleNew(Game)
                         {
                             Stroke = BorderBrush,
-                            StrokeThickness = BorderThickness.Left
+                            StrokeThickness = BorderThickness.Left,
+                            DrawOrder = DrawOrder
                         };
                     _borderRectangles.Add(border);
                 }
@@ -413,8 +417,10 @@ namespace XAMLite
                 Width = (int)BorderThickness.Left,
                 Height = Height,
                 HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Top
+                VerticalAlignment = VerticalAlignment.Top,
+                DrawOrder = DrawOrder
             };
+
             _borderRectangles.Add(leftBorder);
 
             var rightBorder = new XAMLiteRectangleNew(Game)
@@ -425,7 +431,9 @@ namespace XAMLite
                 Height = Height,
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Center,
+                DrawOrder = DrawOrder
             };
+
             _borderRectangles.Add(rightBorder);
 
             var topBorder = new XAMLiteRectangleNew(Game)
@@ -436,7 +444,9 @@ namespace XAMLite
                 Height = (int)BorderThickness.Top,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Top,
+                DrawOrder = DrawOrder
             };
+
             _borderRectangles.Add(topBorder);
 
             var bottomBorder = new XAMLiteRectangleNew(Game)
@@ -447,7 +457,9 @@ namespace XAMLite
                 Height = (int)BorderThickness.Bottom,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Bottom,
+                DrawOrder = DrawOrder
             };
+
             _borderRectangles.Add(bottomBorder);
         }
 

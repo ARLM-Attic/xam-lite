@@ -261,7 +261,7 @@ namespace XAMLite
         /// This toggles the visibility of the child to Hidden when the grid becomes hidden.  However, if
         /// the grid becomes visible again, the child visibilities are reset to what they were prior.
         /// </summary>
-        private void UpdateChildVisibility()
+        protected virtual void UpdateChildVisibility()
         {
             if (Visibility == Visibility.Hidden)
             {
