@@ -37,7 +37,7 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// Initializes the event hooks.
         /// </summary>
         public override void Initialize()
         {
@@ -68,7 +68,7 @@ namespace XAMLite
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="mouseButtonEventArgs"></param>
-        private void OnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        private void OnMouseDown(object sender, MouseEventArgs mouseButtonEventArgs)
         {
             if (IsEnabled)
             {

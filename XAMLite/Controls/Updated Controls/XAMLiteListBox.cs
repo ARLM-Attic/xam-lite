@@ -41,24 +41,7 @@ namespace XAMLite
         /// Gets or sets the index of the item in the current selection or 
         /// returns negative one (-1) if the selection is empty.
         /// </summary>
-        private int _selectedIndex;
-
-        /// <summary>
-        /// Gets or sets the index of the item in the current selection or 
-        /// returns negative one (-1) if the selection is empty.
-        /// </summary>
-        public int SelectedIndex
-        {
-            get
-            {
-                return _selectedIndex;
-            } 
-
-            set
-            {
-                _selectedIndex = value;
-            }
-        }
+        public int SelectedIndex { get; set; }
 
         /// <summary>
         /// True when the control contains the mouse.
@@ -517,7 +500,7 @@ namespace XAMLite
                 return;
             }
 
-            _selectedIndex = -1;
+            SelectedIndex = -1;
             IsFocused = false;
         }
 

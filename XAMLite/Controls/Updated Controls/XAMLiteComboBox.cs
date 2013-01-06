@@ -13,6 +13,9 @@ namespace XAMLite
     /// </summary>
     public class XAMLiteComboBox : XAMLiteListBox
     {
+        /// <summary>
+        /// The text displayed in the ComboBox.
+        /// </summary>
         private string _text;
 
         /// <summary>
@@ -104,14 +107,6 @@ namespace XAMLite
         /// The height of the control when the items are visible.
         /// </summary>
         private int _openHeight;
-
-        /// <summary>
-        /// At start up, the ComboBox should be initially closed,  but the
-        /// Items have not yet been added to the grid.  At the first Update
-        /// Items call, once the Items have been added, the control visibility
-        /// is toggled off.
-        /// </summary>
-        private bool _isFirstUpdate = true;
 
         /// <summary>
         /// Constructor.
@@ -252,15 +247,6 @@ namespace XAMLite
         /// </summary>
         protected override void UpdateItems()
         {
-            // The first time this method is called, the visibility of the 
-            // Items is set to hidden.
-            if (_isFirstUpdate)
-            {
-                _isFirstUpdate = false;
-
-                Close();
-            } 
-
             // Since this class derives from a ListBox, the first Item must be
             // moved downward to accommodate the top portion of the control.
             // The remaining Items are adjusted in the base class.
