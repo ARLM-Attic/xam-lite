@@ -441,6 +441,12 @@ namespace XAMLite
         protected static Rectangle MsRect;
 
         /// <summary>
+        /// This is used to prevent multiple mouse downs when the XAMLite
+        /// controls are layered, one on top of the other.
+        /// </summary>
+        protected static bool MouseReleased = true;
+
+        /// <summary>
         /// True when the mouse has been pressed while over a control.
         /// </summary>
         protected bool MousePressed;
@@ -640,7 +646,7 @@ namespace XAMLite
                     }
                 }
 
-                if (!MousePressed && Ms.LeftButton == ButtonState.Pressed && MouseEntered)
+                if (MouseReleased && !MousePressed && Ms.LeftButton == ButtonState.Pressed && MouseEntered)
                 {
                     if (Math.Abs(MousePressPosition.X - Ms.X) < 0.01 && Math.Abs(MousePressPosition.Y - Ms.Y) < 0.01)
                     {
@@ -661,6 +667,11 @@ namespace XAMLite
                 if (Ms.LeftButton == ButtonState.Released && MousePressPositionRecorded)
                 {
                     MousePressPositionRecorded = false;
+                }
+
+                if (Ms.LeftButton == ButtonState.Released)
+                {
+                    MouseReleased = true;
                 }
             }
         }
@@ -698,6 +709,7 @@ namespace XAMLite
             {
                 var e = EventArgs.Empty as MouseButtonEventArgs;
                 MouseDown(this, e);
+                MouseReleased = false;
             }
         }
 
