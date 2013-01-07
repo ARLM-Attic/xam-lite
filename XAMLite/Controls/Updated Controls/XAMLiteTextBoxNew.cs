@@ -605,6 +605,11 @@ namespace XAMLite
         /// <param name="mouseButtonEventArgs"></param>
         private void OnMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
+            if (Parent != null && Parent is XAMLiteComboBox)
+            {
+                return;    
+            }
+
             IsFocused = true;
 
             if ((string)_textLabel.Content == _initialText)

@@ -109,6 +109,17 @@ namespace XAMLite
         private int _openHeight;
 
         /// <summary>
+        /// When true, no other combo boxes may open.
+        /// </summary>
+        protected static bool IsOpenLock;
+
+        /// <summary>
+        /// When true, the mouse down functions will work properly for the 
+        /// specific control.  This is set to true when the IsOpenLock is set.
+        /// </summary>
+        private bool _isOpenLock;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="game"></param>
@@ -239,6 +250,12 @@ namespace XAMLite
             _textBoxHover.Visibility = Visibility.Hidden;
 
             Close();
+
+            if (_isOpenLock)
+            {
+                _isOpenLock = false;
+                IsOpenLock = false;
+            }
         }
 
         /// <summary>
@@ -293,30 +310,36 @@ namespace XAMLite
         /// <param name="mouseButtonEventArgs"></param>
         private void TextBoxOnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
-            _areItemsVisibile = !_areItemsVisibile;
-
-            SelectedIndex = -1;
-
-            foreach (var child in Children)
+            if (_isOpenLock || !IsOpenLock)
             {
-                if (!(child is XAMLiteTextBoxNew) && !(child is XAMLiteImageNew))
+                IsOpenLock = true;
+                _isOpenLock = true;
+
+                _areItemsVisibile = !_areItemsVisibile;
+
+                SelectedIndex = -1;
+
+                foreach (var child in Children)
                 {
-                    child.Visibility = _areItemsVisibile ? Visibility.Visible : Visibility.Hidden;
+                    if (!(child is XAMLiteTextBoxNew) && !(child is XAMLiteImageNew))
+                    {
+                        child.Visibility = _areItemsVisibile ? Visibility.Visible : Visibility.Hidden;
+                    }
                 }
-            }
 
-            if (_areItemsVisibile && !IsFocused)
-            {
-                IsFocused = true;
-            }
-            else if (!_areItemsVisibile && IsFocused)
-            {
-                IsFocused = false;
-            }
+                if (_areItemsVisibile && !IsFocused)
+                {
+                    IsFocused = true;
+                }
+                else if (!_areItemsVisibile && IsFocused)
+                {
+                    IsFocused = false;
+                }
 
-            Height = _areItemsVisibile ? _openHeight : _textBox.Height;
+                Height = _areItemsVisibile ? _openHeight : _textBox.Height;
 
-            ToggleButtons();
+                ToggleButtons();
+            }
         }
 
         /// <summary>

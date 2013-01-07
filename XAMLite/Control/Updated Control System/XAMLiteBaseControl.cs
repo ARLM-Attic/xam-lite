@@ -441,12 +441,6 @@ namespace XAMLite
         protected static Rectangle MsRect;
 
         /// <summary>
-        /// This is used to prevent multiple mouse downs when the XAMLite
-        /// controls are layered, one on top of the other.
-        /// </summary>
-        protected static bool MouseReleased = true;
-
-        /// <summary>
         /// True when the mouse has been pressed while over a control.
         /// </summary>
         protected bool MousePressed;
@@ -618,15 +612,6 @@ namespace XAMLite
                 LostFocus(this, EventArgs.Empty);
             }
 
-            // record the mouse down vector2
-            if (!MousePressed && Ms.LeftButton == ButtonState.Pressed && !MousePressPositionRecorded)
-            {
-                MousePressPositionRecorded = true;
-
-                MousePressPosition.X = MsRect.X;
-                MousePressPosition.Y = MsRect.Y;
-            }
-
             if (Visibility == Visibility.Visible)
             {
                 if (Panel.Contains(MsRect))
@@ -646,32 +631,35 @@ namespace XAMLite
                     }
                 }
 
-                if (MouseReleased && !MousePressed && Ms.LeftButton == ButtonState.Pressed && MouseEntered)
+                if (!MousePressed && Ms.LeftButton == ButtonState.Pressed && MouseEntered)
                 {
-                    if (Math.Abs(MousePressPosition.X - Ms.X) < 0.01 && Math.Abs(MousePressPosition.Y - Ms.Y) < 0.01)
+                    if (!MousePressPositionRecorded)
                     {
-                        MousePressed = true;
-                        OnMouseDown();
+                        MousePressPositionRecorded = true;
+                        MousePressPosition.X = MsRect.X;
+                        MousePressPosition.Y = MsRect.Y;
                     }
-                }
-                else if (MousePressed && Ms.LeftButton == ButtonState.Released)
-                {
-                    MousePressed = false;
 
-                    if (MouseEntered)
-                    {
-                        OnMouseUp();
-                    }
-                }
-
-                if (Ms.LeftButton == ButtonState.Released && MousePressPositionRecorded)
-                {
-                    MousePressPositionRecorded = false;
+                    MousePressed = true;
+                    OnMouseDown();
                 }
 
                 if (Ms.LeftButton == ButtonState.Released)
                 {
-                    MouseReleased = true;
+                    if (MousePressed)
+                    {
+                        MousePressed = false;
+
+                        if (MouseEntered)
+                        {
+                            OnMouseUp();
+                        }
+                    }
+
+                    if (MousePressPositionRecorded)
+                    {
+                        MousePressPositionRecorded = false;
+                    }
                 }
             }
         }
@@ -709,7 +697,6 @@ namespace XAMLite
             {
                 var e = EventArgs.Empty as MouseButtonEventArgs;
                 MouseDown(this, e);
-                MouseReleased = false;
             }
         }
 

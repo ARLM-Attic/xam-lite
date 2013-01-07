@@ -841,7 +841,7 @@ namespace XAMLite
             }
 
             _initialSliderValue = Value;
-            _initialClickPosition = new Vector2(Ms.X, Ms.Y);
+            _initialClickPosition = MousePressPosition; // new Vector2(Ms.X, Ms.Y);
             _scrollSliderMouseDown = true;
         }
 

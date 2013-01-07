@@ -74,11 +74,7 @@ namespace XAMLite
             {
                 LoadChildren();
             }
-            //if (!_childrenLoaded)
-            //{
-            //    LoadChildren();
-            //}
-
+            
             // Update Visibility of Children according to the grid's visibility.
             if (VisibilityChanged)
             {
