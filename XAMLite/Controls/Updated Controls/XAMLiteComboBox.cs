@@ -211,6 +211,8 @@ namespace XAMLite
             _textBox.MouseDown += TextBoxOnMouseDown;
             _textBox.MouseEnter += TextBoxOnMouseEnter;
             _textBox.MouseLeave += TextBoxOnMouseLeave;
+            _textBox.MouseUp += TextBoxOnMouseUp;
+            MouseLeave += OnMouseLeave;
 
             // This is messing up Virtual pig once the 
             // gameplay screen is active.
@@ -238,24 +240,6 @@ namespace XAMLite
             Width = w;
             _textBox.Width = Width;
             _textBoxHover.Width = Width - (int)BorderThickness.Left - (int)BorderThickness.Right;
-        }
-
-        /// <summary>
-        /// Closes the dialog when focus is lost.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="eventArgs"></param>
-        private void OnLostFocus(object sender, EventArgs eventArgs)
-        {
-            _textBoxHover.Visibility = Visibility.Hidden;
-
-            Close();
-
-            if (_isOpenLock)
-            {
-                _isOpenLock = false;
-                IsOpenLock = false;
-            }
         }
 
         /// <summary>
@@ -304,6 +288,63 @@ namespace XAMLite
         }
 
         /// <summary>
+        /// Closes the dialog when focus is lost.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="eventArgs"></param>
+        private void OnLostFocus(object sender, EventArgs eventArgs)
+        {
+            _textBoxHover.Visibility = Visibility.Hidden;
+
+            Close();
+
+            if (_isOpenLock)
+            {
+                _isOpenLock = false;
+                IsOpenLock = false;
+                _textBox.Text = _text;
+            }
+        }
+
+        /// <summary>
+        /// Removes the focus on the text box, thus removing the 
+        /// highlighted border color.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseEventArgs"></param>
+        private void OnMouseLeave(object sender, MouseEventArgs mouseEventArgs)
+        {
+            if (!_areItemsVisibile)
+            {
+                _textBox.IsFocused = false;
+            }
+        }
+
+        /// <summary>
+        /// This prevent the text box normal tendency to put an empty string 
+        /// in the text box, in case a combo box was selected which was beneath
+        /// another open combo box when it was closing.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseButtonEventArgs"></param>
+        private void TextBoxOnMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        {
+            if (_isOpenLock && _areItemsVisibile)
+            {
+                _textBox.IsFocused = true;
+                _textBox.Text = string.Empty;
+                
+            }
+            else if (_isOpenLock && !_areItemsVisibile)
+            {
+                _textBox.IsFocused = true;
+                _textBox.Text = _text;
+                _isOpenLock = false;
+                IsOpenLock = false;
+            }
+        }
+
+        /// <summary>
         /// Makes visible/hidden all of the ComboBoxItems.
         /// </summary>
         /// <param name="sender"></param>
@@ -316,8 +357,6 @@ namespace XAMLite
                 _isOpenLock = true;
 
                 _areItemsVisibile = !_areItemsVisibile;
-
-                SelectedIndex = -1;
 
                 foreach (var child in Children)
                 {
@@ -449,7 +488,6 @@ namespace XAMLite
         public void Close()
         {
             _areItemsVisibile = false;
-
             HideChildren();
         }
 
@@ -460,7 +498,7 @@ namespace XAMLite
         {
             if (IsEditable)
             {
-                Text = content;
+                _text = content;
             }
 
             Close();
@@ -520,7 +558,9 @@ namespace XAMLite
             _textBox.MouseDown -= TextBoxOnMouseDown;
             _textBox.MouseEnter -= TextBoxOnMouseEnter;
             _textBox.MouseLeave -= TextBoxOnMouseLeave;
+            _textBox.MouseUp -= TextBoxOnMouseUp;
             LostFocus -= OnLostFocus;
+            MouseLeave -= OnMouseLeave;
 
             foreach (var item in Items)
             {

@@ -480,7 +480,10 @@ namespace XAMLite
 
                 if (_textLabel.Content != null && _textLabel.Content.ToString() == string.Empty)
                 {
-                    _textLabel.Content = _initialText;
+                    if (Parent != null && !(Parent is XAMLiteComboBox))
+                    {
+                        _textLabel.Content = _initialText;
+                    }
                 }
             }
 
@@ -534,6 +537,8 @@ namespace XAMLite
                 {
                     ResetBorderBrush();
                 }
+
+                IsFocused = false;
             }
         }
 
@@ -607,9 +612,10 @@ namespace XAMLite
         {
             if (Parent != null && Parent is XAMLiteComboBox)
             {
-                return;    
+                return;
             }
 
+            Console.WriteLine("Still making it past");
             IsFocused = true;
 
             if ((string)_textLabel.Content == _initialText)
