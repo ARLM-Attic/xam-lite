@@ -615,7 +615,6 @@ namespace XAMLite
                 return;
             }
 
-            Console.WriteLine("Still making it past");
             IsFocused = true;
 
             if ((string)_textLabel.Content == _initialText)
