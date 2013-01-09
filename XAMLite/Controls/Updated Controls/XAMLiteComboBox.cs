@@ -487,13 +487,14 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// When an item is selected and also is enabled, the highlight color 
+        /// is updated.  Otherwise, the highlight colors are removed.
         /// </summary>
         protected override void ModifyChildFocusAndHighlightColor()
         {
             foreach (XAMLiteComboBoxItem item in Items)
             {
-                if (item.IsSelected)
+                if (item.IsSelected && item.IsEnabled)
                 {
                     item.ModifySelectedBrush(IsFocused);
                 }

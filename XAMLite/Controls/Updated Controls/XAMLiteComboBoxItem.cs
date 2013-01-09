@@ -70,12 +70,9 @@ namespace XAMLite
         /// <param name="mouseButtonEventArgs"></param>
         private void OnMouseDown(object sender, MouseEventArgs mouseButtonEventArgs)
         {
-            if (IsEnabled)
-            {
-                IsSelected = true;
-                IsFocused = false;
-                _parent.Close((string)Content);
-            }
+            IsSelected = true;
+            IsFocused = false;
+            _parent.Close((string)Content);
         }
 
         /// <summary>
