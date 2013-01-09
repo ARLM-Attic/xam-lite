@@ -8,6 +8,8 @@ using Microsoft.Xna.Framework.Input;
 
 namespace XAMLite
 {
+    using System.Windows.Media;
+
     /// <summary>
     /// The orientation of the control, whether horizontal or vertical.
     /// </summary>
@@ -71,12 +73,12 @@ namespace XAMLite
         private XAMLiteGridNew _scrollBar;
 
         /// <summary>
-        /// 
+        /// The arrow used to view text that is above the window.
         /// </summary>
         private XAMLiteGridNew _upArrow;
 
         /// <summary>
-        /// 
+        /// The arrow used to view text that is below the window.
         /// </summary>
         private XAMLiteGridNew _downArrow;
 
@@ -139,6 +141,35 @@ namespace XAMLite
         /// When they are different, the child will scroll.
         /// </summary>
         private int _previousScrollWheelValue;
+
+        /// <summary>
+        /// The maximum height that the scrollable bar can have.
+        /// </summary>
+        private double _maxScrollBarHeight;
+
+        /// <summary>
+        /// The minimum height that a scrollable bar can have.
+        /// </summary>
+        private double _minScrollBarHeight;
+
+        /// <summary>
+        /// True when the text height minus the control height + the minimum 
+        /// scrollable bar height is greater than the maximum scrollable bar 
+        /// height.
+        /// </summary>
+        private bool _isLargeTextBlock;
+
+        /// <summary>
+        /// This determines the amount the scrollable bar should adjust in 
+        /// relation to the text adjustments made by one of the arrow buttons.
+        /// </summary>
+        private double _scrollValueAdjuster = 1;
+
+        /// <summary>
+        /// This determines the amount the text should adjust in relation to 
+        /// the scrollable bar being moved.
+        /// </summary>
+        private double _textValueAdjuster = 1;
 
         /// <summary>
         /// Constructor.
@@ -316,18 +347,41 @@ namespace XAMLite
             _downArrow.MouseLeave += DownArrowOnMouseLeave;
             _downArrow.MouseDown += DownArrowOnMouseDown;
 
-            SetInitialScrollValues();
-
             _scrollBarNormal = new List<XAMLiteImageNew>();
             _scrollBarHover = new List<XAMLiteImageNew>();
             _scrollBarMouseDown = new List<XAMLiteImageNew>();
 
             // percent of the text height versus the child height.
             var childToTextRatio = Child.Height / _childTextHeight;
+            
+            // the difference between the text height and the height of its 
+            // container.
+            var textHeightToChildHeightDifference = _childTextHeight - Child.Height;
 
-            // scroll slider height and width
-            var scrollHeight = Orientation == Orientation.Vertical ? (int)((Height - (t.Height * 2)) * childToTextRatio) : Height;
+            // the maximum scroll bar height
+            _maxScrollBarHeight = Child.Height - (t.Height * 2) + 1;
+
+            // the minimum scroll bar height.
+            _minScrollBarHeight = 10;
+
+            var scrollHeight = 0;
+            if (textHeightToChildHeightDifference + _minScrollBarHeight < _maxScrollBarHeight)
+            {
+                scrollHeight = (int)(_maxScrollBarHeight - textHeightToChildHeightDifference - 2);
+            }
+            else
+            {
+                _isLargeTextBlock = true;
+                var difference = textHeightToChildHeightDifference + _minScrollBarHeight + 1 - _maxScrollBarHeight;
+                _scrollValueAdjuster = difference / textHeightToChildHeightDifference;
+                scrollHeight = (int)_minScrollBarHeight;
+                _textValueAdjuster = (_childTextHeight - Child.Height) / (_maxScrollBarHeight - scrollHeight);
+            }
+
+            // TODO: this is not truly set up yet.  Focus is currently on vertical scrolling.
             var scrollWidth = Orientation == Orientation.Vertical ? Width : (int)((Width - (t.Width * 2)) * childToTextRatio);
+
+            SetInitialScrollValues(new Vector2(scrollWidth, scrollHeight));
 
             _scrollBar = new XAMLiteGridNew(Game)
             {
@@ -335,7 +389,7 @@ namespace XAMLite
                 Height = scrollHeight,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
-                Margin = Orientation == Orientation.Vertical ? new Thickness(0, t.Height - 1, 0, 0) : new Thickness(t.Width - 1, 0, 0, 0)
+                Margin = Orientation == Orientation.Vertical ? new Thickness(0, t.Height, 0, 0) : new Thickness(t.Width, 0, 0, 0)
             };
             Children.Add(_scrollBar);
             _scrollBar.MouseEnter += ScrollBarOnMouseEnter;
@@ -450,7 +504,7 @@ namespace XAMLite
         /// <summary>
         /// Sets the Minimum, Maximum, and initial Value.
         /// </summary>
-        private void SetInitialScrollValues()
+        private void SetInitialScrollValues(Vector2 widthHeight)
         {
             Value = 0;
             Minimum = 0;
@@ -458,11 +512,11 @@ namespace XAMLite
             switch (Orientation)
             {
                 case Orientation.Vertical:
-                    Maximum = Math.Abs(Height - _childTextHeight) + 2;
+                    Maximum = Math.Abs(_childTextHeight - Height) + 2;
                     break;
 
                 case Orientation.Horizontal:
-                    //Maximum = Math.Abs(Width - _childTextWidth) + 2;
+                    Maximum = Width - (_upArrow.Width * 2) - widthHeight.X;
                     break;
             }
         }
@@ -557,8 +611,8 @@ namespace XAMLite
                 Value = Minimum;
             }
 
-            UpdateChildPosition();
-            UpdateScrollSliderPosition(Value);
+            UpdateChildPosition(Value);
+            UpdateScrollSliderPosition(_isLargeTextBlock ? Value * (1 - _scrollValueAdjuster) : Value);
         }
 
         /// <summary>
@@ -573,8 +627,8 @@ namespace XAMLite
                 Value = Maximum;
             }
 
-            UpdateChildPosition();
-            UpdateScrollSliderPosition(Value);
+            UpdateChildPosition(Value);
+            UpdateScrollSliderPosition(_isLargeTextBlock ? Value * (1 - _scrollValueAdjuster) : Value);
         }
 
         /// <summary>
@@ -583,19 +637,23 @@ namespace XAMLite
         /// </summary>
         private void UpdateScrollSliderValue()
         {
-            Value = Orientation == Orientation.Vertical ? _initialSliderValue + Ms.Y - _initialClickPosition.Y : _initialSliderValue + Ms.X - _initialClickPosition.X;
+            var scrollBarValue = Orientation == Orientation.Vertical ? _initialSliderValue + (Ms.Y - _initialClickPosition.Y) : _initialSliderValue + (Ms.X - _initialClickPosition.X);
 
+            Value = scrollBarValue * _textValueAdjuster;
+            
             if (Value <= Minimum)
             {
                 Value = Minimum;
+                scrollBarValue = Minimum * (1 - _scrollValueAdjuster);
             }
             else if (Value >= Maximum)
             {
                 Value = Maximum;
+                scrollBarValue = _isLargeTextBlock ? Maximum * (1 - _scrollValueAdjuster) : Maximum;
             }
 
-            UpdateChildPosition();
-            UpdateScrollSliderPosition(Value);
+            UpdateChildPosition(Value);
+            UpdateScrollSliderPosition(scrollBarValue);
         }
 
         /// <summary>
@@ -604,7 +662,11 @@ namespace XAMLite
         /// <param name="value"></param>
         private void UpdateScrollSliderPosition(double value)
         {
-            var m = Orientation == Orientation.Vertical ? new Thickness(0, value < Maximum ? value : value - 2, 0, 0) : new Thickness(value < Maximum ? value : value - 2, 0, 0, 0);
+            var z = Orientation == Orientation.Vertical ? new Thickness(0, _upArrow.Height + value, 0, 0) : new Thickness(value < Maximum ? _upArrow.Width + value : _upArrow.Width + value - 2, 0, 0, 0);
+            _scrollBar.Margin = z;
+
+            var m = Orientation == Orientation.Vertical ? new Thickness(0, value, 0, 0) : new Thickness(value < Maximum ? value : value - 2, 0, 0, 0);
+
             _scrollBarNormal[0].Margin = m;
             _scrollBarHover[0].Margin = m;
             _scrollBarMouseDown[0].Margin = m;
@@ -613,7 +675,7 @@ namespace XAMLite
             _scrollBarHover[1].Margin = m;
             _scrollBarMouseDown[1].Margin = m;
 
-            m = Orientation == Orientation.Vertical ? new Thickness(0, 0, 0, value < Maximum ? -value : -value + 2) : new Thickness(0, 0, value < Maximum ? -value : -value + 2, 0);
+            m = Orientation == Orientation.Vertical ? new Thickness(0, 0, 0, -value) : new Thickness(0, 0, value < Maximum ? -value : -value + 2, 0);
             _scrollBarNormal[2].Margin = m;
             _scrollBarHover[2].Margin = m;
             _scrollBarMouseDown[2].Margin = m;
@@ -674,18 +736,18 @@ namespace XAMLite
         /// <summary>
         /// Updates the position of the child.
         /// </summary>
-        private void UpdateChildPosition()
+        private void UpdateChildPosition(double value)
         {
             var m = Child.Margin;
 
             switch (Orientation)
             {
                 case Orientation.Vertical:
-                    Child.Margin = new Thickness(m.Left, -Value, m.Right, m.Bottom);
+                    Child.Margin = new Thickness(m.Left, -value, m.Right, m.Bottom);
                     break;
 
                 case Orientation.Horizontal:
-                    Child.Margin = new Thickness(-Value, m.Top, m.Right, m.Bottom);
+                    Child.Margin = new Thickness(-value, m.Top, m.Right, m.Bottom);
                     break;
             }
         }
@@ -755,6 +817,11 @@ namespace XAMLite
         /// <param name="mouseEventArgs"></param>
         private void UpArrowOnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
         {
+            if (_scrollSliderMouseDown)
+            {
+                return;
+            }
+
             _upArrow.Children[0].Visibility = Visibility.Hidden;
             _upArrow.Children[2].Visibility = Visibility.Hidden;
             _upArrow.Children[1].Visibility = Visibility.Visible;
@@ -779,6 +846,11 @@ namespace XAMLite
         /// <param name="mouseButtonEventArgs"></param>
         private void UpArrowOnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
+            if (_scrollSliderMouseDown)
+            {
+                return;
+            }
+
             _upArrow.Children[0].Visibility = Visibility.Hidden;
             _upArrow.Children[1].Visibility = Visibility.Hidden;
             _upArrow.Children[2].Visibility = Visibility.Visible;
@@ -794,6 +866,11 @@ namespace XAMLite
         /// <param name="mouseEventArgs"></param>
         private void DownArrowOnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
         {
+            if (_scrollSliderMouseDown)
+            {
+                return;
+            }
+
             _downArrow.Children[0].Visibility = Visibility.Hidden;
             _downArrow.Children[2].Visibility = Visibility.Hidden;
             _downArrow.Children[1].Visibility = Visibility.Visible;
@@ -818,6 +895,11 @@ namespace XAMLite
         /// <param name="mouseButtonEventArgs"></param>
         private void DownArrowOnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
+            if (_scrollSliderMouseDown)
+            {
+                return;
+            }
+
             _downArrow.Children[0].Visibility = Visibility.Hidden;
             _downArrow.Children[1].Visibility = Visibility.Hidden;
             _downArrow.Children[2].Visibility = Visibility.Visible;
@@ -840,8 +922,8 @@ namespace XAMLite
                 _scrollBarMouseDown[i].Visibility = Visibility.Visible;
             }
 
-            _initialSliderValue = Value;
-            _initialClickPosition = MousePressPosition; // new Vector2(Ms.X, Ms.Y);
+            _initialSliderValue = _isLargeTextBlock ? Value * (1 - _scrollValueAdjuster) : Value;
+            _initialClickPosition = MousePressPosition;
             _scrollSliderMouseDown = true;
         }
 
@@ -907,6 +989,11 @@ namespace XAMLite
             foreach (var child in Children)
             {
                 child.Dispose();
+            }
+
+            if (_scrollBar == null)
+            {
+                return;
             }
 
             foreach (var child in _scrollBar.Children)
