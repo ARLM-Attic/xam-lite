@@ -1011,9 +1011,9 @@ namespace XAMLite
                 child.Dispose();
             }
 
-            _scrollBarNormal = null;
-            _scrollBarHover = null;
-            _scrollBarMouseDown = null;
+            //_scrollBarNormal = null;
+            //_scrollBarHover = null;
+            //_scrollBarMouseDown = null;
         }
     }
 }
