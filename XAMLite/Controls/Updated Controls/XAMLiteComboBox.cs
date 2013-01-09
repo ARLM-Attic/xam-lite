@@ -8,6 +8,8 @@ using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {
+    using Microsoft.Xna.Framework.Input;
+
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
@@ -26,8 +28,8 @@ namespace XAMLite
         /// <summary>
         /// The text to be displayed in the TextBox.
         /// </summary>
-        public string Text 
-        { 
+        public string Text
+        {
             get
             {
                 return _text;
@@ -40,8 +42,8 @@ namespace XAMLite
                 if (_textBox != null)
                 {
                     _textBox.Text = value;
-                }   
-            } 
+                }
+            }
         }
 
         /// <summary>
@@ -49,7 +51,7 @@ namespace XAMLite
         /// in text box of the ComboBox.
         /// </summary>
         public bool IsEditable { get; set; }
-        
+
         /// <summary>
         /// The font family the text belongs to.
         /// </summary>
@@ -120,6 +122,39 @@ namespace XAMLite
         private bool _isOpenLock;
 
         /// <summary>
+        /// When true, the first mouse up will allow the combo box to be opened.
+        /// This prevents the combo box from opening when a mouse down occurred
+        /// on the control when it first became visible.
+        /// </summary>
+        private bool _isJustVisible;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public override Visibility Visibility
+        {
+            get
+            {
+                return base.Visibility;
+            }
+
+            set
+            {
+                base.Visibility = value;
+
+                if (_textBox == null)
+                {
+                    return;
+                }
+
+                if (value == Visibility.Visible)
+                {
+                    _isJustVisible = true;
+                }
+            }
+        }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="game"></param>
@@ -175,16 +210,16 @@ namespace XAMLite
             Children.Add(_textBoxHover);
 
             _button = new XAMLiteImageNew(Game)
-                {
-                    SourceName = "Icons/combobox-arrow",
-                    Width = 15,
-                    Height = 8,
-                    HorizontalAlignment = HorizontalAlignment.Right,
-                    VerticalAlignment = VerticalAlignment.Top,
-                    Margin = new Thickness(0, 10, 5, 0),
-                    Background = BorderBrush,
-                    DrawOrder = DrawOrder + 1
-                };
+            {
+                SourceName = "Icons/combobox-arrow",
+                Width = 15,
+                Height = 8,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Top,
+                Margin = new Thickness(0, 10, 5, 0),
+                Background = BorderBrush,
+                DrawOrder = DrawOrder + 1
+            };
             Children.Add(_button);
 
             _buttonOver = new XAMLiteImageNew(Game)
@@ -217,6 +252,20 @@ namespace XAMLite
             // This is messing up Virtual pig once the 
             // gameplay screen is active.
             LostFocus += OnLostFocus;
+        }
+
+        /// <summary>
+        /// Checks whether the combo box just became visible.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            if (_isJustVisible && Ms.LeftButton == ButtonState.Released)
+            {
+                _isJustVisible = false;
+            }
         }
 
         /// <summary>
@@ -333,7 +382,7 @@ namespace XAMLite
             {
                 _textBox.IsFocused = true;
                 _textBox.Text = string.Empty;
-                
+
             }
             else if (_isOpenLock && !_areItemsVisibile)
             {
@@ -351,6 +400,11 @@ namespace XAMLite
         /// <param name="mouseButtonEventArgs"></param>
         private void TextBoxOnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
+            if (_isJustVisible)
+            {
+                return;
+            }
+
             if (_isOpenLock || !IsOpenLock)
             {
                 IsOpenLock = true;
