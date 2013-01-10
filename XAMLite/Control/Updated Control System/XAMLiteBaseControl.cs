@@ -589,10 +589,7 @@ namespace XAMLite
                 PositionChanged = false;
             }
 
-            if (IsEnabled)
-            {
-                HandleInput(gameTime);
-            }
+            HandleInput(gameTime);
         }
 
         /// <summary>
@@ -629,6 +626,11 @@ namespace XAMLite
                         MouseEntered = false;
                         OnMouseLeave();
                     }
+                }
+
+                if (!IsEnabled)
+                {
+                    return;
                 }
 
                 if (!MousePressed && Ms.LeftButton == ButtonState.Pressed && MouseEntered)

@@ -58,8 +58,12 @@ namespace XAMLite
             {
                 _parent.SelectedIndex = ItemIndex;
                 _parent.RemoveHighLightColor(Index);
-                BackgroundPanel.Fill = SelectedBackground;
-                BackgroundPanel.Visibility = Visibility.Visible;
+
+                if (IsEnabled)
+                {
+                    BackgroundPanel.Fill = SelectedBackground;
+                    BackgroundPanel.Visibility = Visibility.Visible;
+                }
             }
         }
 
@@ -76,8 +80,7 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// When the ListBox containing the ListBoxItem loses focus, the brush
-        /// color of the selected item changes to an unfocused color.
+        /// 
         /// </summary>
         public override void ModifySelectedBrush(bool isFocused)
         {
