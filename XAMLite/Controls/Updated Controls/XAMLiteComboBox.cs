@@ -4,12 +4,11 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {
-    using Microsoft.Xna.Framework.Input;
-
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
@@ -616,6 +615,11 @@ namespace XAMLite
             _textBox.MouseUp -= TextBoxOnMouseUp;
             LostFocus -= OnLostFocus;
             MouseLeave -= OnMouseLeave;
+
+            foreach (var child in Children)
+            {
+                child.Dispose();
+            }
 
             foreach (var item in Items)
             {
