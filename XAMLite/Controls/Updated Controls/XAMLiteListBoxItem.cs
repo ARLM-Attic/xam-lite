@@ -5,8 +5,6 @@ using Microsoft.Xna.Framework;
 
 namespace XAMLite
 {
-    using System;
-
     /// <summary>
     /// Represents a selectable item in a ListBox.
     /// </summary>
@@ -89,7 +87,7 @@ namespace XAMLite
         /// Object contained in the control, which might include
         /// string, date/time, etc.
         /// </summary>
-        public object Content { get; set; }
+        public virtual object Content { get; set; }
 
         /// <summary>
         /// Character spacing.

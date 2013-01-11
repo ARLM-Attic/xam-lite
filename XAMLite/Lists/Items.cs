@@ -33,6 +33,12 @@ namespace XAMLite
                 i.ItemIndex = Count;
                 base.Add(item);
             }
+            else if (_parent is XAMLiteMenuNew && item is XAMLiteMenuItemNew)
+            {
+                var i = item as XAMLiteMenuItemNew;
+                i.ItemIndex = Count;
+                base.Add(item);
+            }
             else if (_parent is XAMLiteListBox && item is XAMLiteListBoxItem)
             {
                 var i = item as XAMLiteListBoxItem;

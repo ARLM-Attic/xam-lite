@@ -85,7 +85,7 @@ namespace XAMLite
 
         /// <summary>
         /// The gradient color that displays when the combo box has been 
-        /// selected.
+        /// hovered over or is open.
         /// </summary>
         private XAMLiteImageNew _textBoxHover;
 
@@ -165,6 +165,7 @@ namespace XAMLite
             Background = Brushes.White;
             BorderBrush = Brushes.Black;
             BorderThickness = new Thickness(1);
+            Width = 100;
         }
 
         /// <summary>
@@ -195,7 +196,7 @@ namespace XAMLite
             };
             Children.Add(_textBox);
 
-            _textBoxHover = new XAMLiteImageNew(Game, CreateGradientTexture(150))
+            _textBoxHover = new XAMLiteImageNew(Game, GradientTextureBuilder.CreateGradientTexture(Game, 55, _textBox.Height - (int)_textBox.BorderThickness.Top - (int)_textBox.BorderThickness.Bottom, 150))
             {
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
@@ -248,8 +249,6 @@ namespace XAMLite
             _textBox.MouseUp += TextBoxOnMouseUp;
             MouseLeave += OnMouseLeave;
 
-            // This is messing up Virtual pig once the 
-            // gameplay screen is active.
             LostFocus += OnLostFocus;
         }
 
@@ -299,11 +298,13 @@ namespace XAMLite
             // Since this class derives from a ListBox, the first Item must be
             // moved downward to accommodate the top portion of the control.
             // The remaining Items are adjusted in the base class.
-            if (Items.Count > 0)
+            if (Items.Count <= 0)
             {
-                var m = Items[0].Margin;
-                Items[0].Margin = new Thickness(m.Left, m.Top + _textBox.Height - BorderThickness.Top, m.Right, m.Bottom);
+                return;
             }
+
+            var m = Items[0].Margin;
+            Items[0].Margin = new Thickness(m.Left, m.Top + _textBox.Height - BorderThickness.Top, m.Right, m.Bottom);
 
             UpdateWidth();
             UpdateHeight();
@@ -577,28 +578,6 @@ namespace XAMLite
                     _buttonOver.Visibility = Visibility.Hidden;
                 }
             }
-        }
-
-        /// <summary>
-        /// Builds the gradient-styled default buttons.
-        /// </summary>
-        /// <returns></returns>
-        private Texture2D CreateGradientTexture(int brightness)
-        {
-            const int GradientThickness = 3;
-            var t = new Texture2D(Game.GraphicsDevice, 55, Height);
-
-            var bgc = new Color[55 * Height];
-
-            for (int i = bgc.Length - 1; i > 0; i--)
-            {
-                var gradientColor = ((i * 20) / (Height * GradientThickness)) - brightness;
-                bgc[i] = new Color(gradientColor, gradientColor, gradientColor, gradientColor);
-            }
-
-            t.SetData(bgc);
-
-            return t;
         }
 
         /// <summary>

@@ -7,9 +7,9 @@ using Microsoft.Xna.Framework;
 namespace XAMLite
 {
     /// <summary>
-    /// TODO: Update summary.
+    /// TODO: This probably should be either a XAMLiteImage or a XAMLiteGrid.
     /// </summary>
-    public class XAMLiteMenuNew : XAMLiteBaseControl
+    public class XAMLiteMenuNew : XAMLiteGridNew
     {
         /// <summary>
         /// List of menu items, if any.  Each item that is added to the menu 
@@ -19,12 +19,30 @@ namespace XAMLite
         public Items Items;
 
         /// <summary>
+        /// The background of the control that holds all of the menu item headers.
+        /// </summary>
+        private XAMLiteImageNew _background;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="game"></param>
         public XAMLiteMenuNew(Game game)
             : base(game)
         {
+            Width = 200;
+            Height = 23;
+        }
+
+        /// <summary>
+        /// Loads all of the content for the control.
+        /// </summary>
+        protected override void LoadContent()
+        {
+            base.LoadContent();
+
+            _background = new XAMLiteImageNew(Game);
+            Game.Components.Add(_background);
         }
     }
 }

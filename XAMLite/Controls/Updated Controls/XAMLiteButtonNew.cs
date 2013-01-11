@@ -377,7 +377,7 @@ namespace XAMLite
                 Background = Brushes.CornflowerBlue;
             }
 
-            _mainButton = new XAMLiteImageNew(Game, CreateGradientTexture(0))
+            _mainButton = new XAMLiteImageNew(Game, GradientTextureBuilder.CreateGradientTexture(Game, 55, Height - (4), 0))
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
@@ -388,7 +388,7 @@ namespace XAMLite
             };
             _defaultImages.Add(_mainButton);
 
-            var defaultRolloverButton = new XAMLiteImageNew(Game, CreateGradientTexture(75))
+            var defaultRolloverButton = new XAMLiteImageNew(Game, GradientTextureBuilder.CreateGradientTexture(Game, 55, Height - (4), 75))
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
@@ -400,7 +400,7 @@ namespace XAMLite
             };
             _defaultRolloverImages.Add(defaultRolloverButton);
 
-            _clickedButton = new XAMLiteImageNew(Game, CreateGradientTexture(-75))
+            _clickedButton = new XAMLiteImageNew(Game, GradientTextureBuilder.CreateGradientTexture(Game, 55, Height - (4), -75))
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
@@ -633,28 +633,6 @@ namespace XAMLite
             }
 
             base.Update(gameTime);
-        }
-
-        /// <summary>
-        /// Builds the gradient-styled default buttons.
-        /// </summary>
-        /// <returns></returns>
-        private Texture2D CreateGradientTexture(int brightness)
-        {
-            const int GradientThickness = 3;
-            var t = new Texture2D(Game.GraphicsDevice, 55, Height);
-
-            var bgc = new Color[55 * Height];
-
-            for (int i = bgc.Length - 1; i > 0; i--)
-            {
-                var gradientColor = ((i * 20) / (Height * GradientThickness)) - brightness;
-                bgc[i] = new Color(gradientColor, gradientColor, gradientColor, gradientColor);
-            }
-
-            t.SetData(bgc);
-
-            return t;
         }
 
         /// <summary>

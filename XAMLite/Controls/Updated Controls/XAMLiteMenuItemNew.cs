@@ -9,7 +9,7 @@ namespace XAMLite
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
-    public class XAMLiteMenuItemNew : XAMLiteBaseControl
+    public class XAMLiteMenuItemNew : XAMLiteComboBoxItem
     {
         /// <summary>
         /// List of menu items, if any. Each item that is added to another menu 
@@ -23,7 +23,18 @@ namespace XAMLite
         /// <summary>
         /// The text that makes up the label of the control.
         /// </summary>
-        public string Header { get; set; }
+        public string Header
+        {
+            get
+            {
+                return Content.ToString();
+            }
+
+            set
+            {
+                Content = value;
+            }
+        }
         
         /// <summary>
         /// Constructor.

@@ -315,6 +315,10 @@ namespace XAMLite
         /// </summary>
         protected void CheckForNewChildren()
         {
+            if (Children.Count <= 0)
+            {
+                return;
+            }
             if (_gridCount == Children.Count && Children.Count == _childOpacity.Count && _childOpacity.Count == _childVisibility.Count && _childVisibility.Count == Children.Count)
             {
                 return;
