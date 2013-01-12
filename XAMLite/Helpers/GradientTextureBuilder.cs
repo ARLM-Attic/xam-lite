@@ -27,7 +27,8 @@ namespace XAMLite
         /// <param name="height">The height of the control that the texture is
         /// being created for.</param>
         /// <param name="brightness">The higher the number, the brighter the 
-        /// control. Numbers may also be negative.</param>
+        /// control. Numbers may also be negative.  The brighter the number, 
+        /// the greater the amount of the gradient becomes transparent.</param>
         /// <returns></returns>
         public static Texture2D CreateGradientTexture(Game game, int gradientLevel, int height, int brightness)
         {
