@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows;
+using System.Windows.Media;
 using Microsoft.Xna.Framework;
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
-{
+{ 
     /// <summary>
     /// TODO: This probably should be either a XAMLiteImage or a XAMLiteGrid.
     /// </summary>
@@ -19,9 +22,29 @@ namespace XAMLite
         public Items Items;
 
         /// <summary>
-        /// The background of the control that holds all of the menu item headers.
+        /// The brightness of the Upper portion of the menu bar.
         /// </summary>
-        private XAMLiteImageNew _background;
+        public int UpperGradientBrightness;
+
+        /// <summary>
+        /// The brightness of the lower portion of the menu bar.
+        /// </summary>
+        public int LowerGradientBrightness;
+
+        /// <summary>
+        /// The top highlight portion of the background.
+        /// </summary>
+        private XAMLiteImageNew _gradientTop;
+
+        /// <summary>
+        /// The bottom highlight portion of the background.
+        /// </summary>
+        private XAMLiteImageNew _gradientBottom;
+
+        /// <summary>
+        /// The background of the menu that the gradient then gets placed over.
+        /// </summary>
+        private XAMLiteRectangleNew _background;
 
         /// <summary>
         /// Constructor.
@@ -31,7 +54,12 @@ namespace XAMLite
             : base(game)
         {
             Width = 200;
-            Height = 23;
+            Height = 28;
+            Background = Brushes.DarkGray;
+            HorizontalAlignment = HorizontalAlignment.Center;
+            VerticalAlignment = VerticalAlignment.Center;
+            UpperGradientBrightness = 175;
+            LowerGradientBrightness = 175;
         }
 
         /// <summary>
@@ -41,8 +69,34 @@ namespace XAMLite
         {
             base.LoadContent();
 
-            _background = new XAMLiteImageNew(Game);
-            Game.Components.Add(_background);
+            _background = new XAMLiteRectangleNew(Game)
+                {
+                    Fill = Background,
+                    Width = Width,
+                    Height = Height
+                };
+            Children.Add(_background);
+
+            _gradientTop = new XAMLiteImageNew(Game, GradientTextureBuilder.CreateGradientTexture(Game, 5, Height, UpperGradientBrightness))
+                {
+                    Width = Width,
+                    Height = Height,
+                    Background = Brushes.White,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    RenderTransform = RenderTransform.FlipVertical
+                };
+            Children.Add(_gradientTop);
+
+            _gradientBottom = new XAMLiteImageNew(Game, GradientTextureBuilder.CreateGradientTexture(Game, 5, Height, LowerGradientBrightness))
+            {
+                Width = Width,
+                Height = Height,
+                Background = Brushes.Black,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            Children.Add(_gradientBottom);
         }
     }
 }

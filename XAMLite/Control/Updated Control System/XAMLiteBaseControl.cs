@@ -382,7 +382,7 @@ namespace XAMLite
         /// <summary>
         /// Background color of the Grid.
         /// </summary>
-        protected Color BackgroundColor;
+        internal Color BackgroundColor;
 
         /// <summary>
         /// 
@@ -403,7 +403,7 @@ namespace XAMLite
             {
                 _background = value;
 
-                if (_background != null)
+                if (_background != null && BackgroundColor == Color.Transparent)
                 {
                     var solidBrush = (SolidColorBrush)value;
                     var color = solidBrush.Color;
@@ -532,7 +532,7 @@ namespace XAMLite
             IsEnabled = true;
             _margin = new Thickness(0, 0, 0, 0);
             Viewport = Game.GraphicsDevice.Viewport;
-
+            BackgroundColor = Color.Transparent;
             if (!StaticVariablesCreated)
             {
                 MousePressPosition = new Vector2();

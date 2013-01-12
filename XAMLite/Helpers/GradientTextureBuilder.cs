@@ -13,24 +13,33 @@ namespace XAMLite
     public static class GradientTextureBuilder
     {
         /// <summary>
-        /// Builds the gradient-styled default buttons.
+        /// Builds gradient-styled textures.
         /// When using this method, pass in the actual height for the control.  
         /// For gradientContrast, the lower the number, the less extreme the 
         /// contrast between the colors that make up the gradient.
         /// For brightness, the higher the number, the brighter the control.
         /// Numbers for brightness may be positive or negative.
         /// </summary>
+        /// <param name="game">Reference to the game.</param>
+        /// <param name="gradientLevel">Controls how extreme the gradient 
+        /// texture will becomes.  The lower the number, the more extreme.
+        /// A good starting place is a setting of 3.</param>
+        /// <param name="height">The height of the control that the texture is
+        /// being created for.</param>
+        /// <param name="brightness">The higher the number, the brighter the 
+        /// control. Numbers may also be negative.</param>
         /// <returns></returns>
-        public static Texture2D CreateGradientTexture(Game game, int gradientContrast, int height, int brightness)
+        public static Texture2D CreateGradientTexture(Game game, int gradientLevel, int height, int brightness)
         {
-            const int GradientThickness = 3;
-            var t = new Texture2D(game.GraphicsDevice, gradientContrast, height);
+            //This number is multiplied against the Height to build the gradient color array.
+            const int GradientWidth = 55;
+            var t = new Texture2D(game.GraphicsDevice, GradientWidth, height);
 
-            var bgc = new Color[gradientContrast * height];
+            var bgc = new Color[GradientWidth * height];
 
             for (int i = bgc.Length - 1; i > 0; i--)
             {
-                var gradientColor = ((i * 20) / (height * GradientThickness)) - brightness;
+                var gradientColor = ((i * 20) / (height * gradientLevel)) - brightness;
                 bgc[i] = new Color(gradientColor, gradientColor, gradientColor, gradientColor);
             }
 

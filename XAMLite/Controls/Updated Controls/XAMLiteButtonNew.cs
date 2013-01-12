@@ -377,7 +377,7 @@ namespace XAMLite
                 Background = Brushes.CornflowerBlue;
             }
 
-            _mainButton = new XAMLiteImageNew(Game, GradientTextureBuilder.CreateGradientTexture(Game, 55, Height - (4), 0))
+            _mainButton = new XAMLiteImageNew(Game, GradientTextureBuilder.CreateGradientTexture(Game, 3, Height - (4), 0))
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
@@ -388,7 +388,7 @@ namespace XAMLite
             };
             _defaultImages.Add(_mainButton);
 
-            var defaultRolloverButton = new XAMLiteImageNew(Game, GradientTextureBuilder.CreateGradientTexture(Game, 55, Height - (4), 75))
+            var defaultRolloverButton = new XAMLiteImageNew(Game, GradientTextureBuilder.CreateGradientTexture(Game, 3, Height - (4), 75))
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
@@ -400,7 +400,7 @@ namespace XAMLite
             };
             _defaultRolloverImages.Add(defaultRolloverButton);
 
-            _clickedButton = new XAMLiteImageNew(Game, GradientTextureBuilder.CreateGradientTexture(Game, 55, Height - (4), -75))
+            _clickedButton = new XAMLiteImageNew(Game, GradientTextureBuilder.CreateGradientTexture(Game, 3, Height - (4), -75))
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
