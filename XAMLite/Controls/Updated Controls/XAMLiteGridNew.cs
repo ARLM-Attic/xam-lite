@@ -271,6 +271,11 @@ namespace XAMLite
 
                 // return the visibility of the child to what it was prior to becoming hidden
                 // like its parent.
+                if (_childVisibility == null)
+                {
+                    return;
+                }
+
                 for (var i = 0; i < _childVisibility.Count; i++)
                 {
                     Children[i].Visibility = _childVisibility[i] ? Visibility.Visible : Visibility.Hidden;
