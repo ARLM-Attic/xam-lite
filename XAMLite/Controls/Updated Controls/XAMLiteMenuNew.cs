@@ -205,6 +205,9 @@ namespace XAMLite
             Children.Add(_gradientBottom);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void SetBorders()
         {
             var leftBorder = new XAMLiteRectangleNew(Game)
@@ -283,7 +286,6 @@ namespace XAMLite
         {
             for (var i = _itemsIndex; i < Items.Count; i++)
             {
-                Console.WriteLine("Adding Child: " + i);
                 Children.Add(Items[i]);
             }
 
@@ -309,7 +311,6 @@ namespace XAMLite
                 }
 
                 item.UpdateMarginAndWidth(new Thickness(leftMargin, margin.Top, margin.Right, margin.Bottom));
-                Console.WriteLine("Setting margin: " + i);
             }
 
             _needToUpdate = false;

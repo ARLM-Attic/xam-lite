@@ -7,7 +7,9 @@ using Microsoft.Xna.Framework;
 namespace XAMLite
 {
     using System.Windows;
+    using System.Windows.Input;
     using System.Windows.Media;
+    using Microsoft.Xna.Framework.Graphics;
 
     /// <summary>
     /// TODO: Update summary.
@@ -195,7 +197,7 @@ namespace XAMLite
         /// <summary>
         /// The background of the control that changes colors when hovered.
         /// </summary>
-        private XAMLiteRectangleNew _highlightedBackground;
+        private XAMLiteImageNew _highlightedBackground;
 
         /// <summary>
         /// Although not in WPF, this seems essential to override the default
@@ -204,6 +206,11 @@ namespace XAMLite
         /// as specified by the ListBox that contains it.
         /// </summary>
         public Brush HoverBrush { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private List<XAMLiteImageNew> _highlightEdgesHover; 
 
         /// <summary>
         /// Constructor.
@@ -224,6 +231,8 @@ namespace XAMLite
             Padding = new Thickness(10, 4, 10, 5);
             Focusable = true;
             IsEnabled = true;
+
+            _highlightEdgesHover = new List<XAMLiteImageNew>();
         }
 
         /// <summary>
@@ -240,7 +249,6 @@ namespace XAMLite
                     FontFamily = FontFamily,
                     Spacing = Spacing,
                     Padding = Padding,
-                    Margin = Margin,
                     Opacity = IsEnabled ? 1f : 0.75f
                 };
             Game.Components.Add(_label);
@@ -266,28 +274,132 @@ namespace XAMLite
                 BorderThickness = new Thickness(1);
             }
 
+            var topMargin = 0;
+            //var gradientLevel = 1;
             if (Parent is XAMLiteMenuNew)
             {
-                
+                var m = Margin;
+                topMargin = (Parent.Height - Height) / 2;
+                Margin = new Thickness(m.Left, topMargin, m.Right, m.Bottom);
+                //gradientLevel = (Parent as XAMLiteMenuNew).UpperGradientBrightness;
             }
 
             if (HoverBrush != Brushes.Transparent)
             {
-                _highlightedBackground = new XAMLiteRectangleNew(Game)
+                var isBright = ColorHelper.Brightness(HoverBrush) > 0.5f;
+                
+                _highlightedBackground = new XAMLiteImageNew(Game, GradientTextureBuilder.CreateGradientTexture(Game, 5, Height, !isBright ? 55 : 100))
                     {
-                        Fill = HoverBrush,
-                        Width = Width,
+                        RenderTransform = isBright ? RenderTransform.FlipVertical : RenderTransform.Normal,
+                        Background = HoverBrush,
+                        Width = Width - 2,
                         Height = Height,
-                        HorizontalAlignment = HorizontalAlignment.Left,
-                        VerticalAlignment = VerticalAlignment.Top,
-                        Margin = new Thickness(BorderThickness.Left, 0, BorderThickness.Top, BorderThickness.Bottom),
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        //Margin = new Thickness(BorderThickness.Left, BorderThickness.Top, 0, 0),
                         Opacity = 0.45f,
-                        DrawOrder = Parent.DrawOrder
+                        DrawOrder = Parent.DrawOrder,
+                        Visibility = Visibility.Hidden
                     };
                 Children.Add(_highlightedBackground);
             }
 
+            if (Parent is XAMLiteMenuNew)
+            {
+                LoadHighlightEdges();
+            }
+
             Children.Add(_label);
+        }
+
+        public override void Initialize()
+        {
+            base.Initialize();
+            MouseEnter += OnMouseEnter;
+            MouseLeave += OnMouseLeave;
+        }
+
+        private void OnMouseLeave(object sender, MouseEventArgs mouseEventArgs)
+        {
+            foreach (var image in _highlightEdgesHover)
+            {
+                image.Visibility = Visibility.Hidden;
+            }
+
+            if (_highlightedBackground != null)
+            {
+                _highlightedBackground.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void OnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
+        {
+            foreach (var image in _highlightEdgesHover)
+            {
+                image.Visibility = Visibility.Visible;
+            }
+
+            if (_highlightedBackground != null)
+            {
+                _highlightedBackground.Visibility = Visibility.Visible;
+            }
+        }
+
+        /// <summary>
+        /// Loads the hover edges of the control.
+        /// </summary>
+        private void LoadHighlightEdges()
+        {
+            var texture = Game.Content.Load<Texture2D>("Icons/menu-highlight-top");
+            var isBright = ColorHelper.Brightness(HoverBrush) > 0.75f;
+            var top = new XAMLiteImageNew(Game, texture)
+                {
+                    Width = Width,
+                    Background = HoverBrush == Brushes.Transparent ? Brushes.DarkGray : !isBright ? HoverBrush : Brushes.DarkGray,
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    VerticalAlignment = VerticalAlignment.Top,
+                    Visibility = Visibility.Hidden
+                };
+            _highlightEdgesHover.Add(top);
+
+            var bottom = new XAMLiteImageNew(Game, texture)
+            {
+                Width = Width,
+                RenderTransform = RenderTransform.FlipVertical,
+                Background = HoverBrush == Brushes.Transparent ? Brushes.DarkGray : !isBright ? HoverBrush : Brushes.DarkGray,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                Visibility = Visibility.Hidden
+            };
+            _highlightEdgesHover.Add(bottom);
+
+            texture = Game.Content.Load<Texture2D>("Icons/menu-highlight-side");
+
+            var left = new XAMLiteImageNew(Game, texture)
+            {
+                Background = HoverBrush == Brushes.Transparent ? Brushes.DarkGray : !isBright ? HoverBrush : Brushes.DarkGray,
+                Height = Height - 4,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Center,
+                Visibility = Visibility.Hidden
+            };
+            _highlightEdgesHover.Add(left);
+
+            var right = new XAMLiteImageNew(Game, texture)
+            {
+                RenderTransform = RenderTransform.FlipHorizontal,
+                Height = Height - 4,
+                Background = HoverBrush == Brushes.Transparent ? Brushes.DarkGray : !isBright ? HoverBrush : Brushes.DarkGray,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Center,
+                Visibility = Visibility.Hidden
+            };
+            _highlightEdgesHover.Add(right);
+
+            foreach (var image in _highlightEdgesHover)
+            {
+                Children.Add(image);
+            }
         }
 
         /// <summary>
