@@ -8,7 +8,9 @@ using Microsoft.Xna.Framework;
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
-{ 
+{
+    using Microsoft.Xna.Framework.Input;
+
     /// <summary>
     /// TODO: This probably should be either a XAMLiteImage or a XAMLiteGrid.
     /// </summary>
@@ -127,6 +129,11 @@ namespace XAMLite
         /// True when the border thickness is of a uniform size.
         /// </summary>
         private bool _isBorderThicknessEqual;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        internal bool IsMenuOpen;
 
         /// <summary>
         /// Constructor.
@@ -277,6 +284,11 @@ namespace XAMLite
             {
                 UpdateItems();
             }
+
+            if (IsMenuOpen && !Panel.Contains(MsRect) && Ms.LeftButton == ButtonState.Pressed)
+            {
+                IsMenuOpen = false;
+            }
         }
 
         /// <summary>
@@ -286,7 +298,13 @@ namespace XAMLite
         {
             for (var i = _itemsIndex; i < Items.Count; i++)
             {
-                Children.Add(Items[i]);
+                var item = Items[i] as XAMLiteMenuItemNew;
+                if (item != null)
+                {
+                    item.IsMenuHead = true;
+                }
+
+                Children.Add(item);
             }
 
             _needToUpdate = true;
@@ -298,19 +316,19 @@ namespace XAMLite
             {
                 var item = (XAMLiteMenuItemNew)Items[i];
 
-                var margin = item.Margin;
+                var m = item.Margin;
 
                 double leftMargin = 0;
                 if (i == 0)
                 {
                     leftMargin = Items[0].Margin.Left + BorderThickness.Left;
                 }
-                if (i > 0)
+                else
                 {
                     leftMargin += Items[i - 1].Margin.Left + Items[i - 1].Width;
                 }
 
-                item.UpdateMarginAndWidth(new Thickness(leftMargin, margin.Top, margin.Right, margin.Bottom));
+                item.UpdateMargin(new Thickness(leftMargin, m.Top, m.Right, m.Bottom));
             }
 
             _needToUpdate = false;
@@ -329,6 +347,21 @@ namespace XAMLite
             foreach (var child in Children)
             {
                 child.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="itemIndex"></param>
+        public void CloseOtherMenus(int itemIndex)
+        {
+            foreach (XAMLiteMenuItemNew item in Items)
+            {
+                if (item.ItemIndex != itemIndex)
+                {
+                    item.Close();
+                }
             }
         }
     }

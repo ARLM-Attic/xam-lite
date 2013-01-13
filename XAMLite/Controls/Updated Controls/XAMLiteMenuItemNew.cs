@@ -10,6 +10,7 @@ namespace XAMLite
     using System.Windows.Input;
     using System.Windows.Media;
     using Microsoft.Xna.Framework.Graphics;
+    using Microsoft.Xna.Framework.Input;
 
     /// <summary>
     /// TODO: Update summary.
@@ -109,33 +110,6 @@ namespace XAMLite
         /// </summary>
         protected bool FontFamilyChanged;
 
-        // TODO: A Menu Item needs a background color when it
-        // TODO: is not the head of a menu and it needs a highlight color
-        // TODO: when it is being hovered over.
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //public override Brush Background
-        //{
-        //    get
-        //    {
-        //        if (BackgroundPanel != null)
-        //        {
-        //            return BackgroundPanel.Background;
-        //        }
-
-        //        return Brushes.Transparent;
-        //    }
-
-        //    set
-        //    {
-        //        if (BackgroundPanel != null)
-        //        {
-        //            BackgroundPanel.Background = value;
-        //        }
-        //    }
-        //}
-
         /// <summary>
         /// 
         /// </summary>
@@ -174,10 +148,10 @@ namespace XAMLite
         /// </summary>
         private XAMLiteLabelNew _label;
 
-        ///// <summary>
-        ///// Parent of the this control.
-        ///// </summary>
-        //private XAMLiteMenuNew _parent;
+        /// <summary>
+        /// When true, the menu item parent is a XAMLiteMenu.
+        /// </summary>
+        internal bool IsMenuHead; 
 
         /// <summary>
         /// Index of object in Items as opposed to its grid index.
@@ -210,7 +184,25 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        private List<XAMLiteImageNew> _highlightEdgesHover; 
+        private List<XAMLiteImageNew> _highlightEdgesHover;
+
+        /// <summary>
+        /// When this does not equal Items.Count, a method is called to add the
+        /// additional assets to the Game Components.
+        /// </summary>
+        private int _itemsIndex;
+
+        /// <summary>
+        /// Remains true, until the Items have been added to the grid and 
+        /// therefore, the label now has a height and can be positioned 
+        /// inside the ListBox.
+        /// </summary>
+        private bool _needToUpdate = true;
+
+        /// <summary>
+        /// When true, the items for a menu item are visible.
+        /// </summary>
+        internal bool IsMenuOpen;
 
         /// <summary>
         /// Constructor.
@@ -219,15 +211,13 @@ namespace XAMLite
         public XAMLiteMenuItemNew(Game game)
             : base(game)
         {
+            Items = new Items(this);
+
             Background = Brushes.Transparent;
-            //SelectedBackground = Brushes.Transparent;
-            //UnfocusedSelectedBackground = Brushes.Transparent;
             Foreground = Brushes.Transparent;
             HoverBrush = Brushes.Transparent;
-            //BorderBrush = Brushes.Transparent;
             FontFamily = new FontFamily("Verdana14");
             Spacing = 2;
-            //BorderThickness = new Thickness(1);
             Padding = new Thickness(10, 4, 10, 5);
             Focusable = true;
             IsEnabled = true;
@@ -292,11 +282,10 @@ namespace XAMLite
                     {
                         RenderTransform = isBright ? RenderTransform.FlipVertical : RenderTransform.Normal,
                         Background = HoverBrush,
-                        Width = Width - 2,
-                        Height = Height,
+                        Width = Width,
+                        Height = Height - 2,
                         HorizontalAlignment = HorizontalAlignment.Center,
                         VerticalAlignment = VerticalAlignment.Center,
-                        //Margin = new Thickness(BorderThickness.Left, BorderThickness.Top, 0, 0),
                         Opacity = 0.45f,
                         DrawOrder = Parent.DrawOrder,
                         Visibility = Visibility.Hidden
@@ -304,45 +293,9 @@ namespace XAMLite
                 Children.Add(_highlightedBackground);
             }
 
-            if (Parent is XAMLiteMenuNew)
-            {
-                LoadHighlightEdges();
-            }
+            LoadHighlightEdges();
 
             Children.Add(_label);
-        }
-
-        public override void Initialize()
-        {
-            base.Initialize();
-            MouseEnter += OnMouseEnter;
-            MouseLeave += OnMouseLeave;
-        }
-
-        private void OnMouseLeave(object sender, MouseEventArgs mouseEventArgs)
-        {
-            foreach (var image in _highlightEdgesHover)
-            {
-                image.Visibility = Visibility.Hidden;
-            }
-
-            if (_highlightedBackground != null)
-            {
-                _highlightedBackground.Visibility = Visibility.Hidden;
-            }
-        }
-
-        private void OnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
-        {
-            foreach (var image in _highlightEdgesHover)
-            {
-                image.Visibility = Visibility.Visible;
-            }
-
-            if (_highlightedBackground != null)
-            {
-                _highlightedBackground.Visibility = Visibility.Visible;
-            }
         }
 
         /// <summary>
@@ -353,21 +306,21 @@ namespace XAMLite
             var texture = Game.Content.Load<Texture2D>("Icons/menu-highlight-top");
             var isBright = ColorHelper.Brightness(HoverBrush) > 0.75f;
             var top = new XAMLiteImageNew(Game, texture)
-                {
-                    Width = Width,
-                    Background = HoverBrush == Brushes.Transparent ? Brushes.DarkGray : !isBright ? HoverBrush : Brushes.DarkGray,
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                    VerticalAlignment = VerticalAlignment.Top,
-                    Visibility = Visibility.Hidden
-                };
+            {
+                Width = Width - 4,
+                Background = HoverBrush == Brushes.Transparent ? Brushes.DarkGray : !isBright ? HoverBrush : Brushes.DarkGray,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Top,
+                Visibility = Visibility.Hidden
+            };
             _highlightEdgesHover.Add(top);
 
             var bottom = new XAMLiteImageNew(Game, texture)
             {
-                Width = Width,
+                Width = Width - 4,
                 RenderTransform = RenderTransform.FlipVertical,
                 Background = HoverBrush == Brushes.Transparent ? Brushes.DarkGray : !isBright ? HoverBrush : Brushes.DarkGray,
-                HorizontalAlignment = HorizontalAlignment.Left,
+                HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Bottom,
                 Visibility = Visibility.Hidden
             };
@@ -396,31 +349,274 @@ namespace XAMLite
             };
             _highlightEdgesHover.Add(right);
 
+            texture = Game.Content.Load<Texture2D>("Icons/menu-highlight-corner");
+            var tlCorner = new XAMLiteImageNew(Game, texture)
+                {
+                    Background = HoverBrush == Brushes.Transparent ? Brushes.DarkGray : !isBright ? HoverBrush : Brushes.DarkGray,
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    VerticalAlignment = VerticalAlignment.Top,
+                    Margin = new Thickness(1, 1, 0, 0),
+                    Visibility = Visibility.Hidden
+                };
+            _highlightEdgesHover.Add(tlCorner);
+
+            var trCorner = new XAMLiteImageNew(Game, texture)
+            {
+                Background = HoverBrush == Brushes.Transparent ? Brushes.DarkGray : !isBright ? HoverBrush : Brushes.DarkGray,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Top,
+                Margin = new Thickness(0, 1, 1, 0),
+                Visibility = Visibility.Hidden
+            };
+            _highlightEdgesHover.Add(trCorner);
+
+            var blCorner = new XAMLiteImageNew(Game, texture)
+            {
+                Background = HoverBrush == Brushes.Transparent ? Brushes.DarkGray : !isBright ? HoverBrush : Brushes.DarkGray,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                Margin = new Thickness(1, 0, 0, 1),
+                Visibility = Visibility.Hidden
+            };
+            _highlightEdgesHover.Add(blCorner);
+
+            var brCorner = new XAMLiteImageNew(Game, texture)
+            {
+                Background = HoverBrush == Brushes.Transparent ? Brushes.DarkGray : !isBright ? HoverBrush : Brushes.DarkGray,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                Margin = new Thickness(0, 0, 1, 1),
+                Visibility = Visibility.Hidden
+            };
+            _highlightEdgesHover.Add(brCorner);
+
             foreach (var image in _highlightEdgesHover)
             {
                 Children.Add(image);
             }
         }
 
+        public override void Initialize()
+        {
+            base.Initialize();
+            MouseEnter += OnMouseEnter;
+            MouseLeave += OnMouseLeave;
+            MouseDown += OnMouseDown;
+        }
+
+        /// <summary>
+        /// Updates the control.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            if (_itemsIndex != Items.Count)
+            {
+                LoadItems();
+            }
+
+            base.Update(gameTime);
+
+            if (_needToUpdate)
+            {
+                SetNewItems();
+            }
+
+            if (!Panel.Contains(MsRect) && Ms.LeftButton == ButtonState.Pressed)
+            {
+                IsMenuOpen = false;
+                UpdateVisibility();
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="margin"></param>
-        internal void UpdateMarginAndWidth(Thickness margin)
+        private void UpdateVisibility()
         {
-            // set margins
+            foreach (var item in Items)
+            {
+                item.Visibility = IsMenuOpen ? item.Visibility = Visibility.Visible : item.Visibility = Visibility.Hidden;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void LoadItems()
+        {
+            for (var i = _itemsIndex; i < Items.Count; i++)
+            {
+                Items[i].Visibility = Visibility.Hidden;
+                Children.Add(Items[i]);
+            }
+
+            _needToUpdate = true;
+        }
+
+        /// <summary>
+        /// Sets the positions of the item margins and widths when they change.
+        /// </summary>
+        private void SetNewItems()
+        {
+            if (Items.Count <= 0)
+            {
+                return;
+            }
+
+            for (var i = _itemsIndex; i < Items.Count; i++)
+            {
+                var item = (XAMLiteMenuItemNew)Items[i];
+                var p = item.Parent as XAMLiteMenuItemNew;
+
+                var m = item.Margin;
+
+                double leftMargin = 0;
+                double topMargin = 0;
+                if (i == 0)
+                {
+                    leftMargin = (p != null && p.IsMenuHead) ? 0 : p.Width + m.Left + BorderThickness.Left;
+                    topMargin = (p.IsMenuHead) ? p.Height + BorderThickness.Top : 0;
+                }
+                else
+                {
+                    leftMargin += Items[i - 1].Margin.Left;
+                    topMargin += Items[i - 1].Margin.Top + Items[i - 1].Height;
+                }
+
+                item.UpdateMargin(new Thickness(leftMargin, topMargin, m.Right, m.Bottom));
+            }
+
+            _needToUpdate = false;
+
+            _itemsIndex = Items.Count;
+
+            UpdateWidth();
+        }
+
+        /// <summary>
+        /// Margin as set by a menu, if the Menu Item's parent is a menu.
+        /// </summary>
+        /// <param name="margin"></param>
+        internal void UpdateMargin(Thickness margin)
+        {
             Margin = margin;
 
-            //Console.WriteLine("Parent: " + _parent);
-            // set Widths.
-            //Width = _parent.Width;
-            //BackgroundPanel.Width = Width - (int)_parent.BorderThickness.Right - (int)_parent.BorderThickness.Left;
-            //var m = Margin;
-            //var m = BackgroundPanel.Margin;
-            //BackgroundPanel.Margin = new Thickness(_parent.BorderThickness.Left, m.Top, m.Right, m.Bottom);
             var m = _label.Margin;
             _label.Margin = new Thickness(m.Left, m.Top, m.Right, m.Bottom);
+        }
 
+        /// <summary>
+        /// Updates the width of the control according to the largest item's 
+        /// width.
+        /// </summary>
+        private void UpdateWidth()
+        {
+            var w = Width;
+            
+            // determine which item has the greatest width
+            foreach (var item in Items)
+            {
+                var i = (XAMLiteMenuItemNew)item;
+                var width = (int)Math.Round(i._label.MeasureString().X) + (int)i.Padding.Left + (int)i.Padding.Right;
+                
+                if (width > w)
+                {
+                    w = width;
+                }
+            }
+
+            // set all widths to the size of the greatest width.
+            foreach (var item in Items)
+            {
+                item.Width = w;
+                var i = (XAMLiteMenuItemNew)item;
+                i._highlightEdgesHover[0].Width = w - 4;
+                i._highlightEdgesHover[1].Width = w - 4;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseButtonEventArgs"></param>
+        private void OnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        {
+            if (Items.Count <= 0)
+            {
+                return;
+            }
+
+            IsMenuOpen = !IsMenuOpen;
+
+            UpdateVisibility();
+
+            if (Parent is XAMLiteMenuNew)
+            {
+                var p = (XAMLiteMenuNew)Parent;
+                p.IsMenuOpen = IsMenuOpen;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseEventArgs"></param>
+        private void OnMouseLeave(object sender, MouseEventArgs mouseEventArgs)
+        {
+            foreach (var image in _highlightEdgesHover)
+            {
+                image.Visibility = Visibility.Hidden;
+            }
+
+            if (_highlightedBackground != null)
+            {
+                _highlightedBackground.Visibility = Visibility.Hidden;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseEventArgs"></param>
+        private void OnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
+        {
+            foreach (var image in _highlightEdgesHover)
+            {
+                image.Visibility = Visibility.Visible;
+            }
+
+            if (_highlightedBackground != null)
+            {
+                _highlightedBackground.Visibility = Visibility.Visible;
+            }
+
+            if (Parent is XAMLiteMenuNew)
+            {
+                var p = (XAMLiteMenuNew)Parent;
+                if (p.IsMenuOpen && !IsMenuOpen)
+                {
+                    IsMenuOpen = !IsMenuOpen;
+
+                    p.CloseOtherMenus(ItemIndex);
+                    UpdateVisibility();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Close()
+        {
+            if (IsMenuOpen)
+            {
+                IsMenuOpen = !IsMenuOpen;
+                UpdateVisibility();
+            }
         }
     }
 }

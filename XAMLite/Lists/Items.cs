@@ -27,9 +27,8 @@ namespace XAMLite
         /// <param name="item"></param>
         public new void Add(XAMLiteBaseControl item)
         {
-            if (_parent is XAMLiteMenuNew && item is XAMLiteMenuItemNew)
+            if ((_parent is XAMLiteMenuNew || _parent is XAMLiteMenuItemNew) && item is XAMLiteMenuItemNew)
             {
-                Console.WriteLine("Pare: " + _parent);
                 var i = item as XAMLiteMenuItemNew;
                 i.ItemIndex = Count;
                 base.Add(item);
