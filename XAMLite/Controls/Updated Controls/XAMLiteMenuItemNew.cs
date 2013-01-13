@@ -27,6 +27,17 @@ namespace XAMLite
         public Items Items;
 
         /// <summary>
+        /// Returns whether there are Items in the list of Items.
+        /// </summary>
+        public bool HasItems
+        {
+            get
+            {
+                return Items.Count > 0;
+            }
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         public override bool IsEnabled
@@ -239,6 +250,7 @@ namespace XAMLite
                     FontFamily = FontFamily,
                     Spacing = Spacing,
                     Padding = Padding,
+                    HorizontalAlignment = HorizontalAlignment.Right,
                     Opacity = IsEnabled ? 1f : 0.75f
                 };
             Game.Components.Add(_label);
@@ -459,7 +471,7 @@ namespace XAMLite
         /// </summary>
         private void SetNewItems()
         {
-            if (Items.Count <= 0)
+            if (!HasItems)
             {
                 return;
             }
@@ -519,6 +531,10 @@ namespace XAMLite
             {
                 var i = (XAMLiteMenuItemNew)item;
                 var width = (int)Math.Round(i._label.MeasureString().X) + (int)i.Padding.Left + (int)i.Padding.Right;
+                if (i.HasItems)
+                {
+                    width += 20;
+                }
                 
                 if (width > w)
                 {
@@ -526,11 +542,14 @@ namespace XAMLite
                 }
             }
 
+            w += 20;
+
             // set all widths to the size of the greatest width.
             foreach (var item in Items)
             {
                 item.Width = w;
                 var i = (XAMLiteMenuItemNew)item;
+                i._highlightedBackground.Width = w;
                 i._highlightEdgesHover[0].Width = w - 4;
                 i._highlightEdgesHover[1].Width = w - 4;
             }
