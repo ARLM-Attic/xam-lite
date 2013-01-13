@@ -26,21 +26,21 @@ namespace XAMLite
         /// A good starting place is a setting of 3.</param>
         /// <param name="height">The height of the control that the texture is
         /// being created for.</param>
-        /// <param name="brightness">The higher the number, the brighter the 
-        /// control. Numbers may also be negative.  The brighter the number, 
-        /// the greater the amount of the gradient becomes transparent.</param>
+        /// <param name="transparencyLevel">The higher the number, the brighter the 
+        /// control. Numbers may also be negative.  The higher the number, 
+        /// the greater the amount of transparency.</param>
         /// <returns></returns>
-        public static Texture2D CreateGradientTexture(Game game, int gradientLevel, int height, int brightness)
+        public static Texture2D CreateGradientTexture(Game game, int gradientLevel, int height, int transparencyLevel)
         {
             //This number is multiplied against the Height to build the gradient color array.
             const int GradientWidth = 55;
             var t = new Texture2D(game.GraphicsDevice, GradientWidth, height);
 
             var bgc = new Color[GradientWidth * height];
-
-            for (int i = bgc.Length - 1; i > 0; i--)
+            
+            for (var i = bgc.Length - 1; i > 0; i--)
             {
-                var gradientColor = ((i * 20) / (height * gradientLevel)) - brightness;
+                var gradientColor = ((i * 20) / (height * gradientLevel)) - transparencyLevel;
                 bgc[i] = new Color(gradientColor, gradientColor, gradientColor, gradientColor);
             }
 

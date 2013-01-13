@@ -172,10 +172,10 @@ namespace XAMLite
         /// </summary>
         private XAMLiteLabelNew _label;
 
-        /// <summary>
-        /// Parent of the this control.
-        /// </summary>
-        private XAMLiteMenuNew _parent;
+        ///// <summary>
+        ///// Parent of the this control.
+        ///// </summary>
+        //private XAMLiteMenuNew _parent;
 
         /// <summary>
         /// Index of object in Items as opposed to its grid index.
@@ -193,9 +193,17 @@ namespace XAMLite
         public Thickness BorderThickness { get; set; }
 
         /// <summary>
-        /// The background of the control that changes colors when selected.
+        /// The background of the control that changes colors when hovered.
         /// </summary>
-        protected internal XAMLiteRectangleNew BackgroundPanel;
+        private XAMLiteRectangleNew _highlightedBackground;
+
+        /// <summary>
+        /// Although not in WPF, this seems essential to override the default
+        /// colors in WPF for highlighting on mouse over or when selected.  
+        /// If this is not explicitly set, it will receive the brush color
+        /// as specified by the ListBox that contains it.
+        /// </summary>
+        public Brush HoverBrush { get; set; }
 
         /// <summary>
         /// Constructor.
@@ -208,6 +216,7 @@ namespace XAMLite
             //SelectedBackground = Brushes.Transparent;
             //UnfocusedSelectedBackground = Brushes.Transparent;
             Foreground = Brushes.Transparent;
+            HoverBrush = Brushes.Transparent;
             //BorderBrush = Brushes.Transparent;
             FontFamily = new FontFamily("Verdana14");
             Spacing = 2;
@@ -224,8 +233,6 @@ namespace XAMLite
         {
             base.LoadContent();
 
-            Console.WriteLine("Header: " + Header);
-
             _label = new XAMLiteLabelNew(Game)
                 {
                     Content = Header,
@@ -240,7 +247,6 @@ namespace XAMLite
 
             var w = _label.MeasureString().X + Padding.Left + Padding.Right;
             var h = _label.MeasureString().Y + Padding.Top + Padding.Bottom;
-            Console.WriteLine(("Width: " + w + "  Height: " + h));
 
             if (w > Width)
             {
@@ -260,22 +266,28 @@ namespace XAMLite
                 BorderThickness = new Thickness(1);
             }
 
-            BackgroundPanel = new XAMLiteRectangleNew(Game)
+            if (Parent is XAMLiteMenuNew)
             {
-                Width = Width,
-                Height = Height,
-                HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Top,
-                Margin = new Thickness(BorderThickness.Left, 0, BorderThickness.Top, BorderThickness.Bottom),
-                Opacity = 0.45f,
-                DrawOrder = Parent.DrawOrder
-            };
-            Children.Add(BackgroundPanel);
+                
+            }
+
+            if (HoverBrush != Brushes.Transparent)
+            {
+                _highlightedBackground = new XAMLiteRectangleNew(Game)
+                    {
+                        Fill = HoverBrush,
+                        Width = Width,
+                        Height = Height,
+                        HorizontalAlignment = HorizontalAlignment.Left,
+                        VerticalAlignment = VerticalAlignment.Top,
+                        Margin = new Thickness(BorderThickness.Left, 0, BorderThickness.Top, BorderThickness.Bottom),
+                        Opacity = 0.45f,
+                        DrawOrder = Parent.DrawOrder
+                    };
+                Children.Add(_highlightedBackground);
+            }
 
             Children.Add(_label);
-
-            _parent = (XAMLiteMenuNew)Parent;
-            Console.WriteLine(_parent + ":   Parent");
         }
 
         /// <summary>
@@ -287,7 +299,7 @@ namespace XAMLite
             // set margins
             Margin = margin;
 
-            Console.WriteLine("Parent: " + _parent);
+            //Console.WriteLine("Parent: " + _parent);
             // set Widths.
             //Width = _parent.Width;
             //BackgroundPanel.Width = Width - (int)_parent.BorderThickness.Right - (int)_parent.BorderThickness.Left;
