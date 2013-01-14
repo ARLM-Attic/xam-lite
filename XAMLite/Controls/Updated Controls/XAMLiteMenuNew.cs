@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
 using Microsoft.Xna.Framework;
-using Color = Microsoft.Xna.Framework.Color;
+using Microsoft.Xna.Framework.Input;
 
 namespace XAMLite
 {
-    using Microsoft.Xna.Framework.Input;
-
     /// <summary>
     /// TODO: This probably should be either a XAMLiteImage or a XAMLiteGrid.
     /// </summary>

@@ -196,7 +196,7 @@ namespace XAMLite
             };
             Children.Add(_textBox);
 
-            _textBoxHover = new XAMLiteImageNew(Game, GradientTextureBuilder.CreateGradientTexture(Game, 55, _textBox.Height - (int)_textBox.BorderThickness.Top - (int)_textBox.BorderThickness.Bottom, 150))
+            _textBoxHover = new XAMLiteImageNew(Game, GradientTextureBuilder.CreateGradientTexture(Game, 5, _textBox.Height - (int)_textBox.BorderThickness.Top - (int)_textBox.BorderThickness.Bottom, 85))
             {
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
