@@ -2,16 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows;
+using System.Windows.Input;
+using System.Windows.Media;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace XAMLite
-{
-    using System.Windows;
-    using System.Windows.Input;
-    using System.Windows.Media;
-    using Microsoft.Xna.Framework.Graphics;
-    using Microsoft.Xna.Framework.Input;
-
+{  
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
@@ -59,7 +58,7 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// The text that makes up the label of the control.
         /// </summary>
         private string _header;
 
@@ -122,12 +121,12 @@ namespace XAMLite
         protected bool FontFamilyChanged;
 
         /// <summary>
-        /// 
+        /// The Text color of the Menu Item.
         /// </summary>
         private Brush _foreground;
 
         /// <summary>
-        /// Sets the Text color of the ListBoxItem.
+        /// The Text color of the Menu Item.
         /// </summary>
         public Brush Foreground
         {
@@ -150,7 +149,8 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// The spacing between the edge of the control and where the text
+        /// starts.
         /// </summary>
         public Thickness Padding { get; set; }
 
@@ -193,7 +193,7 @@ namespace XAMLite
         public Brush HoverBrush { get; set; }
 
         /// <summary>
-        /// 
+        /// The edges of the highlight color.
         /// </summary>
         private List<XAMLiteImageNew> _highlightEdgesHover;
 
@@ -250,7 +250,7 @@ namespace XAMLite
                     FontFamily = FontFamily,
                     Spacing = Spacing,
                     Padding = Padding,
-                    HorizontalAlignment = HorizontalAlignment.Right,
+                    HorizontalAlignment = HorizontalAlignment.Left,
                     Opacity = IsEnabled ? 1f : 0.75f
                 };
             Game.Components.Add(_label);
@@ -476,6 +476,9 @@ namespace XAMLite
                 return;
             }
 
+            UpdateWidth();
+            UpdatePadding();
+
             for (var i = _itemsIndex; i < Items.Count; i++)
             {
                 var item = (XAMLiteMenuItemNew)Items[i];
@@ -502,8 +505,20 @@ namespace XAMLite
             _needToUpdate = false;
 
             _itemsIndex = Items.Count;
+        }
 
-            UpdateWidth();
+        /// <summary>
+        /// 
+        /// </summary>
+        private void UpdatePadding()
+        {
+            // set all widths to the size of the greatest width.
+            foreach (var item in Items)
+            {
+                var i = item as XAMLiteMenuItemNew;
+                var p = (item as XAMLiteMenuItemNew)._label.Padding;
+                i._label.Padding = new Thickness(p.Left + 20, p.Top, p.Right, p.Bottom);
+            }
         }
 
         /// <summary>
@@ -524,7 +539,12 @@ namespace XAMLite
         /// </summary>
         private void UpdateWidth()
         {
-            var w = Width;
+            var w = 0;
+            
+            if (Parent is XAMLiteMenuNew)
+            {
+                w = Width;
+            }
             
             // determine which item has the greatest width
             foreach (var item in Items)
@@ -622,6 +642,32 @@ namespace XAMLite
 
                     p.CloseOtherMenus(ItemIndex);
                     UpdateVisibility();
+                }
+            }
+            else
+            {
+                var p = (XAMLiteMenuItemNew)Parent;
+                if (p.IsMenuOpen)
+                {
+                    IsMenuOpen = true;
+
+                    p.CloseOtherMenus(ItemIndex);
+                    UpdateVisibility();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="itemIndex"></param>
+        private void CloseOtherMenus(int itemIndex)
+        {
+            foreach (XAMLiteMenuItemNew item in Items)
+            {
+                if (item.ItemIndex != itemIndex)
+                {
+                    item.Close();
                 }
             }
         }
