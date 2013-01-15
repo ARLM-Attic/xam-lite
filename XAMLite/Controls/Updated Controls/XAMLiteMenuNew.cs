@@ -73,6 +73,12 @@ namespace XAMLite
         public bool IsMouseOver { get; set; }
 
         /// <summary>
+        /// The spacing between the edge of the control and where the text
+        /// starts.
+        /// </summary>
+        public Thickness Padding { get; set; }
+
+        /// <summary>
         /// The private border color.
         /// </summary>
         private Brush _borderBrush;
@@ -314,16 +320,19 @@ namespace XAMLite
                 var m = item.Margin;
 
                 double leftMargin = 0;
+                double topMargin = 0;
                 if (i == 0)
                 {
-                    leftMargin = Items[0].Margin.Left + BorderThickness.Left;
+                    leftMargin = Padding.Left + m.Left + BorderThickness.Left;
+                    topMargin = Padding.Top + m.Top + BorderThickness.Top;
                 }
                 else
                 {
                     leftMargin += Items[i - 1].Margin.Left + Items[i - 1].Width;
+                    topMargin = Padding.Top + m.Top + BorderThickness.Top;
                 }
 
-                item.UpdateMargin(new Thickness(leftMargin, m.Top, m.Right, m.Bottom));
+                item.UpdateMargin(new Thickness(leftMargin, topMargin, m.Right, m.Bottom));
             }
 
             _needToUpdate = false;

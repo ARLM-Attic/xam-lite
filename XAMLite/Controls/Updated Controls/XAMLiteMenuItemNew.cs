@@ -149,6 +149,13 @@ namespace XAMLite
         }
 
         /// <summary>
+        /// The default background brush color for all items when a menu is
+        /// open.  if a particular menu item has its Background set, this will 
+        /// override it.
+        /// </summary>
+        public Brush ItemsBackground { get; set; }
+
+        /// <summary>
         /// The spacing between the edge of the control and where the text
         /// starts.
         /// </summary>
@@ -183,6 +190,21 @@ namespace XAMLite
         /// The background of the control that changes colors when hovered.
         /// </summary>
         private XAMLiteImageNew _highlightedBackground;
+
+        /// <summary>
+        /// A specific backdrop color, if one is assigned.
+        /// </summary>
+        //private XAMLiteRectangleNew _background;
+
+        /// <summary>
+        /// The backdrop color for all items in a Menu.
+        /// </summary>
+        private XAMLiteRectangleNew _backdrop;
+
+        /// <summary>
+        /// The drop shadow for an open menu.
+        /// </summary>
+        //private XAMLiteRectangleNew _dropShadow;
 
         /// <summary>
         /// Although not in WPF, this seems essential to override the default
@@ -225,6 +247,7 @@ namespace XAMLite
             Items = new Items(this);
 
             Background = Brushes.Transparent;
+            ItemsBackground = Brushes.Gainsboro;
             Foreground = Brushes.Transparent;
             HoverBrush = Brushes.Transparent;
             FontFamily = new FontFamily("Verdana14");
@@ -243,6 +266,19 @@ namespace XAMLite
         {
             base.LoadContent();
 
+            if (HasItems)
+            {
+                _backdrop = new XAMLiteRectangleNew(Game)
+                    {
+                        Width = Width,
+                        Height = Height,
+                        Fill = ItemsBackground,
+                        Stroke = Brushes.Black,
+                        StrokeThickness = 1,
+                        Visibility = Visibility.Hidden
+                    };
+                Children.Add(_backdrop);
+            }
             _label = new XAMLiteLabelNew(Game)
                 {
                     Content = Header,
@@ -344,6 +380,7 @@ namespace XAMLite
             {
                 Background = HoverBrush == Brushes.Transparent ? Brushes.DarkGray : !isBright ? HoverBrush : Brushes.DarkGray,
                 Height = Height - 4,
+                Margin = Parent is XAMLiteMenuNew ? new Thickness() : new Thickness(5, 0, 0, 0), 
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Center,
                 Visibility = Visibility.Hidden
@@ -355,6 +392,7 @@ namespace XAMLite
                 RenderTransform = RenderTransform.FlipHorizontal,
                 Height = Height - 4,
                 Background = HoverBrush == Brushes.Transparent ? Brushes.DarkGray : !isBright ? HoverBrush : Brushes.DarkGray,
+                Margin = Parent is XAMLiteMenuNew ? new Thickness() : new Thickness(0, 0, 5, 0), 
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Center,
                 Visibility = Visibility.Hidden
@@ -367,7 +405,7 @@ namespace XAMLite
                     Background = HoverBrush == Brushes.Transparent ? Brushes.DarkGray : !isBright ? HoverBrush : Brushes.DarkGray,
                     HorizontalAlignment = HorizontalAlignment.Left,
                     VerticalAlignment = VerticalAlignment.Top,
-                    Margin = new Thickness(1, 1, 0, 0),
+                    Margin = Parent is XAMLiteMenuNew ? new Thickness(1, 1, 0, 0) : new Thickness(6, 1, 0, 0),
                     Visibility = Visibility.Hidden
                 };
             _highlightEdgesHover.Add(tlCorner);
@@ -377,7 +415,7 @@ namespace XAMLite
                 Background = HoverBrush == Brushes.Transparent ? Brushes.DarkGray : !isBright ? HoverBrush : Brushes.DarkGray,
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Top,
-                Margin = new Thickness(0, 1, 1, 0),
+                Margin = Parent is XAMLiteMenuNew ? new Thickness(0, 1, 1, 0) : new Thickness(0, 1, 6, 0),
                 Visibility = Visibility.Hidden
             };
             _highlightEdgesHover.Add(trCorner);
@@ -387,7 +425,7 @@ namespace XAMLite
                 Background = HoverBrush == Brushes.Transparent ? Brushes.DarkGray : !isBright ? HoverBrush : Brushes.DarkGray,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Bottom,
-                Margin = new Thickness(1, 0, 0, 1),
+                Margin = Parent is XAMLiteMenuNew ? new Thickness(1, 0, 0, 1) : new Thickness(6, 0, 0, 1),
                 Visibility = Visibility.Hidden
             };
             _highlightEdgesHover.Add(blCorner);
@@ -397,7 +435,7 @@ namespace XAMLite
                 Background = HoverBrush == Brushes.Transparent ? Brushes.DarkGray : !isBright ? HoverBrush : Brushes.DarkGray,
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Bottom,
-                Margin = new Thickness(0, 0, 1, 1),
+                Margin = Parent is XAMLiteMenuNew ? new Thickness(0, 0, 1, 1) : new Thickness(0, 0, 6, 1),
                 Visibility = Visibility.Hidden
             };
             _highlightEdgesHover.Add(brCorner);
@@ -439,6 +477,24 @@ namespace XAMLite
                 IsMenuOpen = false;
                 UpdateVisibility();
             }
+
+            //if (IsMenuOpen && _highlightedBackground.Visibility == Visibility.Hidden)
+            //{
+            //    Highlight();
+            //}
+        }
+
+        private void Highlight()
+        {
+            foreach (var image in _highlightEdgesHover)
+            {
+                image.Visibility = Visibility.Visible;
+            }
+
+            if (_highlightedBackground != null)
+            {
+                _highlightedBackground.Visibility = Visibility.Visible;
+            }
         }
 
         /// <summary>
@@ -450,6 +506,13 @@ namespace XAMLite
             {
                 item.Visibility = IsMenuOpen ? item.Visibility = Visibility.Visible : item.Visibility = Visibility.Hidden;
             }
+
+            if (HasItems)
+            {
+                _backdrop.Visibility = IsMenuOpen ? _backdrop.Visibility = Visibility.Visible : _backdrop.Visibility = Visibility.Hidden;
+            }
+
+
         }
 
         /// <summary>
@@ -490,7 +553,7 @@ namespace XAMLite
                 double topMargin = 0;
                 if (i == 0)
                 {
-                    leftMargin = (p != null && p.IsMenuHead) ? 0 : p.Width + m.Left + BorderThickness.Left;
+                    leftMargin = (p != null && p.IsMenuHead) ? 0 : p.Width + m.Left - 5; // +BorderThickness.Left;
                     topMargin = (p.IsMenuHead) ? p.Height + BorderThickness.Top : 0;
                 }
                 else
@@ -505,6 +568,28 @@ namespace XAMLite
             _needToUpdate = false;
 
             _itemsIndex = Items.Count;
+
+            SetBackground();
+        }
+
+        private void SetBackground()
+        {
+            if (!HasItems)
+            {
+                return;
+            }
+
+            var m = Items[0].Margin;
+            _backdrop.Margin = new Thickness(m.Left, m.Top - BorderThickness.Top, m.Right, m.Bottom);
+            _backdrop.Width = Items[0].Width;
+
+            var h = 0;
+            foreach (var item in Items)
+            {
+                h += item.Height;
+            }
+
+            _backdrop.Height = h + (int)BorderThickness.Top + (int)BorderThickness.Bottom + 2;
         }
 
         /// <summary>
@@ -512,7 +597,6 @@ namespace XAMLite
         /// </summary>
         private void UpdatePadding()
         {
-            // set all widths to the size of the greatest width.
             foreach (var item in Items)
             {
                 var i = item as XAMLiteMenuItemNew;
@@ -567,7 +651,7 @@ namespace XAMLite
             // set all widths to the size of the greatest width.
             foreach (var item in Items)
             {
-                item.Width = w;
+                item.Width = w + 10;
                 var i = (XAMLiteMenuItemNew)item;
                 i._highlightedBackground.Width = w;
                 i._highlightEdgesHover[0].Width = w - 4;
@@ -623,15 +707,7 @@ namespace XAMLite
         /// <param name="mouseEventArgs"></param>
         private void OnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
         {
-            foreach (var image in _highlightEdgesHover)
-            {
-                image.Visibility = Visibility.Visible;
-            }
-
-            if (_highlightedBackground != null)
-            {
-                _highlightedBackground.Visibility = Visibility.Visible;
-            }
+            Highlight();
 
             if (Parent is XAMLiteMenuNew)
             {

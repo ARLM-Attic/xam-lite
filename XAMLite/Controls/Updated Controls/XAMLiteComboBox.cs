@@ -588,6 +588,11 @@ namespace XAMLite
         {
             base.Dispose(disposing);
 
+            if (_isOpenLock)
+            {
+                IsOpenLock = false;
+            }
+
             _textBox.MouseDown -= TextBoxOnMouseDown;
             _textBox.MouseEnter -= TextBoxOnMouseEnter;
             _textBox.MouseLeave -= TextBoxOnMouseLeave;
