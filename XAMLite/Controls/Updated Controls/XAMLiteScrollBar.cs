@@ -8,8 +8,6 @@ using Microsoft.Xna.Framework.Input;
 
 namespace XAMLite
 {
-    using System.Windows.Media;
-
     /// <summary>
     /// The orientation of the control, whether horizontal or vertical.
     /// </summary>
@@ -22,6 +20,7 @@ namespace XAMLite
 
     /// <summary>
     /// TODO: Remove color from textures so that the assets can be colorized to any color.
+    /// TODO: Spend some serious time optimizing all of the state changes of the various buttons and sliders.
     /// </summary>
     public class XAMLiteScrollBar : XAMLiteGridNew
     {
@@ -170,6 +169,18 @@ namespace XAMLite
         /// the scrollable bar being moved.
         /// </summary>
         private double _textValueAdjuster = 1;
+
+        /// <summary>
+        /// When true, a mouse down is still active on the Up Arrow, but a 
+        /// Mouse Leave occurred.  The text should not scroll while this is true.
+        /// </summary>
+        private bool _upArrowHasLeftWhilePressed;
+
+        /// <summary>
+        /// When true, a mouse down is still active on the Down Arrow, but a 
+        /// Mouse Leave occurred.  The text should not scroll while this is true.
+        /// </summary>
+        private bool _downArrowHasLeftWhilePressed;
 
         /// <summary>
         /// Constructor.
@@ -536,7 +547,7 @@ namespace XAMLite
 
             HandleMouseUp();
             
-            if (_mouseDownUpArrow)
+            if (_mouseDownUpArrow && !_upArrowHasLeftWhilePressed)
             {
                 _scrollTimer -= gameTime.ElapsedGameTime;
                 if (_scrollTimer <= TimeSpan.Zero)
@@ -545,7 +556,7 @@ namespace XAMLite
                     _scrollTimer = TimeSpan.FromSeconds(0.1);
                 }
             }
-            else if (_mouseDownDownArrow)
+            else if (_mouseDownDownArrow && !_downArrowHasLeftWhilePressed)
             {
                 _scrollTimer -= gameTime.ElapsedGameTime;
                 if (_scrollTimer <= TimeSpan.Zero)
@@ -588,15 +599,46 @@ namespace XAMLite
             if (_scrollSliderMouseDown && Ms.LeftButton == ButtonState.Released)
             {
                 SliderReleased();
+                CheckForMouseEnter();
             }
             else if (_mouseDownUpArrow && Ms.LeftButton == ButtonState.Released)
             {
                 UpArrowReleased();
+                CheckForMouseEnter();
             }
             else if (_mouseDownDownArrow && Ms.LeftButton == ButtonState.Released)
             {
                 DownArrowReleased();
+                CheckForMouseEnter();
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void CheckForMouseEnter()
+        {
+            if (_scrollBar.Panel.Contains(Ms.X, Ms.Y))
+            {
+                for (var i = 0; i < _scrollBarNormal.Count; i++)
+                {
+                    _scrollBarNormal[i].Visibility = Visibility.Hidden;
+                    _scrollBarHover[i].Visibility = Visibility.Visible;
+                }
+            }
+            else if (_upArrow.Panel.Contains(Ms.X, Ms.Y))
+            {
+                _upArrow.Children[0].Visibility = Visibility.Hidden;
+                _upArrow.Children[1].Visibility = Visibility.Visible;
+            }
+            else if (_downArrow.Panel.Contains(Ms.X, Ms.Y))
+            {
+                _downArrow.Children[0].Visibility = Visibility.Hidden;
+                _downArrow.Children[1].Visibility = Visibility.Visible;
+            }
+
+            _upArrowHasLeftWhilePressed = false;
+            _downArrowHasLeftWhilePressed = false;
         }
 
         /// <summary>
@@ -686,9 +728,18 @@ namespace XAMLite
         /// </summary>
         private void UpArrowReleased()
         {
-            _upArrow.Children[0].Visibility = Visibility.Hidden;
-            _upArrow.Children[2].Visibility = Visibility.Hidden;
-            _upArrow.Children[1].Visibility = Visibility.Visible;
+            if (_upArrow.Panel.Contains(Ms.X, Ms.Y))
+            {
+                _upArrow.Children[0].Visibility = Visibility.Hidden;
+                _upArrow.Children[2].Visibility = Visibility.Hidden;
+                _upArrow.Children[1].Visibility = Visibility.Visible;
+            }
+            else
+            {
+                _upArrow.Children[1].Visibility = Visibility.Hidden;
+                _upArrow.Children[2].Visibility = Visibility.Hidden;
+                _upArrow.Children[0].Visibility = Visibility.Visible;
+            }
 
             _mouseDownUpArrow = false;
         }
@@ -698,9 +749,18 @@ namespace XAMLite
         /// </summary>
         private void DownArrowReleased()
         {
-            _downArrow.Children[0].Visibility = Visibility.Hidden;
-            _downArrow.Children[2].Visibility = Visibility.Hidden;
-            _downArrow.Children[1].Visibility = Visibility.Visible;
+            if (_downArrow.Panel.Contains(Ms.X, Ms.Y))
+            {
+                _downArrow.Children[0].Visibility = Visibility.Hidden;
+                _downArrow.Children[2].Visibility = Visibility.Hidden;
+                _downArrow.Children[1].Visibility = Visibility.Visible;
+            }
+            else
+            {
+                _downArrow.Children[1].Visibility = Visibility.Hidden;
+                _downArrow.Children[2].Visibility = Visibility.Hidden;
+                _downArrow.Children[0].Visibility = Visibility.Visible;
+            }
 
             _mouseDownDownArrow = false;
         }
@@ -713,7 +773,7 @@ namespace XAMLite
             _scrollSliderMouseDown = false;
             _initialClickPosition = Vector2.Zero;
 
-            if (Panel.Contains(Ms.X, Ms.Y))
+            if (_scrollBar.Panel.Contains(Ms.X, Ms.Y))
             {
                 for (var i = 0; i < _scrollBarNormal.Count; i++)
                 {
@@ -817,14 +877,24 @@ namespace XAMLite
         /// <param name="mouseEventArgs"></param>
         private void UpArrowOnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
         {
-            if (_scrollSliderMouseDown)
+            if (_scrollSliderMouseDown || _mouseDownDownArrow)
             {
                 return;
             }
 
             _upArrow.Children[0].Visibility = Visibility.Hidden;
-            _upArrow.Children[2].Visibility = Visibility.Hidden;
-            _upArrow.Children[1].Visibility = Visibility.Visible;
+
+            if (_mouseDownUpArrow)
+            {
+                _upArrow.Children[1].Visibility = Visibility.Hidden;
+                _upArrow.Children[2].Visibility = Visibility.Visible;
+                _upArrowHasLeftWhilePressed = false;
+            }
+            else
+            {
+                _upArrow.Children[2].Visibility = Visibility.Hidden;
+                _upArrow.Children[1].Visibility = Visibility.Visible;
+            }
         }
 
         /// <summary>
@@ -834,9 +904,24 @@ namespace XAMLite
         /// <param name="mouseEventArgs"></param>
         private void UpArrowOnMouseLeave(object sender, MouseEventArgs mouseEventArgs)
         {
-            _upArrow.Children[1].Visibility = Visibility.Hidden;
+            if (_mouseDownDownArrow || _scrollSliderMouseDown)
+            {
+                return;
+            }
+
             _upArrow.Children[2].Visibility = Visibility.Hidden;
-            _upArrow.Children[0].Visibility = Visibility.Visible;
+
+            if (_mouseDownUpArrow)
+            {
+                _upArrow.Children[0].Visibility = Visibility.Hidden;
+                _upArrow.Children[1].Visibility = Visibility.Visible;
+                _upArrowHasLeftWhilePressed = true;
+            }
+            else
+            {
+                _upArrow.Children[1].Visibility = Visibility.Hidden;
+                _upArrow.Children[0].Visibility = Visibility.Visible;
+            }
         }
 
         /// <summary>
@@ -846,7 +931,7 @@ namespace XAMLite
         /// <param name="mouseButtonEventArgs"></param>
         private void UpArrowOnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
-            if (_scrollSliderMouseDown)
+            if (_scrollSliderMouseDown || _mouseDownDownArrow)
             {
                 return;
             }
@@ -866,14 +951,24 @@ namespace XAMLite
         /// <param name="mouseEventArgs"></param>
         private void DownArrowOnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
         {
-            if (_scrollSliderMouseDown)
+            if (_scrollSliderMouseDown || _mouseDownUpArrow)
             {
                 return;
             }
 
             _downArrow.Children[0].Visibility = Visibility.Hidden;
-            _downArrow.Children[2].Visibility = Visibility.Hidden;
-            _downArrow.Children[1].Visibility = Visibility.Visible;
+
+            if (_mouseDownDownArrow)
+            {
+                _downArrow.Children[1].Visibility = Visibility.Hidden;
+                _downArrow.Children[2].Visibility = Visibility.Visible;
+                _downArrowHasLeftWhilePressed = false;
+            }
+            else
+            {
+                _downArrow.Children[2].Visibility = Visibility.Hidden;
+                _downArrow.Children[1].Visibility = Visibility.Visible;
+            }
         }
 
         /// <summary>
@@ -883,9 +978,24 @@ namespace XAMLite
         /// <param name="mouseEventArgs"></param>
         private void DownArrowOnMouseLeave(object sender, MouseEventArgs mouseEventArgs)
         {
-            _downArrow.Children[1].Visibility = Visibility.Hidden;
+            if (_mouseDownUpArrow || _scrollSliderMouseDown)
+            {
+                return;
+            }
+
             _downArrow.Children[2].Visibility = Visibility.Hidden;
-            _downArrow.Children[0].Visibility = Visibility.Visible;
+
+            if (_mouseDownDownArrow)
+            {
+                _downArrow.Children[0].Visibility = Visibility.Hidden;
+                _downArrow.Children[1].Visibility = Visibility.Visible;
+                _downArrowHasLeftWhilePressed = true;
+            }
+            else
+            {
+                _downArrow.Children[1].Visibility = Visibility.Hidden;
+                _downArrow.Children[0].Visibility = Visibility.Visible;
+            }
         }
 
         /// <summary>
@@ -895,7 +1005,7 @@ namespace XAMLite
         /// <param name="mouseButtonEventArgs"></param>
         private void DownArrowOnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
-            if (_scrollSliderMouseDown)
+            if (_scrollSliderMouseDown || _mouseDownUpArrow)
             {
                 return;
             }
@@ -915,6 +1025,11 @@ namespace XAMLite
         /// <param name="mouseButtonEventArgs"></param>
         private void ScrollBarOnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
+            if (_mouseDownDownArrow || _mouseDownUpArrow)
+            {
+                return;
+            }
+
             for (var i = 0; i < _scrollBarNormal.Count; i++)
             {
                 _scrollBarNormal[i].Visibility = Visibility.Hidden;
@@ -952,6 +1067,11 @@ namespace XAMLite
         /// <param name="mouseEventArgs"></param>
         private void ScrollBarOnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
         {
+            if (_mouseDownDownArrow || _mouseDownUpArrow)
+            {
+                return;
+            }
+
             if (!_scrollSliderMouseDown) 
             {
                 for (var i = 0; i < _scrollBarNormal.Count; i++)
