@@ -3,9 +3,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {

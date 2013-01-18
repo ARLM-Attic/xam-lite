@@ -31,7 +31,7 @@ namespace XAMLite
 
                 if (_listBoxContent != null)
                 {
-                    _listBoxContent.Opacity = value ? 1f : 0.55f;
+                    _listBoxContent.Opacity = value ? 1f : 0.65f;
                 }
             }
         }
@@ -204,6 +204,7 @@ namespace XAMLite
             SelectedBackground = Brushes.Transparent;
             UnfocusedSelectedBackground = Brushes.Transparent;
             Foreground = Brushes.Transparent;
+            //_disabledForeground = Brushes.Gray;
             BorderBrush = Brushes.Transparent;
             FontFamily = new FontFamily("Verdana12");
             Spacing = 2;
@@ -229,7 +230,7 @@ namespace XAMLite
                 Spacing = Spacing,
                 Padding = Padding,
                 Foreground = Foreground,
-                Opacity = IsEnabled ? 1f : 0.75f,
+                Opacity = IsEnabled ? 1f : 0.65f,
                 DrawOrder = Parent.DrawOrder
             };
             Game.Components.Add(_listBoxContent);
