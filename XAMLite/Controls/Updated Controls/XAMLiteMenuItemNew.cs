@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -37,7 +35,7 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// When true, the menu item is able to be interacted with.
         /// </summary>
         public override bool IsEnabled
         {
@@ -260,7 +258,7 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// Loads the content of the control.
         /// </summary>
         protected override void LoadContent()
         {
@@ -279,6 +277,7 @@ namespace XAMLite
                     };
                 Children.Add(_backdrop);
             }
+
             _label = new XAMLiteLabelNew(Game)
                 {
                     Content = Header,
@@ -446,12 +445,24 @@ namespace XAMLite
             }
         }
 
+        /// <summary>
+        /// Initializes the event hooks.
+        /// </summary>
         public override void Initialize()
         {
             base.Initialize();
+
             MouseEnter += OnMouseEnter;
             MouseLeave += OnMouseLeave;
-            MouseDown += OnMouseDown;
+
+            if (IsMenuHead || !HasItems)
+            {
+                MouseDown += OnMouseDown;
+            }
+            else
+            {
+                Console.WriteLine(_label.Content);
+            }
         }
 
         /// <summary>
@@ -757,6 +768,33 @@ namespace XAMLite
             {
                 IsMenuOpen = !IsMenuOpen;
                 UpdateVisibility();
+            }
+        }
+
+        /// <summary>
+        /// Disposes of the XAMLite objects that make up the control.
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            if (IsMenuHead || !HasItems)
+            {
+                MouseDown -= OnMouseDown;
+            }
+
+            MouseEnter -= OnMouseEnter;
+            MouseLeave -= OnMouseLeave;
+
+            foreach (var child in Children)
+            {
+                child.Dispose();
+            }
+
+            foreach (var item in Items)
+            {
+                item.Dispose();
             }
         }
     }
