@@ -286,9 +286,36 @@ namespace XAMLite
                 UpdateItems();
             }
 
-            if (IsMenuOpen && !Panel.Contains(MsRect) && Ms.LeftButton == ButtonState.Pressed)
+            if (IsMenuOpen && Ms.LeftButton == ButtonState.Pressed)
             {
-                IsMenuOpen = false;
+                SearchForMouseDown();
+
+                //foreach (XAMLiteMenuItemNew item in Items)
+                //{
+                //    if (item.IsMenuOpen)
+                //    {
+                //        foreach (var item1 in item.Items)
+                //        {
+                //            if (item1)
+                //        }
+                //        return;
+                //    }
+                //}
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void SearchForMouseDown()
+        {
+            foreach (XAMLiteMenuItemNew item in Items)
+            {
+                if (item.IsMenuOpen)
+                {
+                    item.FindMouseDownAndClose();
+                    return;
+                }
             }
         }
 

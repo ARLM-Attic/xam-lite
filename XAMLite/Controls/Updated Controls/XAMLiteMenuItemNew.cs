@@ -234,6 +234,7 @@ namespace XAMLite
         /// When true, the items for a menu item are visible.
         /// </summary>
         internal bool IsMenuOpen;
+        private bool _isHighlighted;
 
         /// <summary>
         /// Constructor.
@@ -455,13 +456,9 @@ namespace XAMLite
             MouseEnter += OnMouseEnter;
             MouseLeave += OnMouseLeave;
 
-            if (IsMenuHead || !HasItems)
+            if (IsMenuHead)
             {
                 MouseDown += OnMouseDown;
-            }
-            else
-            {
-                Console.WriteLine(_label.Content);
             }
         }
 
@@ -483,18 +480,51 @@ namespace XAMLite
                 SetNewItems();
             }
 
-            if (!Panel.Contains(MsRect) && Ms.LeftButton == ButtonState.Pressed)
-            {
-                IsMenuOpen = false;
-                UpdateVisibility();
-            }
-
-            //if (IsMenuOpen && _highlightedBackground.Visibility == Visibility.Hidden)
-            //{
-            //    Highlight();
-            //}
+            HandleHighlights();
         }
 
+        /// <summary>
+        /// Specifically manages the highlights on menu items that have Items.
+        /// For example, when its list of Items is visible, the highlight should
+        /// always be visible.
+        /// </summary>
+        private void HandleHighlights()
+        {
+            if (IsMenuHead && Panel.Contains(Ms.X, Ms.Y))
+            {
+                return;
+            }
+
+            if (HasItems && Items[0].Visibility == Visibility.Visible && !_isHighlighted)
+            {
+                ToggleHighlight();
+            }
+            else if (HasItems && Items[0].Visibility == Visibility.Hidden && _isHighlighted)
+            {
+                ToggleHighlight();
+            }
+        }
+
+        /// <summary>
+        /// Toggles the highlight on a menu item.
+        /// </summary>
+        private void ToggleHighlight()
+        {
+            _isHighlighted = !_isHighlighted;
+
+            if (_isHighlighted)
+            {
+                Highlight();
+            }
+            else
+            {
+                RemoveHighlight();
+            }
+        }
+
+        /// <summary>
+        /// Highlights a menu item without needing to consider toggling.
+        /// </summary>
         private void Highlight()
         {
             foreach (var image in _highlightEdgesHover)
@@ -509,25 +539,40 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// Removes the Highlight on a menu item without needing to consider 
+        /// toggling.
         /// </summary>
-        private void UpdateVisibility()
+        private void RemoveHighlight()
         {
-            foreach (var item in Items)
+            foreach (var image in _highlightEdgesHover)
             {
-                item.Visibility = IsMenuOpen ? item.Visibility = Visibility.Visible : item.Visibility = Visibility.Hidden;
+                image.Visibility = Visibility.Hidden;
             }
 
-            if (HasItems)
+            if (_highlightedBackground != null)
             {
-                _backdrop.Visibility = IsMenuOpen ? _backdrop.Visibility = Visibility.Visible : _backdrop.Visibility = Visibility.Hidden;
+                _highlightedBackground.Visibility = Visibility.Hidden;
             }
-
-
         }
 
         /// <summary>
-        /// 
+        /// Sets the visiblity of Items when this menu item Has Items.
+        /// </summary>
+        private void UpdateVisibility()
+        {
+            if (HasItems)
+            {
+                foreach (var item in Items)
+                {
+                    item.Visibility = IsMenuOpen ? item.Visibility = Visibility.Visible : item.Visibility = Visibility.Hidden;
+                }
+
+                _backdrop.Visibility = IsMenuOpen ? _backdrop.Visibility = Visibility.Visible : _backdrop.Visibility = Visibility.Hidden;
+            }
+        }
+
+        /// <summary>
+        /// Adds items to the grid.
         /// </summary>
         private void LoadItems()
         {
@@ -583,6 +628,9 @@ namespace XAMLite
             SetBackground();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void SetBackground()
         {
             if (!HasItems)
@@ -604,7 +652,7 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// Updates the padding of the control.
         /// </summary>
         private void UpdatePadding()
         {
@@ -671,48 +719,37 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// Handles Mouse Down events.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="mouseButtonEventArgs"></param>
         private void OnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
-            if (Items.Count <= 0)
+            if (IsMenuHead)
             {
-                return;
-            }
-
-            IsMenuOpen = !IsMenuOpen;
-
-            UpdateVisibility();
-
-            if (Parent is XAMLiteMenuNew)
-            {
+                IsMenuOpen = !IsMenuOpen;
                 var p = (XAMLiteMenuNew)Parent;
                 p.IsMenuOpen = IsMenuOpen;
+
+                UpdateVisibility();
             }
         }
 
         /// <summary>
-        /// 
+        /// Handles Mouse Leave events.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="mouseEventArgs"></param>
         private void OnMouseLeave(object sender, MouseEventArgs mouseEventArgs)
         {
-            foreach (var image in _highlightEdgesHover)
+            if (!HasItems || Items[0].Visibility == Visibility.Hidden)
             {
-                image.Visibility = Visibility.Hidden;
-            }
-
-            if (_highlightedBackground != null)
-            {
-                _highlightedBackground.Visibility = Visibility.Hidden;
+                RemoveHighlight();
             }
         }
 
         /// <summary>
-        /// 
+        /// Handles Mouse Enter events.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="mouseEventArgs"></param>
@@ -745,7 +782,7 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// Closes all menus except the the one passed as a parameter.
         /// </summary>
         /// <param name="itemIndex"></param>
         private void CloseOtherMenus(int itemIndex)
@@ -760,7 +797,31 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// Closes each layer of items until it reaches a menu head.
+        /// </summary>
+        public void CloseAll()
+        {
+            if (Parent != null)
+            {
+                if (Parent is XAMLiteMenuItemNew)
+                {
+                    var p = (XAMLiteMenuItemNew)Parent;
+                    p.IsMenuOpen = false;
+                    p.CloseAll();
+                }
+                else
+                {
+                    var p = (XAMLiteMenuNew)Parent;
+                    p.IsMenuOpen = false;
+                    p.CloseOtherMenus(-1);
+                }
+
+                UpdateVisibility();
+            }
+        }
+
+        /// <summary>
+        /// Call to close a menu and its items.
         /// </summary>
         public void Close()
         {
@@ -779,7 +840,7 @@ namespace XAMLite
         {
             base.Dispose(disposing);
 
-            if (IsMenuHead || !HasItems)
+            if (IsMenuHead)
             {
                 MouseDown -= OnMouseDown;
             }
@@ -795,6 +856,44 @@ namespace XAMLite
             foreach (var item in Items)
             {
                 item.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void FindMouseDownAndClose()
+        {
+            // recursively find the deepest open menu.
+            foreach (XAMLiteMenuItemNew item in Items)
+            {
+                if (item.HasItems && item.IsMenuOpen)
+                {
+                    item.FindMouseDownAndClose();
+                    return;
+                }
+            }
+
+            if (!Panel.Contains(Ms.X, Ms.Y))
+            {
+                IsMenuOpen = false;
+
+                if (Parent is XAMLiteMenuNew)
+                {
+                    var p = (XAMLiteMenuNew)Parent;
+                    if (p.IsMenuOpen)
+                    {
+                        p.IsMenuOpen = false;
+
+                        UpdateVisibility();
+                    }
+                }
+                else
+                {
+                    var p = (XAMLiteMenuItemNew)Parent;
+                    p.IsMenuOpen = false;
+                    p.CloseAll();
+                }
             }
         }
     }
