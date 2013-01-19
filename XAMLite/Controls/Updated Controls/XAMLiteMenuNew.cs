@@ -132,7 +132,7 @@ namespace XAMLite
         private bool _isBorderThicknessEqual;
 
         /// <summary>
-        /// 
+        /// When true, a menu is open.
         /// </summary>
         internal bool IsMenuOpen;
 
@@ -214,7 +214,7 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// Sets the borders on a menu.
         /// </summary>
         private void SetBorders()
         {
@@ -283,29 +283,20 @@ namespace XAMLite
 
             if (_needToUpdate)
             {
-                UpdateItems();
+                UpdateMargins();
             }
 
+            // Check to see whether all menus should close from
+            // a mouse down occurring off of a menu item.
             if (IsMenuOpen && Ms.LeftButton == ButtonState.Pressed)
             {
                 SearchForMouseDown();
-
-                //foreach (XAMLiteMenuItemNew item in Items)
-                //{
-                //    if (item.IsMenuOpen)
-                //    {
-                //        foreach (var item1 in item.Items)
-                //        {
-                //            if (item1)
-                //        }
-                //        return;
-                //    }
-                //}
             }
         }
 
         /// <summary>
-        /// 
+        /// Searches all menus and determines whether the menus should close
+        /// due to a mouse down occurring off of any menu item.
         /// </summary>
         private void SearchForMouseDown()
         {
@@ -320,7 +311,7 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
+        /// Adds items to the grid's children.
         /// </summary>
         private void LoadItems()
         {
@@ -338,7 +329,10 @@ namespace XAMLite
             _needToUpdate = true;
         }
 
-        private void UpdateItems()
+        /// <summary>
+        /// Updates margin positions.
+        /// </summary>
+        private void UpdateMargins()
         {
             for (var i = _itemsIndex; i < Items.Count; i++)
             {
@@ -368,21 +362,7 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="disposing"></param>
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-
-            foreach (var child in Children)
-            {
-                child.Dispose();
-            }
-        }
-
-        /// <summary>
-        /// 
+        /// Closes any menu except the one passed as a parameter.
         /// </summary>
         /// <param name="itemIndex"></param>
         public void CloseOtherMenus(int itemIndex)
@@ -393,6 +373,25 @@ namespace XAMLite
                 {
                     item.Close();
                 }
+            }
+        }
+
+        /// <summary>
+        /// Disposes of all the XAMLite assets.
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            foreach (var child in Children)
+            {
+                child.Dispose();
+            }
+
+            foreach (var item in Items)
+            {
+                item.Dispose();
             }
         }
     }

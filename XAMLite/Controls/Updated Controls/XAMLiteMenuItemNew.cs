@@ -5,7 +5,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace XAMLite
 {  
@@ -54,6 +53,16 @@ namespace XAMLite
                 }
             }
         }
+
+        /// <summary>
+        /// When true, a menu item can have a state of IsChecked or !IsChecked.
+        /// </summary>
+        public bool IsCheckable;
+
+        /// <summary>
+        /// When true, a check mark is visible to the left of the menu item.
+        /// </summary>
+        public bool IsChecked;
 
         /// <summary>
         /// The text that makes up the label of the control.
@@ -190,6 +199,16 @@ namespace XAMLite
         private XAMLiteImageNew _highlightedBackground;
 
         /// <summary>
+        /// Displayed when a menu item has a submenu.
+        /// </summary>
+        private XAMLiteImageNew _arrow;
+
+        /// <summary>
+        /// Displayed when a menu item IsCheckable and IsChecked.
+        /// </summary>
+        private XAMLiteImageNew _checkmark;
+
+        /// <summary>
         /// A specific backdrop color, if one is assigned.
         /// </summary>
         //private XAMLiteRectangleNew _background;
@@ -234,7 +253,19 @@ namespace XAMLite
         /// When true, the items for a menu item are visible.
         /// </summary>
         internal bool IsMenuOpen;
+
+        /// <summary>
+        /// Specifically manages the highlights on menu items that have Items.
+        /// For example, when its list of Items is visible, the highlight should
+        /// always be visible.
+        /// </summary>
         private bool _isHighlighted;
+
+        /// <summary>
+        /// When true, the Menu Item must toggle the visibility of the check
+        /// mark.
+        /// </summary>
+        private bool _isCheckedChanged;
 
         /// <summary>
         /// Constructor.
@@ -342,6 +373,33 @@ namespace XAMLite
             }
 
             LoadHighlightEdges();
+
+            if (HasItems && !IsMenuHead)
+            {
+                _arrow = new XAMLiteImageNew(Game)
+                    {
+                        SourceName = "Icons/menu-item-arrow",
+                        Background = Foreground,
+                        HorizontalAlignment = HorizontalAlignment.Right,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        Margin = new Thickness(0, 0, 15, 0)
+                    };
+                Children.Add(_arrow);
+            }
+
+            if (IsCheckable)
+            {
+                _checkmark = new XAMLiteImageNew(Game)
+                    {
+                        SourceName = "Icons/checkmark",
+                        Background = Foreground,
+                        HorizontalAlignment = HorizontalAlignment.Left,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        Margin = new Thickness(12, 0, 0, 0),
+                        Visibility = IsChecked ? Visibility.Visible : Visibility.Hidden
+                    };
+                Children.Add(_checkmark);
+            }
 
             Children.Add(_label);
         }
@@ -456,7 +514,7 @@ namespace XAMLite
             MouseEnter += OnMouseEnter;
             MouseLeave += OnMouseLeave;
 
-            if (IsMenuHead)
+            if (IsMenuHead || !HasItems)
             {
                 MouseDown += OnMouseDown;
             }
@@ -481,6 +539,33 @@ namespace XAMLite
             }
 
             HandleHighlights();
+
+            HandleCheckMarks();
+        }
+
+        /// <summary>
+        /// Manages the visibility of checkmarks when the Menu Item is visible.
+        /// </summary>
+        private void HandleCheckMarks()
+        {
+            if (!_isCheckedChanged)
+            {
+                return;    
+            }
+
+            if (Visibility == Visibility.Visible)
+            {
+                _isCheckedChanged = false;
+
+                if (IsCheckable && IsChecked && _checkmark.Visibility == Visibility.Hidden)
+                {
+                    _checkmark.Visibility = _checkmark.Visibility = Visibility.Visible;
+                }
+                else if (IsCheckable && !IsChecked && _checkmark.Visibility == Visibility.Visible)
+                {
+                    _checkmark.Visibility = _checkmark.Visibility = Visibility.Hidden;
+                }
+            }
         }
 
         /// <summary>
@@ -562,7 +647,7 @@ namespace XAMLite
         {
             if (HasItems)
             {
-                foreach (var item in Items)
+                foreach (XAMLiteMenuItemNew item in Items)
                 {
                     item.Visibility = IsMenuOpen ? item.Visibility = Visibility.Visible : item.Visibility = Visibility.Hidden;
                 }
@@ -660,7 +745,7 @@ namespace XAMLite
             {
                 var i = item as XAMLiteMenuItemNew;
                 var p = (item as XAMLiteMenuItemNew)._label.Padding;
-                i._label.Padding = new Thickness(p.Left + 20, p.Top, p.Right, p.Bottom);
+                i._label.Padding = new Thickness(p.Left + 25, p.Top, p.Right, p.Bottom);
             }
         }
 
@@ -730,8 +815,35 @@ namespace XAMLite
                 IsMenuOpen = !IsMenuOpen;
                 var p = (XAMLiteMenuNew)Parent;
                 p.IsMenuOpen = IsMenuOpen;
-
                 UpdateVisibility();
+            }
+            else
+            {
+                if (!HasItems && IsCheckable)
+                {
+                    IsChecked = !IsChecked;
+                    Console.WriteLine("Mouse Down! " + IsChecked);
+                    _isCheckedChanged = true;
+
+                    IsMenuOpen = false;
+
+                    if (Parent is XAMLiteMenuNew)
+                    {
+                        var p = (XAMLiteMenuNew)Parent;
+                        if (p.IsMenuOpen)
+                        {
+                            p.IsMenuOpen = false;
+
+                            UpdateVisibility();
+                        }
+                    }
+                    else
+                    {
+                        var p = (XAMLiteMenuItemNew)Parent;
+                        p.IsMenuOpen = false;
+                        p.CloseAll();
+                    }
+                } 
             }
         }
 
@@ -840,7 +952,7 @@ namespace XAMLite
         {
             base.Dispose(disposing);
 
-            if (IsMenuHead)
+            if (IsMenuHead || !HasItems)
             {
                 MouseDown -= OnMouseDown;
             }
@@ -870,6 +982,15 @@ namespace XAMLite
                 if (item.HasItems && item.IsMenuOpen)
                 {
                     item.FindMouseDownAndClose();
+                    return;
+                }
+            }
+
+            // abort if a mouse down occurred on the control.
+            foreach (XAMLiteMenuItemNew item in Items)
+            {
+                if (item.Panel.Contains(Ms.X, Ms.Y) && item.IsCheckable)
+                {
                     return;
                 }
             }
