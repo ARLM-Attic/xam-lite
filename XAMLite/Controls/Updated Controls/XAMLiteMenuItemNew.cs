@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace XAMLite
-{  
+{
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
@@ -176,7 +176,7 @@ namespace XAMLite
         /// <summary>
         /// When true, the menu item parent is a XAMLiteMenu.
         /// </summary>
-        internal bool IsMenuHead; 
+        internal bool IsMenuHead;
 
         /// <summary>
         /// Index of object in Items as opposed to its grid index.
@@ -221,7 +221,7 @@ namespace XAMLite
         /// <summary>
         /// The drop shadow for an open menu.
         /// </summary>
-        //private XAMLiteRectangleNew _dropShadow;
+        private XAMLiteRectangleNew _dropShadow;
 
         /// <summary>
         /// Although not in WPF, this seems essential to override the default
@@ -298,28 +298,38 @@ namespace XAMLite
 
             if (HasItems)
             {
+                _dropShadow = new XAMLiteRectangleNew(Game)
+                {
+                    Width = Width,
+                    Height = Height,
+                    Fill = Brushes.Black,
+                    Visibility = Visibility.Hidden,
+                    Opacity = 0.15f
+                };
+                Children.Add(_dropShadow);
+
                 _backdrop = new XAMLiteRectangleNew(Game)
-                    {
-                        Width = Width,
-                        Height = Height,
-                        Fill = ItemsBackground,
-                        Stroke = Brushes.Black,
-                        StrokeThickness = 1,
-                        Visibility = Visibility.Hidden
-                    };
+                {
+                    Width = Width,
+                    Height = Height,
+                    Fill = ItemsBackground,
+                    Stroke = Brushes.Black,
+                    StrokeThickness = 1,
+                    Visibility = Visibility.Hidden
+                };
                 Children.Add(_backdrop);
             }
 
             _label = new XAMLiteLabelNew(Game)
-                {
-                    Content = Header,
-                    Foreground = Foreground == Brushes.Transparent ? Brushes.Black : Foreground,
-                    FontFamily = FontFamily,
-                    Spacing = Spacing,
-                    Padding = Padding,
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                    Opacity = IsEnabled ? 1f : 0.55f
-                };
+            {
+                Content = Header,
+                Foreground = Foreground == Brushes.Transparent ? Brushes.Black : Foreground,
+                FontFamily = FontFamily,
+                Spacing = Spacing,
+                Padding = Padding,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                Opacity = IsEnabled ? 1f : 0.55f
+            };
             Game.Components.Add(_label);
 
             var w = _label.MeasureString().X + Padding.Left + Padding.Right;
@@ -355,20 +365,20 @@ namespace XAMLite
 
             if (HoverBrush != Brushes.Transparent)
             {
-                var isBright = ColorHelper.Brightness(HoverBrush) > 0.5f;
-                
+                var isBright = ColorHelper.Brightness(HoverBrush) > (IsMenuHead ? ColorHelper.Brightness(Parent.Background) : ColorHelper.Brightness(ItemsBackground));
+
                 _highlightedBackground = new XAMLiteImageNew(Game, GradientTextureBuilder.CreateGradientTexture(Game, 5, Height, !isBright ? 55 : 100))
-                    {
-                        RenderTransform = isBright ? RenderTransform.FlipVertical : RenderTransform.Normal,
-                        Background = HoverBrush,
-                        Width = Width,
-                        Height = Height - 2,
-                        HorizontalAlignment = HorizontalAlignment.Center,
-                        VerticalAlignment = VerticalAlignment.Center,
-                        Opacity = 0.45f,
-                        DrawOrder = Parent.DrawOrder,
-                        Visibility = Visibility.Hidden
-                    };
+                {
+                    RenderTransform = isBright ? RenderTransform.FlipVertical : RenderTransform.Normal,
+                    Background = HoverBrush,
+                    Width = Width,
+                    Height = Height - 2,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Opacity = 0.45f,
+                    DrawOrder = Parent.DrawOrder,
+                    Visibility = Visibility.Hidden
+                };
                 Children.Add(_highlightedBackground);
             }
 
@@ -377,27 +387,29 @@ namespace XAMLite
             if (HasItems && !IsMenuHead)
             {
                 _arrow = new XAMLiteImageNew(Game)
-                    {
-                        SourceName = "Icons/menu-item-arrow",
-                        Background = Foreground,
-                        HorizontalAlignment = HorizontalAlignment.Right,
-                        VerticalAlignment = VerticalAlignment.Center,
-                        Margin = new Thickness(0, 0, 15, 0)
-                    };
+                {
+                    SourceName = "Icons/menu-item-arrow",
+                    Background = _label.Foreground,
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Margin = new Thickness(0, 0, 15, 0),
+                    IsColorized = true
+                };
                 Children.Add(_arrow);
             }
 
             if (IsCheckable)
             {
                 _checkmark = new XAMLiteImageNew(Game)
-                    {
-                        SourceName = "Icons/checkmark",
-                        Background = Foreground,
-                        HorizontalAlignment = HorizontalAlignment.Left,
-                        VerticalAlignment = VerticalAlignment.Center,
-                        Margin = new Thickness(12, 0, 0, 0),
-                        Visibility = IsChecked ? Visibility.Visible : Visibility.Hidden
-                    };
+                {
+                    SourceName = "Icons/checkmark",
+                    Background = _label.Foreground,
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Margin = new Thickness(12, 0, 0, 0),
+                    Visibility = IsChecked ? Visibility.Visible : Visibility.Hidden,
+                    IsColorized = true
+                };
                 Children.Add(_checkmark);
             }
 
@@ -438,7 +450,7 @@ namespace XAMLite
             {
                 Background = HoverBrush == Brushes.Transparent ? Brushes.DarkGray : !isBright ? HoverBrush : Brushes.DarkGray,
                 Height = Height - 4,
-                Margin = Parent is XAMLiteMenuNew ? new Thickness() : new Thickness(5, 0, 0, 0), 
+                Margin = Parent is XAMLiteMenuNew ? new Thickness() : new Thickness(5, 0, 0, 0),
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Center,
                 Visibility = Visibility.Hidden
@@ -450,7 +462,7 @@ namespace XAMLite
                 RenderTransform = RenderTransform.FlipHorizontal,
                 Height = Height - 4,
                 Background = HoverBrush == Brushes.Transparent ? Brushes.DarkGray : !isBright ? HoverBrush : Brushes.DarkGray,
-                Margin = Parent is XAMLiteMenuNew ? new Thickness() : new Thickness(0, 0, 5, 0), 
+                Margin = Parent is XAMLiteMenuNew ? new Thickness() : new Thickness(0, 0, 5, 0),
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Center,
                 Visibility = Visibility.Hidden
@@ -459,13 +471,13 @@ namespace XAMLite
 
             texture = Game.Content.Load<Texture2D>("Icons/menu-highlight-corner");
             var tlCorner = new XAMLiteImageNew(Game, texture)
-                {
-                    Background = HoverBrush == Brushes.Transparent ? Brushes.DarkGray : !isBright ? HoverBrush : Brushes.DarkGray,
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                    VerticalAlignment = VerticalAlignment.Top,
-                    Margin = Parent is XAMLiteMenuNew ? new Thickness(1, 1, 0, 0) : new Thickness(6, 1, 0, 0),
-                    Visibility = Visibility.Hidden
-                };
+            {
+                Background = HoverBrush == Brushes.Transparent ? Brushes.DarkGray : !isBright ? HoverBrush : Brushes.DarkGray,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                Margin = Parent is XAMLiteMenuNew ? new Thickness(1, 1, 0, 0) : new Thickness(6, 1, 0, 0),
+                Visibility = Visibility.Hidden
+            };
             _highlightEdgesHover.Add(tlCorner);
 
             var trCorner = new XAMLiteImageNew(Game, texture)
@@ -550,7 +562,7 @@ namespace XAMLite
         {
             if (!_isCheckedChanged)
             {
-                return;    
+                return;
             }
 
             if (Visibility == Visibility.Visible)
@@ -653,6 +665,7 @@ namespace XAMLite
                 }
 
                 _backdrop.Visibility = IsMenuOpen ? _backdrop.Visibility = Visibility.Visible : _backdrop.Visibility = Visibility.Hidden;
+                _dropShadow.Visibility = IsMenuOpen ? _backdrop.Visibility = Visibility.Visible : _backdrop.Visibility = Visibility.Hidden;
             }
         }
 
@@ -726,6 +739,8 @@ namespace XAMLite
             var m = Items[0].Margin;
             _backdrop.Margin = new Thickness(m.Left, m.Top - BorderThickness.Top, m.Right, m.Bottom);
             _backdrop.Width = Items[0].Width;
+            _dropShadow.Margin = _backdrop.Margin;
+            _dropShadow.Width = _backdrop.Width + 3;
 
             var h = 0;
             foreach (var item in Items)
@@ -734,6 +749,7 @@ namespace XAMLite
             }
 
             _backdrop.Height = h + (int)BorderThickness.Top + (int)BorderThickness.Bottom + 2;
+            _dropShadow.Height = _backdrop.Height + 3;
         }
 
         /// <summary>
@@ -768,12 +784,12 @@ namespace XAMLite
         private void UpdateWidth()
         {
             var w = 0;
-            
+
             if (Parent is XAMLiteMenuNew)
             {
                 w = Width;
             }
-            
+
             // determine which item has the greatest width
             foreach (var item in Items)
             {
@@ -783,7 +799,7 @@ namespace XAMLite
                 {
                     width += 20;
                 }
-                
+
                 if (width > w)
                 {
                     w = width;
@@ -824,7 +840,7 @@ namespace XAMLite
                     if (IsCheckable)
                     {
                         IsChecked = !IsChecked;
-                        
+
                         _isCheckedChanged = true;
                     }
 
@@ -846,7 +862,7 @@ namespace XAMLite
                         p.IsMenuOpen = false;
                         p.CloseAll();
                     }
-                } 
+                }
             }
         }
 

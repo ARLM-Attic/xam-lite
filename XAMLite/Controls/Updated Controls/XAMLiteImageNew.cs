@@ -1,14 +1,11 @@
 ﻿using System.Diagnostics;
 using System.Windows;
-using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {
-    using Matrix = Microsoft.Xna.Framework.Matrix;
-
     /// <summary>
     /// Used by the XAMLiteImage class for transforming an image.
     /// </summary>
@@ -60,7 +57,7 @@ namespace XAMLite
         /// True when a background has been set for the image. This is primitive
         /// and only the color over the top of the image.
         /// </summary>
-        protected bool IsColorized;
+        protected internal bool IsColorized;
 
         /// <summary>
         /// True when the image is the edge of a default button.
