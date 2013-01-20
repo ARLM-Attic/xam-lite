@@ -70,7 +70,13 @@ namespace XAMLite
         /// <summary>
         /// True when the control contains the mouse.
         /// </summary>
-        public bool IsMouseOver { get; set; }
+        public bool IsMouseOver 
+        {
+            get
+            {
+                return IsMenuOpen || Panel.Contains(Ms.X, Ms.Y);
+            }
+        }
 
         /// <summary>
         /// The spacing between the edge of the control and where the text

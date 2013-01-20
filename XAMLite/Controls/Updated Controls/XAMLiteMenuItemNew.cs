@@ -318,7 +318,7 @@ namespace XAMLite
                     Spacing = Spacing,
                     Padding = Padding,
                     HorizontalAlignment = HorizontalAlignment.Left,
-                    Opacity = IsEnabled ? 1f : 0.75f
+                    Opacity = IsEnabled ? 1f : 0.55f
                 };
             Game.Components.Add(_label);
 
