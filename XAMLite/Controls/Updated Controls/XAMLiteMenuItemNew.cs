@@ -819,11 +819,14 @@ namespace XAMLite
             }
             else
             {
-                if (!HasItems && IsCheckable)
+                if (!HasItems)
                 {
-                    IsChecked = !IsChecked;
-                    Console.WriteLine("Mouse Down! " + IsChecked);
-                    _isCheckedChanged = true;
+                    if (IsCheckable)
+                    {
+                        IsChecked = !IsChecked;
+                        
+                        _isCheckedChanged = true;
+                    }
 
                     IsMenuOpen = false;
 
@@ -989,7 +992,7 @@ namespace XAMLite
             // abort if a mouse down occurred on the control.
             foreach (XAMLiteMenuItemNew item in Items)
             {
-                if (item.Panel.Contains(Ms.X, Ms.Y) && item.IsCheckable)
+                if (item.Panel.Contains(Ms.X, Ms.Y) && !item.HasItems)
                 {
                     return;
                 }
