@@ -713,7 +713,7 @@ namespace XAMLite
                 else
                 {
                     leftMargin += Items[i - 1].Margin.Left;
-                    topMargin += Items[i - 1].Margin.Top + Items[i - 1].Height;
+                    topMargin += Items[i - 1].Margin.Top + Items[i - 1].Height + 1;
                 }
 
                 item.UpdateMargin(new Thickness(leftMargin, topMargin, m.Right, m.Bottom));
@@ -745,7 +745,7 @@ namespace XAMLite
             var h = 0;
             foreach (var item in Items)
             {
-                h += item.Height;
+                h += item.Height + 1;
             }
 
             _backdrop.Height = h + (int)BorderThickness.Top + (int)BorderThickness.Bottom + 2;
@@ -761,6 +761,7 @@ namespace XAMLite
             {
                 var i = item as XAMLiteMenuItemNew;
                 var p = (item as XAMLiteMenuItemNew)._label.Padding;
+
                 i._label.Padding = new Thickness(p.Left + 25, p.Top, p.Right, p.Bottom);
             }
         }
