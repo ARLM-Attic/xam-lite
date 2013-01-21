@@ -356,7 +356,7 @@ namespace XAMLite
                 else
                 {
                     leftMargin += Items[i - 1].Margin.Left + Items[i - 1].Width;
-                    topMargin = Padding.Top + m.Top + BorderThickness.Top + 1;
+                    topMargin = Padding.Top + m.Top + BorderThickness.Top;
                 }
 
                 item.UpdateMargin(new Thickness(leftMargin, topMargin, m.Right, m.Bottom));

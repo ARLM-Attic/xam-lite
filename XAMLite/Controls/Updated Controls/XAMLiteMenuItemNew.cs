@@ -707,8 +707,8 @@ namespace XAMLite
                 double topMargin = 0;
                 if (i == 0)
                 {
-                    leftMargin = (p != null && p.IsMenuHead) ? 0 : p.Width + m.Left - 5; // +BorderThickness.Left;
-                    topMargin = (p.IsMenuHead) ? p.Height + BorderThickness.Top : 0;
+                    leftMargin = (p != null && p.IsMenuHead) ? 0 : p.Width + m.Left - 4; // +BorderThickness.Left;
+                    topMargin = (p.IsMenuHead) ? p.Height + BorderThickness.Top + 2 : 0;
                 }
                 else
                 {
@@ -737,7 +737,7 @@ namespace XAMLite
             }
 
             var m = Items[0].Margin;
-            _backdrop.Margin = new Thickness(m.Left, m.Top - BorderThickness.Top, m.Right, m.Bottom);
+            _backdrop.Margin = new Thickness(m.Left, m.Top - BorderThickness.Top - 2, m.Right, m.Bottom);
             _backdrop.Width = Items[0].Width;
             _dropShadow.Margin = _backdrop.Margin;
             _dropShadow.Width = _backdrop.Width + 3;
@@ -748,7 +748,7 @@ namespace XAMLite
                 h += item.Height + 1;
             }
 
-            _backdrop.Height = h + (int)BorderThickness.Top + (int)BorderThickness.Bottom + 2;
+            _backdrop.Height = h + (int)BorderThickness.Top + (int)BorderThickness.Bottom + 4;
             _dropShadow.Height = _backdrop.Height + 3;
         }
 
