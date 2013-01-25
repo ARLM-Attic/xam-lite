@@ -261,15 +261,18 @@ namespace XAMLite
                 Game.Components.Remove(TextLabel);
             }
 
-            _background = new XAMLiteRectangleNew(Game)
-                {
-                    Fill = Background,
-                    Width = Width,
-                    Height = Height,
-                    HorizontalAlignment = HorizontalAlignment.Stretch,
-                    VerticalAlignment = VerticalAlignment.Stretch
-                };
-            Children.Add(_background);
+            if (Background != Brushes.Transparent)
+            {
+                _background = new XAMLiteRectangleNew(Game)
+                    {
+                        Fill = Background,
+                        Width = Width,
+                        Height = Height,
+                        HorizontalAlignment = HorizontalAlignment.Stretch,
+                        VerticalAlignment = VerticalAlignment.Stretch
+                    };
+                Children.Add(_background);
+            }
 
             Children.Add(TextLabel);
 
