@@ -132,6 +132,17 @@ namespace XAMLite
         internal bool IsMenuOpen;
 
         /// <summary>
+        /// Gets a value indicating whether the mouse is captured to this element. 
+        /// </summary>
+        public bool IsMouseCaptured
+        {
+            get
+            {
+                return IsMenuOpen;
+            }
+        }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="game"></param>

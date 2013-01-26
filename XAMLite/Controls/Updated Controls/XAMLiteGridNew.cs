@@ -40,6 +40,11 @@ namespace XAMLite
         {
             get
             {
+                if (IsMouseDirectlyOver)
+                {
+                    return true;
+                }
+
                 foreach (var child in Children)
                 {
                     if (child.Visibility == Visibility.Visible && child.Panel.Contains(Ms.X, Ms.Y))
@@ -49,6 +54,18 @@ namespace XAMLite
                 }
 
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value that indicates whether the position of the mouse 
+        /// pointer corresponds to grid itself, and not one of its children.
+        /// </summary>
+        public bool IsMouseDirectlyOver
+        {
+            get
+            {
+                return Visibility == Visibility.Visible && Panel.Contains(Ms.X, Ms.Y);
             }
         }
 
