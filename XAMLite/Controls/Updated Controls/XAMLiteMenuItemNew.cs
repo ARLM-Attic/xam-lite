@@ -827,6 +827,11 @@ namespace XAMLite
         /// <param name="mouseButtonEventArgs"></param>
         private void OnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
+            if (!IsEnabled)
+            {
+                return;
+            }
+
             if (IsMenuHead)
             {
                 IsMenuOpen = !IsMenuOpen;
@@ -874,6 +879,11 @@ namespace XAMLite
         /// <param name="mouseEventArgs"></param>
         private void OnMouseLeave(object sender, MouseEventArgs mouseEventArgs)
         {
+            if (!IsEnabled)
+            {
+                return;
+            }
+
             if (!HasItems || Items[0].Visibility == Visibility.Hidden)
             {
                 RemoveHighlight();
@@ -887,6 +897,11 @@ namespace XAMLite
         /// <param name="mouseEventArgs"></param>
         private void OnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
         {
+            if (!IsEnabled)
+            {
+                return;
+            }
+
             Highlight();
 
             if (Parent is XAMLiteMenuNew)

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace XAMLite
 {
-    using Microsoft.Xna.Framework.Graphics;
-
     /// <summary>
     /// Note: Currently under development.  Continue to use normal
     /// XAMLiteLabel class until this class replaces it.

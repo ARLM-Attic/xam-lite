@@ -30,6 +30,32 @@ namespace XAMLite
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public override bool IsEnabled
+        {
+            get
+            {
+                return base.IsEnabled;
+            }
+
+            set
+            {
+                base.IsEnabled = value;
+
+                if (Items == null)
+                {
+                    return;
+                }
+
+                foreach (var item in Items)
+                {
+                    item.IsEnabled = value;
+                }
+            }
+        }
+
+        /// <summary>
         /// When this does not equal Items.Count, a method is called to add the
         /// additional assets to the Game Components.
         /// </summary>
