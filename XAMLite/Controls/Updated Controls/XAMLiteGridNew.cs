@@ -42,7 +42,7 @@ namespace XAMLite
             {
                 foreach (var child in Children)
                 {
-                    if (child.Panel.Contains(Ms.X, Ms.Y))
+                    if (child.Visibility == Visibility.Visible && child.Panel.Contains(Ms.X, Ms.Y))
                     {
                         return true;
                     }
