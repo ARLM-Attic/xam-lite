@@ -33,6 +33,26 @@ namespace XAMLite
         private int _gridCount;
 
         /// <summary>
+        /// Gets a value indicating whether the mouse pointer is located over 
+        /// this element (including child elements in the visual tree).
+        /// </summary>
+        public bool IsMouseOver
+        {
+            get
+            {
+                foreach (var child in Children)
+                {
+                    if (child.Panel.Contains(Ms.X, Ms.Y))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="game"></param>

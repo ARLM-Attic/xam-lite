@@ -50,17 +50,6 @@ namespace XAMLite
         public bool IsEditable { get; set; }
 
         /// <summary>
-        /// 
-        /// </summary>
-        public new bool IsMouseOver
-        {
-            get
-            {
-                return _areItemsVisibile || _textBox.Panel.Contains(Ms.X, Ms.Y);
-            }
-        }
-
-        /// <summary>
         /// The font family the text belongs to.
         /// </summary>
         protected FontFamily _fontFamily;

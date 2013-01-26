@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Xna.Framework;
 
@@ -42,11 +41,6 @@ namespace XAMLite
         /// returns negative one (-1) if the selection is empty.
         /// </summary>
         public int SelectedIndex { get; set; }
-
-        /// <summary>
-        /// True when the control contains the mouse.
-        /// </summary>
-        public bool IsMouseOver { get; set; }
 
         /// <summary>
         /// List of Items that make up the content of the control.
@@ -287,8 +281,6 @@ namespace XAMLite
         {
             base.Initialize();
 
-            MouseEnter += OnMouseEnter;
-            MouseLeave += OnMouseLeave;
             LostFocus += OnLostFocus;
         }
 
@@ -466,26 +458,6 @@ namespace XAMLite
                     item.IsSelected = false;
                 }
             }
-        }
-
-        /// <summary>
-        /// Sets IsMouseOver to true when the control is entered.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="mouseEventArgs"></param>
-        private void OnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
-        {
-            IsMouseOver = true;
-        }
-
-        /// <summary>
-        /// Sets IsMouseOver to false when the control is exited.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="mouseEventArgs"></param>
-        private void OnMouseLeave(object sender, MouseEventArgs mouseEventArgs)
-        {
-            IsMouseOver = false;
         }
 
         /// <summary>

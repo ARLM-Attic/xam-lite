@@ -759,5 +759,14 @@ namespace XAMLite
                     break;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool Contains(Vector2 position)
+        {
+            return Panel.Contains(Ms.X, Ms.Y);
+        }
     }
 }
