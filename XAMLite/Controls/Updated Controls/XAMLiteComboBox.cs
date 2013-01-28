@@ -422,7 +422,7 @@ namespace XAMLite
                 {
                     IsFocused = true;
                 }
-                else if (!_areItemsVisibile && IsFocused)
+                else if (!_areItemsVisibile && IsFocused && Ms.LeftButton == ButtonState.Released)
                 {
                     IsFocused = false;
                 }
