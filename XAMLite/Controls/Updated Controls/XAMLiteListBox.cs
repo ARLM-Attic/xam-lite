@@ -180,6 +180,7 @@ namespace XAMLite
             Focusable = true;
             Items = new Items(this);
             _borderRectangles = new List<XAMLiteRectangleNew>();
+            SelectedIndex = -1;
         }
 
         /// <summary>
