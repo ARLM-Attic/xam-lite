@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
 
 namespace XAMLite
 {
-    using System.Text.RegularExpressions;
-    using System.Windows;
-    using System.Windows.Media;
-    using Microsoft.Xna.Framework.Graphics;
-
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
@@ -19,7 +13,7 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        private List<string> _hTMLTags = new List<string> { "<b>", "<i>", "<u>" };
+        private List<string> _hTMLTags = new List<string> { "<b>", "<i>", "<u>", "<Font>", "<Font Color=" };
 
         /// <summary>
         /// 
