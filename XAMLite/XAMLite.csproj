@@ -111,6 +111,9 @@
     <Compile Include="Controls\Updated Controls\XAMLiteTextBoxNew.cs" />
     <Compile Include="Controls\Old Controls\XAMLiteToolTip.cs" />
     <Compile Include="Controls\Old Controls\XAMLiteToolTipService.cs" />
+    <Compile Include="Fonts\ArialFonts.cs" />
+    <Compile Include="Fonts\CourierFonts.cs" />
+    <Compile Include="Fonts\VerdanaFonts.cs" />
     <Compile Include="Control\Updated Control System\XAMLiteBaseContent.cs" />
     <Compile Include="Control\Updated Control System\XAMLiteBaseControl.cs" />
     <Compile Include="Control\Updated Control System\XAMLiteBaseText.cs" />
