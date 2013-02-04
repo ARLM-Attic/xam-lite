@@ -5,6 +5,9 @@ using Microsoft.Xna.Framework;
 
 namespace XAMLite
 {
+    using System.Windows;
+    using System.Windows.Media;
+
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
@@ -34,6 +37,49 @@ namespace XAMLite
         /// 
         /// </summary>
         //private RasterizerState _rasterizeState;
+
+        /// <summary>
+        /// This modifies both the grid's and the text label's margins but 
+        /// leaves the background alone.  This allows for scrolling when it is 
+        /// attached to a scroll bar.
+        /// </summary>
+        public override Thickness Margin
+        {
+            get
+            {
+                if (_labels == null)
+                {
+                    return base.Margin;
+                }
+
+                if (TextLabel != null)
+                {
+                    return TextLabel.Margin;
+                }
+
+                return base.Margin;
+            }
+
+            set
+            {
+                if (_labels == null)
+                {
+                    base.Margin = value;
+                }
+                else
+                {
+                    var t = Margin.Top - value.Top;
+                    var l = Margin.Left - value.Left;
+
+                    foreach (var label in _labels)
+                    {
+                        label.Margin = new Thickness(label.Margin.Left - l, label.Margin.Top - t, label.Margin.Right, label.Margin.Bottom);
+                    }
+
+                    base.Margin = value;
+                }
+            }
+        }
 
         /// <summary>
         /// Basic constructor.
@@ -66,7 +112,12 @@ namespace XAMLite
             RemoveAndReplaceTags();
 
             base.LoadContent();
-            
+
+            foreach (var label in _labels)
+            {
+                Children.Add(label);
+            }
+
             //_labels.Add(TextLabel);
         }
 
@@ -152,12 +203,8 @@ namespace XAMLite
                 {
                     var indexStart = text.IndexOf(tag);
 
-                    //Console.WriteLine("Tag: " + tag + "  Index start: " + indexStart);
-
                     var c = tag.ToCharArray()[1];
                     var indexEnd = text.IndexOf("</" + c + ">") + 2;
-
-                    //Console.WriteLine("Index end: " + indexEnd);
 
                     if (indexStart >= 0)
                     {
@@ -181,6 +228,7 @@ namespace XAMLite
         {
             var s = excerpt;
             var str = "";
+            var tagsInBlock = new List<string>();
 
             foreach (var tag in _hTMLTags)
             {
@@ -188,6 +236,7 @@ namespace XAMLite
 
                 if (s.Contains(tag))
                 {      
+                    tagsInBlock.Add(tag);
                     var t = tag.ToCharArray()[1];
 
                     // remove the start tag.
@@ -204,7 +253,53 @@ namespace XAMLite
                 }
             }
 
+            BuildLabel(tagsInBlock, s);
+
             return s;
+        }
+
+        private int position = 0;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void BuildLabel(List<string> tags, string s)
+        {
+            FontFamily font = BuildFontFamily(tags);
+            var label = new XAMLiteLabelNew(Game)
+                {
+                    Content = s,
+                    Foreground = Foreground,
+                    FontFamily = font,
+                    Margin = new Thickness(0, position, 0, 0)
+                };
+            _labels.Add(label);
+
+            position += 20;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        private FontFamily BuildFontFamily(List<string> tags)
+        {
+            var s = FontFamily.ToString();
+
+            if (tags.Contains(_hTMLTags[0]) && tags.Contains(_hTMLTags[1]))
+            {
+                s += "BoldItalic";
+            }
+            else if (tags.Contains(_hTMLTags[0]))
+            {
+                s += "Bold";
+            }
+            else if (tags.Contains(_hTMLTags[1]))
+            {
+                s += "Italic";
+            }
+
+            return new FontFamily(s);
         }
 
         /// <summary>
