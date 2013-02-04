@@ -28,7 +28,7 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        private bool _stringSeparated;
+        //private bool _stringSeparated;
 
         /// <summary>
         /// 
@@ -63,10 +63,9 @@ namespace XAMLite
         /// </summary>
         protected override void LoadContent()
         {
-            //RemoveAndReplaceTags();
-
             base.LoadContent();
 
+            RemoveAndReplaceTags();
             //_labels.Add(TextLabel);
         }
 
@@ -78,10 +77,10 @@ namespace XAMLite
         {
             base.Update(gameTime);
 
-            if (!_stringSeparated)
-            {
-                SeparateStrings();
-            }
+            //if (!_stringSeparated)
+            //{
+            //    SeparateStrings();
+            //}
         }
 
         /// <summary>
@@ -91,7 +90,7 @@ namespace XAMLite
         {
             _blocks = Regex.Split(TextLabel.Content.ToString(), @"\n");
             
-            _stringSeparated = true;
+            //_stringSeparated = true;
 
             for (var i = 0; i < _blocks.Length; i++)
             {
@@ -120,23 +119,23 @@ namespace XAMLite
             //    SpriteBatch.GraphicsDevice.ScissorRectangle = TextLabel.Parent.Panel;
             //}
             //else
-            {
-                SpriteBatch.Begin();
-            }
+            //{
+            //    SpriteBatch.Begin();
+            //}
 
-            var count = 0;
-            for (var i = 0; i < _blocks.Length; i++)
-            {
-                //if (!_blocks[i].Contains("<b>") && !_blocks[i].Contains("</b>") && !_blocks[i].Contains("<i>") && !_blocks[i].Contains("</i>") && !_blocks[i].Contains("<u>") && !_blocks[i].Contains("</u>"))
-                {
-                    SpriteBatch.DrawString(TextLabel.SpriteFont, _blocks[i], new Vector2(TextLabel.Panel.X, TextLabel.Panel.Y + (TextLabel.Height * count)), Microsoft.Xna.Framework.Color.Black * (float)Opacity);
-                }
+            //var count = 0;
+            //for (var i = 0; i < _blocks.Length; i++)
+            //{
+            //    //if (!_blocks[i].Contains("<b>") && !_blocks[i].Contains("</b>") && !_blocks[i].Contains("<i>") && !_blocks[i].Contains("</i>") && !_blocks[i].Contains("<u>") && !_blocks[i].Contains("</u>"))
+            //    {
+            //        SpriteBatch.DrawString(TextLabel.SpriteFont, _blocks[i], new Vector2(TextLabel.Panel.X, TextLabel.Panel.Y + (TextLabel.Height * count)), Microsoft.Xna.Framework.Color.Black * (float)Opacity);
+            //    }
 
-                Console.WriteLine(count);
-                count++;
-            }
+            //    Console.WriteLine(count);
+            //    count++;
+            //}
 
-            SpriteBatch.End();
+            //SpriteBatch.End();
         }
 
         /// <summary>
@@ -158,7 +157,7 @@ namespace XAMLite
                     if (indexStart >= 0)
                     {
                         var s = text.Substring(indexStart, (indexEnd + 2) - indexStart);
-                        //Console.WriteLine(s);
+                        Console.WriteLine(s);
                         var str = " ";
                         for (var i = 0; i < s.Length - 1; i++)
                         {

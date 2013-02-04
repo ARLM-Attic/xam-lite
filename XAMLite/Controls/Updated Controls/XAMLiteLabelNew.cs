@@ -94,7 +94,7 @@ namespace XAMLite
                     SpriteBatch.Draw(Pixel, Panel, BackgroundColor);
                 }
 
-                if (!(Parent is XAMLiteRichTextBlock))
+                //if (!(Parent is XAMLiteRichTextBlock))
                 {
                     SpriteBatch.DrawString(SpriteFont, Content.ToString(), ContentPosition, ForegroundColor * (float)Opacity);
                 }
