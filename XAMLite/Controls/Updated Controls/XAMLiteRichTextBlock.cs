@@ -8,6 +8,15 @@ namespace XAMLite
     using System.Windows;
     using System.Windows.Media;
 
+    public class RichTextInfo
+    {
+        public int StartIndex;
+
+        public int EndIndex;
+
+        public string Text;
+    }
+
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
@@ -26,7 +35,9 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        private string[] _blocks;  
+        private string[] _blocks;
+
+        private List<RichTextInfo> _richTextInfo; 
 
         /// <summary>
         /// 
@@ -89,6 +100,7 @@ namespace XAMLite
             : base(game)
         {
             _labels = new List<XAMLiteLabelNew>();
+            _richTextInfo = new List<RichTextInfo>();
             //_blocks = new List<string>();
         }
 
@@ -109,16 +121,17 @@ namespace XAMLite
         /// </summary>
         protected override void LoadContent()
         {
-            RemoveAndReplaceTags();
-
+            
             base.LoadContent();
+
+            RemoveAndReplaceTags();
 
             foreach (var label in _labels)
             {
                 Children.Add(label);
             }
 
-            //_labels.Add(TextLabel);
+            TextLabel.Foreground = Brushes.White;
         }
 
         /// <summary>
@@ -195,24 +208,44 @@ namespace XAMLite
         /// </summary>
         private void RemoveAndReplaceTags()
         {
+            var indexStart = 0;
+            var indexEnd = 0;
+            var nextIndex = 0;
+
             foreach (var tag in _hTMLTags)
             {
                 var text = Text;
-
+                
                 while (text.Contains(tag))
                 {
-                    var indexStart = text.IndexOf(tag);
+                    nextIndex = text.IndexOf(tag);
+                    //Console.WriteLine("Next Index: " + nextIndex);
+                    //Console.WriteLine("Previous End Index: " + indexEnd);
 
+                    //if (nextIndex != indexEnd && nextIndex >= indexEnd)
+                    //{
+                    //    //Console.WriteLine("Indexes do not match");
+                    //var basicString = text.Substring(indexEnd, nextIndex);
+                    //Console.WriteLine("START BASIC STRING: " + basicString + " : END BASIC STRING");
+                    //    BuildLabel(new List<string>() { "x" }, basicString);
+                    //}
+                    
                     var c = tag.ToCharArray()[1];
-                    var indexEnd = text.IndexOf("</" + c + ">") + 2;
+                    indexEnd = text.IndexOf("</" + c + ">") + 2;
+                    //Console.WriteLine("New End Index: " + indexEnd);
+                    //Console.WriteLine();
+
+                    indexStart = text.IndexOf(tag);
 
                     if (indexStart >= 0)
                     {
                         // get the whole substring
                         var s = text.Substring(indexStart, (indexEnd + 2) - indexStart);
 
-                        //s = ReplaceInnerTags(s);
-                        Text = Text.Replace(s, ReplaceInnerTags(s));
+                        var t = ReplaceInnerTags(s);
+                        _richTextInfo.Add(new RichTextInfo() { StartIndex = indexStart, EndIndex = indexEnd, Text = t });
+
+                        Text = Text.Replace(s, t);
 
                         text = text.Substring(indexEnd + 2);
                     }
@@ -271,6 +304,7 @@ namespace XAMLite
                     Content = s,
                     Foreground = Foreground,
                     FontFamily = font,
+                    Spacing = Spacing,
                     Margin = new Thickness(0, position, 0, 0)
                 };
             _labels.Add(label);
