@@ -255,6 +255,10 @@ namespace XAMLite
                 Game.Components.Add(TextLabel);
                 UpdateForTextWrapping();
             }
+            else
+            {
+                Console.WriteLine(Text != string.Empty || TextLabel.Width == 0);
+            }
 
             if (Game.Components.Contains(TextLabel))
             {
