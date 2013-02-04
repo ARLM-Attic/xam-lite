@@ -63,9 +63,10 @@ namespace XAMLite
         /// </summary>
         protected override void LoadContent()
         {
-            base.LoadContent();
-
             RemoveAndReplaceTags();
+
+            base.LoadContent();
+            
             //_labels.Add(TextLabel);
         }
 
@@ -150,21 +151,21 @@ namespace XAMLite
                 while (text.Contains(tag))
                 {
                     var indexStart = text.IndexOf(tag);
-                    Console.WriteLine("Tag: " + tag + "  Index start: " + indexStart);
+
+                    //Console.WriteLine("Tag: " + tag + "  Index start: " + indexStart);
+
                     var c = tag.ToCharArray()[1];
                     var indexEnd = text.IndexOf("</" + c + ">") + 2;
-                    Console.WriteLine("Index end: " + indexEnd);
+
+                    //Console.WriteLine("Index end: " + indexEnd);
+
                     if (indexStart >= 0)
                     {
+                        // get the whole substring
                         var s = text.Substring(indexStart, (indexEnd + 2) - indexStart);
-                        Console.WriteLine(s);
-                        var str = " ";
-                        for (var i = 0; i < s.Length - 1; i++)
-                        {
-                            str = str.Insert(i, " ");
-                        }
 
-                        Text = Text.Replace(s, str);
+                        //s = ReplaceInnerTags(s);
+                        Text = Text.Replace(s, ReplaceInnerTags(s));
 
                         text = text.Substring(indexEnd + 2);
                     }
@@ -174,6 +175,36 @@ namespace XAMLite
                     }
                 }
             }
+        }
+
+        private string ReplaceInnerTags(string excerpt)
+        {
+            var s = excerpt;
+            var str = "";
+
+            foreach (var tag in _hTMLTags)
+            {
+                s = excerpt;
+
+                if (s.Contains(tag))
+                {      
+                    var t = tag.ToCharArray()[1];
+
+                    // remove the start tag.
+                    s = s.Replace(tag, str);
+
+                    // remove the end tag.
+                    s = s.Replace("</" + t + ">", str);
+
+
+                    // Replace the old text with the new text.
+                    Text = Text.Replace(excerpt, s);
+
+                    excerpt = s;
+                }
+            }
+
+            return s;
         }
 
         /// <summary>
