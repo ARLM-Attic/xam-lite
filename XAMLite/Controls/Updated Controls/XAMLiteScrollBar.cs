@@ -277,7 +277,16 @@ namespace XAMLite
             c.MouseDown += ChildOnMouseDown;
             // if the text height is less than the height of the block, do not load
             // scroll bar nor set the event handlers.
-            _childTextHeight = c.MeasureText().Y;
+
+            if (Child is XAMLiteRichTextBlock)
+            {
+                var rtb = Child as XAMLiteRichTextBlock;
+                _childTextHeight = rtb.MeasureTextHeight();
+            }
+            else
+            {
+                _childTextHeight = c.MeasureText().Y;
+            }
 
             if (_childTextHeight <= Child.Height)
             {

@@ -353,5 +353,21 @@ namespace XAMLite
 
             position += 20;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public float MeasureTextHeight()
+        {
+            var h = 0f;
+
+            foreach (var label in _labels)
+            {
+                h += (int)label.MeasureHeight();
+            }
+
+            return h;
+        }
     }
 }
