@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
+using System.Windows;
+using System.Windows.Media;
 using Microsoft.Xna.Framework;
 
 namespace XAMLite
 {
-    using System.Windows;
-    using System.Windows.Media;
-
     public class RichTextInfo
     {
         public int StartIndex;
@@ -15,6 +13,15 @@ namespace XAMLite
         public int EndIndex;
 
         public string Text;
+
+        public FontFamily Font;
+
+        public List<string> Tags;
+
+        public RichTextInfo()
+        {
+            Tags = new List<string>();
+        }
     }
 
     /// <summary>
@@ -35,19 +42,7 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        private string[] _blocks;
-
         private List<RichTextInfo> _richTextInfo; 
-
-        /// <summary>
-        /// 
-        /// </summary>
-        //private bool _stringSeparated;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        //private RasterizerState _rasterizeState;
 
         /// <summary>
         /// This modifies both the grid's and the text label's margins but 
@@ -101,7 +96,6 @@ namespace XAMLite
         {
             _labels = new List<XAMLiteLabelNew>();
             _richTextInfo = new List<RichTextInfo>();
-            //_blocks = new List<string>();
         }
 
         /// <summary>
@@ -113,7 +107,7 @@ namespace XAMLite
             : base(game, run)
         {
             _labels = new List<XAMLiteLabelNew>();
-            //_blocks = new List<string>();
+            _richTextInfo = new List<RichTextInfo>();
         }
 
         /// <summary>
@@ -121,195 +115,140 @@ namespace XAMLite
         /// </summary>
         protected override void LoadContent()
         {
-            
+            BuildTextBlocks();
+
             base.LoadContent();
 
-            RemoveAndReplaceTags();
+            //foreach (var label in _labels)
+            //{
+            //    Children.Add(label);
+            //}
 
-            foreach (var label in _labels)
-            {
-                Children.Add(label);
-            }
-
-            TextLabel.Foreground = Brushes.White;
+            //TextLabel.Foreground = Brushes.White;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="gameTime"></param>
-        public override void Update(GameTime gameTime)
+        private void BuildTextBlocks()
         {
-            base.Update(gameTime);
+            // 1. Search for first tag
+            // 2. If one is found, find its end position.
+            //    A. If end position not found, throw error.
+            // 3. Create separate string containing the block of text.
+            // 4. Search for inner tags.
+            // 5. Build blocks of rich text info.
 
-            //if (!_stringSeparated)
-            //{
-            //    SeparateStrings();
-            //}
-        }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        private void SeparateStrings()
-        {
-            _blocks = Regex.Split(TextLabel.Content.ToString(), @"\n");
-            
-            //_stringSeparated = true;
+            // 6. Once the entire text is archived, layout the text line by line.
+            // TODO: Flesh out 6 into steps.
 
-            for (var i = 0; i < _blocks.Length; i++)
+            // go through the text block once.
+            // 1. Start by finding the first tag in the block.
+            var text = Text;
+            for (int j = 0; j < Text.Length; j++)
             {
-                Console.WriteLine("Line: " + i + 1 + "    " +_blocks[i]);
-            }
-
-            Console.WriteLine("Text Height: " + TextLabel.Height);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="gameTime"></param>
-        public override void Draw(GameTime gameTime)
-        {
-            //base.Draw(gameTime);
-            if (_blocks == null)
-            {
-                return;
-            }
-
-            //if (TextLabel.Parent != null)
-            //{
-            //    _rasterizeState = new RasterizerState { ScissorTestEnable = true };
-            //    SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, _rasterizeState);
-            //    SpriteBatch.GraphicsDevice.ScissorRectangle = TextLabel.Parent.Panel;
-            //}
-            //else
-            //{
-            //    SpriteBatch.Begin();
-            //}
-
-            //var count = 0;
-            //for (var i = 0; i < _blocks.Length; i++)
-            //{
-            //    //if (!_blocks[i].Contains("<b>") && !_blocks[i].Contains("</b>") && !_blocks[i].Contains("<i>") && !_blocks[i].Contains("</i>") && !_blocks[i].Contains("<u>") && !_blocks[i].Contains("</u>"))
-            //    {
-            //        SpriteBatch.DrawString(TextLabel.SpriteFont, _blocks[i], new Vector2(TextLabel.Panel.X, TextLabel.Panel.Y + (TextLabel.Height * count)), Microsoft.Xna.Framework.Color.Black * (float)Opacity);
-            //    }
-
-            //    Console.WriteLine(count);
-            //    count++;
-            //}
-
-            //SpriteBatch.End();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private void RemoveAndReplaceTags()
-        {
-            var indexStart = 0;
-            var indexEnd = 0;
-            var nextIndex = 0;
-
-            foreach (var tag in _hTMLTags)
-            {
-                var text = Text;
-                
-                while (text.Contains(tag))
+                var firstTag = _hTMLTags[0];
+                var position = text.Length - 1;
+                for (int i = 0; i < _hTMLTags.Count; i++)
                 {
-                    nextIndex = text.IndexOf(tag);
-                    //Console.WriteLine("Next Index: " + nextIndex);
-                    //Console.WriteLine("Previous End Index: " + indexEnd);
-
-                    //if (nextIndex != indexEnd && nextIndex >= indexEnd)
-                    //{
-                    //    //Console.WriteLine("Indexes do not match");
-                    //var basicString = text.Substring(indexEnd, nextIndex);
-                    //Console.WriteLine("START BASIC STRING: " + basicString + " : END BASIC STRING");
-                    //    BuildLabel(new List<string>() { "x" }, basicString);
-                    //}
-                    
-                    var c = tag.ToCharArray()[1];
-                    indexEnd = text.IndexOf("</" + c + ">") + 2;
-                    //Console.WriteLine("New End Index: " + indexEnd);
-                    //Console.WriteLine();
-
-                    indexStart = text.IndexOf(tag);
-
-                    if (indexStart >= 0)
+                    var index = text.IndexOf(_hTMLTags[i]);
+                    if (index < position && index > -1)
                     {
-                        // get the whole substring
-                        var s = text.Substring(indexStart, (indexEnd + 2) - indexStart);
-
-                        var t = ReplaceInnerTags(s);
-                        _richTextInfo.Add(new RichTextInfo() { StartIndex = indexStart, EndIndex = indexEnd, Text = t });
-
-                        Text = Text.Replace(s, t);
-
-                        text = text.Substring(indexEnd + 2);
-                    }
-                    else
-                    {
-                        text = string.Empty;
+                        position = index;
+                        firstTag = _hTMLTags[i];
                     }
                 }
+
+                // If the first tag is not at the beginning, add this string to the list.
+                if (position != 0 && position != text.Length - 1)
+                {
+                    var info = new RichTextInfo();
+                    info.StartIndex = j;
+                    info.EndIndex = j + position - 1;
+                    info.Font = FontFamily;
+                    info.Text = Text.Substring(info.StartIndex, position - 1);
+                    _richTextInfo.Add(info);
+
+                    Console.WriteLine(_richTextInfo[_richTextInfo.Count - 1].Text);
+                    position--;
+                }
+                else
+                {
+                    return;
+                }
+
+                // Extract the first excerpt with tags.
+                var s = ExtractRawString(firstTag, j + position);
+
+                // Determine fonts, etc. and add to the list.
+                BuildTextInfo(s, j + position);
+
+                j = _richTextInfo[_richTextInfo.Count - 1].EndIndex;
+                text = Text.Substring(j);
             }
         }
 
-        private string ReplaceInnerTags(string excerpt)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tag"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        private string ExtractRawString(string tag, int index)
         {
-            var s = excerpt;
-            var str = "";
+            var endTag = tag.Insert(1, "/");
+            var text = Text.Substring(index);
+            var pos = text.IndexOf(endTag);
+
+            return Text.Substring(index, pos + endTag.Length);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="position"> </param>
+        private void BuildTextInfo(string s, int position)
+        {
+            // 1. Search for inner tags.
+            var tags = CollectTags(s);
+
+            // 2. Determine the correct font.
+            var font = BuildFontFamily(tags);
+
+            var tLength = s.Length;
+            // 3. Remove all tags.
+            var text = RemoveTags(s);
+            Console.WriteLine("Font: " + font + "   : " + text);
+
+            // 4. Build the rich text info.
+            var info = new RichTextInfo();
+            info.StartIndex = position;
+            info.EndIndex = position + tLength;
+            info.Font = font;
+
+            _richTextInfo.Add(info);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="excerpt"></param>
+        /// <returns></returns>
+        private List<string> CollectTags(string excerpt)
+        {
             var tagsInBlock = new List<string>();
 
             foreach (var tag in _hTMLTags)
             {
-                s = excerpt;
-
-                if (s.Contains(tag))
-                {      
+                if (excerpt.Contains(tag))
+                {
                     tagsInBlock.Add(tag);
-                    var t = tag.ToCharArray()[1];
-
-                    // remove the start tag.
-                    s = s.Replace(tag, str);
-
-                    // remove the end tag.
-                    s = s.Replace("</" + t + ">", str);
-
-
-                    // Replace the old text with the new text.
-                    Text = Text.Replace(excerpt, s);
-
-                    excerpt = s;
                 }
             }
 
-            BuildLabel(tagsInBlock, s);
-
-            return s;
-        }
-
-        private int position = 0;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private void BuildLabel(List<string> tags, string s)
-        {
-            FontFamily font = BuildFontFamily(tags);
-            var label = new XAMLiteLabelNew(Game)
-                {
-                    Content = s,
-                    Foreground = Foreground,
-                    FontFamily = font,
-                    Spacing = Spacing,
-                    Margin = new Thickness(0, position, 0, 0)
-                };
-            _labels.Add(label);
-
-            position += 20;
+            return tagsInBlock;
         }
 
         /// <summary>
@@ -339,24 +278,53 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        protected override void UpdateForTextWrapping()
+        /// <param name="excerpt"></param>
+        /// <returns></returns>
+        private string RemoveTags(string excerpt)
         {
-            base.UpdateForTextWrapping();
+            var s = excerpt;
+            var str = "";
 
-            // When applicable, wrap the text and create the label.
-            //if (TextWrapping == TextWrapping.Wrap)
-            //{
-            //    Text = WordWrapper.Wrap(Text, Width, (int)TextLabel.MeasureString().X, TextLabel.Padding);
-            //}
+            foreach (var tag in _hTMLTags)
+            {
+                s = excerpt;
+
+                if (s.Contains(tag))
+                {
+                    var t = tag.ToCharArray()[1];
+
+                    // remove the start tag.
+                    s = s.Replace(tag, str);
+
+                    // remove the end tag.
+                    s = s.Replace("</" + t + ">", str);
+
+                    excerpt = s;
+                }
+            }
+
+            return s;
         }
+
+        private int position = 0;
 
         /// <summary>
         /// 
         /// </summary>
-        /// <returns></returns>
-        private int HTMLTagCounter()
+        private void BuildLabel(List<string> tags, string s)
         {
-            return 0;
+            FontFamily font = BuildFontFamily(tags);
+            var label = new XAMLiteLabelNew(Game)
+                {
+                    Content = s,
+                    Foreground = Foreground,
+                    FontFamily = font,
+                    Spacing = Spacing,
+                    Margin = new Thickness(0, position, 0, 0)
+                };
+            _labels.Add(label);
+
+            position += 20;
         }
     }
 }
