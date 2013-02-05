@@ -119,12 +119,42 @@ namespace XAMLite
 
             base.LoadContent();
 
-            //foreach (var label in _labels)
-            //{
-            //    Children.Add(label);
-            //}
+            foreach (var info in _richTextInfo)
+            {
+                var label = new XAMLiteLabelNew(Game);
+                label.Content = info.Text;
+                label.Foreground = Foreground;
+                label.FontFamily = info.Font;
+                label.Spacing = Spacing;
+                label.Padding = Padding;
+                label.Width = Width;
+                _labels.Add(label);
+            }
 
-            //TextLabel.Foreground = Brushes.White;
+            var h = 0;
+            foreach (var label in _labels)
+            {
+                Game.Components.Add(label);
+                var w = (int)label.MeasureString().X;
+                if (w > Width)
+                {
+                    label.Content = WordWrapper.Wrap(label.Content.ToString(), Width - 20, w, label.Padding);
+                }
+
+                var m = label.Margin;
+                label.Margin = new Thickness(m.Left, m.Top + h, m.Right, m.Bottom);
+
+                Console.WriteLine(h);
+                Console.WriteLine(label.Margin);
+                Console.WriteLine(label.Content);
+                Console.WriteLine();
+                h += (int)label.MeasureHeight();
+
+                Game.Components.Remove(label);
+                Children.Add(label);
+            }
+
+            TextLabel.Foreground = Brushes.Transparent;
         }
 
         /// <summary>
@@ -145,6 +175,7 @@ namespace XAMLite
 
             // go through the text block once.
             // 1. Start by finding the first tag in the block.
+
             var text = Text;
             for (int j = 0; j < Text.Length; j++)
             {
@@ -170,10 +201,9 @@ namespace XAMLite
                     info.Text = Text.Substring(info.StartIndex, position - 1);
                     _richTextInfo.Add(info);
 
-                    Console.WriteLine(_richTextInfo[_richTextInfo.Count - 1].Text);
                     position--;
                 }
-                else
+                else if (position == text.Length - 1)
                 {
                     return;
                 }
@@ -218,15 +248,16 @@ namespace XAMLite
             var font = BuildFontFamily(tags);
 
             var tLength = s.Length;
+
             // 3. Remove all tags.
             var text = RemoveTags(s);
-            Console.WriteLine("Font: " + font + "   : " + text);
-
+            
             // 4. Build the rich text info.
             var info = new RichTextInfo();
             info.StartIndex = position;
             info.EndIndex = position + tLength;
             info.Font = font;
+            info.Text = text;
 
             _richTextInfo.Add(info);
         }

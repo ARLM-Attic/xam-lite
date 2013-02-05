@@ -128,6 +128,23 @@ namespace XAMLite
         }
 
         /// <summary>
+        /// Measures the height of a label.
+        /// </summary>
+        /// <returns></returns>
+        public float MeasureHeight()
+        {
+            if (SpriteFont != null && Content != null)
+            {
+                // first remove any newline modifiers, "\n", or basic html tags, if any.
+                var s = Content.ToString();
+                
+                return SpriteFont.MeasureString(s).Y;
+            }
+
+            return 0f;
+        }
+
+        /// <summary>
         /// Sets the content of the control.
         /// </summary>
         /// <param name="content"></param>
