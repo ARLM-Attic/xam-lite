@@ -144,10 +144,6 @@ namespace XAMLite
                 var m = label.Margin;
                 label.Margin = new Thickness(m.Left, m.Top + h, m.Right, m.Bottom);
 
-                Console.WriteLine(h);
-                Console.WriteLine(label.Margin);
-                Console.WriteLine(label.Content);
-                Console.WriteLine();
                 h += (int)label.MeasureHeight();
 
                 Game.Components.Remove(label);
