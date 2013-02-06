@@ -276,9 +276,53 @@ namespace XAMLite
                         VerticalAlignment = VerticalAlignment.Stretch
                     };
                 Children.Add(_background);
+
+                var top = new XAMLiteRectangleNew(Game)
+                    {
+                        Fill = Brushes.Black,
+                        Width = Width,
+                        Height = 1,
+                        HorizontalAlignment = HorizontalAlignment.Left,
+                        VerticalAlignment = VerticalAlignment.Top,
+                        DrawOrder = TextLabel.DrawOrder + 1
+                    };
+                Children.Add(top);
             }
 
             Children.Add(TextLabel);
+
+            var left = new XAMLiteRectangleNew(Game)
+            {
+                Fill = Brushes.Black,
+                Width = 1,
+                Height = Height,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                DrawOrder = TextLabel.DrawOrder + 1
+            };
+            Children.Add(left);
+
+            var right = new XAMLiteRectangleNew(Game)
+            {
+                Fill = Brushes.Black,
+                Width = 1,
+                Height = Height,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Top,
+                DrawOrder = TextLabel.DrawOrder + 1
+            };
+            Children.Add(right);
+
+            var bottom = new XAMLiteRectangleNew(Game)
+            {
+                Fill = Brushes.Black,
+                Width = Width,
+                Height = 1,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                DrawOrder = TextLabel.DrawOrder + 1
+            };
+            Children.Add(bottom);
 
         }
 

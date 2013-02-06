@@ -219,11 +219,12 @@ namespace XAMLite
             // that the scroll bar needs.
             if (Child != null)
             {
+                var m = Child.Margin;
                 _grid = new XAMLiteGridNew(Game)
                     {
                         Width = Child.Width,
-                        Height = Child.Height,
-                        Margin = Child.Margin,
+                        Height = Child.Height - 2,
+                        Margin = new Thickness(m.Left, m.Top + 1, m.Right + 1, m.Bottom + 1),
                         HorizontalAlignment = Child.HorizontalAlignment,
                         VerticalAlignment = Child.VerticalAlignment
                     };
