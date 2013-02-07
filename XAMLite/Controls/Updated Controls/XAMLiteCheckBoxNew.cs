@@ -23,7 +23,7 @@ namespace XAMLite
             get
             {
                 return _isChecked;
-            } 
+            }
 
             set
             {
@@ -149,12 +149,12 @@ namespace XAMLite
         protected override void LoadContent()
         {
             base.LoadContent();
-            
+
             Debug.Assert((SourceName != null), "Must set CheckBoxSourceName property. This is the image file path, minus the file extension.");
             _texture = Game.Content.Load<Texture2D>(SourceName);
 
             UpdateFontMetrics();
-            
+
             Debug.Assert((CheckedSourceName != null), "Must set CheckBoxSelectedSourceName property. This is the image file path, minus the file extension.");
 
             _grid = new XAMLiteGridNew(Game)
@@ -196,7 +196,7 @@ namespace XAMLite
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Center,
                 Visibility = IsChecked ? Visibility.Visible : Visibility.Hidden
-            };    
+            };
             _grid.Children.Add(_checkedButton);
 
             if (HoverCheckedSourceName != null)
@@ -222,7 +222,7 @@ namespace XAMLite
                 Spacing = Spacing,
                 Margin = new Thickness(_texture.Width, 0, 0, 0)
             };
-            
+
             _grid.Children.Add(_label);
         }
 
@@ -351,12 +351,16 @@ namespace XAMLite
         {
             base.Dispose(disposing);
 
-            foreach (var child in _grid.Children)
+            // Temporary hack by Adam.  Scott: Please review/revise. -AK 2/7/2013
+            if (_grid != null)
             {
-                child.Dispose();
-            }
+                foreach (var child in _grid.Children)
+                {
+                    child.Dispose();
+                }
 
-            _grid.Dispose();
+                _grid.Dispose();
+            }
         }
     }
 }
