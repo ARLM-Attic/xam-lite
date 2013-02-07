@@ -100,6 +100,12 @@ namespace XAMLite
         public int Spacing { get; set; }
 
         /// <summary>
+        /// Thickness of the border for the control.
+        /// Currently this is either 0 or 1.
+        /// </summary>
+        public int StrokeThickness;
+
+        /// <summary>
         /// Padding for the text.
         /// </summary>
         private Thickness _padding;
@@ -202,6 +208,7 @@ namespace XAMLite
             Width = 50;
             Height = 28;
             Focusable = true;
+            StrokeThickness = 0;
         }
 
         /// <summary>
@@ -223,6 +230,7 @@ namespace XAMLite
             Width = 50;
             Height = 28;
             Focusable = true;
+            StrokeThickness = 0;
         }
 
         /// <summary>
@@ -286,7 +294,7 @@ namespace XAMLite
             Children.Add(TextLabel);
 
             // Add borders around the edge of the text.
-            if (Background != Brushes.Transparent)
+            if (Background != Brushes.Transparent && StrokeThickness > 0)
             {
                 var top = new XAMLiteRectangleNew(Game)
                     {
