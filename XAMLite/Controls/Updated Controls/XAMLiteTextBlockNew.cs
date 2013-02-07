@@ -288,8 +288,6 @@ namespace XAMLite
                 Children.Add(Back);
             }
 
-            //Console.WriteLine("Background: " + _background.Margin);
-            //Console.WriteLine(IsLoading);
             // Add the text over the background
             Children.Add(TextLabel);
 

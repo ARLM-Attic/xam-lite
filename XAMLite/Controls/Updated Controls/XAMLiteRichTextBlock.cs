@@ -142,22 +142,47 @@ namespace XAMLite
             }
 
             var h = 0;
+            int count = 0;
             foreach (var label in _labels)
             {
                 Game.Components.Add(label);
+                var append = false;
                 var w = (int)label.MeasureString().X;
+                if (count > 0)
+                {
+                    var s = _labels[count - 1].Content.ToString();
+                    if (s.LastIndexOf("\n") != s.Length - 1)
+                    {
+                        append = true;
+                    }
+                }
+
                 if (w > Width)
                 {
                     label.Content = WordWrapper.Wrap(label.Content.ToString(), Width - 20, w, label.Padding);
                 }
 
+                if (append)
+                {
+                    var text = label.Content.ToString();
+                    label.Content = "";
+
+                    while (label.MeasureString().X < _labels[count - 1].MeasureString().X)
+                    {
+                        label.Content = " " + label.Content;
+                    }
+
+                    label.Content += text;
+                }
+
                 var m = label.Margin;
                 label.Margin = new Thickness(m.Left, m.Top + h, m.Right, m.Bottom);
 
-                h += (int)label.MeasureHeight();
+                h += (label.Content.ToString().LastIndexOf("\n") != label.Content.ToString().Length - 1) ? 0 : (int)label.MeasureHeight();
 
                 Game.Components.Remove(label);
                 Children.Add(label);
+                count++;
             }
 
             TextLabel.Foreground = Brushes.Transparent;
@@ -372,9 +397,20 @@ namespace XAMLite
         {
             var h = 0f;
 
+            var count = 0;
             foreach (var label in _labels)
             {
                 h += (int)label.MeasureHeight();
+
+                if (count > 0)
+                {
+                    if (_labels[count - 1].Content.ToString().LastIndexOf("\n") != _labels[count - 1].Content.ToString().Length - 1)
+                    {
+                        h -= _labels[count - 1].MeasureString().Y;
+                    }
+                }
+
+                count++;
             }
 
             return h;
