@@ -100,7 +100,7 @@ namespace XAMLite
         public int Spacing { get; set; }
 
         /// <summary>
-        /// 
+        /// Padding for the text.
         /// </summary>
         private Thickness _padding;
 
@@ -137,7 +137,7 @@ namespace XAMLite
         {
             get
             {
-                if (_isLoading)
+                if (IsLoading)
                 {
                     return base.Margin;
                 }
@@ -152,7 +152,7 @@ namespace XAMLite
 
             set
             {
-                if (_isLoading)
+                if (IsLoading)
                 {
                     base.Margin = value;
                 }
@@ -177,12 +177,12 @@ namespace XAMLite
         /// <summary>
         /// Background fo the text block.
         /// </summary>
-        private XAMLiteRectangleNew _background;
+        protected internal XAMLiteRectangleNew Back;
 
         /// <summary>
         /// Initially true so that the margin can be set and then locked.
         /// </summary>
-        private bool _isLoading = true;
+        protected internal bool IsLoading = true;
 
         /// <summary>
         /// Constructor.
@@ -265,18 +265,29 @@ namespace XAMLite
                 Game.Components.Remove(TextLabel);
             }
 
+            //Console.WriteLine(Margin);
+            // Place a background for the text.
             if (Background != Brushes.Transparent)
             {
-                _background = new XAMLiteRectangleNew(Game)
+                Back = new XAMLiteRectangleNew(Game)
                     {
                         Fill = Background,
                         Width = Width,
                         Height = Height,
-                        HorizontalAlignment = HorizontalAlignment.Stretch,
-                        VerticalAlignment = VerticalAlignment.Stretch
+                        HorizontalAlignment = HorizontalAlignment,
+                        VerticalAlignment = VerticalAlignment
                     };
-                Children.Add(_background);
+                Children.Add(Back);
+            }
 
+            //Console.WriteLine("Background: " + _background.Margin);
+            //Console.WriteLine(IsLoading);
+            // Add the text over the background
+            Children.Add(TextLabel);
+
+            // Add borders around the edge of the text.
+            if (Background != Brushes.Transparent)
+            {
                 var top = new XAMLiteRectangleNew(Game)
                     {
                         Fill = Brushes.Black,
@@ -287,43 +298,40 @@ namespace XAMLite
                         DrawOrder = TextLabel.DrawOrder + 1
                     };
                 Children.Add(top);
+
+                var left = new XAMLiteRectangleNew(Game)
+                    {
+                        Fill = Brushes.Black,
+                        Width = 1,
+                        Height = Height,
+                        HorizontalAlignment = HorizontalAlignment.Left,
+                        VerticalAlignment = VerticalAlignment.Top,
+                        DrawOrder = TextLabel.DrawOrder + 1
+                    };
+                Children.Add(left);
+
+                var right = new XAMLiteRectangleNew(Game)
+                    {
+                        Fill = Brushes.Black,
+                        Width = 1,
+                        Height = Height,
+                        HorizontalAlignment = HorizontalAlignment.Right,
+                        VerticalAlignment = VerticalAlignment.Top,
+                        DrawOrder = TextLabel.DrawOrder + 1
+                    };
+                Children.Add(right);
+
+                var bottom = new XAMLiteRectangleNew(Game)
+                    {
+                        Fill = Brushes.Black,
+                        Width = Width,
+                        Height = 1,
+                        HorizontalAlignment = HorizontalAlignment.Left,
+                        VerticalAlignment = VerticalAlignment.Bottom,
+                        DrawOrder = TextLabel.DrawOrder + 1
+                    };
+                Children.Add(bottom);
             }
-
-            Children.Add(TextLabel);
-
-            var left = new XAMLiteRectangleNew(Game)
-            {
-                Fill = Brushes.Black,
-                Width = 1,
-                Height = Height,
-                HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Top,
-                DrawOrder = TextLabel.DrawOrder + 1
-            };
-            Children.Add(left);
-
-            var right = new XAMLiteRectangleNew(Game)
-            {
-                Fill = Brushes.Black,
-                Width = 1,
-                Height = Height,
-                HorizontalAlignment = HorizontalAlignment.Right,
-                VerticalAlignment = VerticalAlignment.Top,
-                DrawOrder = TextLabel.DrawOrder + 1
-            };
-            Children.Add(right);
-
-            var bottom = new XAMLiteRectangleNew(Game)
-            {
-                Fill = Brushes.Black,
-                Width = Width,
-                Height = 1,
-                HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Bottom,
-                DrawOrder = TextLabel.DrawOrder + 1
-            };
-            Children.Add(bottom);
-
         }
 
         /// <summary>
@@ -335,9 +343,9 @@ namespace XAMLite
             base.Update(gameTime);
 
             // lock the margin for the text block.
-            if (_isLoading)
+            if (IsLoading)
             {
-                _isLoading = false;
+                IsLoading = false;
             }
         }
 

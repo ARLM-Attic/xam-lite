@@ -42,7 +42,9 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        private List<RichTextInfo> _richTextInfo; 
+        private List<RichTextInfo> _richTextInfo;
+
+        private Thickness _storedMargin;
 
         /// <summary>
         /// This modifies both the grid's and the text label's margins but 
@@ -68,8 +70,14 @@ namespace XAMLite
 
             set
             {
-                if (_labels == null)
+                if (IsLoading)
                 {
+                    base.Margin = value;
+                    _storedMargin = value;
+                }
+
+                if (_labels == null)
+                {   
                     base.Margin = value;
                 }
                 else
@@ -118,6 +126,8 @@ namespace XAMLite
             BuildTextBlocks();
 
             base.LoadContent();
+
+            Margin = _storedMargin;
 
             foreach (var info in _richTextInfo)
             {
