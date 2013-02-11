@@ -214,6 +214,12 @@ namespace XAMLite
         private KeyboardState _lastKeyboardState;
 
         /// <summary>
+        /// 
+        /// </summary>
+        private static bool _locked;
+        private bool _isLocked;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="game"></param>
@@ -469,8 +475,44 @@ namespace XAMLite
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            if (!IsFocused)
+            base.Update(gameTime);
+
+            if (!_isLocked)
             {
+                if (Parent != null && !(Parent is XAMLiteComboBox))
+                {
+                    _textLabel.Content = _initialText;
+                }
+            }
+
+            if (CurrentTabIndex == TabIndex && !_locked && !_isLocked && Ms.LeftButton == ButtonState.Released)
+            {
+                _isLocked = true;
+
+                foreach (var borderRectangle in _borderRectangles)
+                {
+                    borderRectangle.Stroke = Brushes.Blue;
+                }
+
+                if ((string)_textLabel.Content == _initialText)
+                {
+                    _textLabel.Content = string.Empty;
+                    Console.WriteLine("In the update.");
+                }
+
+                _cursorVisible = true;
+
+                IsFocused = true;
+                _locked = true;
+            }
+
+            if (!IsFocused && Ms.LeftButton == ButtonState.Released)
+            {
+                if (_isLocked)
+                {
+                    _isLocked = false;
+                }
+
                 if (!IsReadOnly)
                 {
                     _cursor.Visibility = Visibility.Hidden;
@@ -483,6 +525,11 @@ namespace XAMLite
                     if (Parent != null && !(Parent is XAMLiteComboBox))
                     {
                         _textLabel.Content = _initialText;
+                    }
+
+                    if (_borderRectangles[0].Stroke != BorderBrush)
+                    {
+                        ResetBorderBrush();
                     }
                 }
             }
@@ -508,8 +555,6 @@ namespace XAMLite
             }
 
             UpdateBorders();
-
-            base.Update(gameTime);
 
             _lastKeyboardState = _currentKeyboardState;
         }
@@ -615,11 +660,14 @@ namespace XAMLite
                 return;
             }
 
+            _locked = true;
             IsFocused = true;
+            _isLocked = true;
 
             if ((string)_textLabel.Content == _initialText)
             {
                 _textLabel.Content = string.Empty;
+                Console.WriteLine("In the mouse up.");
             }
 
             _cursorVisible = true;
@@ -682,7 +730,7 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// Stats or stops key deletion.
+        /// Starts or stops key deletion.
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
@@ -788,6 +836,7 @@ namespace XAMLite
                     case Keys.Enter:
                     case Keys.Tab:
                         IsFocused = false;
+                        _locked = false;
                         ResetBorderBrush();
                         break;
                     default:

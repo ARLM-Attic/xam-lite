@@ -14,6 +14,8 @@ using Point = Microsoft.Xna.Framework.Point;
 
 namespace XAMLite
 {
+    using Keyboard = Microsoft.Xna.Framework.Input.Keyboard;
+
     /// <summary>
     /// The base class for all XAMLite objects.
     /// </summary>
@@ -74,6 +76,12 @@ namespace XAMLite
                 if (Focusable)
                 {
                     _isFocused = value;
+
+                    if (!value && IsTabStop && _tabRecorded)
+                    {
+                        _tabRecorded = false;
+                        CurrentTabIndex++;
+                    }
                 }
             }
         }
@@ -90,11 +98,8 @@ namespace XAMLite
         internal bool IsAttachedToGrid;
 
         /// <summary>
-        /// If the control IsAttachedToGrid and the GridIsHidden, then the 
-        /// control will not draw.
+        /// 
         /// </summary>
-        //internal bool GridIsHidden;
-
         private int _width;
 
         /// <summary>
@@ -167,6 +172,19 @@ namespace XAMLite
         /// The screen width and height.
         /// </summary>
         protected Viewport Viewport;
+
+        /// <summary>
+        /// Gets or sets a value that determines the order in which elements 
+        /// receive focus when the user navigates through controls by using 
+        /// the TAB key. 
+        /// </summary>
+        public int TabIndex { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value that indicates whether a control is included 
+        /// in tab navigation.
+        /// </summary>
+        public bool IsTabStop { get; set; }
 
         /// <summary>
         /// The horizontal alignment of the control.
@@ -519,6 +537,16 @@ namespace XAMLite
         protected internal bool PositionChanged;
 
         /// <summary>
+        /// The current tab index from which individual controls are compared.
+        /// </summary>
+        protected internal static int CurrentTabIndex;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private static bool _tabRecorded;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="game"></param>
@@ -628,6 +656,12 @@ namespace XAMLite
                     }
                 }
 
+                if (IsTabStop && Keyboard.GetState().IsKeyDown(Keys.Tab) && !_tabRecorded)
+                {
+                    _tabRecorded = true;
+                    //CurrentTabIndex++;
+                }
+
                 if (!IsEnabled)
                 {
                     return;
@@ -651,6 +685,7 @@ namespace XAMLite
                     if (MousePressed)
                     {
                         MousePressed = false;
+                        //_tabRecorded = false;
 
                         if (MouseEntered)
                         {
@@ -711,6 +746,11 @@ namespace XAMLite
             {
                 var e = EventArgs.Empty as MouseButtonEventArgs;
                 MouseUp(this, e);
+
+                if (IsTabStop)
+                {
+                    CurrentTabIndex = TabIndex;
+                }
             }
         }
 

@@ -32,7 +32,7 @@ namespace XAMLite
         /// <summary>
         /// 
         /// </summary>
-        private List<string> _hTMLTags = new List<string> { "<b>", "<i>", "<u>", "<Font>", "<Font Color=" };
+        private List<string> _hTMLTags = new List<string> { "<b>", "<i>", "<u>", "<h1>", "<h2>", "<h3>", "<Font>", "<Font Color=" };
 
         /// <summary>
         /// 
@@ -44,6 +44,9 @@ namespace XAMLite
         /// </summary>
         private List<RichTextInfo> _richTextInfo;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private Thickness _storedMargin;
 
         /// <summary>
@@ -202,7 +205,6 @@ namespace XAMLite
 
 
             // 6. Once the entire text is archived, layout the text line by line.
-            // TODO: Flesh out 6 into steps.
 
             // go through the text block once.
             // 1. Start by finding the first tag in the block.
@@ -366,27 +368,6 @@ namespace XAMLite
             }
 
             return s;
-        }
-
-        private int position = 0;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private void BuildLabel(List<string> tags, string s)
-        {
-            FontFamily font = BuildFontFamily(tags);
-            var label = new XAMLiteLabelNew(Game)
-                {
-                    Content = s,
-                    Foreground = Foreground,
-                    FontFamily = font,
-                    Spacing = Spacing,
-                    Margin = new Thickness(0, position, 0, 0)
-                };
-            _labels.Add(label);
-
-            position += 20;
         }
 
         /// <summary>
