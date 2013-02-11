@@ -273,7 +273,6 @@ namespace XAMLite
                 Game.Components.Remove(TextLabel);
             }
 
-            //Console.WriteLine(Margin);
             // Place a background for the text.
             if (Background != Brushes.Transparent)
             {

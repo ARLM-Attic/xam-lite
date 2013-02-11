@@ -497,7 +497,6 @@ namespace XAMLite
                 if ((string)_textLabel.Content == _initialText)
                 {
                     _textLabel.Content = string.Empty;
-                    Console.WriteLine("In the update.");
                 }
 
                 _cursorVisible = true;
@@ -667,7 +666,6 @@ namespace XAMLite
             if ((string)_textLabel.Content == _initialText)
             {
                 _textLabel.Content = string.Empty;
-                Console.WriteLine("In the mouse up.");
             }
 
             _cursorVisible = true;
