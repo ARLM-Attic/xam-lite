@@ -41,6 +41,11 @@ namespace XAMLite
         {
             get
             {
+                if (_textLabel != null)
+                {
+                    return _textLabel.Content.ToString();
+                }
+
                 return _text;
             }
 
@@ -479,7 +484,7 @@ namespace XAMLite
 
             if (!_isLocked)
             {
-                if (Parent != null && !(Parent is XAMLiteComboBox))
+                if (_textLabel.Content.ToString() == string.Empty && Parent != null && !(Parent is XAMLiteComboBox))
                 {
                     _textLabel.Content = _initialText;
                 }
