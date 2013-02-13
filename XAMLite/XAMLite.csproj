@@ -109,6 +109,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controls\Updated Controls\XAMLiteScrollBar.cs" />
+    <Compile Include="Controls\Updated Controls\XAMLiteSlider.cs" />
     <Compile Include="Controls\Updated Controls\XAMLiteTextBlockNew.cs" />
     <Compile Include="Controls\Updated Controls\XAMLiteTextBoxNew.cs" />
     <Compile Include="Controls\Old Controls\XAMLiteToolTip.cs" />
