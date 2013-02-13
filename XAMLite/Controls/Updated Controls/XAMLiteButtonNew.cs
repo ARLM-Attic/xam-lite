@@ -233,6 +233,44 @@ namespace XAMLite
         //}
 
         /// <summary>
+        /// 
+        /// </summary>
+        private Thickness _originalMargin;
+
+
+        public override Thickness Margin
+        {
+            get
+            {
+                return base.Margin;
+            }
+
+            set
+            {
+                base.Margin = value;
+
+                if (Children.Count > 0)
+                {
+                    var om = _originalMargin;
+
+                    var l = value.Left - om.Left;
+                    var t = value.Top - om.Top;
+                    var r = value.Right - om.Right;
+                    var b = value.Bottom - om.Bottom;
+
+                    foreach (var child in Children)
+                    {
+                        child.Margin = new Thickness(l, t, r, b);
+                    }
+                }
+                else
+                {
+                    _originalMargin = value;
+                }
+            }
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="XAMLite.XAMLiteButton"/> class. 
         /// </summary>
         /// <param name="game">
