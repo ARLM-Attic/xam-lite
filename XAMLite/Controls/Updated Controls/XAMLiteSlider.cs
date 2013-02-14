@@ -126,6 +126,8 @@ namespace XAMLite
                 };
             button.MouseDown += ButtonOnMouseDown;
             Children.Add(button);
+
+            Console.WriteLine("Initial Slider value: " + _initialSliderValue);
         }
 
         public override void Update(GameTime gameTime)
@@ -172,7 +174,7 @@ namespace XAMLite
             }
             else
             {
-                Value = (_initialSliderValue + sliderValue) * _slideAdjuster;
+                Value = Minimum + ((_initialSliderValue + sliderValue) * _slideAdjuster);
             }
 
             UpdateSliderBar(sliderValue);
