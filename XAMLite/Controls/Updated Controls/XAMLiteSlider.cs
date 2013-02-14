@@ -190,5 +190,24 @@ namespace XAMLite
             
             _buttonMouseDown = true;
         }
+
+        /// <summary>
+        /// Disposes of the elements that make up the slider.
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            if (button != null)
+            {
+                button.MouseDown -= ButtonOnMouseDown;
+            }
+
+            foreach (var child in Children)
+            {
+                child.Dispose();
+            }
+        }
     }
 }

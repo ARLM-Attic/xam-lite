@@ -8,6 +8,8 @@ using Color = Microsoft.Xna.Framework.Color;
 
 namespace XAMLite
 {
+    using Microsoft.Xna.Framework.Input;
+
     /// <summary>
     /// Button class with rollover and mouse down textures.
     /// Note: Currently under development.  Continue to use normal
@@ -236,6 +238,7 @@ namespace XAMLite
         /// 
         /// </summary>
         private Thickness _originalMargin;
+        private bool _buttonMouseDown;
 
 
         public override Thickness Margin
@@ -399,7 +402,6 @@ namespace XAMLite
             Background = Brushes.Transparent;
 
             MouseDown += OnMouseDown;
-            MouseUp += OnMouseUp;
             MouseEnter += OnMouseEnter;
             MouseLeave += OnMouseLeave;
         }
@@ -670,6 +672,18 @@ namespace XAMLite
             }
 
             base.Update(gameTime);
+
+            if (!IsEnabled)
+            {
+                return;
+            }
+
+            if (_buttonMouseDown && Ms.LeftButton == ButtonState.Released)
+            {
+                _buttonMouseDown = false;
+
+                MouseUpOccurred();
+            }
         }
 
         /// <summary>
@@ -750,17 +764,11 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// Updates the visibility between the mouse down and mouse hover images.
+        /// Handles when the left mouse button is released after a mouse down 
+        /// event occurred.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="mouseButtonEventArgs"></param>
-        private void OnMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        private void MouseUpOccurred()
         {
-            if (!IsEnabled)
-            {
-                return;
-            }
-
             if (RolloverSourceName != null && ClickSourceName != null)
             {
                 _clickedButton.Visibility = Visibility.Hidden;
@@ -774,12 +782,12 @@ namespace XAMLite
 
                     foreach (var image in _defaultImages)
                     {
-                        image.Visibility = Visibility.Hidden;
+                        image.Visibility = Panel.Contains(MsRect) ? Visibility.Hidden : Visibility.Visible;
                     }
 
                     foreach (var image in _defaultRolloverImages)
                     {
-                        image.Visibility = Visibility.Visible;
+                        image.Visibility = Panel.Contains(MsRect) ? Visibility.Visible : Visibility.Hidden;
                     }
                 }
                 else
@@ -800,6 +808,8 @@ namespace XAMLite
             {
                 return;
             }
+
+            _buttonMouseDown = true;
 
             if (RolloverSourceName != null && ClickSourceName != null)
             {
