@@ -262,12 +262,6 @@ namespace XAMLite
         private bool _isHighlighted;
 
         /// <summary>
-        /// When true, the Menu Item must toggle the visibility of the check
-        /// mark.
-        /// </summary>
-        private bool _isCheckedChanged;
-
-        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="game"></param>
@@ -560,15 +554,8 @@ namespace XAMLite
         /// </summary>
         private void HandleCheckMarks()
         {
-            if (!_isCheckedChanged)
-            {
-                return;
-            }
-
             if (Visibility == Visibility.Visible)
             {
-                _isCheckedChanged = false;
-
                 if (IsCheckable && IsChecked && _checkmark.Visibility == Visibility.Hidden)
                 {
                     _checkmark.Visibility = _checkmark.Visibility = Visibility.Visible;
@@ -846,8 +833,6 @@ namespace XAMLite
                     if (IsCheckable)
                     {
                         IsChecked = !IsChecked;
-
-                        _isCheckedChanged = true;
                     }
 
                     IsMenuOpen = false;
