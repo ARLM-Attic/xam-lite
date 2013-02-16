@@ -66,7 +66,7 @@ namespace XAMLite
         /// 
         /// </summary>
         private XAMLiteButtonNew button;
-        
+
         /// <summary>
         /// Represents a control that lets the user select from a range of values 
         /// by moving a slider control along a track.
@@ -126,18 +126,18 @@ namespace XAMLite
                 };
             button.MouseDown += ButtonOnMouseDown;
             Children.Add(button);
-
-            Console.WriteLine("Initial Slider value: " + _initialSliderValue);
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
-            if (_buttonMouseDown)
+            if (_buttonMouseDown && IsEnabled)
             {
                 UpdateValue();
             }
+
+            button.IsEnabled = IsEnabled;
 
             if (_buttonMouseDown && Ms.LeftButton == ButtonState.Released)
             {

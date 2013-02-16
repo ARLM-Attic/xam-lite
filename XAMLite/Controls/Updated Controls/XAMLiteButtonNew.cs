@@ -738,6 +738,11 @@ namespace XAMLite
         {
             if (!IsEnabled)
             {
+                if (!_isDefaultTextures && _mainButtonWithRollover != null)
+                {
+                    _mainButtonWithRollover.IsEnabled = false;
+                }
+
                 return;
             }
 
@@ -760,6 +765,10 @@ namespace XAMLite
                 {
                     image.Visibility = Visibility.Visible;
                 }
+            }
+            else if (IsEnabled)
+            {
+                _mainButtonWithRollover.IsEnabled = true;
             }
         }
 
