@@ -68,6 +68,16 @@ namespace XAMLite
         private XAMLiteButtonNew button;
 
         /// <summary>
+        /// 
+        /// </summary>
+        private double sliderValue;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private double _previousValue;
+
+        /// <summary>
         /// Represents a control that lets the user select from a range of values 
         /// by moving a slider control along a track.
         /// </summary>
@@ -115,7 +125,18 @@ namespace XAMLite
 
             _range = Maximum - Minimum;
             _slideAdjuster = _range / (Width - b.Width);
-            _initialSliderValue = (Value - Minimum) / _slideAdjuster;
+            
+            if (Minimum < Maximum)
+            {
+                _initialSliderValue = (Value - Minimum) / _slideAdjuster;
+            }
+            else
+            {
+                _initialSliderValue = (-(Minimum - (Value - Maximum)) / _slideAdjuster) - b.Width;
+            }
+            
+
+            //Console.WriteLine("Start slider value: " + _initialSliderValue);
 
             button = new XAMLiteButtonNew(Game)
                 {
@@ -136,6 +157,10 @@ namespace XAMLite
             {
                 UpdateValue();
             }
+            else if (_previousValue != Value && !_buttonMouseDown)
+            {
+                UpdateSliderValue();
+            }
 
             button.IsEnabled = IsEnabled;
 
@@ -153,6 +178,7 @@ namespace XAMLite
         private void UpdateSliderBar(double sliderValue)
         {
             button.Margin = new Thickness(_initialSliderValue + sliderValue, 0, 0, 0);
+            //Console.WriteLine("New margin: " + button.Margin.Left);
         }
 
         /// <summary>
@@ -160,7 +186,7 @@ namespace XAMLite
         /// </summary>
         private void UpdateValue()
         {
-            double sliderValue = Ms.X - _initialClickPosition.X;
+            sliderValue = Ms.X - _initialClickPosition.X;
 
             if (_initialSliderValue + sliderValue >= _range / _slideAdjuster)
             {
@@ -177,7 +203,24 @@ namespace XAMLite
                 Value = Minimum + ((_initialSliderValue + sliderValue) * _slideAdjuster);
             }
 
+            _previousValue = Value;
+
             UpdateSliderBar(sliderValue);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void UpdateSliderValue()
+        {
+             sliderValue = Value / _slideAdjuster;
+
+
+            //Console.WriteLine("Slider Value: " + sliderValue);
+            _previousValue = Value;
+            //Console.WriteLine("Value: " + Value);
+
+            UpdateSliderBar(_slideAdjuster);
         }
 
         /// <summary>
