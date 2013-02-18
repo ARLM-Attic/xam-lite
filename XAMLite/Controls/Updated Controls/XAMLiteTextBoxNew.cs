@@ -146,7 +146,7 @@ namespace XAMLite
         /// <summary>
         /// Default text as designated by the developer.
         /// </summary>
-        private string _initialText;
+        internal string InitialText;
 
         /// <summary>
         /// Initial Padding as defined by the developer.  Included with
@@ -157,7 +157,7 @@ namespace XAMLite
         /// <summary>
         /// The label containing the cursor.
         /// </summary>
-        private XAMLiteLabelNew _cursor;
+        internal XAMLiteLabelNew TextCursor;
 
         /// <summary>
         /// The current position of the cursor.
@@ -222,6 +222,10 @@ namespace XAMLite
         /// 
         /// </summary>
         private static bool _locked;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private bool _isLocked;
 
         /// <summary>
@@ -240,7 +244,7 @@ namespace XAMLite
             Foreground = Brushes.Black;
             Padding = new Thickness(5, 0, 0, 0);
             TextBoxCursor = "|";
-            _initialText = string.Empty;
+            InitialText = string.Empty;
             _cursorBlinkTime = TimeSpan.FromSeconds(0.5);
             BorderBrush = null;
             _borderRectangles = new List<XAMLiteRectangleNew>();
@@ -276,7 +280,7 @@ namespace XAMLite
         {
             base.LoadContent();
 
-            _initialText = Text;
+            InitialText = Text;
             _initialPadding = Padding.Left;
 
             _textLabel = new XAMLiteLabelNew(Game)
@@ -346,7 +350,7 @@ namespace XAMLite
 
             if (!IsReadOnly)
             {
-                _cursor = new XAMLiteLabelNew(Game)
+                TextCursor = new XAMLiteLabelNew(Game)
                     {
                         Content = TextBoxCursor,
                         HorizontalAlignment = _textLabel.HorizontalAlignment,
@@ -358,7 +362,7 @@ namespace XAMLite
                         Visibility = Visibility.Hidden,
                         DrawOrder = DrawOrder
                     };
-                Children.Add(_cursor);
+                Children.Add(TextCursor);
             }
 
             if (BorderBrush == null)
@@ -482,11 +486,16 @@ namespace XAMLite
         {
             base.Update(gameTime);
 
+            if (this is XAMLitePasswordBox && (_textLabel.Content.ToString() != string.Empty && _textLabel.Content.ToString() != InitialText))
+            {
+                _textLabel.Visibility = Visibility.Hidden;
+            }
+
             if (!_isLocked)
             {
                 if (_textLabel.Content.ToString() == string.Empty && Parent != null && !(Parent is XAMLiteComboBox))
                 {
-                    _textLabel.Content = _initialText;
+                    _textLabel.Content = InitialText;
                 }
             }
 
@@ -499,7 +508,7 @@ namespace XAMLite
                     borderRectangle.Stroke = Brushes.Blue;
                 }
 
-                if ((string)_textLabel.Content == _initialText)
+                if ((string)_textLabel.Content == InitialText)
                 {
                     _textLabel.Content = string.Empty;
                 }
@@ -519,7 +528,7 @@ namespace XAMLite
 
                 if (!IsReadOnly)
                 {
-                    _cursor.Visibility = Visibility.Hidden;
+                    TextCursor.Visibility = Visibility.Hidden;
                     _cursorVisible = false;
                     _cursorBlink = false;
                 }
@@ -528,7 +537,8 @@ namespace XAMLite
                 {
                     if (Parent != null && !(Parent is XAMLiteComboBox))
                     {
-                        _textLabel.Content = _initialText;
+                        _textLabel.Content = InitialText;
+                        _textLabel.Visibility = Visibility.Visible;
                     }
 
                     if (_borderRectangles[0].Stroke != BorderBrush)
@@ -551,7 +561,7 @@ namespace XAMLite
                     }
                 }
 
-                _cursor.Visibility = _cursorBlink ? Visibility.Visible : Visibility.Hidden;
+                TextCursor.Visibility = _cursorBlink ? Visibility.Visible : Visibility.Hidden;
 
                 ProcessInput(gameTime);
 
@@ -636,7 +646,11 @@ namespace XAMLite
         /// </summary>
         private void UpdateTextAndCursor()
         {
-            _cursor.Padding = new Thickness(_initialPadding + _textLabel.MeasureString().X + Spacing, Padding.Top, 0, 0);
+            if (!(this is XAMLitePasswordBox))
+            {
+                TextCursor.Padding = new Thickness(
+                    _initialPadding + _textLabel.MeasureString().X + Spacing, Padding.Top, 0, 0);
+            }
         }
 
         /// <summary>
@@ -668,7 +682,7 @@ namespace XAMLite
             IsFocused = true;
             _isLocked = true;
 
-            if ((string)_textLabel.Content == _initialText)
+            if ((string)_textLabel.Content == InitialText)
             {
                 _textLabel.Content = string.Empty;
             }
@@ -729,7 +743,10 @@ namespace XAMLite
                 }
             }
 
-            CursorPosition.X = CursorStartPosition + _textLabel.MeasureString().X + 2;
+            if (!(this is XAMLitePasswordBox))
+            {
+                CursorPosition.X = CursorStartPosition + _textLabel.MeasureString().X + 2;
+            }
         }
 
         /// <summary>

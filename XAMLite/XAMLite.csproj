@@ -102,6 +102,7 @@
     <Compile Include="Controls\Updated Controls\XAMLiteListBoxItem.cs" />
     <Compile Include="Controls\Updated Controls\XAMLiteMenuItemNew.cs" />
     <Compile Include="Controls\Updated Controls\XAMLiteMenuNew.cs" />
+    <Compile Include="Controls\Updated Controls\XAMLitePasswordBox.cs" />
     <Compile Include="Controls\Updated Controls\XAMLiteRectangleNew.cs" />
     <Compile Include="Controls\Old Controls\XAMLiteTextBlock.cs" />
     <Compile Include="Controls\Old Controls\XAMLiteTextBox.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="Controls\Old Controls\XAMLiteToolTipService.cs" />
     <Compile Include="Fonts\ArialFonts.cs" />
     <Compile Include="Fonts\CourierFonts.cs" />
+    <Compile Include="Fonts\OtherFonts.cs" />
     <Compile Include="Fonts\VerdanaFonts.cs" />
     <Compile Include="Control\Updated Control System\XAMLiteBaseContent.cs" />
     <Compile Include="Control\Updated Control System\XAMLiteBaseControl.cs" />

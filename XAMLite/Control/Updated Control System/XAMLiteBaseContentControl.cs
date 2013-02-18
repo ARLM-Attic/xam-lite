@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,9 +10,7 @@ using FontFamily = System.Windows.Media.FontFamily;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace XAMLite
-{
-    using System;
-
+{  
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
@@ -110,6 +109,7 @@ namespace XAMLite
             LoadArialFonts();
             LoadCourierFonts();
             LoadVerdanaFonts();
+            LoadOtherFonts();
 
             //Default this controls font
             SpriteFont = Courier10SpriteFont;
@@ -159,6 +159,10 @@ namespace XAMLite
             else if (font.Contains("Verdana"))
             {
                 UpdateVerdanaFontFamily();
+            }
+            else if (font.Contains("Webdings"))
+            {
+                UpdateOtherFontFamily();
             }
             else
             {

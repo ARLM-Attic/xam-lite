@@ -135,9 +135,6 @@ namespace XAMLite
                 _initialSliderValue = (-(Minimum - (Value - Maximum)) / _slideAdjuster) - b.Width;
             }
             
-
-            //Console.WriteLine("Start slider value: " + _initialSliderValue);
-
             button = new XAMLiteButtonNew(Game)
                 {
                     SourceName = "Icons/slider-button-normal",
@@ -178,7 +175,6 @@ namespace XAMLite
         private void UpdateSliderBar(double sliderValue)
         {
             button.Margin = new Thickness(_initialSliderValue + sliderValue, 0, 0, 0);
-            //Console.WriteLine("New margin: " + button.Margin.Left);
         }
 
         /// <summary>
@@ -215,10 +211,7 @@ namespace XAMLite
         {
              sliderValue = Value / _slideAdjuster;
 
-
-            //Console.WriteLine("Slider Value: " + sliderValue);
             _previousValue = Value;
-            //Console.WriteLine("Value: " + Value);
 
             UpdateSliderBar(_slideAdjuster);
         }
