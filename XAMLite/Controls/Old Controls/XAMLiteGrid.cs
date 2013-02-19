@@ -160,7 +160,7 @@ namespace XAMLite
             // it should limit the increase to that of the grid's.
             CheckChildrenOpacity();
 
-            if (_childrenLoaded && !_isVisible)
+            if (_childrenLoaded && !_isVisible && Visible == Visibility.Visible)
             {
                 _isVisible = true;
 
@@ -358,14 +358,13 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// This toggles the visibilty of the child to Hidden when the grid becomes hidden.  However, if
+        /// This toggles the visibility of the child to Hidden when the grid becomes hidden.  However, if
         /// the grid becomes visible again, the child visibilities are reset to what they were prior.
         /// </summary>
         private void UpdateChildVisibility()
         {
             if (Visible == Visibility.Hidden)
             {
-                // before making the child hidden, record its lateset visibility state.
                 HideChildren();
             }
             else
@@ -390,9 +389,9 @@ namespace XAMLite
         private void HideChildren()
         {
             // change the child visibility to hidden, like the grid.
-            foreach (var t in Children)
+            foreach (var child in Children)
             {
-                t.Visible = Visibility.Hidden;
+                child.Visible = Visibility.Hidden;
             }
         }
 
