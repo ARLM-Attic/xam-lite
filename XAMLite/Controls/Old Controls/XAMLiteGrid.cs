@@ -56,7 +56,7 @@ namespace XAMLite
         /// <summary>
         /// Holds a record of the child's natural visibility prior to being affected by the grid.
         /// </summary>
-        private bool[] _childVisibility;
+        private List<bool> _childVisibility;
 
         /// <summary>
         /// Holds a record of the child's natural opacity and is used to modify its opacity according to
@@ -206,18 +206,12 @@ namespace XAMLite
         {
             _childrenLoaded = true;
 
-            _childVisibility = new bool[Children.Count];
             _childOpacity = new float[Children.Count];
 
             RecordChildOpacity();
-            RecordChildVisibility();
-
-            // Add the child component to the game with the modified parameters.
-            foreach (var t in Children)
-            {
-                t.Visible = Visibility.Hidden;
-            }
-
+            SaveInitialChildVisibility();
+            HideChildren();
+            
             Panel = new Rectangle((int)Position.X - (int)_originalGridMargin.Left +
                     (int)Margin.Left + (int)_originalGridMargin.Right - (int)Margin.Right,
                     (int)Position.Y - (int)_originalGridMargin.Top + (int)Margin.Top + (int)_originalGridMargin.Bottom - (int)Margin.Bottom, Width, Height);
@@ -235,6 +229,23 @@ namespace XAMLite
             {
                 Game.Components.Add(t);
                 t.Update(gameTime);
+            }
+        }
+
+        /// <summary>
+        /// Stores the original visibility of the child and initially sets its
+        /// visibility to hidden until the grid is fully set up.
+        /// </summary>
+        private void SaveInitialChildVisibility()
+        {
+            if (_childVisibility == null)
+            {
+                _childVisibility = new List<bool>();
+            }
+
+            for (var i = 0; i < Children.Count; i++)
+            {
+                _childVisibility.Add(Children[i].Visible == Visibility.Visible);
             }
         }
 
@@ -347,24 +358,6 @@ namespace XAMLite
         }
 
         /// <summary>
-        /// Stores the visibilty of the child.
-        /// </summary>
-        private void RecordChildVisibility()
-        {
-            for (var i = 0; i < Children.Count; i++)
-            {
-                if (Children[i].Visible == Visibility.Visible)
-                {
-                    _childVisibility[i] = true;
-                }
-                else
-                {
-                    _childVisibility[i] = false;
-                }
-            }
-        }
-
-        /// <summary>
         /// This toggles the visibilty of the child to Hidden when the grid becomes hidden.  However, if
         /// the grid becomes visible again, the child visibilities are reset to what they were prior.
         /// </summary>
@@ -373,22 +366,33 @@ namespace XAMLite
             if (Visible == Visibility.Hidden)
             {
                 // before making the child hidden, record its lateset visibility state.
-                RecordChildVisibility();
-
-                // change the child visibility to hidden, like the grid.
-                foreach (var t in Children)
-                {
-                    t.Visible = Visibility.Hidden;
-                }
+                HideChildren();
             }
             else
             {
                 // return the visibility of the child to what it was prior to becoming hidden
                 // like its parent.
-                for (var i = 0; i < _childVisibility.Length; i++)
+                if (_childVisibility == null)
+                {
+                    return;
+                }
+
+                for (var i = 0; i < _childVisibility.Count; i++)
                 {
                     Children[i].Visible = _childVisibility[i] ? Visibility.Visible : Visibility.Hidden;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Hides the grid children.
+        /// </summary>
+        private void HideChildren()
+        {
+            // change the child visibility to hidden, like the grid.
+            foreach (var t in Children)
+            {
+                t.Visible = Visibility.Hidden;
             }
         }
 
