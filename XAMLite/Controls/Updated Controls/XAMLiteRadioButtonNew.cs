@@ -1,13 +1,12 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace XAMLite
-{
-    using System.Collections.Generic;
-
+{ 
     /// <summary>
     /// Represents a button that can be selected, but not cleared, by a user. 
     /// The IsChecked property of a XAMLiteRadioButton can be set by clicking 
@@ -185,7 +184,6 @@ namespace XAMLite
         {
             ToggleCheckMark();
             DeselectOtherRadioButtons();
-            
         }
 
         /// <summary>
@@ -216,15 +214,6 @@ namespace XAMLite
             }
 
             ToggleCheckMark();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="gameTime"></param>
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
         }
 
         /// <summary>
