@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace XAMLite
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Represents a button that can be selected, but not cleared, by a user. 
     /// The IsChecked property of a XAMLiteRadioButton can be set by clicking 
@@ -93,6 +95,11 @@ namespace XAMLite
         private XAMLiteImageNew _checkedBox;
 
         /// <summary>
+        /// List of every radio button in the UI.
+        /// </summary>
+        internal static List<XAMLiteRadioButtonNew> RadioButtonList;
+
+        /// <summary>
         /// Initializes a new instance of the XAMLiteRadioButton class.
         /// </summary>
         /// <param name="game"></param>
@@ -105,6 +112,10 @@ namespace XAMLite
             RadioButtonSelectedSourceName = "Icons/RadioButtonSelected";
             Height = 16;
             Padding = new Thickness(5, 0, 0, 0);
+            if (RadioButtonList == null)
+            {
+                RadioButtonList = new List<XAMLiteRadioButtonNew>();
+            }
         }
 
         /// <summary>
@@ -151,6 +162,8 @@ namespace XAMLite
                 Visibility = IsChecked ? Visibility.Visible : Visibility.Hidden
             };
             Children.Add(_checkedBox);
+
+            RadioButtonList.Add(this);
         }
 
         /// <summary>
@@ -170,18 +183,39 @@ namespace XAMLite
         /// <param name="mouseButtonEventArgs"></param>
         private void OnMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
-            IsChecked = !IsChecked;
-
-            SetRadioButtonIsChecked();
+            ToggleCheckMark();
+            DeselectOtherRadioButtons();
+            
         }
 
         /// <summary>
         /// Visual changes the art assets based on whether IsChecked = true.
         /// </summary>
-        private void SetRadioButtonIsChecked()
+        internal void ToggleCheckMark()
         {
+            IsChecked = !IsChecked;
+
             _checkedBox.Visibility = IsChecked ? Visibility.Visible : Visibility.Hidden;
             _uncheckedBox.Visibility = !IsChecked ? Visibility.Visible : Visibility.Hidden;
+        }
+
+        /// <summary>
+        /// Deselects other radio buttons with the same group.
+        /// </summary>
+        private void DeselectOtherRadioButtons()
+        {
+            foreach (var radioButton in RadioButtonList)
+            {
+                if (radioButton.IsEnabled)
+                {
+                    if (radioButton.GroupName == GroupName && radioButton.IsChecked)
+                    {
+                        radioButton.ToggleCheckMark();
+                    }
+                }
+            }
+
+            ToggleCheckMark();
         }
 
         /// <summary>
@@ -201,6 +235,12 @@ namespace XAMLite
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
+
+            if (RadioButtonList != null)
+            {
+                RadioButtonList.Clear();
+                RadioButtonList = null;
+            }
 
             foreach (var child in Children)
             {
