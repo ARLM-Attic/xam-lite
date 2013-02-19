@@ -103,6 +103,7 @@
     <Compile Include="Controls\Updated Controls\XAMLiteMenuItemNew.cs" />
     <Compile Include="Controls\Updated Controls\XAMLiteMenuNew.cs" />
     <Compile Include="Controls\Updated Controls\XAMLitePasswordBox.cs" />
+    <Compile Include="Controls\Updated Controls\XAMLiteRadioButtonNew.cs" />
     <Compile Include="Controls\Updated Controls\XAMLiteRectangleNew.cs" />
     <Compile Include="Controls\Old Controls\XAMLiteTextBlock.cs" />
     <Compile Include="Controls\Old Controls\XAMLiteTextBox.cs" />
