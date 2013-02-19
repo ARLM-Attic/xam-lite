@@ -254,7 +254,8 @@ namespace XAMLite
                 Spacing = Spacing,
                 Foreground = Foreground,
                 Padding = Padding,
-                Width = Width
+                Width = Width,
+                DrawOrder = DrawOrder
             };
 
             if (Text != string.Empty || TextLabel.Width == 0)
@@ -282,7 +283,8 @@ namespace XAMLite
                         Width = Width,
                         Height = Height,
                         HorizontalAlignment = HorizontalAlignment,
-                        VerticalAlignment = VerticalAlignment
+                        VerticalAlignment = VerticalAlignment,
+                        DrawOrder = DrawOrder
                     };
                 Children.Add(Back);
             }

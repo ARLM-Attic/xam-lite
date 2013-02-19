@@ -141,6 +141,7 @@ namespace XAMLite
                 label.Spacing = Spacing;
                 label.Padding = Padding;
                 label.Width = Width;
+                label.DrawOrder = DrawOrder;
                 _labels.Add(label);
             }
 

@@ -219,6 +219,7 @@ namespace XAMLite
             // that the scroll bar needs.
             if (Child != null)
             {
+                DrawOrder = Child.DrawOrder + 1;
                 var m = Child.Margin;
                 _grid = new XAMLiteGridNew(Game)
                     {
@@ -226,7 +227,7 @@ namespace XAMLite
                         Height = Child.Height - 2,
                         Margin = new Thickness(m.Left, m.Top + 1, m.Right + 1, m.Bottom + 1),
                         HorizontalAlignment = Child.HorizontalAlignment,
-                        VerticalAlignment = Child.VerticalAlignment
+                        VerticalAlignment = Child.VerticalAlignment,
                     };
                 Game.Components.Add(_grid);
                 _grid.Children.Add(this);
@@ -247,7 +248,8 @@ namespace XAMLite
             {
                 SourceName = "Icons/ScrollBackDrop",
                 Height = Height,
-                Width = Width
+                Width = Width,
+                DrawOrder = DrawOrder
             };
             Children.Add(backDrop);
 
@@ -257,7 +259,8 @@ namespace XAMLite
             {
                 RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateCounterClockwise90,
                 HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Top
+                VerticalAlignment = VerticalAlignment.Top,
+                DrawOrder = DrawOrder
             };   
 
             var downArrowNormalButton = new XAMLiteImageNew(Game)
@@ -265,7 +268,8 @@ namespace XAMLite
                 SourceName = "Icons/ArrowButton",
                 RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.FlipVertical : RenderTransform.RotateClockwise90,
                 HorizontalAlignment = HorizontalAlignment.Right,
-                VerticalAlignment = VerticalAlignment.Bottom
+                VerticalAlignment = VerticalAlignment.Bottom,
+                DrawOrder = DrawOrder
             };
 
             var c = Child as XAMLiteTextBlockNew;
@@ -302,7 +306,8 @@ namespace XAMLite
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
                 Width = t.Width,
-                Height = t.Height
+                Height = t.Height,
+                DrawOrder = DrawOrder
             };    
             Children.Add(_upArrow);
 
@@ -314,7 +319,8 @@ namespace XAMLite
                 RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateCounterClockwise90,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
-                Visibility = Visibility.Hidden
+                Visibility = Visibility.Hidden,
+                DrawOrder = DrawOrder
             };
             _upArrow.Children.Add(upArrowHoverButton);
 
@@ -324,7 +330,8 @@ namespace XAMLite
                 RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateCounterClockwise90,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
-                Visibility = Visibility.Hidden
+                Visibility = Visibility.Hidden,
+                DrawOrder = DrawOrder
             };
             _upArrow.Children.Add(_upArrowButtonMouseDown);
 
@@ -333,7 +340,8 @@ namespace XAMLite
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Bottom,
                 Width = t.Width,
-                Height = t.Height
+                Height = t.Height,
+                DrawOrder = DrawOrder
             };
             Children.Add(_downArrow);
 
@@ -345,7 +353,8 @@ namespace XAMLite
                 RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.FlipVertical : RenderTransform.RotateClockwise90,
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Bottom,
-                Visibility = Visibility.Hidden
+                Visibility = Visibility.Hidden,
+                DrawOrder = DrawOrder
             };
             _downArrow.Children.Add(downArrowHoverButton);
 
@@ -355,7 +364,8 @@ namespace XAMLite
                 RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.FlipVertical : RenderTransform.RotateClockwise90,
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Bottom,
-                Visibility = Visibility.Hidden
+                Visibility = Visibility.Hidden,
+                DrawOrder = DrawOrder
             };
             _downArrow.Children.Add(_downArrowButtonMouseDown);
 
@@ -410,7 +420,8 @@ namespace XAMLite
                 Height = scrollHeight,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
-                Margin = Orientation == Orientation.Vertical ? new Thickness(0, t.Height, 0, 0) : new Thickness(t.Width, 0, 0, 0)
+                Margin = Orientation == Orientation.Vertical ? new Thickness(0, t.Height, 0, 0) : new Thickness(t.Width, 0, 0, 0),
+                DrawOrder = DrawOrder
             };
             Children.Add(_scrollBar);
             _scrollBar.MouseEnter += ScrollBarOnMouseEnter;
@@ -424,7 +435,8 @@ namespace XAMLite
             {
                 RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateCounterClockwise90,
                 HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Top
+                VerticalAlignment = VerticalAlignment.Top,
+                DrawOrder = DrawOrder
             };    
             _scrollBar.Children.Add(scrollBarTopNoHover);
             _scrollBarNormal.Add(scrollBarTopNoHover);
@@ -435,7 +447,8 @@ namespace XAMLite
                 RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateCounterClockwise90,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
-                Visibility = Visibility.Hidden
+                Visibility = Visibility.Hidden,
+                DrawOrder = DrawOrder
             };
             _scrollBar.Children.Add(scrollBarTopHover);
             _scrollBarHover.Add(scrollBarTopHover);
@@ -446,7 +459,8 @@ namespace XAMLite
                 RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateCounterClockwise90,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
-                Visibility = Visibility.Hidden
+                Visibility = Visibility.Hidden,
+                DrawOrder = DrawOrder
             };
             _scrollBar.Children.Add(scrollBarTopMouseDown);
             _scrollBarMouseDown.Add(scrollBarTopMouseDown);
@@ -458,7 +472,8 @@ namespace XAMLite
                 Height = Orientation == Orientation.Vertical ? _scrollBar.Height - tTop.Height - tBottom.Height : _scrollBar.Height,
                 RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateCounterClockwise90,
                 HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
+                VerticalAlignment = VerticalAlignment.Center,
+                DrawOrder = DrawOrder
             };
             _scrollBar.Children.Add(scrollBarBodyNoHover);
             _scrollBarNormal.Add(scrollBarBodyNoHover);
@@ -471,7 +486,8 @@ namespace XAMLite
                 RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateCounterClockwise90,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                Visibility = Visibility.Hidden
+                Visibility = Visibility.Hidden,
+                DrawOrder = DrawOrder
             };
             _scrollBar.Children.Add(scrollBarBodyHover);
             _scrollBarHover.Add(scrollBarBodyHover);
@@ -484,7 +500,8 @@ namespace XAMLite
                 RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateCounterClockwise90,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                Visibility = Visibility.Hidden
+                Visibility = Visibility.Hidden,
+                DrawOrder = DrawOrder
             };
             _scrollBar.Children.Add(scrollBarBodyMouseDown);
             _scrollBarMouseDown.Add(scrollBarBodyMouseDown);
@@ -494,7 +511,8 @@ namespace XAMLite
                 SourceName = "Icons/ScrollButtonBottomNoHover",
                 RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateClockwise90,
                 HorizontalAlignment = HorizontalAlignment.Right,
-                VerticalAlignment = VerticalAlignment.Bottom
+                VerticalAlignment = VerticalAlignment.Bottom,
+                DrawOrder = DrawOrder
             };
             _scrollBar.Children.Add(scrollBarBottomNoHover);
             _scrollBarNormal.Add(scrollBarBottomNoHover);
@@ -505,7 +523,8 @@ namespace XAMLite
                 RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateClockwise90,
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Bottom,
-                Visibility = Visibility.Hidden
+                Visibility = Visibility.Hidden,
+                DrawOrder = DrawOrder
             };
             _scrollBar.Children.Add(scrollBarBottomHover);
             _scrollBarHover.Add(scrollBarBottomHover);
@@ -516,7 +535,8 @@ namespace XAMLite
                 RenderTransform = Orientation == Orientation.Vertical ? RenderTransform.Normal : RenderTransform.RotateClockwise90,
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Bottom,
-                Visibility = Visibility.Hidden
+                Visibility = Visibility.Hidden,
+                DrawOrder = DrawOrder
             };
             _scrollBar.Children.Add(scrollBarBottomMouseDown);
             _scrollBarMouseDown.Add(scrollBarBottomMouseDown);
