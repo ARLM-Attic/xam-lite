@@ -296,8 +296,7 @@ namespace XAMLite
                 Foreground = Foreground,
                 Padding = new Thickness(BorderThickness.Left > 1 ? Padding.Left + BorderThickness.Left : Padding.Left,
                     BorderThickness.Top > 1 ? Padding.Top + BorderThickness.Top : Padding.Top, 0, 0),
-                DrawOrder = DrawOrder + 2,
-                Visibility = Visibility.Hidden
+                DrawOrder = DrawOrder + 2
             };
 
             // the developer did not set a specific Width and therefore, the 
