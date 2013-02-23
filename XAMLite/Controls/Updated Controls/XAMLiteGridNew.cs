@@ -125,10 +125,10 @@ namespace XAMLite
                 OpacityChanged = false;
                 UpdateChildOpacity();
             }
-
+            // TODO: Test whether this is truly necessary
             // makes sure that if Opacity of child was changed separate from grid after initialization, then
             // it should limit the increase to that of the grid's.
-            CheckChildrenOpacity();
+            //CheckChildrenOpacity();
         }
 
         /// <summary>

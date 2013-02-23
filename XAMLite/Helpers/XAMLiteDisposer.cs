@@ -23,6 +23,18 @@ namespace XAMLite
         }
 
         /// <summary>
+        /// Calls dispose, but does a null check first.
+        /// </summary>
+        /// <param name="control"></param>
+        public static void SafeDispose(XAMLiteBaseControl control)
+        {
+            if (control != null)
+            {
+                control.Dispose();
+            }
+        }
+
+        /// <summary>
         /// Calls dispose on a list of XAMLiteMenuItems, but does a null check on each first.
         /// </summary>
         /// <param name="menuItems"> </param>

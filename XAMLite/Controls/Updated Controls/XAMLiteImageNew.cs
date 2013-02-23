@@ -169,11 +169,6 @@ namespace XAMLite
         {
             base.Draw(gameTime);
 
-            if (Visibility == Visibility.Hidden)
-            {
-                return;
-            }
-
             SpriteBatch.Begin();
 
             // NOTE:  When an image is rotated, the image currently cannot have an Alignment = Stretch

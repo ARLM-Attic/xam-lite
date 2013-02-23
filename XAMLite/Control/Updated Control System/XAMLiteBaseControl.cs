@@ -527,11 +527,6 @@ namespace XAMLite
         protected static bool StaticVariablesCreated;
 
         /// <summary>
-        /// List of every radio button in the UI.
-        /// </summary>
-        protected static List<XAMLiteRadioButton> AllRadioButtons;
-
-        /// <summary>
         /// 
         /// </summary>
         protected internal bool PositionChanged;
@@ -555,16 +550,14 @@ namespace XAMLite
         {
             HorizontalAlignment = HorizontalAlignment.Left;
             VerticalAlignment = VerticalAlignment.Top;
+            Visibility = Visibility.Visible;
             Opacity = 1.0;
-            
             IsEnabled = true;
-            _margin = new Thickness(0, 0, 0, 0);
             Viewport = Game.GraphicsDevice.Viewport;
             BackgroundColor = Color.Transparent;
             if (!StaticVariablesCreated)
             {
                 MousePressPosition = new Vector2();
-                AllRadioButtons = new List<XAMLiteRadioButton>();
                 
                 StaticVariablesCreated = true;
             }
@@ -576,8 +569,6 @@ namespace XAMLite
         protected override void LoadContent()
         {
             base.LoadContent();
-
-            Visibility = Visibility.Visible;
 
             // If the sprite batch that is shared across all XAMLite controls
             // hasn't yet been created, create it.
@@ -699,6 +690,16 @@ namespace XAMLite
                     }
                 }
             }
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            if (Visibility == Visibility.Hidden)
+            {
+                return;
+            }
+
+            base.Draw(gameTime);
         }
 
         /// <summary>

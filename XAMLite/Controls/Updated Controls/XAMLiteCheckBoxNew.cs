@@ -11,27 +11,41 @@ namespace XAMLite
     /// Note: Currently under development.  Continue to use normal
     /// XAMLiteCheckBox class until this class replaces it.
     /// </summary>
-    public class XAMLiteCheckBoxNew : XAMLiteBaseContent
+    public class XAMLiteCheckBoxNew : XAMLiteGridNew
     {
-        private bool _isChecked;
+        /// <summary>
+        /// Gets or sets the content for the textual portion of the control.
+        /// </summary>
+        public object Content { get; set; }
 
         /// <summary>
-        /// True when the checkbox is checked.
+        /// The color of the content, whether text or some other object.
         /// </summary>
-        public bool IsChecked
+        public Brush Foreground { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether the ToggleButton is checked. 
+        /// </summary>
+        public bool IsChecked { get; set; }
+
+        public override bool IsEnabled
         {
             get
             {
-                return _isChecked;
+                return base.IsEnabled;
             }
 
             set
             {
-                if (IsEnabled)
-                {
-                    _isChecked = value;
+                base.IsEnabled = value;
 
-                    ToggleTextures();
+                if (!value)
+                {
+                    Opacity = 0.65;
+                }
+                else
+                {
+                    Opacity = 1;
                 }
             }
         }
@@ -64,12 +78,7 @@ namespace XAMLite
         /// checkbox is hovered over and checked.
         /// </summary>
         public string HoverCheckedSourceName { get; set; }
-
-        /// <summary>
-        /// Contains all of the components of the check box.
-        /// </summary>
-        private XAMLiteGridNew _grid;
-
+        
         /// <summary>
         /// The unchecked button.
         /// </summary>
@@ -96,26 +105,42 @@ namespace XAMLite
         private XAMLiteLabelNew _label;
 
         /// <summary>
-        /// TODO: Consider creating a base class for complex controls
-        /// TODO: so that adding all of these parts are not necessary every time.
+        /// character spacing
         /// </summary>
-        public override Visibility Visibility
+        public int Spacing { get; set; }
+
+        /// <summary>
+        /// The font family the text belongs to.
+        /// </summary>
+        protected FontFamily _fontFamily;
+
+        /// <summary>
+        /// The font family the text belongs to.
+        /// </summary>
+        public FontFamily FontFamily
         {
             get
             {
-                return base.Visibility;
+                return _fontFamily;
             }
 
             set
             {
-                base.Visibility = value;
-
-                if (_grid != null)
-                {
-                    _grid.Visibility = value;
-                }
+                _fontFamily = value;
+                FontFamilyChanged = true;
             }
         }
+
+        /// <summary>
+        /// True when the font family has changed.
+        /// </summary>
+        protected bool FontFamilyChanged;
+
+        /// <summary>
+        /// The padding that surrounds the text within the control.  Note, in 
+        /// WPF, only the top and left can be set.
+        /// </summary>
+        public Thickness Padding { get; set; }
 
         /// <summary>
         /// 
@@ -124,23 +149,14 @@ namespace XAMLite
         public XAMLiteCheckBoxNew(Game game)
             : base(game)
         {
+            Content = "CheckBox";
+            IsChecked = false;
             SourceName = "Icons/RadioButton";
             CheckedSourceName = "Icons/RadioButtonSelected";
-            FontFamily = new FontFamily("Arial");
+            FontFamily = new FontFamily("Verdana12");
+            Height = 16;
             Spacing = 2;
             Padding = new Thickness(5, 0, 0, 0);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public override void Initialize()
-        {
-            base.Initialize();
-
-            MouseDown += OnMouseDown;
-            MouseEnter += OnMouseEnter;
-            MouseLeave += OnMouseLeave;
         }
 
         /// <summary>
@@ -153,21 +169,26 @@ namespace XAMLite
             Debug.Assert((SourceName != null), "Must set CheckBoxSourceName property. This is the image file path, minus the file extension.");
             _texture = Game.Content.Load<Texture2D>(SourceName);
 
-            UpdateFontMetrics();
-
             Debug.Assert((CheckedSourceName != null), "Must set CheckBoxSelectedSourceName property. This is the image file path, minus the file extension.");
 
-            _grid = new XAMLiteGridNew(Game)
+            _label = new XAMLiteLabelNew(Game)
             {
-                Parent = this,
-                HorizontalAlignment = HorizontalAlignment,
-                VerticalAlignment = VerticalAlignment,
-                Width = Width,
-                Height = Height,
-                Margin = Margin
+                Content = Content,
+                FontFamily = FontFamily,
+                Foreground = Foreground,
+                Spacing = Spacing,
+                Margin = new Thickness(_texture.Width + Padding.Left, 0, 0, 0),
+                VerticalAlignment = VerticalAlignment.Center,
+                DrawOrder = DrawOrder
             };
+            Game.Components.Add(_label);
 
-            Game.Components.Add(_grid);
+            // determine width and height
+            Width = (int)(_label.MeasureString().X + _texture.Width + Padding.Left + Padding.Right + _label.Margin.Left);
+            Height = (int)(_label.MeasureString().Y + Padding.Top + Padding.Bottom);
+
+            Game.Components.Remove(_label);
+            Children.Add(_label);
 
             _uncheckedButton = new XAMLiteImageNew(Game)
             {
@@ -176,7 +197,7 @@ namespace XAMLite
                 VerticalAlignment = VerticalAlignment.Center,
                 Visibility = !IsChecked ? Visibility.Visible : Visibility.Hidden
             };
-            _grid.Children.Add(_uncheckedButton);
+            Children.Add(_uncheckedButton);
 
             if (HoverSourceName != null)
             {
@@ -187,7 +208,7 @@ namespace XAMLite
                         VerticalAlignment = VerticalAlignment.Center,
                         Visibility = Visibility.Hidden
                     };
-                _grid.Children.Add(_uncheckedHoverButton);
+                Children.Add(_uncheckedHoverButton);
             }
 
             _checkedButton = new XAMLiteImageNew(Game)
@@ -197,7 +218,7 @@ namespace XAMLite
                 VerticalAlignment = VerticalAlignment.Center,
                 Visibility = IsChecked ? Visibility.Visible : Visibility.Hidden
             };
-            _grid.Children.Add(_checkedButton);
+            Children.Add(_checkedButton);
 
             if (HoverCheckedSourceName != null)
             {
@@ -208,36 +229,20 @@ namespace XAMLite
                         VerticalAlignment = VerticalAlignment.Center,
                         Visibility = Visibility.Hidden
                     };
-                _grid.Children.Add(_checkedHoverButton);
+                Children.Add(_checkedHoverButton);
             }
-
-            _label = new XAMLiteLabelNew(Game)
-            {
-                Content = Content,
-                Foreground = Foreground,
-                HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Center,
-                Padding = new Thickness(Padding.Left, Padding.Top, 0, 0),
-                FontFamily = FontFamily,
-                Spacing = Spacing,
-                Margin = new Thickness(_texture.Width, 0, 0, 0)
-            };
-
-            _grid.Children.Add(_label);
         }
 
         /// <summary>
-        /// Recalculates the width and height of the control.  If the width or height
-        /// as set by the user is greater than those of the assets within the control,
-        /// the user defined settings will be maintained.
+        /// 
         /// </summary>
-        /// <param name="content"></param>
-        protected override void RecalculateWidthAndHeight(object content)
+        public override void Initialize()
         {
-            var w = _texture.Width + (int)Padding.Left + (int)Padding.Right + (int)SpriteFont.MeasureString(Content.ToString()).X;
-            Width = Width > w ? Width : w;
-            var h = (int)SpriteFont.MeasureString(Content.ToString()).Y + (int)Padding.Top + (int)Padding.Bottom;
-            Height = Height > h && Height > _texture.Height ? Height : _texture.Height > h ? _texture.Height : h;
+            base.Initialize();
+
+            MouseDown += OnMouseDown;
+            MouseEnter += OnMouseEnter;
+            MouseLeave += OnMouseLeave;
         }
 
         /// <summary>
@@ -339,6 +344,8 @@ namespace XAMLite
             if (IsEnabled)
             {
                 IsChecked = !IsChecked;
+
+                ToggleTextures();
             }
         }
 
@@ -351,15 +358,9 @@ namespace XAMLite
         {
             base.Dispose(disposing);
 
-            // Temporary hack by Adam.  Scott: Please review/revise. -AK 2/7/2013
-            if (_grid != null)
+            foreach (var child in Children)
             {
-                foreach (var child in _grid.Children)
-                {
-                    child.Dispose();
-                }
-
-                _grid.Dispose();
+                child.Dispose();
             }
         }
     }

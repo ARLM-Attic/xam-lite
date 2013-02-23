@@ -14,15 +14,121 @@ namespace XAMLite
     /// </summary>
     public class XAMLiteRadioButtonNew : XAMLiteGridNew
     {
+        private bool _isChecked;
+
         /// <summary>
         /// Gets or sets whether the ToggleButton is checked. 
         /// </summary>
-        public bool IsChecked { get; set; }
+        public bool IsChecked 
+        { 
+            get
+            {
+                return _isChecked;
+            } 
+            
+            set
+            {
+                _isChecked = value;
+
+                if (Children == null || Children.Count == 0)
+                {
+                    return;
+                }
+
+                AddRemoveCheckMark();
+
+                if (value)
+                {
+                    DeselectOtherRadioButtons();
+                }
+            } 
+        }
+
+        /// <summary>
+        /// Enables/Disables the control.
+        /// </summary>
+        public override bool IsEnabled
+        {
+            get
+            {
+                return base.IsEnabled;
+            }
+
+            set
+            {
+                base.IsEnabled = value;
+
+                if (!value)
+                {
+                    Opacity = 0.65;
+                }
+                else
+                {
+                    Opacity = 1;
+                }
+            }
+        }
+
+        private object _content;
 
         /// <summary>
         /// Gets or sets the content for the textual portion of the control.
         /// </summary>
-        public object Content { get; set; }
+        public object Content
+        {
+            get
+            {
+                return _content;
+            } 
+            
+            set
+            {
+                _content = value;
+
+                if (_label != null)
+                {
+                    _label.Content = value;
+                    Width = (int)(_label.MeasureString().X + _checkedBox.Width + Padding.Left + Padding.Right + _label.Margin.Left);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private Thickness _originalMargin;
+
+        public override Thickness Margin
+        {
+            get
+            {
+                return base.Margin;
+            }
+
+            set
+            {
+                base.Margin = value;
+
+                if (Children.Count > 0)
+                {
+                    var om = _originalMargin;
+
+                    var l = value.Left - om.Left;
+                    var t = value.Top - om.Top;
+                    var r = value.Right - om.Right;
+                    var b = value.Bottom - om.Bottom;
+
+                    foreach (var child in Children)
+                    {
+                        child.Margin = child == _label ? new Thickness(l + _uncheckedBox.Width + Padding.Left, t, r, b) : new Thickness(l, t, r, b);
+                    }
+                }
+                else
+                {
+                    _originalMargin = value;
+                }
+            }
+        }
 
         /// <summary>
         /// character spacing
@@ -84,6 +190,11 @@ namespace XAMLite
         public Brush Foreground { get; set; }
 
         /// <summary>
+        /// The text portion of the radio button
+        /// </summary>
+        private XAMLiteLabelNew _label;
+
+        /// <summary>
         /// The unchecked radio button.
         /// </summary>
         private XAMLiteImageNew _uncheckedBox;
@@ -105,7 +216,7 @@ namespace XAMLite
         public XAMLiteRadioButtonNew(Game game)
             : base(game)
         {
-            Content = "CheckBox";
+            Content = "RadioButton";
             IsChecked = false;
             RadioButtonSourceName = "Icons/RadioButton";
             RadioButtonSelectedSourceName = "Icons/RadioButtonSelected";
@@ -126,7 +237,7 @@ namespace XAMLite
 
             var checkBoxAsset = Game.Content.Load<Texture2D>(RadioButtonSourceName);
 
-            var label = new XAMLiteLabelNew(Game)
+            _label = new XAMLiteLabelNew(Game)
                 {
                     Content = Content,
                     FontFamily = FontFamily,
@@ -134,16 +245,17 @@ namespace XAMLite
                     Spacing = Spacing,
                     Margin = new Thickness(checkBoxAsset.Width + Padding.Left, 0, 0, 0),
                     VerticalAlignment = VerticalAlignment.Center,
+                    Padding = Padding,
                     DrawOrder = DrawOrder
                 };
-            Game.Components.Add(label);
+            Game.Components.Add(_label);
 
             // determine width and height
-            Width = (int)(label.MeasureString().X + checkBoxAsset.Width + Padding.Left + Padding.Right + label.Margin.Left);
-            Height = (int)(label.MeasureString().Y + Padding.Top + Padding.Bottom);
+            Width = (int)(_label.MeasureString().X + checkBoxAsset.Width + Padding.Left + Padding.Right + _label.Margin.Left);
+            Height = (int)(_label.MeasureString().Y + Padding.Top + Padding.Bottom);
 
-            Game.Components.Remove(label);
-            Children.Add(label);
+            Game.Components.Remove(_label);
+            Children.Add(_label);
 
             _uncheckedBox = new XAMLiteImageNew(Game, checkBoxAsset)
                 {
@@ -182,16 +294,18 @@ namespace XAMLite
         /// <param name="mouseButtonEventArgs"></param>
         private void OnMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
-            ToggleCheckMark();
-            DeselectOtherRadioButtons();
+            IsChecked = true;
         }
 
         /// <summary>
-        /// Visual changes the art assets based on whether IsChecked = true.
+        /// Visually changes the art assets based on whether IsChecked = true.
         /// </summary>
-        internal void ToggleCheckMark()
+        internal void AddRemoveCheckMark()
         {
-            IsChecked = !IsChecked;
+            if (Visibility == Visibility.Hidden)
+            {
+                return;
+            }
 
             _checkedBox.Visibility = IsChecked ? Visibility.Visible : Visibility.Hidden;
             _uncheckedBox.Visibility = !IsChecked ? Visibility.Visible : Visibility.Hidden;
@@ -206,14 +320,28 @@ namespace XAMLite
             {
                 if (radioButton.IsEnabled)
                 {
-                    if (radioButton.GroupName == GroupName && radioButton.IsChecked)
+                    if (this != radioButton && radioButton.GroupName == GroupName && radioButton.IsChecked)
                     {
-                        radioButton.ToggleCheckMark();
+                        radioButton.IsChecked = false;
                     }
                 }
             }
+        }
 
-            ToggleCheckMark();
+        /// <summary>
+        /// Overrides the typical characteristics of this method.
+        /// </summary>
+        protected override void UpdateChildVisibility()
+        {
+            if (Visibility == Visibility.Hidden)
+            {
+                base.UpdateChildVisibility();
+            }
+            else
+            {
+                AddRemoveCheckMark();
+                _label.Visibility = Visibility.Visible;
+            }
         }
 
         /// <summary>

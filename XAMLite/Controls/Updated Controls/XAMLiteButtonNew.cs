@@ -211,35 +211,12 @@ namespace XAMLite
         /// </summary>
         private List<XAMLiteImageNew> _defaultClickImages;
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //public override double Opacity
-        //{
-        //    get
-        //    {
-        //        return base.Opacity;
-        //    }
-
-        //    set
-        //    {
-        //        if (label != null)
-        //        {
-        //            label.Opacity = value;
-        //        }
-        //        else
-        //        {
-        //            base.Opacity = value;
-        //        }
-        //    }
-        //}
+        private bool _buttonMouseDown;
 
         /// <summary>
         /// 
         /// </summary>
         private Thickness _originalMargin;
-        private bool _buttonMouseDown;
-
 
         public override Thickness Margin
         {
