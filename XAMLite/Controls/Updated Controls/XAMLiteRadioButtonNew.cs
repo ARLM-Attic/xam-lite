@@ -170,6 +170,11 @@ namespace XAMLite
             {
                 _fontFamily = value;
                 FontFamilyChanged = true;
+
+                if (_label != null)
+                {
+                    _label.FontFamily = value;
+                }
             }
         }
 
