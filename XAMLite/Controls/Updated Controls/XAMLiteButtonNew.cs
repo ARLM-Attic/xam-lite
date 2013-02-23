@@ -288,7 +288,7 @@ namespace XAMLite
                         Spacing = Spacing,
                         Foreground = Foreground,
                         Padding = Padding,
-                        Visibility = Visibility.Hidden,
+                        //Visibility = Visibility.Hidden,
                         DrawOrder = DrawOrder
                     };
 
