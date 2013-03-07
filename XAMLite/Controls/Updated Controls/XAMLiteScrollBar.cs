@@ -95,7 +95,7 @@ namespace XAMLite
         /// Timer for determining when to next scroll the text.
         /// </summary>
         private TimeSpan _scrollTimer;
- 
+
         /// <summary>
         /// Contains all XAMLite objects that make up the normal state scroll 
         /// bar.
@@ -201,14 +201,21 @@ namespace XAMLite
         {
             base.LoadContent();
 
+            var ch = Child as XAMLiteTextBlockNew;
+            var bt = 0;
+            if (ch != null)
+            {
+                bt = ch.StrokeThickness;
+            }
+
             switch (Orientation)
             {
                 case Orientation.Vertical:
                     Width = 21;
-                    Height = Child != null && Height == 0 ? Child.Height : 100;
+                    Height = Child != null && Height == 0 ? Child.Height - (bt * 2) : 100;
                     break;
                 case Orientation.Horizontal:
-                    Width = Child != null && Width == 0 ? Child.Width : 100;
+                    Width = Child != null && Width == 0 ? Child.Width - (bt * 2) : 100;
                     Height = 21;
                     break;
             }
@@ -217,37 +224,28 @@ namespace XAMLite
             // child's location so that the scroll bar will be positioned within its child's
             // boundaries. Also, modify the padding of the child to accommodate the space
             // that the scroll bar needs.
-            if (Child != null)
+            if (ch != null)
             {
                 DrawOrder = Child.DrawOrder + 1;
                 var m = Child.Margin;
                 _grid = new XAMLiteGridNew(Game)
-                    {
-                        Width = Child.Width,
-                        Height = Child.Height - 2,
-                        Margin = new Thickness(m.Left, m.Top + 1, m.Right + 1, m.Bottom + 1),
-                        HorizontalAlignment = Child.HorizontalAlignment,
-                        VerticalAlignment = Child.VerticalAlignment,
-                    };
+                {
+                    Width = Child.Width,
+                    Height = Child.Height,
+                    Margin = new Thickness(m.Left, m.Top, m.Right + bt, m.Bottom),
+                    HorizontalAlignment = Child.HorizontalAlignment,
+                    VerticalAlignment = Child.VerticalAlignment,
+                };
                 Game.Components.Add(_grid);
                 _grid.Children.Add(this);
 
-                if (Child is XAMLiteTextBlockNew)
-                {
-                    var child = (XAMLiteTextBlockNew)Child;
-
-                    ModifyChildPadding(child);
-                }
-                else
-                {
-                    ModifyChildMargin();
-                }
+                ModifyChildPadding(ch);
             }
 
             var backDrop = new XAMLiteImageNew(Game)
             {
                 SourceName = "Icons/ScrollBackDrop",
-                Height = Height,
+                Height = Height - (bt * 2),
                 Width = Width,
                 DrawOrder = DrawOrder
             };
@@ -261,7 +259,7 @@ namespace XAMLite
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
                 DrawOrder = DrawOrder
-            };   
+            };
 
             var downArrowNormalButton = new XAMLiteImageNew(Game)
             {
@@ -308,7 +306,7 @@ namespace XAMLite
                 Width = t.Width,
                 Height = t.Height,
                 DrawOrder = DrawOrder
-            };    
+            };
             Children.Add(_upArrow);
 
             _upArrow.Children.Add(upArrowNormalButton);
@@ -341,6 +339,7 @@ namespace XAMLite
                 VerticalAlignment = VerticalAlignment.Bottom,
                 Width = t.Width,
                 Height = t.Height,
+                Margin = new Thickness(0, 0, 0, bt),
                 DrawOrder = DrawOrder
             };
             Children.Add(_downArrow);
@@ -384,13 +383,13 @@ namespace XAMLite
 
             // percent of the text height versus the child height.
             var childToTextRatio = Child.Height / _childTextHeight;
-            
+
             // the difference between the text height and the height of its 
             // container.
             var textHeightToChildHeightDifference = _childTextHeight - Child.Height;
 
             // the maximum scroll bar height
-            _maxScrollBarHeight = Child.Height - (t.Height * 2) + 1;
+            _maxScrollBarHeight = Height - (t.Height * 2);
 
             // the minimum scroll bar height.
             _minScrollBarHeight = 10;
@@ -398,7 +397,7 @@ namespace XAMLite
             var scrollHeight = 0;
             if (textHeightToChildHeightDifference + _minScrollBarHeight < _maxScrollBarHeight)
             {
-                scrollHeight = (int)(_maxScrollBarHeight - textHeightToChildHeightDifference - 2);
+                scrollHeight = (int)(_maxScrollBarHeight - textHeightToChildHeightDifference);
             }
             else
             {
@@ -406,7 +405,7 @@ namespace XAMLite
                 var difference = textHeightToChildHeightDifference + _minScrollBarHeight + 1 - _maxScrollBarHeight;
                 _scrollValueAdjuster = difference / textHeightToChildHeightDifference;
                 scrollHeight = (int)_minScrollBarHeight;
-                _textValueAdjuster = (_childTextHeight - Child.Height) / (_maxScrollBarHeight - scrollHeight);
+                _textValueAdjuster = (_childTextHeight - Height) / (_maxScrollBarHeight - scrollHeight);
             }
 
             // TODO: this is not truly set up yet.  Focus is currently on vertical scrolling.
@@ -437,7 +436,7 @@ namespace XAMLite
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
                 DrawOrder = DrawOrder
-            };    
+            };
             _scrollBar.Children.Add(scrollBarTopNoHover);
             _scrollBarNormal.Add(scrollBarTopNoHover);
 
@@ -553,7 +552,7 @@ namespace XAMLite
             switch (Orientation)
             {
                 case Orientation.Vertical:
-                    Maximum = Math.Abs(_childTextHeight - Height) + 2;
+                    Maximum = Math.Abs(_childTextHeight - Height) + 1;
                     break;
 
                 case Orientation.Horizontal:
@@ -576,7 +575,7 @@ namespace XAMLite
             }
 
             HandleMouseUp();
-            
+
             if (_mouseDownUpArrow && !_upArrowHasLeftWhilePressed)
             {
                 _scrollTimer -= gameTime.ElapsedGameTime;
@@ -712,7 +711,7 @@ namespace XAMLite
             var scrollBarValue = Orientation == Orientation.Vertical ? _initialSliderValue + (Ms.Y - _initialClickPosition.Y) : _initialSliderValue + (Ms.X - _initialClickPosition.X);
 
             Value = scrollBarValue * _textValueAdjuster;
-            
+
             if (Value <= Minimum)
             {
                 Value = Minimum;
@@ -742,7 +741,7 @@ namespace XAMLite
             _scrollBarNormal[0].Margin = m;
             _scrollBarHover[0].Margin = m;
             _scrollBarMouseDown[0].Margin = m;
-            
+
             _scrollBarNormal[1].Margin = m;
             _scrollBarHover[1].Margin = m;
             _scrollBarMouseDown[1].Margin = m;
@@ -1079,7 +1078,7 @@ namespace XAMLite
         /// <param name="mouseEventArgs"></param>
         private void ScrollBarOnMouseLeave(object sender, MouseEventArgs mouseEventArgs)
         {
-            if (Ms.LeftButton == ButtonState.Released) 
+            if (Ms.LeftButton == ButtonState.Released)
             {
                 for (var i = 0; i < _scrollBarNormal.Count; i++)
                 {
@@ -1102,7 +1101,7 @@ namespace XAMLite
                 return;
             }
 
-            if (!_scrollSliderMouseDown) 
+            if (!_scrollSliderMouseDown)
             {
                 for (var i = 0; i < _scrollBarNormal.Count; i++)
                 {
